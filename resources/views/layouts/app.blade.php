@@ -194,6 +194,9 @@
 
     @include('partials.mobile-nav')
 
+    {{-- Search Modal --}}
+    @include('partials.search-modal')
+
     {{-- Cart Drawer --}}
     @include('partials.cart-drawer')
 

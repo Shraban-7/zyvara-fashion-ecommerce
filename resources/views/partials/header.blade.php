@@ -35,22 +35,23 @@
 
             {{-- Desktop Search Bar --}}
             <div class="hidden md:flex flex-1 max-w-xl mx-8">
-                <div class="relative w-full group">
-                    <input type="text" placeholder="Search for products, brands and more..."
-                        class="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 pl-12 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue focus:bg-white transition-all duration-300 group-hover:border-gray-300">
-                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors">
+                <button onclick="openSearch()" class="relative w-full group text-left">
+                    <div class="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 pl-12 pr-6 text-sm text-gray-400 hover:border-gray-300 hover:bg-white transition-all duration-300">
+                        Search for products, brands and more...
+                    </div>
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
                         <i class="fas fa-search"></i>
                     </div>
-                    <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-brand-blue text-white px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-blue-600 transition-colors">
-                        Search
-                    </button>
-                </div>
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 text-gray-500 px-2 py-1 rounded-lg text-xs font-medium">
+                        Ctrl+K
+                    </span>
+                </button>
             </div>
 
             {{-- Right Icons --}}
             <div class="flex items-center gap-1 md:gap-2">
                 {{-- Search - Mobile --}}
-                <button class="md:hidden icon-btn p-2.5 rounded-xl" aria-label="Search">
+                <button onclick="openSearch()" class="md:hidden icon-btn p-2.5 rounded-xl" aria-label="Search">
                     <i class="fas fa-search text-lg text-gray-600"></i>
                 </button>
 
@@ -117,9 +118,11 @@
 
     {{-- Search Bar (Mobile) --}}
     <div class="px-4 pb-3 md:hidden">
-        <div class="relative">
-            <input type="text" placeholder="Search for products..." class="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue focus:bg-white transition-all">
+        <button onclick="openSearch()" class="relative w-full text-left">
+            <div class="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 pl-11 pr-4 text-sm text-gray-400">
+                Search for products...
+            </div>
             <i class="fas fa-search text-gray-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-        </div>
+        </button>
     </div>
 </header>
