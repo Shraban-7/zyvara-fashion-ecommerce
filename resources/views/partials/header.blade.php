@@ -79,7 +79,7 @@
                 <div class="hidden md:block w-px h-8 bg-gray-200 mx-2"></div>
 
                 {{-- Profile --}}
-                <button class="icon-btn p-2 rounded-xl flex items-center gap-2 group" aria-label="Profile">
+                <button onclick="openAuthModal('login')" class="icon-btn p-2 rounded-xl flex items-center gap-2 group" aria-label="Profile">
                     <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg shadow-brand-blue/25">
                         <i class="fas fa-user text-sm"></i>
                     </div>

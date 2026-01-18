@@ -193,7 +193,10 @@
     <a href="https://wa.me/8801712345678" target="_blank" class="fixed bottom-20 md:bottom-6 right-4 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition tap-effect z-40 animate-bounce" style="animation-duration: 2s;">
         <i class="fab fa-whatsapp text-3xl text-white"></i>
     </a>
-    
+
+    {{-- Auth Modal (Login/Signup) --}}
+    @include('partials.auth-modal')
+
     @include('partials.scripts')
 
     @stack('scripts')
