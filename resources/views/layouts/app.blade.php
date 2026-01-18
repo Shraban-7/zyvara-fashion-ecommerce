@@ -58,6 +58,11 @@
             scroll-behavior: smooth;
         }
 
+        /* Prevent horizontal overflow on mobile */
+        body {
+            overflow-x: hidden;
+        }
+
         /* Slider animations */
         .slide {
             transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
