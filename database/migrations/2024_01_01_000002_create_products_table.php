@@ -30,7 +30,8 @@ return new class extends Migration
             $table->enum('fit_type', FitType::values())->nullable();
             $table->enum('pattern', Pattern::values())->nullable();
             $table->enum('occasion', Occasion::values())->nullable();
-            $table->integer('stock_quantity')->default(0);
+            $table->integer('stock_in')->default(0);
+            $table->integer('stock_out')->default(0);
             $table->integer('low_stock_threshold')->default(5);
             $table->decimal('weight', 8, 2)->nullable(); // In grams
             $table->boolean('is_active')->default(true);
@@ -41,7 +42,6 @@ return new class extends Migration
             $table->decimal('average_rating', 3, 2)->default(0);
             $table->integer('review_count')->default(0);
             $table->integer('view_count')->default(0);
-            $table->integer('sold_count')->default(0);
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->json('tags')->nullable(); // For search
