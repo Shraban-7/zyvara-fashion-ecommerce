@@ -27,7 +27,8 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        Paginator::useBootstrap();
+        //Paginator::useBootstrap();
+        Paginator::useTailwind();
 
         // Share categories with all views
         View::composer('*', function ($view) {
