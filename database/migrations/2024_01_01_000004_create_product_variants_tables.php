@@ -37,12 +37,13 @@ return new class extends Migration
             $table->foreignId('color_id')->nullable()->constrained()->onDelete('set null');
             $table->string('sku')->unique()->nullable(); // Variant-specific SKU
             $table->decimal('price', 10, 2)->nullable(); // Variant-specific price override
-            $table->integer('stock_quantity')->default(0);
+            $table->integer('stock_in')->default(0);
+            $table->integer('stock_out')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->unique(['product_id', 'size_id', 'color_id']);
-            $table->index(['product_id', 'is_active']);
+            $table->index('product_id');
         });
     }
 

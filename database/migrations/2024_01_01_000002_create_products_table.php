@@ -47,12 +47,7 @@ return new class extends Migration
             $table->json('tags')->nullable(); // For search
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['category_id', 'is_active']);
-            $table->index(['is_featured', 'is_active']);
-            $table->index(['is_new_arrival', 'is_active']);
-            $table->index(['is_best_seller', 'is_active']);
-            $table->index(['is_on_sale', 'is_active']);
+            
             $table->index('slug');
             $table->index('sku');
         });

@@ -110,94 +110,43 @@
                     <div class="absolute top-full left-0 w-[800px] bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50">
                         <div class="p-6">
                             <div class="grid grid-cols-4 gap-6">
-                                {{-- Men's Wear --}}
+                                @php
+                                $categoryIcons = [
+                                'blue' => ['bg' => 'bg-blue-100', 'text' => 'text-brand-blue'],
+                                'pink' => ['bg' => 'bg-pink-100', 'text' => 'text-pink-500'],
+                                'orange' => ['bg' => 'bg-orange-100', 'text' => 'text-orange-500'],
+                                'green' => ['bg' => 'bg-green-100', 'text' => 'text-green-500'],
+                                ];
+                                $iconKeys = array_keys($categoryIcons);
+                                $iconIndex = 0;
+                                @endphp
+
+                                @foreach($allMenuCategories->take(4) as $category)
+                                @php
+                                $iconColor = $categoryIcons[$iconKeys[$iconIndex % count($iconKeys)]];
+                                $iconIndex++;
+                                @endphp
                                 <div>
-                                    <a href="{{ route('products.index') }}?category=mens" class="flex items-center gap-2 text-sm font-bold text-brand-black mb-3 hover:text-brand-blue transition">
-                                        <span class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-male text-brand-blue"></i>
+                                    <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="flex items-center gap-2 text-sm font-bold text-brand-black mb-3 hover:text-brand-blue transition">
+                                        <span class="w-8 h-8 {{ $iconColor['bg'] }} rounded-lg flex items-center justify-center">
+                                            @if($category->icon)
+                                            <i class="{{ $category->icon }} {{ $iconColor['text'] }}"></i>
+                                            @else
+                                            <i class="fas fa-tag {{ $iconColor['text'] }}"></i>
+                                            @endif
                                         </span>
-                                        Men's Wear
+                                        {{ $category->name }}
                                     </a>
                                     <ul class="space-y-2">
-                                        <li><a href="{{ route('products.index') }}?category=mens&sub=shirts" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Formal Shirts</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=mens&sub=casual-shirts" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Casual Shirts</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=mens&sub=tshirts" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">T-Shirts</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=mens&sub=polo" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Polo Shirts</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=mens&sub=pants" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Pants & Chinos</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=mens&sub=jeans" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Jeans</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=mens&sub=jackets" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Jackets</a></li>
+                                        @foreach($category->children->take(7) as $child)
+                                        <li><a href="{{ route('products.index') }}?category={{ $child->slug }}" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">{{ $child->name }}</a></li>
+                                        @endforeach
                                     </ul>
-                                    <a href="{{ route('products.index') }}?category=mens" class="inline-flex items-center gap-1 text-xs text-brand-blue font-medium mt-3 hover:underline">
+                                    <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="inline-flex items-center gap-1 text-xs text-brand-blue font-medium mt-3 hover:underline">
                                         View All <i class="fas fa-arrow-right text-[10px]"></i>
                                     </a>
                                 </div>
-
-                                {{-- Women's Wear --}}
-                                <div>
-                                    <a href="{{ route('products.index') }}?category=womens" class="flex items-center gap-2 text-sm font-bold text-brand-black mb-3 hover:text-brand-blue transition">
-                                        <span class="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-female text-pink-500"></i>
-                                        </span>
-                                        Women's Wear
-                                    </a>
-                                    <ul class="space-y-2">
-                                        <li><a href="{{ route('products.index') }}?category=womens&sub=kameez" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Kameez</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=womens&sub=saree" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Saree</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=womens&sub=kurti" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Kurti</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=womens&sub=tops" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Tops & Blouses</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=womens&sub=palazzo" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Palazzo & Pants</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=womens&sub=dupatta" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Dupatta & Scarf</a></li>
-                                    </ul>
-                                    <a href="{{ route('products.index') }}?category=womens" class="inline-flex items-center gap-1 text-xs text-brand-blue font-medium mt-3 hover:underline">
-                                        View All <i class="fas fa-arrow-right text-[10px]"></i>
-                                    </a>
-                                </div>
-
-                                {{-- Traditional --}}
-                                <div>
-                                    <a href="{{ route('products.index') }}?category=traditional" class="flex items-center gap-2 text-sm font-bold text-brand-black mb-3 hover:text-brand-blue transition">
-                                        <span class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-vest text-orange-500"></i>
-                                        </span>
-                                        Traditional
-                                    </a>
-                                    <ul class="space-y-2">
-                                        <li><a href="{{ route('products.index') }}?category=traditional&sub=panjabi" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Panjabi</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=traditional&sub=fatua" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Fatua</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=traditional&sub=kurta" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Kurta</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=traditional&sub=sherwani" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Sherwani</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=traditional&sub=pajama" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Pajama</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=traditional&sub=eid-collection" class="text-sm text-orange-500 font-medium hover:text-orange-600 hover:pl-1 transition-all flex items-center gap-1"><i class="fas fa-star text-[10px]"></i> Eid Collection</a></li>
-                                    </ul>
-                                    <a href="{{ route('products.index') }}?category=traditional" class="inline-flex items-center gap-1 text-xs text-brand-blue font-medium mt-3 hover:underline">
-                                        View All <i class="fas fa-arrow-right text-[10px]"></i>
-                                    </a>
-                                </div>
-
-                                {{-- Kids & More --}}
-                                <div>
-                                    <a href="{{ route('products.index') }}?category=kids" class="flex items-center gap-2 text-sm font-bold text-brand-black mb-3 hover:text-brand-blue transition">
-                                        <span class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-child text-green-500"></i>
-                                        </span>
-                                        Kids & More
-                                    </a>
-                                    <ul class="space-y-2">
-                                        <li><a href="{{ route('products.index') }}?category=kids&sub=boys" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Boys Wear</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=kids&sub=girls" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Girls Wear</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=kids&sub=panjabi" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Kids Panjabi</a></li>
-                                        <li><a href="{{ route('products.index') }}?category=kids&sub=tshirts" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Kids T-Shirts</a></li>
-                                    </ul>
-
-                                    <div class="mt-5 pt-4 border-t border-gray-100">
-                                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Accessories</span>
-                                        <ul class="space-y-2 mt-2">
-                                            <li><a href="{{ route('products.index') }}?category=accessories&sub=caps" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Caps & Hats</a></li>
-                                            <li><a href="{{ route('products.index') }}?category=accessories&sub=belts" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Belts</a></li>
-                                            <li><a href="{{ route('products.index') }}?category=accessories&sub=wallets" class="text-sm text-gray-600 hover:text-brand-blue hover:pl-1 transition-all">Wallets</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
 
                             {{-- Featured Banner --}}
@@ -236,63 +185,50 @@
                 </div>
 
                 {{-- Men Dropdown --}}
+                @foreach($allMenuCategories->take(2) as $category)
                 <div class="relative group">
-                    <a href="{{ route('products.index') }}?category=mens" class="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-brand-blue transition-colors h-12">
-                        Men
+                    <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-brand-blue transition-colors h-12">
+                        {{ $category->name }}
+                        @if($category->children->isNotEmpty())
                         <i class="fas fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform duration-200"></i>
+                        @endif
                     </a>
+                    @if($category->children->isNotEmpty())
                     <div class="absolute top-full left-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50 py-2">
-                        <a href="{{ route('products.index') }}?category=mens&sub=shirts" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Formal Shirts</a>
-                        <a href="{{ route('products.index') }}?category=mens&sub=casual-shirts" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Casual Shirts</a>
-                        <a href="{{ route('products.index') }}?category=mens&sub=tshirts" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">T-Shirts</a>
-                        <a href="{{ route('products.index') }}?category=mens&sub=polo" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Polo Shirts</a>
-                        <a href="{{ route('products.index') }}?category=mens&sub=pants" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Pants & Chinos</a>
-                        <a href="{{ route('products.index') }}?category=mens&sub=jackets" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Jackets</a>
+                        @foreach($category->children as $child)
+                        <a href="{{ route('products.index') }}?category={{ $child->slug }}" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">{{ $child->name }}</a>
+                        @endforeach
                         <div class="border-t border-gray-100 mt-2 pt-2">
-                            <a href="{{ route('products.index') }}?category=mens" class="block px-4 py-2 text-sm text-brand-blue font-medium hover:bg-brand-blue/5 transition">View All Men's →</a>
+                            <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="block px-4 py-2 text-sm text-brand-blue font-medium hover:bg-brand-blue/5 transition">View All {{ $category->name }} →</a>
                         </div>
                     </div>
+                    @endif
                 </div>
-
-                {{-- Women Dropdown --}}
-                <div class="relative group">
-                    <a href="{{ route('products.index') }}?category=womens" class="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-brand-blue transition-colors h-12">
-                        Women
-                        <i class="fas fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform duration-200"></i>
-                    </a>
-                    <div class="absolute top-full left-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50 py-2">
-                        <a href="{{ route('products.index') }}?category=womens&sub=kameez" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Kameez</a>
-                        <a href="{{ route('products.index') }}?category=womens&sub=saree" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Saree</a>
-                        <a href="{{ route('products.index') }}?category=womens&sub=kurti" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Kurti</a>
-                        <a href="{{ route('products.index') }}?category=womens&sub=tops" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Tops & Blouses</a>
-                        <a href="{{ route('products.index') }}?category=womens&sub=palazzo" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Palazzo & Pants</a>
-                        <div class="border-t border-gray-100 mt-2 pt-2">
-                            <a href="{{ route('products.index') }}?category=womens" class="block px-4 py-2 text-sm text-brand-blue font-medium hover:bg-brand-blue/5 transition">View All Women's →</a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
 
                 <a href="{{ route('products.index') }}?collection=new" class="text-sm font-medium text-gray-600 hover:text-brand-blue transition-colors">New Arrivals</a>
 
-                {{-- Panjabi Dropdown --}}
+                {{-- Additional Category Links --}}
+                @foreach($allMenuCategories->skip(2)->take(2) as $category)
                 <div class="relative group">
-                    <a href="{{ route('products.index') }}?category=panjabi" class="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-brand-blue transition-colors h-12">
-                        Panjabi
+                    <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-brand-blue transition-colors h-12">
+                        {{ $category->name }}
+                        @if($category->children->isNotEmpty())
                         <i class="fas fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform duration-200"></i>
+                        @endif
                     </a>
+                    @if($category->children->isNotEmpty())
                     <div class="absolute top-full left-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50 py-2">
-                        <a href="{{ route('products.index') }}?category=panjabi&sub=premium" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Premium Panjabi</a>
-                        <a href="{{ route('products.index') }}?category=panjabi&sub=cotton" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Cotton Panjabi</a>
-                        <a href="{{ route('products.index') }}?category=panjabi&sub=silk" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Silk Panjabi</a>
-                        <a href="{{ route('products.index') }}?category=panjabi&sub=embroidered" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">Embroidered</a>
-                        <a href="{{ route('products.index') }}?category=panjabi&sub=eid" class="block px-4 py-2 text-sm text-orange-500 font-medium hover:bg-orange-50 transition flex items-center gap-1"><i class="fas fa-star text-[10px]"></i> Eid Special</a>
+                        @foreach($category->children as $child)
+                        <a href="{{ route('products.index') }}?category={{ $child->slug }}" class="block px-4 py-2 text-sm text-gray-600 hover:bg-brand-blue/5 hover:text-brand-blue transition">{{ $child->name }}</a>
+                        @endforeach
                         <div class="border-t border-gray-100 mt-2 pt-2">
-                            <a href="{{ route('products.index') }}?category=panjabi" class="block px-4 py-2 text-sm text-brand-blue font-medium hover:bg-brand-blue/5 transition">View All Panjabi →</a>
+                            <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="block px-4 py-2 text-sm text-brand-blue font-medium hover:bg-brand-blue/5 transition">View All {{ $category->name }} →</a>
                         </div>
                     </div>
+                    @endif
                 </div>
-
-                <a href="{{ route('products.index') }}?category=saree" class="text-sm font-medium text-gray-600 hover:text-brand-blue transition-colors">Saree</a>
+                @endforeach
 
                 <a href="{{ route('products.index') }}?sale=1" class="text-sm font-medium text-red-500 hover:text-red-600 transition-colors flex items-center gap-1">
                     <i class="fas fa-fire text-xs"></i>

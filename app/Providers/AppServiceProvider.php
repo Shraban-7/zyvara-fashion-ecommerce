@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,10 +23,37 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if($this->app->environment('production')) {
+        if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
 
         Paginator::useBootstrap();
+
+        // Share categories with all views
+        View::composer('*', function ($view) {
+            $categories = cache()->remember('categories_menu', 3600, function () {
+                return Category::with(['children' => function ($query) {
+                    $query->with('children')->active()->ordered();
+                }])
+                    ->active()
+                    ->parents()
+                    ->featured()
+                    ->ordered()
+                    ->get();
+            });
+
+            $allCategories = cache()->remember('all_categories_menu', 3600, function () {
+                return Category::with(['children' => function ($query) {
+                    $query->with('children')->active()->ordered();
+                }])
+                    ->active()
+                    ->parents()
+                    ->ordered()
+                    ->get();
+            });
+
+            $view->with('menuCategories', $categories);
+            $view->with('allMenuCategories', $allCategories);
+        });
     }
 }

@@ -1,80 +1,40 @@
 {{-- Quick Category Menu --}}
-<section class="bg-white py-4 md:py-6">
-    <div class="max-w-7xl mx-auto">
-        <div class="flex gap-3 md:gap-4 overflow-x-auto px-4 hide-scrollbar">
+<section class="bg-gradient-to-b from-white to-gray-50 py-6 md:py-8">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-6">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-1">Shop by Category</h2>
+            <p class="text-xs md:text-sm text-gray-600">Discover our wide range of fashion collections</p>
+        </div>
 
-            {{-- Category: Men --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-blue-100 transition">
-                    <i class="fas fa-male text-2xl md:text-3xl text-brand-blue"></i>
+        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
+            @foreach($allMenuCategories as $category)
+            <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="group">
+                <div class="flex flex-col items-center gap-2 p-2">
+                    {{-- Image Container --}}
+                    <div class="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
+                        <div class="absolute inset-0 rounded-full overflow-hidden group-hover:scale-105 transition-all duration-300 ring-2 ring-gray-200 group-hover:ring-brand-blue/50">
+                            <img
+                                src="{{ $category->image ? asset('storage/' . $category->image) : asset('assets/images/default.png') }}"
+                                alt="{{ $category->name }}"
+                                class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    {{-- Category Name --}}
+                    <span class="text-[10px] sm:text-xs font-medium text-gray-700 group-hover:text-brand-blue transition-colors text-center leading-tight">
+                        {{ $category->name }}
+                    </span>
                 </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">Men</span>
             </a>
+            @endforeach
+        </div>
 
-            {{-- Category: Ladies --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-pink-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-pink-100 transition">
-                    <i class="fas fa-female text-2xl md:text-3xl text-pink-500"></i>
-                </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">Ladies</span>
+        {{-- View All Categories Button --}}
+        <div class="text-center mt-6">
+            <a href="{{ route('products.index') }}" class="inline-flex items-center gap-2 px-5 py-2 bg-white border-2 border-brand-blue text-brand-blue font-semibold rounded-lg hover:bg-brand-blue hover:text-white transition-all duration-300 text-sm">
+                <span>View All Products</span>
+                <i class="fas fa-arrow-right text-xs"></i>
             </a>
-
-            {{-- Category: New Arrival --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-green-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-green-100 transition">
-                    <i class="fas fa-sparkles text-2xl md:text-3xl text-green-500"></i>
-                </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">New</span>
-            </a>
-
-            {{-- Category: Panjabi --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-purple-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-purple-100 transition">
-                    <i class="fas fa-vest text-2xl md:text-3xl text-purple-500"></i>
-                </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">Panjabi</span>
-            </a>
-
-            {{-- Category: Shirt --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-orange-100 transition">
-                    <i class="fas fa-shirt text-2xl md:text-3xl text-orange-500"></i>
-                </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">Shirt</span>
-            </a>
-
-            {{-- Category: T-Shirt --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-red-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-red-100 transition">
-                    <i class="fas fa-tshirt text-2xl md:text-3xl text-red-500"></i>
-                </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">T-Shirt</span>
-            </a>
-
-            {{-- Category: Saree --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-yellow-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-yellow-100 transition">
-                    <i class="fas fa-person-dress text-2xl md:text-3xl text-yellow-600"></i>
-                </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">Saree</span>
-            </a>
-
-            {{-- Category: Pants --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-indigo-100 transition">
-                    <i class="fas fa-socks text-2xl md:text-3xl text-indigo-500"></i>
-                </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">Pants</span>
-            </a>
-
-            {{-- Category: 3-Piece --}}
-            <a href="#" class="flex flex-col items-center min-w-[70px] md:min-w-[90px] tap-effect">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-teal-50 rounded-2xl flex items-center justify-center mb-2 hover:bg-teal-100 transition">
-                    <i class="fas fa-layer-group text-2xl md:text-3xl text-teal-500"></i>
-                </div>
-                <span class="text-xs md:text-sm font-medium text-gray-700">3-Piece</span>
-            </a>
-
         </div>
     </div>
 </section>
