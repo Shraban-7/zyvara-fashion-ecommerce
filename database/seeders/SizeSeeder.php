@@ -28,10 +28,27 @@ class SizeSeeder extends Seeder
             ['name' => '34', 'code' => '34', 'sort_order' => 13],
             ['name' => '36', 'code' => '36', 'sort_order' => 14],
             ['name' => '38', 'code' => '38', 'sort_order' => 15],
-            ['name' => '40', 'code' => '40', 'sort_order' => 16],
-            ['name' => '42', 'code' => '42', 'sort_order' => 17],
+            // Shoe sizes
+            ['name' => '39', 'code' => '39', 'sort_order' => 30],
+            ['name' => '40 (Shoe)', 'code' => '40-shoe', 'sort_order' => 31],
+            ['name' => '41', 'code' => '41', 'sort_order' => 32],
+            ['name' => '42 (Shoe)', 'code' => '42-shoe', 'sort_order' => 33],
+            ['name' => '43', 'code' => '43', 'sort_order' => 34],
+            ['name' => '44', 'code' => '44', 'sort_order' => 35],
+            // Kids sizes
+            ['name' => '2 Years', 'code' => '2y', 'sort_order' => 40],
+            ['name' => '4 Years', 'code' => '4y', 'sort_order' => 41],
+            ['name' => '6 Years', 'code' => '6y', 'sort_order' => 42],
+            ['name' => '8 Years', 'code' => '8y', 'sort_order' => 43],
+            ['name' => '10 Years', 'code' => '10y', 'sort_order' => 44],
+            ['name' => '12 Years', 'code' => '12y', 'sort_order' => 45],
+            // Baby sizes
+            ['name' => '0-6 Months', 'code' => '0-6m', 'sort_order' => 50],
+            ['name' => '6-12 Months', 'code' => '6-12m', 'sort_order' => 51],
+            ['name' => '12-18 Months', 'code' => '12-18m', 'sort_order' => 52],
+            ['name' => '18-24 Months', 'code' => '18-24m', 'sort_order' => 53],
             // Free size
-            ['name' => 'Free Size', 'code' => 'free', 'sort_order' => 20],
+            ['name' => 'Free Size', 'code' => 'free', 'sort_order' => 60],
         ];
 
         foreach ($sizes as $size) {
