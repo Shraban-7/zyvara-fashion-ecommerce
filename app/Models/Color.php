@@ -26,7 +26,7 @@ class Color extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_variants')
-            ->withPivot('size_id', 'stock_quantity', 'sku')
+            ->withPivot('size_id', 'stock_in', 'sku')
             ->distinct();
     }
 }

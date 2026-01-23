@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Premium Cotton Formal Shirt - SmartFashion')
+@section('title', $product->meta_title ?? $product->name . ' - SmartFashion')
 
 @section('content')
 {{-- Breadcrumb --}}
@@ -11,9 +11,11 @@
             <i class="fas fa-chevron-right text-xs text-gray-400"></i>
             <a href="{{ route('products.index') }}" class="text-gray-500 hover:text-brand-blue transition flex-shrink-0">Products</a>
             <i class="fas fa-chevron-right text-xs text-gray-400 flex-shrink-0"></i>
-            <a href="#" class="text-gray-500 hover:text-brand-blue transition flex-shrink-0">Men's Wear</a>
+            @if($product->category)
+            <a href="{{ route('products.index', ['category' => $product->category->slug]) }}" class="text-gray-500 hover:text-brand-blue transition flex-shrink-0">{{ $product->category->name }}</a>
             <i class="fas fa-chevron-right text-xs text-gray-400 flex-shrink-0"></i>
-            <span class="text-gray-900 font-medium flex-shrink-0">Premium Cotton Formal Shirt</span>
+            @endif
+            <span class="text-gray-900 font-medium flex-shrink-0">{{ $product->name }}</span>
         </nav>
     </div>
 </div>
@@ -26,12 +28,19 @@
         <div class="space-y-4">
             {{-- Main Image --}}
             <div class="relative bg-white rounded-2xl overflow-hidden border border-gray-100">
-                <img id="mainProductImage" src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop" alt="Premium Cotton Formal Shirt" class="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover">
+                <img id="mainProductImage" src="{{ $product->image ? storage_url($product->image) : asset('assets/images/default.png') }}" alt="{{ $product->name }}" class="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover">
 
                 {{-- Badges --}}
                 <div class="absolute top-4 left-4 flex flex-col gap-2">
+                    @if($product->is_new_arrival)
                     <span class="bg-green-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full">NEW ARRIVAL</span>
-                    <span class="bg-red-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full">-17% OFF</span>
+                    @endif
+                    @if($product->discount_percentage)
+                    <span class="bg-red-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full">-{{ $product->discount_percentage }}% OFF</span>
+                    @endif
+                    @if($product->is_best_seller)
+                    <span class="bg-yellow-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full">BEST SELLER</span>
+                    @endif
                 </div>
 
                 {{-- Wishlist Button --}}
@@ -46,91 +55,106 @@
             </div>
 
             {{-- Thumbnail Images --}}
+            @if($product->images->count() > 1)
             <div class="w-full max-w-full overflow-x-auto hide-scrollbar pb-2">
                 <div class="flex gap-3 w-max">
-                    <button onclick="changeMainImage(this)" class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 border-brand-blue">
-                        <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=200&h=200&fit=crop" alt="Thumbnail 1" class="w-full h-full object-cover">
+                    @foreach($product->images as $index => $image)
+                    <button onclick="changeMainImage(this)" class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 {{ $loop->first ? 'border-brand-blue' : 'border-transparent hover:border-brand-blue' }} transition">
+                        <img src="{{ $image->image_url }}" alt="{{ $product->name }} - Image {{ $loop->iteration }}" class="w-full h-full object-cover">
                     </button>
-                    <button onclick="changeMainImage(this)" class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-blue transition">
-                        <img src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=200&h=200&fit=crop" alt="Thumbnail 2" class="w-full h-full object-cover">
-                    </button>
-                    <button onclick="changeMainImage(this)" class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-blue transition">
-                        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=200&h=200&fit=crop" alt="Thumbnail 3" class="w-full h-full object-cover">
-                    </button>
-                    <button onclick="changeMainImage(this)" class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-blue transition">
-                        <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=200&h=200&fit=crop" alt="Thumbnail 4" class="w-full h-full object-cover">
-                    </button>
-                    <button onclick="changeMainImage(this)" class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-blue transition">
-                        <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=200&h=200&fit=crop" alt="Thumbnail 5" class="w-full h-full object-cover">
-                    </button>
+                    @endforeach
                 </div>
             </div>
+            @endif
         </div>
 
         {{-- Product Info --}}
         <div class="space-y-6 min-w-0 overflow-hidden">
             {{-- Title & Rating --}}
             <div>
-                <p class="text-sm text-brand-blue font-medium mb-2">SmartFashion • Men's Wear</p>
-                <h1 class="text-2xl md:text-3xl font-bold text-brand-black mb-3">Premium Cotton Formal Shirt</h1>
+                <p class="text-sm text-brand-blue font-medium mb-2">{{ $product->brand ?? 'SmartFashion' }} @if($product->category)• {{ $product->category->name }}@endif</p>
+                <h1 class="text-2xl md:text-3xl font-bold text-brand-black mb-3">{{ $product->name }}</h1>
 
                 <div class="flex flex-wrap items-center gap-2 sm:gap-4">
                     <div class="flex items-center gap-2">
                         <div class="flex text-yellow-400 text-sm">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star text-gray-300"></i>
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <=floor($product->average_rating))
+                                <i class="fas fa-star"></i>
+                                @elseif($i - 0.5 <= $product->average_rating)
+                                    <i class="fas fa-star-half-alt"></i>
+                                    @else
+                                    <i class="far fa-star text-gray-300"></i>
+                                    @endif
+                                    @endfor
                         </div>
-                        <span class="text-xs sm:text-sm font-medium text-gray-700">4.2</span>
-                        <span class="text-xs sm:text-sm text-gray-400">(128 reviews)</span>
+                        <span class="text-xs sm:text-sm font-medium text-gray-700">{{ number_format($product->average_rating, 1) }}</span>
+                        <span class="text-xs sm:text-sm text-gray-400">({{ $product->review_count }} {{ Str::plural('review', $product->review_count) }})</span>
                     </div>
                     <span class="text-gray-300 hidden sm:inline">|</span>
+                    @if($product->isInStock())
                     <span class="text-xs sm:text-sm text-green-600 font-medium"><i class="fas fa-check-circle mr-1"></i>In Stock</span>
+                    @else
+                    <span class="text-xs sm:text-sm text-red-600 font-medium"><i class="fas fa-times-circle mr-1"></i>Out of Stock</span>
+                    @endif
                 </div>
             </div>
 
             {{-- Price --}}
             <div class="bg-gradient-to-r from-blue-50 to-brand-light rounded-2xl p-5 overflow-hidden">
                 <div class="flex flex-wrap items-end gap-2 sm:gap-3 mb-2">
-                    <span class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-blue">৳1,250</span>
-                    <span class="text-lg sm:text-xl text-gray-400 line-through">৳1,500</span>
-                    <span class="bg-red-100 text-red-600 text-xs sm:text-sm font-semibold px-2 py-1 rounded-lg">Save ৳250</span>
+                    <span class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-blue">৳{{ number_format($product->price, 0) }}</span>
+                    @if($product->compare_price && $product->compare_price > $product->price)
+                    <span class="text-lg sm:text-xl text-gray-400 line-through">৳{{ number_format($product->compare_price, 0) }}</span>
+                    <span class="bg-red-100 text-red-600 text-xs sm:text-sm font-semibold px-2 py-1 rounded-lg">Save ৳{{ number_format($product->compare_price - $product->price, 0) }}</span>
+                    @endif
                 </div>
                 <p class="text-xs sm:text-sm text-gray-500">Inclusive of all taxes. Free shipping on orders over ৳2000.</p>
             </div>
 
             {{-- Color Selection --}}
+            @if($availableColors->count() > 0)
             <div>
                 <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm font-semibold text-gray-900">Color: <span class="font-normal text-gray-600">White</span></span>
+                    <span class="text-sm font-semibold text-gray-900">Color: <span id="selectedColorName" class="font-normal text-gray-600">Select a color</span></span>
                 </div>
-                <div class="flex gap-3">
-                    <button class="w-10 h-10 rounded-full bg-white border-2 border-brand-blue shadow-sm relative">
-                        <i class="fas fa-check text-brand-blue text-xs absolute inset-0 flex items-center justify-center"></i>
+                <div class="flex gap-3 flex-wrap">
+                    @foreach($availableColors as $color)
+                    <button onclick="selectColor(this, '{{ $color->name }}')"
+                        data-color-id="{{ $color->id }}"
+                        class="color-btn w-10 h-10 rounded-full border-2 border-transparent hover:border-brand-blue transition relative"
+                        style="background-color: {{ $color->hex_code }};"
+                        title="{{ $color->name }}">
                     </button>
-                    <button class="w-10 h-10 rounded-full bg-blue-500 border-2 border-transparent hover:border-brand-blue transition"></button>
-                    <button class="w-10 h-10 rounded-full bg-gray-800 border-2 border-transparent hover:border-brand-blue transition"></button>
-                    <button class="w-10 h-10 rounded-full bg-pink-200 border-2 border-transparent hover:border-brand-blue transition"></button>
+                    @endforeach
                 </div>
             </div>
+            @endif
 
             {{-- Size Selection --}}
+            @if($availableSizes->count() > 0)
             <div>
                 <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm font-semibold text-gray-900">Size: <span class="font-normal text-gray-600">Select a size</span></span>
+                    <span class="text-sm font-semibold text-gray-900">Size: <span id="selectedSizeName" class="font-normal text-gray-600">Select a size</span></span>
                     <button class="text-sm text-brand-blue hover:underline font-medium">Size Guide</button>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <button class="product-size-btn w-14 h-11 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:border-brand-blue hover:text-brand-blue transition">S</button>
-                    <button class="product-size-btn w-14 h-11 border border-brand-blue bg-brand-blue/5 rounded-xl text-sm font-medium text-brand-blue">M</button>
-                    <button class="product-size-btn w-14 h-11 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:border-brand-blue hover:text-brand-blue transition">L</button>
-                    <button class="product-size-btn w-14 h-11 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:border-brand-blue hover:text-brand-blue transition">XL</button>
-                    <button class="product-size-btn w-14 h-11 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:border-brand-blue hover:text-brand-blue transition">XXL</button>
-                    <button class="product-size-btn w-14 h-11 border border-gray-200 rounded-xl text-sm font-medium text-gray-300 cursor-not-allowed" disabled>3XL</button>
+                    @foreach($availableSizes as $size)
+                    @php
+                    $variant = $product->variants->where('size_id', $size->id)->first();
+                    $isAvailable = $variant && $variant->stock_in > 0;
+                    @endphp
+                    <button onclick="selectSize(this, '{{ $size->name }}')"
+                        data-size-id="{{ $size->id }}"
+                        class="product-size-btn w-14 h-11 border rounded-xl text-sm font-medium transition
+                                       {{ $isAvailable ? 'border-gray-200 text-gray-600 hover:border-brand-blue hover:text-brand-blue' : 'border-gray-200 text-gray-300 cursor-not-allowed' }}"
+                        {{ $isAvailable ? '' : 'disabled' }}>
+                        {{ $size->name }}
+                    </button>
+                    @endforeach
                 </div>
             </div>
+            @endif
 
             {{-- Quantity --}}
             <div>
@@ -140,17 +164,22 @@
                         <button onclick="updateQuantity(-1)" class="w-10 sm:w-11 h-10 sm:h-11 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                             <i class="fas fa-minus text-sm"></i>
                         </button>
-                        <input type="number" id="productQuantity" value="1" min="1" max="10" class="w-12 sm:w-14 h-10 sm:h-11 text-center text-sm font-semibold border-x border-gray-200 focus:outline-none">
+                        <input type="number" id="productQuantity" value="1" min="1" max="{{ $product->stock_in }}" class="w-12 sm:w-14 h-10 sm:h-11 text-center text-sm font-semibold border-x border-gray-200 focus:outline-none">
                         <button onclick="updateQuantity(1)" class="w-10 sm:w-11 h-10 sm:h-11 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                             <i class="fas fa-plus text-sm"></i>
                         </button>
                     </div>
-                    <span class="text-xs sm:text-sm text-gray-500">Only <span class="text-orange-500 font-semibold">12 items</span> left!</span>
+                    @if($product->isLowStock())
+                    <span class="text-xs sm:text-sm text-gray-500">Only <span class="text-orange-500 font-semibold">{{ $product->stock_in }} items</span> left!</span>
+                    @elseif($product->stock_in > 0)
+                    <span class="text-xs sm:text-sm text-gray-500"><span class="text-green-600 font-semibold">{{ $product->stock_in }} items</span> available</span>
+                    @endif
                 </div>
             </div>
 
             {{-- Action Buttons --}}
             <div class="flex flex-col sm:flex-row gap-3 pt-2 w-full">
+                @if($product->isInStock())
                 <button class="w-full sm:flex-1 bg-brand-blue text-white py-3.5 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-2">
                     <i class="fas fa-shopping-cart"></i>
                     Add to Cart
@@ -159,6 +188,12 @@
                     <i class="fas fa-bolt"></i>
                     Buy Now
                 </button>
+                @else
+                <button disabled class="w-full bg-gray-300 text-gray-500 py-3.5 sm:py-4 rounded-xl font-semibold text-sm sm:text-base cursor-not-allowed flex items-center justify-center gap-2">
+                    <i class="fas fa-times-circle"></i>
+                    Out of Stock
+                </button>
+                @endif
             </div>
 
             {{-- Delivery Info --}}
@@ -225,7 +260,7 @@
                     Specifications
                 </button>
                 <button onclick="switchProductTab('reviews')" class="product-tab pb-4 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent whitespace-nowrap" data-tab="reviews">
-                    Reviews (128)
+                    Reviews ({{ $product->review_count }})
                 </button>
                 <button onclick="switchProductTab('shipping')" class="product-tab pb-4 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent whitespace-nowrap" data-tab="shipping">
                     Shipping & Returns
@@ -239,31 +274,20 @@
             <div id="descriptionTab" class="product-tab-content">
                 <div class="prose max-w-none">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Product Description</h3>
+                    @if($product->short_description)
                     <p class="text-gray-600 mb-4">
-                        Introducing our Premium Cotton Formal Shirt - the perfect blend of comfort, style, and sophistication. Crafted from 100% premium Egyptian cotton, this shirt offers exceptional breathability and a luxuriously soft feel against your skin.
+                        {{ $product->short_description }}
                     </p>
+                    @endif
+                    @if($product->description)
+                    <div class="text-gray-600">
+                        {!! nl2br(e($product->description)) !!}
+                    </div>
+                    @else
                     <p class="text-gray-600 mb-4">
-                        Designed for the modern professional, this formal shirt features a classic spread collar, adjustable button cuffs, and a tailored slim fit that flatters your silhouette without compromising on comfort. The reinforced stitching ensures durability, while the easy-iron fabric makes maintenance a breeze.
+                        Introducing our {{ $product->name }} - crafted with premium quality materials for exceptional comfort and style.
                     </p>
-
-                    <h4 class="text-base font-semibold text-gray-900 mt-6 mb-3">Key Features:</h4>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li>100% Premium Egyptian Cotton</li>
-                        <li>Breathable and lightweight fabric</li>
-                        <li>Classic spread collar design</li>
-                        <li>Slim fit tailored cut</li>
-                        <li>Easy-iron wrinkle-resistant fabric</li>
-                        <li>Reinforced button holes</li>
-                        <li>Available in multiple colors</li>
-                    </ul>
-
-                    <h4 class="text-base font-semibold text-gray-900 mt-6 mb-3">Care Instructions:</h4>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li>Machine wash cold with similar colors</li>
-                        <li>Tumble dry low or hang to dry</li>
-                        <li>Warm iron if needed</li>
-                        <li>Do not bleach</li>
-                    </ul>
+                    @endif
                 </div>
             </div>
 
@@ -273,42 +297,60 @@
                 <div class="bg-gray-50 rounded-2xl overflow-hidden">
                     <table class="w-full">
                         <tbody>
+                            @if($product->brand)
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100 w-1/3">Brand</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">SmartFashion</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $product->brand }}</td>
                             </tr>
+                            @endif
+                            @if($product->sku)
+                            <tr class="border-b border-gray-200">
+                                <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">SKU</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $product->sku }}</td>
+                            </tr>
+                            @endif
+                            @if($product->material)
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Material</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">100% Egyptian Cotton</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $product->material }}</td>
                             </tr>
+                            @endif
+                            @if($product->fit_type)
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Fit Type</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">Slim Fit</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $product->fit_type->value }}</td>
                             </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Collar Style</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">Spread Collar</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Sleeve Type</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">Full Sleeve</td>
-                            </tr>
+                            @endif
+                            @if($product->pattern)
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Pattern</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">Solid</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $product->pattern->value }}</td>
                             </tr>
+                            @endif
+                            @if($product->occasion)
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Occasion</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">Formal, Office Wear, Business Meetings</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $product->occasion->value }}</td>
                             </tr>
+                            @endif
+                            @if($availableSizes->count() > 0)
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Available Sizes</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">S, M, L, XL, XXL</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $availableSizes->pluck('name')->join(', ') }}</td>
                             </tr>
+                            @endif
+                            @if($availableColors->count() > 0)
+                            <tr class="border-b border-gray-200">
+                                <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Available Colors</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $availableColors->pluck('name')->join(', ') }}</td>
+                            </tr>
+                            @endif
+                            @if($product->weight)
                             <tr>
-                                <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Country of Origin</td>
-                                <td class="py-4 px-5 text-sm text-gray-900">Bangladesh</td>
+                                <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100">Weight</td>
+                                <td class="py-4 px-5 text-sm text-gray-900">{{ $product->weight }} kg</td>
                             </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -322,54 +364,36 @@
                         <div class="bg-gray-50 rounded-2xl p-6">
                             <h3 class="text-lg font-bold text-gray-900 mb-4">Customer Reviews</h3>
                             <div class="text-center mb-6">
-                                <div class="text-5xl font-bold text-gray-900 mb-2">4.2</div>
+                                <div class="text-5xl font-bold text-gray-900 mb-2">{{ number_format($product->average_rating, 1) }}</div>
                                 <div class="flex justify-center text-yellow-400 mb-2">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star text-gray-300"></i>
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <=floor($product->average_rating))
+                                        <i class="fas fa-star"></i>
+                                        @elseif($i - 0.5 <= $product->average_rating)
+                                            <i class="fas fa-star-half-alt"></i>
+                                            @else
+                                            <i class="far fa-star text-gray-300"></i>
+                                            @endif
+                                            @endfor
                                 </div>
-                                <p class="text-sm text-gray-500">Based on 128 reviews</p>
+                                <p class="text-sm text-gray-500">Based on {{ $product->review_count }} {{ Str::plural('review', $product->review_count) }}</p>
                             </div>
 
                             {{-- Rating Bars --}}
                             <div class="space-y-3">
+                                @foreach([5, 4, 3, 2, 1] as $rating)
+                                @php
+                                $count = $ratingDistribution[$rating] ?? 0;
+                                $percentage = $product->review_count > 0 ? ($count / $product->review_count * 100) : 0;
+                                @endphp
                                 <div class="flex items-center gap-3">
-                                    <span class="text-sm text-gray-600 w-8">5 ★</span>
+                                    <span class="text-sm text-gray-600 w-8">{{ $rating }} ★</span>
                                     <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-yellow-400 rounded-full" style="width: 60%"></div>
+                                        <div class="h-full bg-yellow-400 rounded-full" style="width: {{ $percentage }}%"></div>
                                     </div>
-                                    <span class="text-sm text-gray-500 w-10">77</span>
+                                    <span class="text-sm text-gray-500 w-10">{{ $count }}</span>
                                 </div>
-                                <div class="flex items-center gap-3">
-                                    <span class="text-sm text-gray-600 w-8">4 ★</span>
-                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-yellow-400 rounded-full" style="width: 25%"></div>
-                                    </div>
-                                    <span class="text-sm text-gray-500 w-10">32</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <span class="text-sm text-gray-600 w-8">3 ★</span>
-                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-yellow-400 rounded-full" style="width: 10%"></div>
-                                    </div>
-                                    <span class="text-sm text-gray-500 w-10">12</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <span class="text-sm text-gray-600 w-8">2 ★</span>
-                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-yellow-400 rounded-full" style="width: 3%"></div>
-                                    </div>
-                                    <span class="text-sm text-gray-500 w-10">4</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <span class="text-sm text-gray-600 w-8">1 ★</span>
-                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-yellow-400 rounded-full" style="width: 2%"></div>
-                                    </div>
-                                    <span class="text-sm text-gray-500 w-10">3</span>
-                                </div>
+                                @endforeach
                             </div>
 
                             <button class="w-full mt-6 bg-brand-blue text-white py-3 rounded-xl font-semibold text-sm hover:bg-blue-600 transition tap-effect">
@@ -380,100 +404,53 @@
 
                     {{-- Reviews List --}}
                     <div class="lg:col-span-2 space-y-6">
-                        {{-- Review 1 --}}
+                        @forelse($product->approvedReviews->take(10) as $review)
                         <div class="bg-white border border-gray-100 rounded-2xl p-5">
                             <div class="flex items-start justify-between mb-3">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white font-semibold">
-                                        R
+                                        {{ strtoupper(substr($review->user->name ?? 'A', 0, 1)) }}
                                     </div>
                                     <div>
-                                        <h4 class="font-semibold text-gray-900 text-sm">Rahim Ahmed</h4>
-                                        <p class="text-xs text-gray-400">Verified Purchase • 2 days ago</p>
+                                        <h4 class="font-semibold text-gray-900 text-sm">{{ $review->user->name ?? 'Anonymous' }}</h4>
+                                        <p class="text-xs text-gray-400">Verified Purchase • {{ $review->created_at->diffForHumans() }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-yellow-400">
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star text-sm {{ $i <= $review->rating ? '' : 'text-gray-300' }}"></i>
+                                        @endfor
                                 </div>
                             </div>
                             <p class="text-sm text-gray-600 mb-3">
-                                Excellent quality shirt! The fabric is very soft and comfortable. Perfect fit for my body type. The color is exactly as shown in the picture. Highly recommended!
+                                {{ $review->comment }}
                             </p>
+                            @if($review->images && $review->images->count() > 0)
+                            <div class="flex gap-2 mb-3">
+                                @foreach($review->images->take(4) as $image)
+                                <img src="{{ $image->image_url }}" alt="Review image" class="w-16 h-16 rounded-lg object-cover">
+                                @endforeach
+                            </div>
+                            @endif
                             <div class="flex items-center gap-4 text-sm">
                                 <button class="text-gray-500 hover:text-brand-blue transition flex items-center gap-1">
-                                    <i class="far fa-thumbs-up"></i> Helpful (12)
+                                    <i class="far fa-thumbs-up"></i> Helpful
                                 </button>
                             </div>
                         </div>
-
-                        {{-- Review 2 --}}
-                        <div class="bg-white border border-gray-100 rounded-2xl p-5">
-                            <div class="flex items-start justify-between mb-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
-                                        F
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-900 text-sm">Fatima Khan</h4>
-                                        <p class="text-xs text-gray-400">Verified Purchase • 1 week ago</p>
-                                    </div>
-                                </div>
-                                <div class="flex text-yellow-400">
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="far fa-star text-sm text-gray-300"></i>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-3">
-                                Bought this for my husband. Great quality and he loves it! The only minor issue is that it runs slightly large, so consider ordering one size down if you prefer a tighter fit.
-                            </p>
-                            <div class="flex items-center gap-4 text-sm">
-                                <button class="text-gray-500 hover:text-brand-blue transition flex items-center gap-1">
-                                    <i class="far fa-thumbs-up"></i> Helpful (8)
-                                </button>
-                            </div>
+                        @empty
+                        <div class="text-center py-12">
+                            <i class="fas fa-comments text-4xl text-gray-300 mb-4"></i>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">No Reviews Yet</h3>
+                            <p class="text-gray-500">Be the first to review this product!</p>
                         </div>
+                        @endforelse
 
-                        {{-- Review 3 --}}
-                        <div class="bg-white border border-gray-100 rounded-2xl p-5">
-                            <div class="flex items-start justify-between mb-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold">
-                                        K
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-900 text-sm">Kamal Hossain</h4>
-                                        <p class="text-xs text-gray-400">Verified Purchase • 2 weeks ago</p>
-                                    </div>
-                                </div>
-                                <div class="flex text-yellow-400">
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                    <i class="fas fa-star text-sm"></i>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-3">
-                                This is my third shirt from SmartFashion and they never disappoint. Premium quality, fast delivery, and great customer service. Will definitely buy again!
-                            </p>
-                            <div class="flex items-center gap-4 text-sm">
-                                <button class="text-gray-500 hover:text-brand-blue transition flex items-center gap-1">
-                                    <i class="far fa-thumbs-up"></i> Helpful (15)
-                                </button>
-                            </div>
-                        </div>
-
-                        {{-- Load More --}}
+                        @if($product->approvedReviews->count() > 10)
                         <button class="w-full border border-gray-200 text-gray-600 py-3 rounded-xl font-medium text-sm hover:bg-gray-50 transition">
                             Load More Reviews
                         </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -552,87 +529,35 @@
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-            {{-- Product Card 1 --}}
+            @foreach($relatedProducts as $relatedProduct)
             <div class="product-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
                 <div class="relative">
-                    <a href="#">
-                        <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop" alt="Casual Shirt" class="w-full h-40 sm:h-48 md:h-56 object-cover">
+                    <a href="{{ route('products.show', $relatedProduct->slug) }}">
+                        <img src="{{ $relatedProduct->image ? storage_url($product->image) : asset('assets/images/default.png') }}" alt="{{ $relatedProduct->name }}" class="w-full h-40 sm:h-48 md:h-56 object-cover">
                     </a>
+                    @if($relatedProduct->discount_percentage)
+                    <span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-semibold px-2 py-1 rounded-full">-{{ $relatedProduct->discount_percentage }}%</span>
+                    @endif
                     <button class="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow hover:bg-white transition tap-effect">
                         <i class="far fa-heart text-gray-600"></i>
                     </button>
                 </div>
                 <div class="p-3 md:p-4">
-                    <a href="#" class="text-sm md:text-base font-medium text-brand-black mb-1 line-clamp-2 hover:text-brand-blue transition">Printed Casual Shirt</a>
+                    <a href="{{ route('products.show', $relatedProduct->slug) }}" class="text-sm md:text-base font-medium text-brand-black mb-1 line-clamp-2 hover:text-brand-blue transition">{{ $relatedProduct->name }}</a>
                     <div class="flex items-center gap-2 my-2">
-                        <span class="text-brand-blue font-bold text-base">৳950</span>
-                        <span class="text-gray-400 text-xs line-through">৳1,200</span>
+                        <span class="text-brand-blue font-bold text-base">৳{{ number_format($relatedProduct->price, 0) }}</span>
+                        @if($relatedProduct->compare_price && $relatedProduct->compare_price > $relatedProduct->price)
+                        <span class="text-gray-400 text-xs line-through">৳{{ number_format($relatedProduct->compare_price, 0) }}</span>
+                        @endif
                     </div>
                     <button class="w-full bg-brand-blue text-white py-2 rounded-xl font-semibold text-xs hover:bg-blue-600 transition tap-effect">Add to Cart</button>
                 </div>
             </div>
-
-            {{-- Product Card 2 --}}
-            <div class="product-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                <div class="relative">
-                    <a href="#">
-                        <img src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=400&h=500&fit=crop" alt="Denim Shirt" class="w-full h-40 sm:h-48 md:h-56 object-cover">
-                    </a>
-                    <button class="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow hover:bg-white transition tap-effect">
-                        <i class="far fa-heart text-gray-600"></i>
-                    </button>
-                </div>
-                <div class="p-3 md:p-4">
-                    <a href="#" class="text-sm md:text-base font-medium text-brand-black mb-1 line-clamp-2 hover:text-brand-blue transition">Denim Casual Shirt</a>
-                    <div class="flex items-center gap-2 my-2">
-                        <span class="text-brand-blue font-bold text-base">৳1,350</span>
-                    </div>
-                    <button class="w-full bg-brand-blue text-white py-2 rounded-xl font-semibold text-xs hover:bg-blue-600 transition tap-effect">Add to Cart</button>
-                </div>
-            </div>
-
-            {{-- Product Card 3 --}}
-            <div class="product-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                <div class="relative">
-                    <a href="#">
-                        <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&h=500&fit=crop" alt="Classic T-Shirt" class="w-full h-40 sm:h-48 md:h-56 object-cover">
-                    </a>
-                    <span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-semibold px-2 py-1 rounded-full">-20%</span>
-                    <button class="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow hover:bg-white transition tap-effect">
-                        <i class="far fa-heart text-gray-600"></i>
-                    </button>
-                </div>
-                <div class="p-3 md:p-4">
-                    <a href="#" class="text-sm md:text-base font-medium text-brand-black mb-1 line-clamp-2 hover:text-brand-blue transition">Classic Round Neck T-Shirt</a>
-                    <div class="flex items-center gap-2 my-2">
-                        <span class="text-brand-blue font-bold text-base">৳650</span>
-                        <span class="text-gray-400 text-xs line-through">৳800</span>
-                    </div>
-                    <button class="w-full bg-brand-blue text-white py-2 rounded-xl font-semibold text-xs hover:bg-blue-600 transition tap-effect">Add to Cart</button>
-                </div>
-            </div>
-
-            {{-- Product Card 4 --}}
-            <div class="product-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                <div class="relative">
-                    <a href="#">
-                        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&h=500&fit=crop" alt="Premium Polo" class="w-full h-40 sm:h-48 md:h-56 object-cover">
-                    </a>
-                    <button class="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow hover:bg-white transition tap-effect">
-                        <i class="far fa-heart text-gray-600"></i>
-                    </button>
-                </div>
-                <div class="p-3 md:p-4">
-                    <a href="#" class="text-sm md:text-base font-medium text-brand-black mb-1 line-clamp-2 hover:text-brand-blue transition">Premium Striped Polo</a>
-                    <div class="flex items-center gap-2 my-2">
-                        <span class="text-brand-blue font-bold text-base">৳990</span>
-                    </div>
-                    <button class="w-full bg-brand-blue text-white py-2 rounded-xl font-semibold text-xs hover:bg-blue-600 transition tap-effect">Add to Cart</button>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>
+
 
 {{-- Image Modal --}}
 <div id="imageModal" class="fixed inset-0 z-[100] hidden">
@@ -648,16 +573,18 @@
 
 @push('scripts')
 <script>
+    const maxQuantity = "{{ $product->stock_in ?? 0 }}";
+
     // Change main product image
     function changeMainImage(btn) {
         const img = btn.querySelector('img');
         const mainImage = document.getElementById('mainProductImage');
 
         // Update main image
-        mainImage.src = img.src.replace('200&h=200', '800&h=1000');
+        mainImage.src = img.src;
 
         // Update thumbnail borders
-        document.querySelectorAll('.flex.gap-3 button').forEach(b => {
+        document.querySelectorAll('.flex.gap-3 button, .w-max button').forEach(b => {
             b.classList.remove('border-brand-blue');
             b.classList.add('border-transparent');
         });
@@ -687,8 +614,30 @@
         const input = document.getElementById('productQuantity');
         let value = parseInt(input.value) + change;
         if (value < 1) value = 1;
-        if (value > 10) value = 10;
+        if (value > maxQuantity) value = maxQuantity;
         input.value = value;
+    }
+
+    // Select color
+    function selectColor(btn, colorName) {
+        document.querySelectorAll('.color-btn').forEach(b => {
+            b.classList.remove('border-brand-blue', 'ring-2', 'ring-brand-blue', 'ring-offset-2');
+            b.classList.add('border-transparent');
+        });
+        btn.classList.remove('border-transparent');
+        btn.classList.add('border-brand-blue', 'ring-2', 'ring-brand-blue', 'ring-offset-2');
+        document.getElementById('selectedColorName').textContent = colorName;
+    }
+
+    // Select size
+    function selectSize(btn, sizeName) {
+        document.querySelectorAll('.product-size-btn:not([disabled])').forEach(b => {
+            b.classList.remove('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue');
+            b.classList.add('border-gray-200', 'text-gray-600');
+        });
+        btn.classList.remove('border-gray-200', 'text-gray-600');
+        btn.classList.add('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue');
+        document.getElementById('selectedSizeName').textContent = sizeName;
     }
 
     // Switch product tabs
@@ -706,7 +655,7 @@
         document.getElementById(tab + 'Tab').classList.remove('hidden');
     }
 
-    // Size button toggle
+    // Size button toggle (legacy support)
     document.querySelectorAll('.product-size-btn:not([disabled])').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.product-size-btn').forEach(b => {

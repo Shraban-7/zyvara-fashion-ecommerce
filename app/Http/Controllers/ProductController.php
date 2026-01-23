@@ -191,7 +191,52 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        // In the future, fetch product by slug
-        return view('products.show');
+        $product = Product::with([
+            'category',
+            'images',
+            'variants.size',
+            'variants.color',
+            'approvedReviews.user',
+            'approvedReviews.images'
+        ])
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        // Increment view count
+        $product->incrementViewCount();
+
+        // Get unique sizes and colors from variants
+        $availableSizes = $product->variants
+            ->pluck('size')
+            ->unique('id')
+            ->sortBy('sort_order')
+            ->values();
+
+        $availableColors = $product->variants
+            ->pluck('color')
+            ->unique('id')
+            ->sortBy('name')
+            ->values();
+
+        // Get related products from same category
+        $relatedProducts = Product::with(['images', 'category'])
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+
+        // Calculate rating distribution
+        $ratingDistribution = [
+            5 => $product->approvedReviews()->where('rating', 5)->count(),
+            4 => $product->approvedReviews()->where('rating', 4)->count(),
+            3 => $product->approvedReviews()->where('rating', 3)->count(),
+            2 => $product->approvedReviews()->where('rating', 2)->count(),
+            1 => $product->approvedReviews()->where('rating', 1)->count(),
+        ];
+
+        return view('products.show', compact('product', 'relatedProducts', 'ratingDistribution', 'availableSizes', 'availableColors'));
     }
 }

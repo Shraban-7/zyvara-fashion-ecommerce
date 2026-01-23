@@ -30,7 +30,7 @@ class Size extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_variants')
-            ->withPivot('color_id', 'stock_quantity', 'sku')
+            ->withPivot('color_id', 'stock_in', 'sku')
             ->distinct();
     }
 

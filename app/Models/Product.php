@@ -31,7 +31,7 @@ class Product extends Model
         'fit_type',
         'pattern',
         'occasion',
-        'stock_quantity',
+        'stock_in',
         'low_stock_threshold',
         'weight',
         'is_active',
@@ -54,7 +54,7 @@ class Product extends Model
         'cost_price' => 'decimal:2',
         'weight' => 'decimal:2',
         'average_rating' => 'decimal:2',
-        'stock_quantity' => 'integer',
+        'stock_in' => 'integer',
         'low_stock_threshold' => 'integer',
         'review_count' => 'integer',
         'view_count' => 'integer',
@@ -94,14 +94,14 @@ class Product extends Model
     public function sizes(): BelongsToMany
     {
         return $this->belongsToMany(Size::class, 'product_variants')
-            ->withPivot('color_id', 'stock_quantity', 'sku')
+            ->withPivot('color_id', 'stock_in', 'sku')
             ->distinct();
     }
 
     public function colors(): BelongsToMany
     {
         return $this->belongsToMany(Color::class, 'product_variants')
-            ->withPivot('size_id', 'stock_quantity', 'sku')
+            ->withPivot('size_id', 'stock_in', 'sku')
             ->distinct();
     }
 
@@ -158,18 +158,18 @@ class Product extends Model
 
     public function scopeInStock($query)
     {
-        return $query->where('stock_quantity', '>', 0);
+        return $query->where('stock_in', '>', 0);
     }
 
     public function scopeLowStock($query)
     {
-        return $query->whereColumn('stock_quantity', '<=', 'low_stock_threshold')
-            ->where('stock_quantity', '>', 0);
+        return $query->whereColumn('stock_in', '<=', 'low_stock_threshold')
+            ->where('stock_in', '>', 0);
     }
 
     public function scopeOutOfStock($query)
     {
-        return $query->where('stock_quantity', '<=', 0);
+        return $query->where('stock_in', '<=', 0);
     }
 
     // Helpers
@@ -190,12 +190,12 @@ class Product extends Model
 
     public function isInStock(): bool
     {
-        return $this->stock_quantity > 0;
+        return $this->stock_in > 0;
     }
 
     public function isLowStock(): bool
     {
-        return $this->stock_quantity > 0 && $this->stock_quantity <= $this->low_stock_threshold;
+        return $this->stock_in > 0 && $this->stock_in <= $this->low_stock_threshold;
     }
 
     public function incrementViewCount(): void

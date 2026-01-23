@@ -73,9 +73,9 @@ class CartItem extends Model
     public function hasStock(): bool
     {
         if ($this->variant) {
-            return $this->variant->stock_quantity >= $this->quantity;
+            return $this->variant->stock_in >= $this->quantity;
         }
 
-        return $this->product->stock_quantity >= $this->quantity;
+        return $this->product->stock_in >= $this->quantity;
     }
 }

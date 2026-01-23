@@ -15,12 +15,12 @@ class ProductVariant extends Model
         'size_id',
         'color_id',
         'sku',
-        'stock_quantity',
+        'stock_in',
         'price_adjustment',
     ];
 
     protected $casts = [
-        'stock_quantity' => 'integer',
+        'stock_in' => 'integer',
         'price_adjustment' => 'decimal:2',
     ];
 
@@ -48,7 +48,7 @@ class ProductVariant extends Model
     // Helpers
     public function isInStock(): bool
     {
-        return $this->stock_quantity > 0;
+        return $this->stock_in > 0;
     }
 
     public function getFinalPriceAttribute(): float
