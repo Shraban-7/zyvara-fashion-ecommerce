@@ -191,13 +191,8 @@
     </main>
 
     @include('partials.footer')
-
     @include('partials.mobile-nav')
-
-    {{-- Search Modal --}}
     @include('partials.search-modal')
-
-    {{-- Cart Drawer --}}
     @include('partials.cart-drawer')
 
     {{-- Floating WhatsApp Button --}}
@@ -205,12 +200,11 @@
         <i class="fab fa-whatsapp text-3xl text-white"></i>
     </a>
 
-    {{-- Auth Modal (Login/Signup) --}}
     @include('partials.auth-modal')
-
     @include('partials.scripts')
+    
+    @include('partials.toast')
 
-    {{-- Cart JavaScript --}}
     <script src="{{ asset('js/cart.js') }}"></script>
 
     @stack('scripts')

@@ -158,3 +158,44 @@ if (!function_exists('maskString')) {
         return $maskedString;
     }
 }
+
+// Toast Notification Helpers
+if (!function_exists('toast_success')) {
+    /**
+     * Flash a success toast message
+     */
+    function toast_success($message)
+    {
+        session()->flash('success', $message);
+    }
+}
+
+if (!function_exists('toast_error')) {
+    /**
+     * Flash an error toast message
+     */
+    function toast_error($message)
+    {
+        session()->flash('error', $message);
+    }
+}
+
+if (!function_exists('toast_warning')) {
+    /**
+     * Flash a warning toast message
+     */
+    function toast_warning($message)
+    {
+        session()->flash('warning', $message);
+    }
+}
+
+if (!function_exists('toast_info')) {
+    /**
+     * Flash an info toast message
+     */
+    function toast_info($message)
+    {
+        session()->flash('info', $message);
+    }
+}

@@ -68,17 +68,27 @@ class CartManager {
             const data = await response.json();
 
             if (data.success) {
-                this.showNotification("success", data.message);
+                if (window.showSuccess) {
+                    window.showSuccess(
+                        data.message || "Product added to cart successfully",
+                    );
+                }
                 this.updateCartCount(data.cart.items_count);
                 this.loadCart(); // Reload full cart
                 return true;
             } else {
-                this.showNotification("error", data.message);
+                if (window.showError) {
+                    window.showError(
+                        data.message || "Failed to add item to cart",
+                    );
+                }
                 return false;
             }
         } catch (error) {
             console.error("Failed to add to cart:", error);
-            this.showNotification("error", "Failed to add item to cart");
+            if (window.showError) {
+                window.showError("Failed to add item to cart");
+            }
             return false;
         }
     }
@@ -102,12 +112,16 @@ class CartManager {
                 this.loadCart(); // Reload full cart
                 return true;
             } else {
-                this.showNotification("error", data.message);
+                if (window.showError) {
+                    window.showError(data.message || "Failed to update cart");
+                }
                 return false;
             }
         } catch (error) {
             console.error("Failed to update quantity:", error);
-            this.showNotification("error", "Failed to update cart");
+            if (window.showError) {
+                window.showError("Failed to update cart");
+            }
             return false;
         }
     }
@@ -126,17 +140,25 @@ class CartManager {
             const data = await response.json();
 
             if (data.success) {
-                this.showNotification("success", data.message);
+                if (window.showSuccess) {
+                    window.showSuccess(
+                        data.message || "Item removed from cart",
+                    );
+                }
                 this.updateCartCount(data.cart.items_count);
                 this.loadCart(); // Reload full cart
                 return true;
             } else {
-                this.showNotification("error", data.message);
+                if (window.showError) {
+                    window.showError(data.message || "Failed to remove item");
+                }
                 return false;
             }
         } catch (error) {
             console.error("Failed to remove item:", error);
-            this.showNotification("error", "Failed to remove item");
+            if (window.showError) {
+                window.showError("Failed to remove item");
+            }
             return false;
         }
     }
@@ -155,12 +177,19 @@ class CartManager {
             const data = await response.json();
 
             if (data.success) {
-                this.showNotification("success", data.message);
+                if (window.showSuccess) {
+                    window.showSuccess(
+                        data.message || "Cart cleared successfully",
+                    );
+                }
                 this.loadCart();
                 return true;
             }
         } catch (error) {
             console.error("Failed to clear cart:", error);
+            if (window.showError) {
+                window.showError("Failed to clear cart");
+            }
             return false;
         }
     }
@@ -178,20 +207,62 @@ class CartManager {
 
         if (cart.items.length === 0) {
             container.innerHTML = this.getEmptyCartHTML();
+            this.hideCartFooter();
         } else {
             container.innerHTML = cart.items
                 .map((item) => this.getCartItemHTML(item))
                 .join("");
+            this.showCartFooter();
         }
 
-        // Update subtotal
+        // Update price breakdown
         const subtotalElement = document.getElementById("cartSubtotal");
         if (subtotalElement) {
             subtotalElement.textContent = `৳${cart.subtotal.toLocaleString()}`;
         }
 
+        const shippingElement = document.getElementById("cartShipping");
+        if (shippingElement) {
+            if (cart.shipping === 0) {
+                shippingElement.innerHTML =
+                    '<span class="text-green-600">Free</span>';
+            } else {
+                shippingElement.textContent = `৳${cart.shipping.toLocaleString()}`;
+            }
+        }
+
+        const discountElement = document.getElementById("cartDiscount");
+        if (discountElement) {
+            discountElement.textContent = `-৳${cart.discount.toLocaleString()}`;
+        }
+
+        const totalElement = document.getElementById("cartTotal");
+        if (totalElement) {
+            totalElement.textContent = `৳${cart.total.toLocaleString()}`;
+        }
+
         // Update free shipping progress
         this.updateShippingProgress(cart.subtotal);
+    }
+
+    /**
+     * Show cart footer
+     */
+    showCartFooter() {
+        const footer = document.getElementById("cartFooter");
+        const coupon = document.getElementById("couponSection");
+        if (footer) footer.classList.remove("hidden");
+        if (coupon) coupon.classList.remove("hidden");
+    }
+
+    /**
+     * Hide cart footer
+     */
+    hideCartFooter() {
+        const footer = document.getElementById("cartFooter");
+        const coupon = document.getElementById("couponSection");
+        if (footer) footer.classList.add("hidden");
+        if (coupon) coupon.classList.add("hidden");
     }
 
     /**
@@ -317,18 +388,6 @@ class CartManager {
             // If quantity is 1, remove the item
             await this.removeItem(itemId);
         }
-    }
-
-    /**
-     * Show notification
-     */
-    showNotification(type, message) {
-        // You can integrate this with your existing notification system
-        // For now, using a simple console log
-        console.log(`[${type}] ${message}`);
-
-        // If you have a toast/notification component, use it here
-        // Example: Toast.show(type, message);
     }
 }
 
