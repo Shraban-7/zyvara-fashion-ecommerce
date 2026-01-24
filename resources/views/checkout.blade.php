@@ -23,7 +23,25 @@
         <p class="text-gray-500 text-sm">Complete your order by filling in the details below</p>
     </div>
 
-    <form id="checkoutForm" class="grid lg:grid-cols-3 gap-6 lg:gap-8">
+    {{-- Validation Errors --}}
+    @if ($errors->any())
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+        <div class="flex items-start gap-3">
+            <i class="fas fa-exclamation-circle text-red-500 text-xl mt-0.5"></i>
+            <div class="flex-1">
+                <h4 class="font-semibold text-red-800 mb-2">Please fix the following errors:</h4>
+                <ul class="list-disc list-inside space-y-1 text-sm text-red-700">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <form id="checkoutForm" action="{{ route('checkout.store') }}" method="POST" class="grid lg:grid-cols-3 gap-6 lg:gap-8">
+        @csrf
         {{-- Left Column - Customer Details --}}
         <div class="lg:col-span-2 space-y-6">
 
@@ -37,19 +55,29 @@
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div class="sm:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" required placeholder="Enter your full name" class="w-full h-12 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition">
+                        <input type="text" name="name" required placeholder="Enter your full name" value="{{ old('name', $user?->name) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition @error('name') border-red-500 @else border-gray-200 @enderror">
+                        @error('name')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
                         <div class="flex">
-                            <span class="h-12 px-3 bg-gray-100 border border-r-0 border-gray-200 rounded-l-xl flex items-center text-sm text-gray-600">+880</span>
-                            <input type="tel" name="phone" required placeholder="1XXXXXXXXX" pattern="1[3-9][0-9]{8}" maxlength="10" class="flex-1 h-12 px-4 border border-gray-200 rounded-r-xl text-sm focus:outline-none focus:border-brand-blue transition">
+                            <span class="h-12 px-3 bg-gray-100 border border-r-0 rounded-l-xl flex items-center text-sm text-gray-600 @error('phone') border-red-500 @else border-gray-200 @enderror">+880</span>
+                            <input type="tel" name="phone" required placeholder="1XXXXXXXXX" pattern="1[3-9][0-9]{8}" maxlength="10" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 border rounded-r-xl text-sm focus:outline-none focus:border-brand-blue transition @error('phone') border-red-500 @else border-gray-200 @enderror">
                         </div>
+                        @error('phone')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @else
                         <p class="text-xs text-gray-400 mt-1">We'll contact you on this number</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email <span class="text-gray-400">(Optional)</span></label>
-                        <input type="email" name="email" placeholder="your@email.com" class="w-full h-12 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition">
+                        <input type="email" name="email" placeholder="your@email.com" value="{{ old('email', $user?->email) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition @error('email') border-red-500 @else border-gray-200 @enderror">
+                        @error('email')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -65,60 +93,52 @@
                 <div class="mb-5">
                     <label class="block text-sm font-medium text-gray-700 mb-3">Select Delivery Zone <span class="text-red-500">*</span></label>
                     <div class="grid sm:grid-cols-2 gap-3">
+                        @foreach($shippingZones as $index => $zone)
                         <label class="delivery-zone-option relative cursor-pointer">
-                            <input type="radio" name="delivery_zone" value="inside_dhaka" class="sr-only peer" checked>
+                            <input type="radio" name="delivery_zone" value="{{ $zone->code }}" data-cost="{{ $zone->shipping_cost }}" class="sr-only peer" {{ $index === 0 ? 'checked' : '' }}>
                             <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-brand-blue peer-checked:bg-brand-blue/5 transition">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="font-semibold text-gray-900">Inside Dhaka</span>
-                                    <span class="text-brand-blue font-bold">৳60</span>
+                                    <span class="font-semibold text-gray-900">{{ $zone->name }}</span>
+                                    <span class="text-brand-blue font-bold">৳{{ number_format($zone->shipping_cost, 0) }}</span>
                                 </div>
-                                <p class="text-xs text-gray-500">Delivery within 1-2 business days</p>
+                                <p class="text-xs text-gray-500">Delivery within {{ $zone->estimated_days }}</p>
                             </div>
                             <div class="absolute top-3 right-3 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-brand-blue peer-checked:bg-brand-blue flex items-center justify-center">
                                 <i class="fas fa-check text-white text-xs hidden peer-checked:block"></i>
                             </div>
                         </label>
-                        <label class="delivery-zone-option relative cursor-pointer">
-                            <input type="radio" name="delivery_zone" value="outside_dhaka" class="sr-only peer">
-                            <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-brand-blue peer-checked:bg-brand-blue/5 transition">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="font-semibold text-gray-900">Outside Dhaka</span>
-                                    <span class="text-brand-blue font-bold">৳120</span>
-                                </div>
-                                <p class="text-xs text-gray-500">Delivery within 3-5 business days</p>
-                            </div>
-                            <div class="absolute top-3 right-3 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-brand-blue peer-checked:bg-brand-blue flex items-center justify-center">
-                                <i class="fas fa-check text-white text-xs hidden peer-checked:block"></i>
-                            </div>
-                        </label>
+                        @endforeach
                     </div>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">District <span class="text-red-500">*</span></label>
-                        <select name="district" required class="w-full h-12 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition bg-white">
+                        <select name="district" required class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition bg-white @error('district') border-red-500 @else border-gray-200 @enderror">
                             <option value="">Select District</option>
-                            <option value="dhaka">Dhaka</option>
-                            <option value="chittagong">Chittagong</option>
-                            <option value="sylhet">Sylhet</option>
-                            <option value="rajshahi">Rajshahi</option>
-                            <option value="khulna">Khulna</option>
-                            <option value="barishal">Barishal</option>
-                            <option value="rangpur">Rangpur</option>
-                            <option value="mymensingh">Mymensingh</option>
-                            <option value="comilla">Comilla</option>
-                            <option value="gazipur">Gazipur</option>
-                            <option value="narayanganj">Narayanganj</option>
+                            @foreach($districts as $district)
+                            <option value="{{ $district->id }}" {{ old('district') == $district->id ? 'selected' : '' }}>
+                                {{ $district->display_name }}
+                            </option>
+                            @endforeach
                         </select>
+                        @error('district')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">City/Area <span class="text-red-500">*</span></label>
-                        <input type="text" name="city" required placeholder="e.g., Uttara, Mirpur, Dhanmondi" class="w-full h-12 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition">
+                        <input type="text" name="city" required placeholder="e.g., Uttara, Mirpur, Dhanmondi" value="{{ old('city') }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition @error('city') border-red-500 @else border-gray-200 @enderror">
+                        @error('city')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="sm:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Full Address <span class="text-red-500">*</span></label>
-                        <textarea name="address" required rows="3" placeholder="House/Flat No, Road, Block, Area (Be specific for faster delivery)" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition resize-none"></textarea>
+                        <textarea name="address" required rows="3" placeholder="House/Flat No, Road, Block, Area (Be specific for faster delivery)" class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition resize-none @error('address') border-red-500 @else border-gray-200 @enderror">{{ old('address') }}</textarea>
+                        @error('address')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -209,8 +229,8 @@
                             <div>
                                 <span>Enter our bKash Merchant Number:</span>
                                 <div class="mt-2 flex items-center gap-2">
-                                    <code class="bg-white px-4 py-2 rounded-lg font-bold text-pink-700 text-lg">01712-345678</code>
-                                    <button type="button" onclick="copyToClipboard('01712345678', this)" class="p-2 hover:bg-pink-200 rounded-lg transition">
+                                    <code class="bg-white px-4 py-2 rounded-lg font-bold text-pink-700 text-lg">{{ $bkashNumber }}</code>
+                                    <button type="button" onclick="copyToClipboard('{{ str_replace('-', '', $bkashNumber) }}', this)" class="p-2 hover:bg-pink-200 rounded-lg transition">
                                         <i class="far fa-copy text-pink-600"></i>
                                     </button>
                                 </div>
@@ -235,7 +255,7 @@
                     </ol>
 
                     {{-- Quick Pay Button --}}
-                    <a href="https://shop.bkash.com/smart-fashion01712345678/pay" target="_blank" class="mt-4 w-full bg-pink-600 text-white py-3 rounded-xl font-semibold text-sm hover:bg-pink-700 transition flex items-center justify-center gap-2">
+                    <a href="https://shop.bkash.com/smart-fashion{{ str_replace('-', '', $bkashNumber) }}/pay" target="_blank" class="mt-4 w-full bg-pink-600 text-white py-3 rounded-xl font-semibold text-sm hover:bg-pink-700 transition flex items-center justify-center gap-2">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/BKash-bKash-Logo.wine.svg/200px-BKash-bKash-Logo.wine.svg.png" alt="bKash" class="h-5 brightness-0 invert">
                         Pay with bKash App
                     </a>
@@ -267,8 +287,8 @@
                             <div>
                                 <span>Enter our Nagad Number:</span>
                                 <div class="mt-2 flex items-center gap-2">
-                                    <code class="bg-white px-4 py-2 rounded-lg font-bold text-orange-700 text-lg">01812-345678</code>
-                                    <button type="button" onclick="copyToClipboard('01812345678', this)" class="p-2 hover:bg-orange-200 rounded-lg transition">
+                                    <code class="bg-white px-4 py-2 rounded-lg font-bold text-orange-700 text-lg">{{ $nagadNumber }}</code>
+                                    <button type="button" onclick="copyToClipboard('{{ str_replace('-', '', $nagadNumber) }}', this)" class="p-2 hover:bg-orange-200 rounded-lg transition">
                                         <i class="far fa-copy text-orange-600"></i>
                                     </button>
                                 </div>
@@ -308,7 +328,10 @@
                     </div>
                     <h2 class="text-lg font-bold text-brand-black">Order Notes <span class="text-gray-400 font-normal text-sm">(Optional)</span></h2>
                 </div>
-                <textarea name="notes" rows="3" placeholder="Any special instructions for your order? e.g., Gift wrapping, specific delivery time, etc." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition resize-none"></textarea>
+                <textarea name="notes" rows="3" placeholder="Any special instructions for your order? e.g., Gift wrapping, specific delivery time, etc." class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition resize-none @error('notes') border-red-500 @else border-gray-200 @enderror">{{ old('notes') }}</textarea>
+                @error('notes')
+                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                @enderror
             </div>
         </div>
 
@@ -319,45 +342,31 @@
 
                 {{-- Cart Items --}}
                 <div class="space-y-4 max-h-64 overflow-y-auto mb-5 pr-2">
+                    @foreach($cart->items as $item)
                     <div class="flex gap-3">
                         <div class="w-16 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                            <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=150&h=200&fit=crop" alt="Product" class="w-full h-full object-cover">
+                            <img src="{{ $item->product->thumbnail }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-medium text-gray-900 line-clamp-2">Premium Cotton Formal Shirt</h4>
-                            <p class="text-xs text-gray-500 mt-1">Size: M | Color: White</p>
+                            <h4 class="text-sm font-medium text-gray-900 line-clamp-2">{{ $item->product->name }}</h4>
+                            @if($item->variant)
+                            <p class="text-xs text-gray-500 mt-1">
+                                @if($item->variant->size)
+                                Size: {{ $item->variant->size->name }}
+                                @endif
+                                @if($item->variant->size && $item->variant->color) | @endif
+                                @if($item->variant->color)
+                                Color: {{ $item->variant->color->name }}
+                                @endif
+                            </p>
+                            @endif
                             <div class="flex items-center justify-between mt-2">
-                                <span class="text-xs text-gray-500">Qty: 1</span>
-                                <span class="text-sm font-semibold text-gray-900">৳1,250</span>
+                                <span class="text-xs text-gray-500">Qty: {{ $item->quantity }}</span>
+                                <span class="text-sm font-semibold text-gray-900">৳{{ number_format($item->total_price, 0) }}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-3">
-                        <div class="w-16 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                            <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=150&h=200&fit=crop" alt="Product" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-medium text-gray-900 line-clamp-2">Printed Casual Shirt</h4>
-                            <p class="text-xs text-gray-500 mt-1">Size: L | Color: Blue</p>
-                            <div class="flex items-center justify-between mt-2">
-                                <span class="text-xs text-gray-500">Qty: 2</span>
-                                <span class="text-sm font-semibold text-gray-900">৳1,900</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex gap-3">
-                        <div class="w-16 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=150&h=200&fit=crop" alt="Product" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-medium text-gray-900 line-clamp-2">Classic Round Neck T-Shirt</h4>
-                            <p class="text-xs text-gray-500 mt-1">Size: M | Color: Black</p>
-                            <div class="flex items-center justify-between mt-2">
-                                <span class="text-xs text-gray-500">Qty: 1</span>
-                                <span class="text-sm font-semibold text-gray-900">৳650</span>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
 
                 {{-- Edit Cart Link --}}
@@ -376,21 +385,21 @@
                 {{-- Price Breakdown --}}
                 <div class="space-y-3 border-t border-gray-100 pt-5">
                     <div class="flex items-center justify-between text-sm">
-                        <span class="text-gray-500">Subtotal (4 items)</span>
-                        <span class="font-medium text-gray-900">৳3,800</span>
+                        <span class="text-gray-500">Subtotal ({{ $cart->items_count }} {{ Str::plural('item', $cart->items_count) }})</span>
+                        <span class="font-medium text-gray-900" id="subtotalAmount">৳{{ number_format($cart->subtotal, 0) }}</span>
                     </div>
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-500">Shipping</span>
-                        <span class="font-medium text-gray-900" id="shippingCost">৳60</span>
+                        <span class="font-medium text-gray-900" id="shippingCost">৳{{ number_format($shippingZones->first()->shipping_cost ?? 0, 0) }}</span>
                     </div>
-                    <div class="flex items-center justify-between text-sm text-green-600">
+                    <div class="flex items-center justify-between text-sm text-green-600" id="discountRow" style="display: none;">
                         <span>Discount</span>
-                        <span class="font-medium">-৳0</span>
+                        <span class="font-medium" id="discountAmount">-৳0</span>
                     </div>
                     <div class="h-px bg-gray-200"></div>
                     <div class="flex items-center justify-between">
                         <span class="text-base font-semibold text-gray-900">Total</span>
-                        <span class="text-2xl font-bold text-brand-blue" id="totalAmount">৳3,860</span>
+                        <span class="text-2xl font-bold text-brand-blue" id="totalAmount">৳{{ number_format($cart->subtotal + ($shippingZones->first()->shipping_cost ?? 0), 0) }}</span>
                     </div>
                 </div>
 
@@ -430,6 +439,17 @@
 
 @push('scripts')
 <script>
+    // Cart data from server
+    const cartSubtotal = "{{ $cart->subtotal }}";
+    let currentDiscount = 0;
+    let currentShippingCost = "{{ $shippingZones->first()->shipping_cost ?? 0 }}";
+
+    // Update total calculations
+    function updateTotals() {
+        const total = cartSubtotal + currentShippingCost - currentDiscount;
+        document.getElementById('totalAmount').textContent = '৳' + total.toLocaleString();
+    }
+
     // Payment method toggle
     document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
         radio.addEventListener('change', function() {
@@ -447,13 +467,9 @@
     // Delivery zone shipping cost update
     document.querySelectorAll('input[name="delivery_zone"]').forEach(radio => {
         radio.addEventListener('change', function() {
-            const shippingCost = this.value === 'inside_dhaka' ? 60 : 120;
-            document.getElementById('shippingCost').textContent = '৳' + shippingCost;
-
-            // Update total
-            const subtotal = 3800; // Static for now
-            const total = subtotal + shippingCost;
-            document.getElementById('totalAmount').textContent = '৳' + total.toLocaleString();
+            currentShippingCost = parseFloat(this.dataset.cost);
+            document.getElementById('shippingCost').textContent = '৳' + currentShippingCost.toLocaleString();
+            updateTotals();
         });
     });
 
@@ -491,8 +507,8 @@
             }
         }
 
-        // Show success (in real app, submit to server)
-        alert('Order placed successfully! You will receive a confirmation SMS shortly.');
+        // Submit the form
+        this.submit();
     });
 
     // Update radio button checkmarks visibility

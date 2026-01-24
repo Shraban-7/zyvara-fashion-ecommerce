@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\District;
+use App\Models\Setting;
+use App\Models\ShippingZone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -11,7 +16,32 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-        return view('checkout');
+        $cart = Auth::check()
+            ? Cart::with(['items.product.images', 'items.variant.size', 'items.variant.color'])
+            ->where('user_id', Auth::id())
+            ->first()
+            : Cart::with(['items.product.images', 'items.variant.size', 'items.variant.color'])
+            ->where('session_id', session()->getId())
+            ->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            toast_warning('Your cart is empty. Add some items first.');
+            return redirect()->route('home');
+        }
+
+        $shippingZones = ShippingZone::active()->orderBy('shipping_cost')->get();
+
+        $districts = District::with('shippingZone')
+            ->active()
+            ->ordered()
+            ->get();
+
+        $user = Auth::user();
+
+        $bkashNumber = Setting::get('bkash_merchant_number');
+        $nagadNumber = Setting::get('nagad_merchant_number');
+
+        return view('checkout', compact('cart', 'shippingZones', 'districts', 'user', 'bkashNumber', 'nagadNumber'));
     }
 
     /**
