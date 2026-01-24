@@ -62,20 +62,13 @@ class Cart extends Model
 
         if ($existingItem) {
             $existingItem->increment('quantity', $quantity);
-            $existingItem->update([
-                'total_price' => $existingItem->unit_price * $existingItem->quantity,
-            ]);
             return $existingItem->fresh();
         }
-
-        $unitPrice = $variant?->final_price ?? $product->price;
 
         return $this->items()->create([
             'product_id' => $product->id,
             'product_variant_id' => $variant?->id,
             'quantity' => $quantity,
-            'unit_price' => $unitPrice,
-            'total_price' => $unitPrice * $quantity,
         ]);
     }
 
@@ -83,7 +76,6 @@ class Cart extends Model
     {
         $item->update([
             'quantity' => $quantity,
-            'total_price' => $item->unit_price * $quantity,
         ]);
 
         return $item->fresh();
@@ -113,9 +105,6 @@ class Cart extends Model
 
             if ($existingItem) {
                 $existingItem->increment('quantity', $guestItem->quantity);
-                $existingItem->update([
-                    'total_price' => $existingItem->unit_price * $existingItem->quantity,
-                ]);
             } else {
                 $guestItem->update(['cart_id' => $this->id]);
             }

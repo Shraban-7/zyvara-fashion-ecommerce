@@ -15,15 +15,13 @@ class CartItem extends Model
         'product_id',
         'product_variant_id',
         'quantity',
-        'unit_price',
-        'total_price',
     ];
 
     protected $casts = [
         'quantity' => 'integer',
-        'unit_price' => 'decimal:2',
-        'total_price' => 'decimal:2',
     ];
+
+    protected $appends = ['unit_price', 'total_price'];
 
     // Relationships
     public function cart(): BelongsTo
@@ -41,6 +39,21 @@ class CartItem extends Model
         return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 
+    // Computed Attributes
+    public function getUnitPriceAttribute(): float
+    {
+        if ($this->variant) {
+            return (float) $this->variant->final_price;
+        }
+
+        return (float) $this->product->price;
+    }
+
+    public function getTotalPriceAttribute(): float
+    {
+        return $this->unit_price * $this->quantity;
+    }
+
     // Helpers
     public function getVariantDescriptionAttribute(): ?string
     {
@@ -55,7 +68,6 @@ class CartItem extends Model
     {
         $this->update([
             'quantity' => $quantity,
-            'total_price' => $this->unit_price * $quantity,
         ]);
     }
 

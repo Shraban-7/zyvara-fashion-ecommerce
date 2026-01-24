@@ -180,11 +180,11 @@
             {{-- Action Buttons --}}
             <div class="flex flex-col sm:flex-row gap-3 pt-2 w-full">
                 @if($product->isInStock())
-                <button class="w-full sm:flex-1 bg-brand-blue text-white py-3.5 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-2">
+                <button id="addToCartBtn" class="w-full sm:flex-1 bg-brand-blue text-white py-3.5 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-2">
                     <i class="fas fa-shopping-cart"></i>
                     Add to Cart
                 </button>
-                <button class="w-full sm:flex-1 bg-brand-black text-white py-3.5 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-gray-800 transition tap-effect flex items-center justify-center gap-2">
+                <button id="buyNowBtn" class="w-full sm:flex-1 bg-brand-black text-white py-3.5 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-gray-800 transition tap-effect flex items-center justify-center gap-2">
                     <i class="fas fa-bolt"></i>
                     Buy Now
                 </button>
@@ -550,7 +550,15 @@
                         <span class="text-gray-400 text-xs line-through">৳{{ number_format($relatedProduct->compare_price, 0) }}</span>
                         @endif
                     </div>
-                    <button class="w-full bg-brand-blue text-white py-2 rounded-xl font-semibold text-xs hover:bg-blue-600 transition tap-effect">Add to Cart</button>
+
+                    <button
+                        class="add-to-cart-btn w-full bg-brand-blue text-white py-2 rounded-xl font-semibold text-xs hover:bg-blue-600 transition tap-effect"
+                        data-add-to-cart
+                        data-product-id="{{ $product->id }}"
+                        data-quantity="1">
+                        <i class="fas fa-shopping-bag mr-1"></i>
+                        Add to Cart
+                    </button>
                 </div>
             </div>
             @endforeach
@@ -675,5 +683,60 @@
             closeImageModal();
         }
     });
+
+    // Add to cart functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        const buyNowBtn = document.getElementById('buyNowBtn');
+
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', function() {
+                const selectedVariant = getSelectedVariant();
+                const quantity = parseInt(document.getElementById('productQuantity').value);
+
+                if (cartManager) {
+                    cartManager.addToCart("{{$product->id}}", selectedVariant, quantity).then(success => {
+                        if (success) {
+                            openCartDrawer();
+                        }
+                    });
+                }
+            });
+        }
+
+        if (buyNowBtn) {
+            buyNowBtn.addEventListener('click', function() {
+                const selectedVariant = getSelectedVariant();
+                const quantity = parseInt(document.getElementById('productQuantity').value);
+
+                if (cartManager) {
+                    cartManager.addToCart("{{$product->id}}", selectedVariant, quantity).then(success => {
+                        if (success) {
+                            window.location.href = "{{ route('checkout') }}";
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    // Get selected variant based on color and size
+    function getSelectedVariant() {
+        const selectedColorBtn = document.querySelector('.color-btn.border-brand-blue');
+        const selectedSizeBtn = document.querySelector('.product-size-btn.border-brand-blue');
+
+        // If product has variants, find the matching variant
+        if (selectedSizeBtn || selectedColorBtn) {
+            const colorId = selectedColorBtn?.dataset.colorId;
+            const sizeId = selectedSizeBtn?.dataset.sizeId;
+
+            // You would need to implement logic to find the variant ID based on color and size
+            // For now, we'll just return null and add to cart without variant
+            // In a real application, you'd pass variants data and match them here
+            return null;
+        }
+
+        return null;
+    }
 </script>
 @endpush

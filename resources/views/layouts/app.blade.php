@@ -210,6 +210,9 @@
 
     @include('partials.scripts')
 
+    {{-- Cart JavaScript --}}
+    <script src="{{ asset('js/cart.js') }}"></script>
+
     @stack('scripts')
 
 </body>

@@ -30,95 +30,17 @@
     {{-- Free Shipping Progress --}}
     <div class="px-5 py-3 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-gray-100">
         <div class="flex items-center justify-between mb-2">
-            <span class="text-xs text-gray-600">Add <span class="font-semibold text-green-600">৳450</span> more for free shipping!</span>
+            <span class="text-xs text-gray-600" id="shippingRemaining">Add <span class="font-semibold text-green-600">৳1,500</span> more for free shipping!</span>
             <i class="fas fa-truck text-green-500 text-sm"></i>
         </div>
         <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full transition-all duration-500" style="width: 77%"></div>
+            <div id="shippingProgressBar" class="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
         </div>
     </div>
 
     {{-- Cart Items --}}
     <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4" id="cartItemsContainer">
-
-        {{-- Cart Item 1 --}}
-        <div class="flex gap-4 p-3 bg-gray-50 rounded-2xl relative group">
-            <div class="w-20 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-white">
-                <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=200&h=250&fit=crop" alt="Product" class="w-full h-full object-cover">
-            </div>
-            <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-semibold text-gray-900 line-clamp-2 pr-6">Premium Cotton Formal Shirt</h4>
-                <p class="text-xs text-gray-500 mt-1">Size: M | Color: White</p>
-                <div class="flex items-center justify-between mt-3">
-                    <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
-                        <button onclick="updateCartQty(this, -1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
-                            <i class="fas fa-minus text-xs"></i>
-                        </button>
-                        <span class="w-8 text-center text-sm font-semibold">1</span>
-                        <button onclick="updateCartQty(this, 1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
-                            <i class="fas fa-plus text-xs"></i>
-                        </button>
-                    </div>
-                    <span class="text-brand-blue font-bold">৳1,250</span>
-                </div>
-            </div>
-            <button onclick="removeCartItem(this)" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition opacity-0 group-hover:opacity-100">
-                <i class="fas fa-trash-alt text-xs"></i>
-            </button>
-        </div>
-
-        {{-- Cart Item 2 --}}
-        <div class="flex gap-4 p-3 bg-gray-50 rounded-2xl relative group">
-            <div class="w-20 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-white">
-                <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=200&h=250&fit=crop" alt="Product" class="w-full h-full object-cover">
-            </div>
-            <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-semibold text-gray-900 line-clamp-2 pr-6">Printed Casual Shirt</h4>
-                <p class="text-xs text-gray-500 mt-1">Size: L | Color: Blue</p>
-                <div class="flex items-center justify-between mt-3">
-                    <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
-                        <button onclick="updateCartQty(this, -1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
-                            <i class="fas fa-minus text-xs"></i>
-                        </button>
-                        <span class="w-8 text-center text-sm font-semibold">2</span>
-                        <button onclick="updateCartQty(this, 1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
-                            <i class="fas fa-plus text-xs"></i>
-                        </button>
-                    </div>
-                    <span class="text-brand-blue font-bold">৳1,900</span>
-                </div>
-            </div>
-            <button onclick="removeCartItem(this)" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition opacity-0 group-hover:opacity-100">
-                <i class="fas fa-trash-alt text-xs"></i>
-            </button>
-        </div>
-
-        {{-- Cart Item 3 --}}
-        <div class="flex gap-4 p-3 bg-gray-50 rounded-2xl relative group">
-            <div class="w-20 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-white">
-                <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=200&h=250&fit=crop" alt="Product" class="w-full h-full object-cover">
-            </div>
-            <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-semibold text-gray-900 line-clamp-2 pr-6">Classic Round Neck T-Shirt</h4>
-                <p class="text-xs text-gray-500 mt-1">Size: M | Color: Black</p>
-                <div class="flex items-center justify-between mt-3">
-                    <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
-                        <button onclick="updateCartQty(this, -1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
-                            <i class="fas fa-minus text-xs"></i>
-                        </button>
-                        <span class="w-8 text-center text-sm font-semibold">1</span>
-                        <button onclick="updateCartQty(this, 1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
-                            <i class="fas fa-plus text-xs"></i>
-                        </button>
-                    </div>
-                    <span class="text-brand-blue font-bold">৳650</span>
-                </div>
-            </div>
-            <button onclick="removeCartItem(this)" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition opacity-0 group-hover:opacity-100">
-                <i class="fas fa-trash-alt text-xs"></i>
-            </button>
-        </div>
-
+        {{-- Cart items will be loaded dynamically here --}}
     </div>
 
     {{-- Empty Cart State (Hidden by default) --}}
@@ -152,31 +74,31 @@
         <div class="space-y-2 mb-4">
             <div class="flex items-center justify-between text-sm">
                 <span class="text-gray-500">Subtotal</span>
-                <span class="font-medium text-gray-900">৳3,800</span>
+                <span class="font-medium text-gray-900" id="cartSubtotal">৳0</span>
             </div>
             <div class="flex items-center justify-between text-sm">
                 <span class="text-gray-500">Shipping</span>
-                <span class="font-medium text-gray-900">৳60</span>
+                <span class="font-medium text-gray-900" id="cartShipping">৳60</span>
             </div>
             <div class="flex items-center justify-between text-sm text-green-600">
                 <span>Discount</span>
-                <span class="font-medium">-৳0</span>
+                <span class="font-medium" id="cartDiscount">-৳0</span>
             </div>
             <div class="h-px bg-gray-200 my-2"></div>
             <div class="flex items-center justify-between">
                 <span class="text-base font-semibold text-gray-900">Total</span>
-                <span class="text-xl font-bold text-brand-blue">৳3,860</span>
+                <span class="text-xl font-bold text-brand-blue" id="cartTotal">৳0</span>
             </div>
         </div>
 
         {{-- Checkout Button --}}
-        <a href="{{ route('checkout') }}" class="w-full bg-brand-blue text-white py-4 rounded-xl font-semibold text-base hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-2">
+        <a href="{{ route('checkout') }}" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-center hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/20 flex items-center justify-center gap-2 mb-3">
             <i class="fas fa-lock text-sm"></i>
             Proceed to Checkout
         </a>
 
         {{-- Continue Shopping --}}
-        <button onclick="closeCartDrawer()" class="w-full mt-3 text-center text-sm text-gray-500 hover:text-brand-blue transition py-2">
+        <button onclick="closeCartDrawer()" class="w-full text-center text-sm text-gray-500 hover:text-brand-blue transition py-2">
             <i class="fas fa-arrow-left mr-2 text-xs"></i>
             Continue Shopping
         </button>
@@ -189,82 +111,5 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/200px-MasterCard_Logo.svg.png" alt="Mastercard" class="h-6 opacity-60 hover:opacity-100 transition">
         </div>
     </div>
+
 </div>
-
-{{-- Cart Drawer Scripts --}}
-<script>
-    function openCartDrawer() {
-        const drawer = document.getElementById('cartDrawer');
-        const overlay = document.getElementById('cartOverlay');
-
-        drawer.classList.remove('translate-x-full');
-        overlay.classList.remove('opacity-0', 'invisible');
-        overlay.classList.add('opacity-100', 'visible');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeCartDrawer() {
-        const drawer = document.getElementById('cartDrawer');
-        const overlay = document.getElementById('cartOverlay');
-
-        drawer.classList.add('translate-x-full');
-        overlay.classList.add('opacity-0', 'invisible');
-        overlay.classList.remove('opacity-100', 'visible');
-        document.body.style.overflow = '';
-    }
-
-    function updateCartQty(btn, change) {
-        const container = btn.closest('.flex.items-center.border');
-        const qtySpan = container.querySelector('span');
-        let qty = parseInt(qtySpan.textContent) + change;
-        if (qty < 1) qty = 1;
-        if (qty > 10) qty = 10;
-        qtySpan.textContent = qty;
-
-        // Add animation
-        qtySpan.classList.add('scale-125');
-        setTimeout(() => qtySpan.classList.remove('scale-125'), 150);
-    }
-
-    function removeCartItem(btn) {
-        const item = btn.closest('.flex.gap-4');
-        item.style.transform = 'translateX(100%)';
-        item.style.opacity = '0';
-        item.style.transition = 'all 0.3s ease';
-
-        setTimeout(() => {
-            item.remove();
-            updateCartCount();
-        }, 300);
-    }
-
-    function updateCartCount() {
-        const items = document.querySelectorAll('#cartItemsContainer > div');
-        const count = items.length;
-
-        document.getElementById('cartCountBadge').textContent = count;
-        document.getElementById('cartItemCount').textContent = count;
-
-        // Show empty state if no items
-        if (count === 0) {
-            document.getElementById('cartItemsContainer').classList.add('hidden');
-            document.getElementById('emptyCartState').classList.remove('hidden');
-            document.getElementById('couponSection').classList.add('hidden');
-            document.getElementById('cartFooter').classList.add('hidden');
-        }
-    }
-
-    // Close drawer on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeCartDrawer();
-        }
-    });
-
-    // Prevent body scroll when drawer is open on touch devices
-    document.getElementById('cartDrawer').addEventListener('touchmove', function(e) {
-        e.stopPropagation();
-    }, {
-        passive: true
-    });
-</script>

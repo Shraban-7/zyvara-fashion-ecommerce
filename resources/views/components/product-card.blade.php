@@ -58,7 +58,7 @@ if ($product->compare_price && $product->compare_price > $product->price) {
                 {{ $product->name }}
             </h3>
         </a>
-        
+
         @if($product->review_count > 0)
         <div class="flex items-center gap-1 mb-2">
             <div class="flex text-yellow-400">
@@ -88,7 +88,10 @@ if ($product->compare_price && $product->compare_price > $product->price) {
 
         <button
             class="add-to-cart-btn w-full bg-brand-blue text-white py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm hover:bg-blue-600 transition tap-effect"
-            data-product-id="{{ $product->id }}">
+            data-add-to-cart
+            data-product-id="{{ $product->id }}"
+            data-quantity="1">
+            <i class="fas fa-shopping-bag mr-1"></i>
             Add to Cart
         </button>
     </div>
