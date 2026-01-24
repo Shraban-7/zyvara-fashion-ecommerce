@@ -65,14 +65,13 @@
                 </button>
 
                 {{-- Cart --}}
-                <button class="icon-btn p-2.5 rounded-xl flex items-center gap-2 group" aria-label="Cart">
+                <button class="icon-btn p-2.5 rounded-xl flex items-center gap-2 group" aria-label="Cart" onclick="openCartDrawer()">
                     <div class="relative">
                         <i class="fas fa-shopping-bag text-lg text-gray-600 group-hover:text-brand-blue transition-colors"></i>
-                        <span class="absolute -top-2 -right-2 bg-brand-blue text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold floating-badge">3</span>
+                        <span class="absolute -top-2 -right-2 bg-brand-blue text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold floating-badge" id="headerCartCount"></span>
                     </div>
                     <div class="hidden lg:flex flex-col items-start">
-                        <span class="text-[10px] text-gray-400">Your Cart</span>
-                        <span class="text-sm font-semibold text-gray-700">৳4,250</span>
+                        <span class="text-sm font-semibold text-gray-700" id="headerCartTotal"></span>
                     </div>
                 </button>
 

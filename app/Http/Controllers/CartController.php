@@ -206,6 +206,10 @@ class CartController extends Controller
             // Reload cart
             $cart->load('items');
 
+            if($cart->items->count() == 0 ){
+                $cart->delete();
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Item removed from cart',
@@ -230,6 +234,7 @@ class CartController extends Controller
         try {
             $cart = $this->getOrCreateCart();
             $cart->items()->delete();
+            $cart->delete();
 
             return response()->json([
                 'success' => true,

@@ -1,4 +1,3 @@
-// Cart Management System
 class CartManager {
     constructor() {
         this.apiUrl = "/cart";
@@ -9,16 +8,10 @@ class CartManager {
     }
 
     init() {
-        // Load cart on page load
         this.loadCart();
-
-        // Setup event listeners for add to cart buttons
         this.setupAddToCartListeners();
     }
 
-    /**
-     * Get headers for API requests
-     */
     getHeaders() {
         return {
             "Content-Type": "application/json",
@@ -28,9 +21,6 @@ class CartManager {
         };
     }
 
-    /**
-     * Load cart data from API
-     */
     async loadCart() {
         try {
             const response = await fetch(this.apiUrl, {
@@ -49,9 +39,6 @@ class CartManager {
         }
     }
 
-    /**
-     * Add item to cart
-     */
     async addToCart(productId, variantId = null, quantity = 1) {
         try {
             const response = await fetch(`${this.apiUrl}/add`, {
@@ -93,9 +80,6 @@ class CartManager {
         }
     }
 
-    /**
-     * Update cart item quantity
-     */
     async updateQuantity(itemId, quantity) {
         try {
             const response = await fetch(`${this.apiUrl}/update/${itemId}`, {
@@ -126,9 +110,6 @@ class CartManager {
         }
     }
 
-    /**
-     * Remove item from cart
-     */
     async removeItem(itemId) {
         try {
             const response = await fetch(`${this.apiUrl}/remove/${itemId}`, {
@@ -163,9 +144,6 @@ class CartManager {
         }
     }
 
-    /**
-     * Clear entire cart
-     */
     async clearCart() {
         try {
             const response = await fetch(`${this.apiUrl}/clear`, {
@@ -194,14 +172,9 @@ class CartManager {
         }
     }
 
-    /**
-     * Update cart UI with data
-     */
     updateCartUI(cart) {
-        // Update cart count badges
         this.updateCartCount(cart.items_count);
 
-        // Update cart items container
         const container = document.getElementById("cartItemsContainer");
         if (!container) return;
 
@@ -215,7 +188,6 @@ class CartManager {
             this.showCartFooter();
         }
 
-        // Update price breakdown
         const subtotalElement = document.getElementById("cartSubtotal");
         if (subtotalElement) {
             subtotalElement.textContent = `৳${cart.subtotal.toLocaleString()}`;
@@ -241,13 +213,14 @@ class CartManager {
             totalElement.textContent = `৳${cart.total.toLocaleString()}`;
         }
 
-        // Update free shipping progress
+        const headerCartTotal = document.getElementById("headerCartTotal");
+        if (headerCartTotal) {
+            headerCartTotal.textContent = `৳${cart.total.toLocaleString()}`;
+        }
+
         this.updateShippingProgress(cart.subtotal);
     }
 
-    /**
-     * Show cart footer
-     */
     showCartFooter() {
         const footer = document.getElementById("cartFooter");
         const coupon = document.getElementById("couponSection");
@@ -255,9 +228,6 @@ class CartManager {
         if (coupon) coupon.classList.remove("hidden");
     }
 
-    /**
-     * Hide cart footer
-     */
     hideCartFooter() {
         const footer = document.getElementById("cartFooter");
         const coupon = document.getElementById("couponSection");
@@ -265,12 +235,9 @@ class CartManager {
         if (coupon) coupon.classList.add("hidden");
     }
 
-    /**
-     * Update cart count badge
-     */
     updateCartCount(count) {
         const badges = document.querySelectorAll(
-            "#cartCountBadge, #cartItemCount",
+            "#cartCountBadge, #cartItemCount, #headerCartCount"
         );
         badges.forEach((badge) => {
             if (badge) {
@@ -279,9 +246,6 @@ class CartManager {
         });
     }
 
-    /**
-     * Update free shipping progress
-     */
     updateShippingProgress(subtotal) {
         const freeShippingThreshold = 1500; // You can adjust this
         const remaining = Math.max(0, freeShippingThreshold - subtotal);
@@ -306,9 +270,6 @@ class CartManager {
         }
     }
 
-    /**
-     * Get HTML for cart item
-     */
     getCartItemHTML(item) {
         return `
             <div class="flex gap-4 p-3 bg-gray-50 rounded-2xl relative group" data-item-id="${item.id}">
@@ -338,9 +299,6 @@ class CartManager {
         `;
     }
 
-    /**
-     * Get empty cart HTML
-     */
     getEmptyCartHTML() {
         return `
             <div class="flex flex-col items-center justify-center py-12 text-center">
@@ -356,11 +314,7 @@ class CartManager {
         `;
     }
 
-    /**
-     * Setup add to cart button listeners
-     */
     setupAddToCartListeners() {
-        // Listen for clicks on buttons with data-add-to-cart attribute
         document.addEventListener("click", (e) => {
             const button = e.target.closest("[data-add-to-cart]");
             if (button) {
@@ -374,9 +328,6 @@ class CartManager {
         });
     }
 
-    /**
-     * Helper methods for quantity updates
-     */
     async increaseQuantity(itemId, currentQuantity) {
         await this.updateQuantity(itemId, currentQuantity + 1);
     }
@@ -385,13 +336,11 @@ class CartManager {
         if (currentQuantity > 1) {
             await this.updateQuantity(itemId, currentQuantity - 1);
         } else {
-            // If quantity is 1, remove the item
             await this.removeItem(itemId);
         }
     }
 }
 
-// Initialize cart manager when DOM is ready
 let cartManager;
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
@@ -401,13 +350,11 @@ if (document.readyState === "loading") {
     cartManager = new CartManager();
 }
 
-// Cart drawer functions (keeping existing functionality)
 function openCartDrawer() {
     const drawer = document.getElementById("cartDrawer");
     const overlay = document.getElementById("cartOverlay");
 
     if (drawer && overlay) {
-        // Reload cart when opening
         if (cartManager) {
             cartManager.loadCart();
         }
