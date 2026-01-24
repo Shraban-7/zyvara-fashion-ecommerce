@@ -155,8 +155,8 @@
                         <input type="radio" name="payment_method" value="bkash" class="sr-only peer">
                         <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-brand-blue peer-checked:bg-brand-blue/5 transition">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/BKash-bKash-Logo.wine.svg/200px-BKash-bKash-Logo.wine.svg.png" alt="bKash" class="h-8">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <img src="{{ asset('assets/images/bkash.png') }}" alt="bKash" class="h-8">
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="font-semibold text-gray-900">bKash Payment</h4>
@@ -174,8 +174,8 @@
                         <input type="radio" name="payment_method" value="nagad" class="sr-only peer">
                         <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-brand-blue peer-checked:bg-brand-blue/5 transition">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <img src="https://download.logo.wine/logo/Nagad/Nagad-Logo.wine.png" alt="Nagad" class="h-8">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <img src="{{ asset('assets/images/nagad.png') }}" alt="Nagad" class="h-8">
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="font-semibold text-gray-900">Nagad Payment</h4>
