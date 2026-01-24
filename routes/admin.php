@@ -2,25 +2,25 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
-
+use App\Http\Controllers\Admin\ProductController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
+    Route::prefix('products')->as('products.')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/create', [ProductController::class, 'create'])->name('create');
+        Route::post('/store', [ProductController::class, 'store'])->name('store');
+        Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
+        Route::post('/{product}/update', [ProductController::class, 'update'])->name('update');
+    });
+
     Route::get('/orders', function () {
         return redirect()->route('admin.dashboard');
     })->name('orders.index');
     Route::get('/orders/{id}', function () {
         return redirect()->route('admin.dashboard');
     })->name('orders.show');
-
-    // Products Routes (placeholder - to be created later)
-    Route::get('/products', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('products.index');
-    Route::get('/products/create', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('products.create');
 
     // Categories Routes (placeholder)
     Route::get('/categories', function () {

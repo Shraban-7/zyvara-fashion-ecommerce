@@ -269,6 +269,8 @@
     </script>
 
     @stack('scripts')
+
+    @include('partials.toast')
 </body>
 
 </html>
