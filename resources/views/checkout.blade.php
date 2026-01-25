@@ -362,19 +362,17 @@
                             @endif
                             <div class="flex items-center justify-between mt-2">
                                 <span class="text-xs text-gray-500">Qty: {{ $item->quantity }}</span>
-                                <span class="text-sm font-semibold text-gray-900">৳{{ number_format($item->total_price, 0) }}</span>
+                                <span class="text-sm font-semibold text-gray-900">{{ money($item->total_price) }}</span>
                             </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
-
-                {{-- Edit Cart Link --}}
+                
                 <a href="#" onclick="openCartDrawer(); return false;" class="text-brand-blue text-sm font-medium hover:underline mb-5 inline-block">
                     <i class="fas fa-edit mr-1"></i> Edit Cart
                 </a>
 
-                {{-- Coupon Code --}}
                 <div class="mb-5">
                     <div class="flex gap-2">
                         <input type="text" name="coupon" placeholder="Coupon code" class="flex-1 h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition">
@@ -386,11 +384,11 @@
                 <div class="space-y-3 border-t border-gray-100 pt-5">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-500">Subtotal ({{ $cart->items_count }} {{ Str::plural('item', $cart->items_count) }})</span>
-                        <span class="font-medium text-gray-900" id="subtotalAmount">৳{{ number_format($cart->subtotal, 0) }}</span>
+                        <span class="font-medium text-gray-900" id="subtotalAmount">{{ money($cart->subtotal) }}</span>
                     </div>
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-500">Shipping</span>
-                        <span class="font-medium text-gray-900" id="shippingCost">৳{{ number_format($shippingZones->first()->shipping_cost ?? 0, 0) }}</span>
+                        <span class="font-medium text-gray-900" id="shippingCost">{{ money($shippingZones->first()->shipping_cost ?? 0) }}</span>
                     </div>
                     <div class="flex items-center justify-between text-sm text-green-600" id="discountRow" style="display: none;">
                         <span>Discount</span>
@@ -399,7 +397,7 @@
                     <div class="h-px bg-gray-200"></div>
                     <div class="flex items-center justify-between">
                         <span class="text-base font-semibold text-gray-900">Total</span>
-                        <span class="text-2xl font-bold text-brand-blue" id="totalAmount">৳{{ number_format($cart->subtotal + ($shippingZones->first()->shipping_cost ?? 0), 0) }}</span>
+                        <span class="text-2xl font-bold text-brand-blue" id="totalAmount">{{ money($cart->subtotal + ($shippingZones->first()->shipping_cost ?? 0)) }}</span>
                     </div>
                 </div>
 
