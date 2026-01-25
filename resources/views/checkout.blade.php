@@ -16,12 +16,12 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto px-4 py-6 md:py-10">
+<div class="max-w-7xl mx-auto px-4 py-4">
     {{-- Checkout Header --}}
-    <div class="text-center mb-8">
+    <!-- <div class="text-center mb-8">
         <h1 class="text-2xl md:text-3xl font-bold text-brand-black mb-2">Checkout</h1>
         <p class="text-gray-500 text-sm">Complete your order by filling in the details below</p>
-    </div>
+    </div> -->
 
     {{-- Validation Errors --}}
     @if ($errors->any())
@@ -97,9 +97,9 @@
                         <label class="delivery-zone-option relative cursor-pointer">
                             <input type="radio" name="delivery_zone" value="{{ $zone->code }}" data-cost="{{ $zone->shipping_cost }}" class="sr-only peer" {{ $index === 0 ? 'checked' : '' }}>
                             <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-brand-blue peer-checked:bg-brand-blue/5 transition">
-                                <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center mb-2">
                                     <span class="font-semibold text-gray-900">{{ $zone->name }}</span>
-                                    <span class="text-brand-blue font-bold">৳{{ number_format($zone->shipping_cost, 0) }}</span>
+                                    <span class="text-brand-blue font-bold ms-2">({{ money($zone->shipping_cost) }})</span>
                                 </div>
                                 <p class="text-xs text-gray-500">Delivery within {{ $zone->estimated_days }}</p>
                             </div>

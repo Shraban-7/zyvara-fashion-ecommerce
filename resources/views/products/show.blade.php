@@ -712,7 +712,7 @@
                 if (cartManager) {
                     cartManager.addToCart("{{$product->id}}", selectedVariant, quantity).then(success => {
                         if (success) {
-                            window.location.href = "{{ route('checkout') }}";
+                            window.location.href = "{{ route('checkout.index') }}";
                         }
                     });
                 }

@@ -6,29 +6,28 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Products Routes
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
-
-// Cart Routes (works for both authenticated and guest users)
-Route::prefix('cart')->group(function () {
-    Route::get('/', [CartController::class, 'getCart'])->name('cart.get');
-    Route::post('/add', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::put('/update/{itemId}', [CartController::class, 'updateQuantity'])->name('cart.update');
-    Route::delete('/remove/{itemId}', [CartController::class, 'removeItem'])->name('cart.remove');
-    Route::delete('/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+Route::prefix('products')->as('products.')->group(function () {
+    Route::get('/', [ProductController::class, 'index'])->name('index');
+    Route::get('/{slug}', [ProductController::class, 'show'])->name('show');
 });
 
-// Checkout Routes
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::prefix('cart')->as('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'getCart'])->name('get');
+    Route::post('/add', [CartController::class, 'addToCart'])->name('add');
+    Route::put('/update/{itemId}', [CartController::class, 'updateQuantity'])->name('update');
+    Route::delete('/remove/{itemId}', [CartController::class, 'removeItem'])->name('remove');
+    Route::delete('/clear', [CartController::class, 'clearCart'])->name('clear');
+});
 
-// Auth Routes (placeholder for logout)
+Route::prefix('checkout')->as('checkout.')->group(function () {
+    Route::get('/', [CheckoutController::class, 'index'])->name('index');
+    Route::post('/', [CheckoutController::class, 'store'])->name('store');
+    Route::get('/success', [CheckoutController::class, 'success'])->name('success');
+});
+
 Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();

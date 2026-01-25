@@ -92,7 +92,7 @@
         </div>
 
         {{-- Checkout Button --}}
-        <a href="{{ route('checkout') }}" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-center hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/20 flex items-center justify-center gap-2 mb-3">
+        <a href="{{ route('checkout.index') }}" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-center hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/20 flex items-center justify-center gap-2 mb-3">
             <i class="fas fa-lock text-sm"></i>
             Proceed to Checkout
         </a>

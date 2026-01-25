@@ -135,7 +135,7 @@ if (!function_exists('money')) {
         if ($decimal[1] == '00') {
             $money = str_replace('.00', '', $money);
         }
-        return $money . ' ' . currency($currencyType);
+        return currency($currencyType) . $money;
     }
 }
 if (!function_exists('convertBengaliToEnglishDigits')) {
