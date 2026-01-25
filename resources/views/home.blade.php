@@ -4,7 +4,7 @@
 
 @section('content')
 {{-- Hero Slider --}}
-@include('home.hero-slider')
+@include('home.hero-slider-new')
 
 {{-- Quick Category Menu --}}
 @include('home.categories')

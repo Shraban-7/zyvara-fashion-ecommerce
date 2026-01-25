@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -74,12 +75,15 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
+        $banners = Banner::get();
+
         return view('home', compact(
             'newArrivals',
             'bestSelling',
             'mensProducts',
             'womensProducts',
-            'featuredCategories'
+            'featuredCategories',
+            'banners',
         ));
     }
 }
