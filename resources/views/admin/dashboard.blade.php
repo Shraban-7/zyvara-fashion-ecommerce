@@ -91,12 +91,12 @@
         <div class="space-y-4">
             @forelse($topProducts ?? [] as $product)
             <div class="flex items-center gap-3">
-                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-12 h-12 rounded-lg object-cover bg-gray-100">
+                <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-12 h-12 rounded-lg object-cover bg-gray-100">
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate">{{ $product->name }}</p>
-                    <p class="text-xs text-gray-500">{{ $product->sales }} sold</p>
+                    <p class="text-sm font-medium text-gray-900 truncate">{{ $product['name'] }}</p>
+                    <p class="text-xs text-gray-500">{{ $product['sales'] }} sold</p>
                 </div>
-                <span class="text-sm font-bold text-gray-900">৳{{ number_format($product->revenue, 0) }}</span>
+                <span class="text-sm font-bold text-gray-900">৳{{ number_format($product['revenue'], 0) }}</span>
             </div>
             @empty
             <div class="flex items-center gap-3">
@@ -163,35 +163,35 @@
                     @forelse($recentOrders ?? [] as $order)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-semibold text-gray-900">#{{ $order->id }}</span>
+                            <span class="text-sm font-semibold text-gray-900">#{{ $order['id'] }}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                                    {{ substr($order->customer_name, 0, 1) }}
+                                    {{ substr($order['customer_name'], 0, 1) }}
                                 </div>
-                                <span class="text-sm text-gray-900">{{ $order->customer_name }}</span>
+                                <span class="text-sm text-gray-900">{{ $order['customer_name'] }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $order->created_at }}
+                            {{ $order['created_at'] }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                            ৳{{ number_format($order->total, 0) }}
+                            ৳{{ number_format($order['total'], 0) }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($order->status === 'pending')
+                            @if($order['status'] === 'pending')
                             <span class="px-3 py-1 text-xs font-semibold text-orange-700 bg-orange-100 rounded-full">Pending</span>
-                            @elseif($order->status === 'processing')
+                            @elseif($order['status'] === 'processing')
                             <span class="px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">Processing</span>
-                            @elseif($order->status === 'completed')
+                            @elseif($order['status'] === 'completed')
                             <span class="px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Completed</span>
                             @else
                             <span class="px-3 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">Cancelled</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">
-                            <a href="{{ route('admin.orders.show', $order->id) }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View</a>
+                            <a href="{{ route('admin.orders.show', $order['id']) }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View</a>
                         </td>
                     </tr>
                     @empty

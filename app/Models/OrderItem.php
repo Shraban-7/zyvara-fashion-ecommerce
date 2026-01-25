@@ -21,13 +21,15 @@ class OrderItem extends Model
         'color',
         'quantity',
         'unit_price',
-        'total_price',
+        'subtotal',
+        'total',
+        'discount',
     ];
 
     protected $casts = [
         'quantity' => 'integer',
         'unit_price' => 'decimal:2',
-        'total_price' => 'decimal:2',
+        'subtotal' => 'decimal:2',
     ];
 
     // Relationships

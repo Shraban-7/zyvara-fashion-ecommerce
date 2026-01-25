@@ -59,6 +59,10 @@
     </style>
 </head>
 
+<?php
+    $pendingOrdersCount = \App\Models\Order::where('status', \App\Enums\OrderStatus::PENDING)->count();
+?>
+
 <body class="bg-gray-50 min-h-screen">
     <div class="flex h-screen overflow-hidden">
         {{-- Sidebar --}}
@@ -94,7 +98,9 @@
                         <a href="{{ route('admin.orders.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                             <i class="fas fa-shopping-bag text-lg w-5"></i>
                             <span>Orders</span>
-                            <span class="ml-auto bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">12</span>
+                            @if($pendingOrdersCount)
+                            <span class="ml-auto bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">{{ $pendingOrdersCount }}</span>
+                            @endif
                         </a>
                     </div>
 

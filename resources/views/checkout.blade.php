@@ -63,8 +63,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
                         <div class="flex">
-                            <span class="h-12 px-3 bg-gray-100 border border-r-0 rounded-l-xl flex items-center text-sm text-gray-600 @error('phone') border-red-500 @else border-gray-200 @enderror">+880</span>
-                            <input type="tel" name="phone" required placeholder="1XXXXXXXXX" pattern="1[3-9][0-9]{8}" maxlength="10" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 border rounded-r-xl text-sm focus:outline-none focus:border-brand-blue transition @error('phone') border-red-500 @else border-gray-200 @enderror">
+                            <span class="h-12 px-3 bg-gray-100 border border-r-0 rounded-l-xl flex items-center text-sm text-gray-600 @error('phone') border-red-500 @else border-gray-200 @enderror">+88</span>
+                            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" maxlength="11" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 border rounded-r-xl text-sm focus:outline-none focus:border-brand-blue transition @error('phone') border-red-500 @else border-gray-200 @enderror">
                         </div>
                         @error('phone')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -368,16 +368,17 @@
                     </div>
                     @endforeach
                 </div>
-                
+
                 <a href="#" onclick="openCartDrawer(); return false;" class="text-brand-blue text-sm font-medium hover:underline mb-5 inline-block">
                     <i class="fas fa-edit mr-1"></i> Edit Cart
                 </a>
 
                 <div class="mb-5">
                     <div class="flex gap-2">
-                        <input type="text" name="coupon" placeholder="Coupon code" class="flex-1 h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition">
-                        <button type="button" class="h-11 px-4 bg-gray-100 text-gray-700 rounded-xl font-medium text-sm hover:bg-gray-200 transition">Apply</button>
+                        <input type="text" name="coupon" id="couponCode" placeholder="Coupon code" class="flex-1 h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition">
+                        <button type="button" id="applyCouponBtn" class="h-11 px-4 bg-gray-100 text-gray-700 rounded-xl font-medium text-sm hover:bg-gray-200 transition">Apply</button>
                     </div>
+                    <div id="couponMessage" class="mt-2 text-sm hidden"></div>
                 </div>
 
                 {{-- Price Breakdown --}}
@@ -441,11 +442,15 @@
     const cartSubtotal = "{{ $cart->subtotal }}";
     let currentDiscount = 0;
     let currentShippingCost = "{{ $shippingZones->first()->shipping_cost ?? 0 }}";
+    let appliedCouponCode = '';
 
     // Update total calculations
     function updateTotals() {
-        const total = cartSubtotal + currentShippingCost - currentDiscount;
-        document.getElementById('totalAmount').textContent = '৳' + total.toLocaleString();
+        const total = parseFloat(cartSubtotal) + parseFloat(currentShippingCost) - parseFloat(currentDiscount);
+        document.getElementById('totalAmount').textContent = '৳' + total.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
     }
 
     // Payment method toggle
@@ -466,10 +471,115 @@
     document.querySelectorAll('input[name="delivery_zone"]').forEach(radio => {
         radio.addEventListener('change', function() {
             currentShippingCost = parseFloat(this.dataset.cost);
-            document.getElementById('shippingCost').textContent = '৳' + currentShippingCost.toLocaleString();
+            document.getElementById('shippingCost').textContent = '৳' + currentShippingCost.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
             updateTotals();
         });
     });
+
+    // Coupon validation
+    document.getElementById('applyCouponBtn').addEventListener('click', async function() {
+        const couponInput = document.getElementById('couponCode');
+        const couponCode = couponInput.value.trim();
+        const messageDiv = document.getElementById('couponMessage');
+        const btn = this;
+
+        if (!couponCode) {
+            showCouponMessage('Please enter a coupon code', 'error');
+            return;
+        }
+
+        // Disable button during validation
+        btn.disabled = true;
+        btn.textContent = 'Checking...';
+
+        try {
+            const response = await fetch("{{ route('checkout.validate-coupon') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        coupon: couponCode,
+                        subtotal: cartSubtotal
+                    })
+                });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                currentDiscount = data.discount;
+                appliedCouponCode = couponCode;
+
+                // Show discount in UI
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('discountAmount').textContent = '-' + data.discount_formatted;
+
+                // Update totals
+                updateTotals();
+
+                // Show success message
+                showCouponMessage(data.message, 'success');
+
+                // Change button to "Remove"
+                btn.textContent = 'Remove';
+                btn.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+                btn.classList.add('bg-red-100', 'text-red-700', 'hover:bg-red-200');
+                btn.onclick = removeCoupon;
+
+                // Disable input
+                couponInput.disabled = true;
+            } else {
+                showCouponMessage(data.message || 'Invalid coupon code', 'error');
+                btn.textContent = 'Apply';
+            }
+        } catch (error) {
+            showCouponMessage('Error validating coupon. Please try again.', 'error');
+            btn.textContent = 'Apply';
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
+    // Remove coupon
+    function removeCoupon() {
+        const btn = document.getElementById('applyCouponBtn');
+        const couponInput = document.getElementById('couponCode');
+
+        currentDiscount = 0;
+        appliedCouponCode = '';
+
+        // Hide discount row
+        document.getElementById('discountRow').style.display = 'none';
+
+        // Update totals
+        updateTotals();
+
+        // Reset button
+        btn.textContent = 'Apply';
+        btn.classList.remove('bg-red-100', 'text-red-700', 'hover:bg-red-200');
+        btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+        btn.onclick = null;
+
+        // Enable and clear input
+        couponInput.disabled = false;
+        couponInput.value = '';
+
+        // Hide message
+        document.getElementById('couponMessage').classList.add('hidden');
+    }
+
+    // Show coupon message
+    function showCouponMessage(message, type) {
+        const messageDiv = document.getElementById('couponMessage');
+        messageDiv.textContent = message;
+        messageDiv.classList.remove('hidden', 'text-green-600', 'text-red-600');
+        messageDiv.classList.add(type === 'success' ? 'text-green-600' : 'text-red-600');
+    }
 
     // Copy to clipboard
     function copyToClipboard(text, btn) {

@@ -47,7 +47,7 @@ class DashboardController extends Controller
             ->map(function ($order) {
                 return [
                     'id' => $order->id,
-                    'customer_name' => $order->customer_name ?? $order->user->name,
+                    'customer_name' => $order->shipping_name ?? $order->user->name,
                     'created_at' => $order->created_at->format('M d, Y'),
                     'total' => $order->total,
                     'status' => $order->status->value ?? 'pending',
@@ -64,7 +64,7 @@ class DashboardController extends Controller
             ->map(function ($item) {
                 return [
                     'name' => $item->product->name,
-                    'image' => $item->product->images->first()?->image_path ?? 'placeholder.jpg',
+                    'image' => $item->product->thumbnail,
                     'sales' => $item->sales,
                     'revenue' => $item->revenue,
                 ];

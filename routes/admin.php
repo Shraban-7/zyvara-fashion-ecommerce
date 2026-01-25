@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\OrderController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -15,12 +16,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{product}/update', [ProductController::class, 'update'])->name('update');
     });
 
-    Route::get('/orders', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('orders.index');
-    Route::get('/orders/{id}', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('orders.show');
+    Route::prefix('orders')->as('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+        Route::post('/{id}/update-status', [OrderController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{id}/update-tracking', [OrderController::class, 'updateTracking'])->name('update-tracking');
+        Route::post('/{id}/update-notes', [OrderController::class, 'updateNotes'])->name('update-notes');
+        Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
+    });
 
     // Categories Routes (placeholder)
     Route::get('/categories', function () {
