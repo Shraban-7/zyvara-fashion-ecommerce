@@ -9,11 +9,6 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Display the homepage.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
         // Fetch new arrivals
