@@ -94,6 +94,7 @@
     </div>
 
     {{-- Desktop Navigation Menu --}}
+    @if(request()->routeIs('home'))
     <div class="hidden md:block border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-6">
             <nav class="flex items-center gap-8 h-12">
@@ -236,6 +237,7 @@
             </nav>
         </div>
     </div>
+    @endif
 
     {{-- Search Bar (Mobile) --}}
     <div class="px-4 pb-3 md:hidden">
