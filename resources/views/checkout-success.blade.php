@@ -85,7 +85,7 @@
                             @endif
                             <div class="flex items-center justify-between">
                                 <span class="text-sm text-gray-600">Qty: {{ $item->quantity }}</span>
-                                <span class="font-semibold text-gray-900">{{ money($item->total_price) }}</span>
+                                <span class="font-semibold text-gray-900">{{ money($item->subtotal) }}</span>
                             </div>
                         </div>
                     </div>

@@ -21,9 +21,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Display the checkout page.
-     */
     public function index()
     {
         $cart = Auth::check()
@@ -54,16 +51,11 @@ class CheckoutController extends Controller
         return view('checkout', compact('cart', 'shippingZones', 'districts', 'user', 'bkashNumber', 'nagadNumber'));
     }
 
-    /**
-     * Process the checkout/order placement.
-     */
     public function store(Request $request)
     {
-        // Validate the request
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|regex:/^01[3-9][0-9]{8}$/',
-            'email' => 'nullable|email|max:255',
             'delivery_zone' => 'required|in:inside_dhaka,outside_dhaka',
             'district' => 'required|string|max:100',
             'city' => 'required|string|max:100',
@@ -143,8 +135,7 @@ class CheckoutController extends Controller
                 'tax_amount' => 0,
                 'total' => $total,
                 'shipping_name' => $validated['name'],
-                'shipping_phone' => '+880' . $validated['phone'],
-                'shipping_email' => $validated['email'],
+                'shipping_phone' => '+88' . $validated['phone'],
                 'shipping_district' => $validated['district'],
                 'shipping_city' => $validated['city'],
                 'shipping_address' => $validated['address'],
@@ -209,9 +200,6 @@ class CheckoutController extends Controller
         }
     }
 
-    /**
-     * Display order success page.
-     */
     public function success()
     {
         $orderId = session('last_order_id');
@@ -229,15 +217,11 @@ class CheckoutController extends Controller
             return redirect()->route('home');
         }
 
-        // Clear the session order ID
         session()->forget('last_order_id');
 
         return view('checkout-success', compact('order'));
     }
 
-    /**
-     * Validate and apply coupon code.
-     */
     public function validateCoupon(Request $request)
     {
         $request->validate([
@@ -258,15 +242,13 @@ class CheckoutController extends Controller
 
         $subtotal = (float) $request->subtotal;
 
-        // Check minimum order amount
         if ($subtotal < $coupon->minimum_order_amount) {
             return response()->json([
                 'success' => false,
                 'message' => 'Minimum order amount of ' . money($coupon->minimum_order_amount) . ' required',
             ], 422);
         }
-
-        // Check usage limit per user
+        
         if ($coupon->usage_limit_per_user && Auth::check()) {
             $userUsageCount = Order::where('user_id', Auth::id())
                 ->where('coupon_id', $coupon->id)

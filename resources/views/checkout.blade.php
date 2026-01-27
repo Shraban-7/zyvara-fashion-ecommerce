@@ -46,7 +46,7 @@
         <div class="lg:col-span-2 space-y-6">
 
             {{-- Customer Information --}}
-            <div class="bg-white rounded-2xl p-5 md:p-6 border border-gray-100 shadow-sm">
+            {{--<div class="bg-white rounded-2xl p-5 md:p-6 border border-gray-100 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
                     <div class="w-8 h-8 bg-brand-blue text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
                     <h2 class="text-lg font-bold text-brand-black">Customer Information</h2>
@@ -80,13 +80,35 @@
                         @enderror
                     </div>
                 </div>
-            </div>
+            </div>--}}
 
             {{-- Delivery Address --}}
             <div class="bg-white rounded-2xl p-5 md:p-6 border border-gray-100 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 bg-brand-blue text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                    <h2 class="text-lg font-bold text-brand-black">Delivery Address</h2>
+                    <div class="w-8 h-8 bg-brand-blue text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                    <h2 class="text-lg font-bold text-brand-black">Delivery Informations</h2>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
+                        <input type="text" name="name" required placeholder="Enter your full name" value="{{ old('name', $user?->name) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition @error('name') border-red-500 @else border-gray-200 @enderror">
+                        @error('name')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
+                        <div class="flex">
+                            <span class="h-12 px-3 bg-gray-100 border border-r-0 rounded-l-xl flex items-center text-sm text-gray-600 @error('phone') border-red-500 @else border-gray-200 @enderror">+88</span>
+                            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" maxlength="11" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 border rounded-r-xl text-sm focus:outline-none focus:border-brand-blue transition @error('phone') border-red-500 @else border-gray-200 @enderror">
+                        </div>
+                        @error('phone')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @else
+                        <p class="text-xs text-gray-400 mt-1">We'll contact you on this number</p>
+                        @enderror
+                    </div>
                 </div>
 
                 {{-- Delivery Zone Selection --}}
@@ -146,7 +168,7 @@
             {{-- Payment Method --}}
             <div class="bg-white rounded-2xl p-5 md:p-6 border border-gray-100 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 bg-brand-blue text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                    <div class="w-8 h-8 bg-brand-blue text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
                     <h2 class="text-lg font-bold text-brand-black">Payment Method</h2>
                 </div>
 

@@ -24,8 +24,6 @@ class AdminUserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => UserRole::ADMIN,
                 'is_active' => true,
-                'email_verified_at' => now(),
-                'is_phone_verified' => true,
                 'phone_verified_at' => now(),
             ]
         );
@@ -40,8 +38,6 @@ class AdminUserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => UserRole::MANAGER,
                 'is_active' => true,
-                'email_verified_at' => now(),
-                'is_phone_verified' => true,
                 'phone_verified_at' => now(),
             ]
         );
@@ -56,8 +52,6 @@ class AdminUserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => UserRole::STAFF,
                 'is_active' => true,
-                'email_verified_at' => now(),
-                'is_phone_verified' => true,
                 'phone_verified_at' => now(),
             ]
         );
