@@ -12,6 +12,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('products')->as('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
     Route::get('/{slug}', [ProductController::class, 'show'])->name('show');
+    Route::get('/{product}/quickview', [ProductController::class, 'getQuickviewData'])->name('getQuickviewData');
 });
 
 Route::prefix('cart')->as('cart.')->group(function () {

@@ -239,4 +239,69 @@ class ProductController extends Controller
 
         return view('products.show', compact('product', 'relatedProducts', 'ratingDistribution', 'availableSizes', 'availableColors'));
     }
+
+    /**
+     * Get product details for (Quick View)
+     */
+    public function getQuickviewData($id)
+    {
+        $product = Product::with([
+            'category',
+            'images',
+            'variants.size',
+            'variants.color'
+        ])
+            ->where('id', $id)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        // Transform product data for API
+        $productData = [
+            'id' => $product->id,
+            'name' => $product->name,
+            'slug' => $product->slug,
+            'brand' => $product->brand,
+            'price' => (float) $product->price,
+            'compare_price' => $product->compare_price ? (float) $product->compare_price : null,
+            'short_description' => $product->short_description,
+            'stock_in' => $product->stock_in,
+            'is_new_arrival' => $product->is_new_arrival,
+            'is_best_seller' => $product->is_best_seller,
+            'is_on_sale' => $product->is_on_sale,
+            'is_featured' => $product->is_featured,
+            'average_rating' => (float) $product->average_rating,
+            'review_count' => $product->review_count,
+            'image' => $product->thumbnail,
+            'images' => $product->images->map(function ($image) {
+                return [
+                    'id' => $image->id,
+                    'image_url' => $image->image_url,
+                    'is_primary' => $image->is_primary,
+                ];
+            }),
+            'variants' => $product->variants->map(function ($variant) {
+                return [
+                    'id' => $variant->id,
+                    'size_id' => $variant->size_id,
+                    'color_id' => $variant->color_id,
+                    'stock_in' => $variant->stock_in,
+                    'price_adjustment' => (float) ($variant->price_adjustment ?? 0),
+                    'size' => $variant->size ? [
+                        'id' => $variant->size->id,
+                        'name' => $variant->size->name,
+                    ] : null,
+                    'color' => $variant->color ? [
+                        'id' => $variant->color->id,
+                        'name' => $variant->color->name,
+                        'hex_code' => $variant->color->hex_code,
+                    ] : null,
+                ];
+            }),
+        ];
+
+        return response()->json([
+            'success' => true,
+            'product' => $productData
+        ]);
+    }
 }

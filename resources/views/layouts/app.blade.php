@@ -194,6 +194,7 @@
     @include('partials.mobile-nav')
     @include('partials.search-modal')
     @include('partials.cart-drawer')
+    @include('components.product-quick-view-modal')
 
     {{-- Floating WhatsApp Button --}}
     <a href="https://wa.me/8801712345678" target="_blank" class="fixed bottom-40 md:bottom-24 right-4 md:right-8 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition tap-effect z-40 animate-bounce" style="animation-duration: 2s;">
@@ -202,10 +203,11 @@
 
     @include('partials.auth-modal')
     @include('partials.scripts')
-    
+
     @include('partials.toast')
 
     <script src="{{ asset('js/cart.js') }}"></script>
+    <script src="{{ asset('js/product-variant.js') }}"></script>
 
     @stack('scripts')
 

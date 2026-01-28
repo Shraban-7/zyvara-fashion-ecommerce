@@ -237,7 +237,7 @@ class CartManager {
 
     updateCartCount(count) {
         const badges = document.querySelectorAll(
-            "#cartCountBadge, #cartItemCount, #headerCartCount"
+            "#cartCountBadge, #cartItemCount, #headerCartCount",
         );
         badges.forEach((badge) => {
             if (badge) {
@@ -281,18 +281,18 @@ class CartManager {
                     <p class="text-xs text-gray-500 mt-1">Size: ${item.size} | Color: ${item.color}</p>
                     <div class="flex items-center justify-between mt-3">
                         <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
-                            <button onclick="cartManager.decreaseQuantity(${item.id}, ${item.quantity})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
+                            <button onclick="window.cartManager.decreaseQuantity(${item.id}, ${item.quantity})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
                                 <i class="fas fa-minus text-xs"></i>
                             </button>
-                            <span class="w-8 text-center text-sm font-semibold">${item.quantity}</span>
-                            <button onclick="cartManager.increaseQuantity(${item.id}, ${item.quantity})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
+                            <span class="w-12 text-center font-semibold text-gray-700">${item.quantity}</span>
+                            <button onclick="window.cartManager.increaseQuantity(${item.id}, ${item.quantity})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition">
                                 <i class="fas fa-plus text-xs"></i>
                             </button>
                         </div>
                         <span class="text-brand-blue font-bold">৳${item.total_price.toLocaleString()}</span>
                     </div>
                 </div>
-                <button onclick="cartManager.removeItem(${item.id})" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition opacity-0 group-hover:opacity-100">
+                <button onclick="window.cartManager.removeItem(${item.id})" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition opacity-0 group-hover:opacity-100">
                     <i class="fas fa-trash-alt text-xs"></i>
                 </button>
             </div>
@@ -341,31 +341,32 @@ class CartManager {
     }
 }
 
-let cartManager;
+// Initialize CartManager and expose globally
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
-        cartManager = new CartManager();
+        window.cartManager = new CartManager();
     });
 } else {
-    cartManager = new CartManager();
+    window.cartManager = new CartManager();
 }
 
-function openCartDrawer() {
+// Expose cart functions globally
+window.openCartDrawer = function openCartDrawer() {
     const drawer = document.getElementById("cartDrawer");
     const overlay = document.getElementById("cartOverlay");
 
     if (drawer && overlay) {
-        if (cartManager) {
-            cartManager.loadCart();
+        if (window.cartManager) {
+            window.cartManager.loadCart();
         }
 
         drawer.classList.remove("translate-x-full");
         overlay.classList.remove("invisible", "opacity-0");
         document.body.style.overflow = "hidden";
     }
-}
+};
 
-function closeCartDrawer() {
+window.closeCartDrawer = function closeCartDrawer() {
     const drawer = document.getElementById("cartDrawer");
     const overlay = document.getElementById("cartOverlay");
 
@@ -374,4 +375,4 @@ function closeCartDrawer() {
         overlay.classList.add("invisible", "opacity-0");
         document.body.style.overflow = "";
     }
-}
+};

@@ -688,16 +688,40 @@
     document.addEventListener('DOMContentLoaded', function() {
         const addToCartBtn = document.getElementById('addToCartBtn');
         const buyNowBtn = document.getElementById('buyNowBtn');
+        const productVariants = @json($product->variants);
 
         if (addToCartBtn) {
             addToCartBtn.addEventListener('click', function() {
-                const selectedVariant = getSelectedVariant();
+                const result = getSelectedVariant();
+
+                // Check for variant validation errors
+                if (result === 'error_color') {
+                    if (window.showError) {
+                        window.showError('Please select a color');
+                    }
+                    return;
+                }
+
+                if (result === 'error_size') {
+                    if (window.showError) {
+                        window.showError('Please select a size');
+                    }
+                    return;
+                }
+
+                if (result === 'error_not_found') {
+                    if (window.showError) {
+                        window.showError('Selected variant is not available');
+                    }
+                    return;
+                }
+
                 const quantity = parseInt(document.getElementById('productQuantity').value);
 
-                if (cartManager) {
-                    cartManager.addToCart("{{$product->id}}", selectedVariant, quantity).then(success => {
-                        if (success) {
-                            openCartDrawer();
+                if (window.cartManager) {
+                    window.cartManager.addToCart("{{$product->id}}", result, quantity).then(success => {
+                        if (success && window.openCartDrawer) {
+                            window.openCartDrawer();
                         }
                     });
                 }
@@ -706,11 +730,34 @@
 
         if (buyNowBtn) {
             buyNowBtn.addEventListener('click', function() {
-                const selectedVariant = getSelectedVariant();
+                const result = getSelectedVariant();
+
+                // Check for variant validation errors
+                if (result === 'error_color') {
+                    if (window.showError) {
+                        window.showError('Please select a color');
+                    }
+                    return;
+                }
+
+                if (result === 'error_size') {
+                    if (window.showError) {
+                        window.showError('Please select a size');
+                    }
+                    return;
+                }
+
+                if (result === 'error_not_found') {
+                    if (window.showError) {
+                        window.showError('Selected variant is not available');
+                    }
+                    return;
+                }
+
                 const quantity = parseInt(document.getElementById('productQuantity').value);
 
-                if (cartManager) {
-                    cartManager.addToCart("{{$product->id}}", selectedVariant, quantity).then(success => {
+                if (window.cartManager) {
+                    window.cartManager.addToCart("{{$product->id}}", result, quantity).then(success => {
                         if (success) {
                             window.location.href = "{{ route('checkout.index') }}";
                         }
@@ -718,25 +765,46 @@
                 }
             });
         }
-    });
 
-    // Get selected variant based on color and size
-    function getSelectedVariant() {
-        const selectedColorBtn = document.querySelector('.color-btn.border-brand-blue');
-        const selectedSizeBtn = document.querySelector('.product-size-btn.border-brand-blue');
+        // Get selected variant based on color and size
+        function getSelectedVariant() {
+            const selectedColorBtn = document.querySelector('.color-btn.border-brand-blue');
+            const selectedSizeBtn = document.querySelector('.product-size-btn.border-brand-blue');
 
-        // If product has variants, find the matching variant
-        if (selectedSizeBtn || selectedColorBtn) {
-            const colorId = selectedColorBtn?.dataset.colorId;
-            const sizeId = selectedSizeBtn?.dataset.sizeId;
+            // If no variants exist, return null
+            if (!productVariants || productVariants.length === 0) {
+                return null;
+            }
 
-            // You would need to implement logic to find the variant ID based on color and size
-            // For now, we'll just return null and add to cart without variant
-            // In a real application, you'd pass variants data and match them here
-            return null;
+            // Get unique colors and sizes from variants
+            const colors = [...new Map(productVariants.filter(v => v.color).map(v => [v.color.id, v.color])).values()];
+            const sizes = [...new Map(productVariants.filter(v => v.size).map(v => [v.size.id, v.size])).values()];
+
+            const hasColors = colors.length > 0;
+            const hasSizes = sizes.length > 0;
+
+            // Validate selections
+            if (hasColors && !selectedColorBtn) {
+                return 'error_color';
+            }
+
+            if (hasSizes && !selectedSizeBtn) {
+                return 'error_size';
+            }
+
+            // Get selected IDs
+            const colorId = selectedColorBtn ? parseInt(selectedColorBtn.dataset.colorId) : null;
+            const sizeId = selectedSizeBtn ? parseInt(selectedSizeBtn.dataset.sizeId) : null;
+
+            // Find matching variant
+            const variant = productVariants.find(v => {
+                const colorMatch = !hasColors || v.color_id === colorId;
+                const sizeMatch = !hasSizes || v.size_id === sizeId;
+                return colorMatch && sizeMatch;
+            });
+
+            return variant ? variant.id : 'error_not_found';
         }
-
-        return null;
-    }
+    });
 </script>
 @endpush

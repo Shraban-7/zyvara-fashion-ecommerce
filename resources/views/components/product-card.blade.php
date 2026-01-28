@@ -88,9 +88,8 @@ if ($product->compare_price && $product->compare_price > $product->price) {
 
         <button
             class="add-to-cart-btn w-full bg-brand-blue text-white py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm hover:bg-blue-600 transition tap-effect"
-            data-add-to-cart
-            data-product-id="{{ $product->id }}"
-            data-quantity="1">
+            onclick="handleProductCardAddToCart({{ $product->id }}, {{ $product->variants->count() }})"
+            data-product-id="{{ $product->id }}">
             <i class="fas fa-shopping-bag mr-1"></i>
             Add to Cart
         </button>

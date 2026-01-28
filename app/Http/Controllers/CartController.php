@@ -96,7 +96,16 @@ class CartController extends Controller
             DB::beginTransaction();
 
             $cart = $this->getOrCreateCart();
-            $product = Product::findOrFail($request->product_id);
+            $product = Product::with('variants')->findOrFail($request->product_id);
+
+            // Check if product has variants and variant is required but not provided
+            if ($product->variants->count() > 0 && !$request->product_variant_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please select product options (size/color) before adding to cart',
+                    'requires_variant' => true
+                ], 400);
+            }
 
             // Get variant if provided
             $variant = null;
@@ -104,6 +113,22 @@ class CartController extends Controller
                 $variant = ProductVariant::where('product_id', $product->id)
                     ->where('id', $request->product_variant_id)
                     ->firstOrFail();
+
+                // Check variant stock
+                if ($variant->stock_in < $request->quantity) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Selected variant does not have enough stock'
+                    ], 400);
+                }
+            } else {
+                // Check product stock if no variant
+                if ($product->stock_in < $request->quantity) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Product does not have enough stock'
+                    ], 400);
+                }
             }
 
             // Check if item already exists in cart
@@ -114,7 +139,18 @@ class CartController extends Controller
 
             if ($cartItem) {
                 // Update quantity if item exists
-                $cartItem->quantity += $request->quantity;
+                $newQuantity = $cartItem->quantity + $request->quantity;
+
+                // Check stock for updated quantity
+                $availableStock = $variant ? $variant->stock_in : $product->stock_in;
+                if ($newQuantity > $availableStock) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Cannot add more items. Only {$availableStock} items available"
+                    ], 400);
+                }
+
+                $cartItem->quantity = $newQuantity;
                 $cartItem->save();
             } else {
                 // Create new cart item
@@ -206,7 +242,7 @@ class CartController extends Controller
             // Reload cart
             $cart->load('items');
 
-            if($cart->items->count() == 0 ){
+            if ($cart->items->count() == 0) {
                 $cart->delete();
             }
 

@@ -77,16 +77,16 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <h4 class="font-semibold text-gray-900 mb-1">{{ $item->product_name }}</h4>
-                        @if($item->size || $item->color)
+                        @if($item->size_name || $item->color_name)
                         <p class="text-sm text-gray-500 mb-2">
-                            @if($item->size)Size: {{ $item->size }}@endif
-                            @if($item->size && $item->color) | @endif
-                            @if($item->color)Color: {{ $item->color }}@endif
+                            @if($item->size_name)Size: {{ $item->size_name }}@endif
+                            @if($item->size_name && $item->color_name) | @endif
+                            @if($item->color_name)Color: {{ $item->color_name }}@endif
                         </p>
                         @endif
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600">Qty: {{ $item->quantity }} × {{ money($item->unit_price) }}</span>
-                            <span class="text-base font-bold text-gray-900">{{ money($item->total_price) }}</span>
+                            <span class="text-base font-bold text-gray-900">{{ money($item->total) }}</span>
                         </div>
                     </div>
                 </div>
