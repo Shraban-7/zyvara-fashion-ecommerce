@@ -13,16 +13,25 @@ class ProductVariantManager {
 
     init() {
         // Setup quick view buttons on product cards
-        this.setupQuickViewButtons();
+        //this.setupQuickViewButtons();
 
         // Close modal on outside click
-        document
-            .getElementById("productQuickViewModal")
-            ?.addEventListener("click", (e) => {
-                if (e.target.id === "productQuickViewModal") {
-                    this.closeQuickView();
+        document.getElementById("productQuickViewModal")?.addEventListener("click", (e) => {
+            if (e.target.id === "productQuickViewModal") {
+                this.closeQuickView();
+            }
+        });
+
+        document.querySelectorAll(".quick-view-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const productId = e.currentTarget.dataset.productId;
+
+                if (productId) {
+                    this.openQuickView(productId);
                 }
             });
+        });
+
 
         // Close modal on ESC key
         document.addEventListener("keydown", (e) => {

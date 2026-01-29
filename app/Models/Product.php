@@ -214,8 +214,11 @@ class Product extends Model
 
     public function thumbnail(): Attribute
     {
+        $default = "assets/images/products/default" . rand(1, 5) . '.webp';
+        
         return Attribute::make(
-            get: fn() => $this->image ? storage_url($this->image) : asset('assets/images/default.png')
+            get: fn() => $this->image ? storage_url($this->image) : asset($default),
+            // get: fn() => $this->image ? storage_url($this->image) : asset('assets/images/default.png'),
         );
     }
 }

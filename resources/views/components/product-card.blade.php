@@ -29,6 +29,100 @@ if ($product->compare_price && $product->compare_price > $product->price) {
 }
 ?>
 
+<div class="product-card group bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
+    <div class="relative overflow-hidden bg-gray-50">
+        <a href="{{ route('products.show', $product->slug) }}" class="block">
+            <img
+                src="{{ $product->thumbnail }}"
+                alt="{{ $product->name }}"
+                class="w-full aspect-[3/4] object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                loading="lazy">
+        </a>
+
+        {{-- Badge --}}
+        @if($badge)
+        <span class="absolute top-2.5 left-2.5 bg-{{ $badgeColor }}-500 text-white text-[10px] font-medium px-2 py-0.5 rounded shadow-sm">
+            {{ $badge }}
+        </span>
+        @endif
+
+        {{-- Top Right Actions --}}
+        <div class="absolute top-2.5 right-2.5 flex flex-col gap-2">
+            {{-- Wishlist Button --}}
+            <button
+                class="wishlist-btn w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-red-50 transition-colors tap-effect"
+                data-product-id="{{ $product->id }}"
+                aria-label="Add to wishlist">
+                <i class="far fa-heart text-gray-600 text-sm"></i>
+            </button>
+
+            {{-- Quick View Button --}}
+            <!-- <button
+                class="quick-view-btn w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-gray-100 transition-colors tap-effect"
+                aria-label="Quick view" data-product-id="{{ $product->id }}">
+                <i class="far fa-eye text-gray-600 text-sm"></i>
+            </button> -->
+        </div>
+    </div>
+
+    <div class="p-3">
+        {{-- Product Name --}}
+        <a href="{{ route('products.show', $product->slug) }}">
+            <h3 class="text-sm font-medium text-gray-800 mb-1.5 line-clamp-2 hover:text-brand-blue transition-colors leading-snug">
+                {{ $product->name }}
+            </h3>
+        </a>
+
+        {{-- Rating --}}
+        @if($product->review_count > 0)
+        <div class="flex items-center gap-1 mb-2">
+            <div class="flex text-yellow-400">
+                @for($i = 1; $i <= 5; $i++)
+                    @if($i <=floor($product->average_rating))
+                    <i class="fas fa-star text-[10px]"></i>
+                    @elseif($i - 0.5 <= $product->average_rating)
+                        <i class="fas fa-star-half-alt text-[10px]"></i>
+                        @else
+                        <i class="far fa-star text-[10px]"></i>
+                        @endif
+                        @endfor
+            </div>
+            <span class="text-[10px] text-gray-500">({{ $product->review_count }})</span>
+        </div>
+        @endif
+
+        {{-- Price --}}
+        <div class="flex items-center gap-1.5 mb-2.5 flex-wrap">
+            <span class="text-gray-900 font-semibold text-base">৳{{ number_format($product->price, 0) }}</span>
+            @if($product->compare_price && $product->compare_price > $product->price)
+            <span class="text-gray-400 text-xs line-through">৳{{ number_format($product->compare_price, 0) }}</span>
+            @if($discountPercent > 0)
+            <span class="text-green-600 text-[10px] font-medium">-{{ $discountPercent }}%</span>
+            @endif
+            @endif
+        </div>
+
+        {{-- Add to Cart Button --}}
+        <div class="flex gap-1.5">
+            <button
+                class="add-to-cart-btn w-full bg-brand-blue/90 text-white py-2.5 rounded-lg font-normal text-sm hover:bg-brand-blue transition-all flex items-center justify-center gap-2 tap-effect"
+                onclick="handleProductCardAddToCart({{ $product->id }}, {{ $product->variants->count() }})"
+                data-product-id="{{ $product->id }}"
+                aria-label="Add to cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add to Cart</span>
+            </button>
+            <button
+                class="quick-view-btn w-10 bg-gray-100 text-gray-700 py-2 rounded-md hover:bg-gray-200 transition-colors tap-effect"
+                data-product-id="{{ $product->id }}"
+                aria-label="Quick view">
+                <i class="far fa-eye text-xs"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+@isset($oldProductCard)
 <div class="product-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
     <div class="relative">
         <a href="{{ route('products.show', $product->slug) }}">
@@ -95,3 +189,4 @@ if ($product->compare_price && $product->compare_price > $product->price) {
         </button>
     </div>
 </div>
+@endisset

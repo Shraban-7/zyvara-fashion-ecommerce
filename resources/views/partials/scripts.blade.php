@@ -160,42 +160,42 @@
     });
 
     // ===== Add to Cart Animation =====
-    document.querySelectorAll('button').forEach(btn => {
-        if (btn.textContent.includes('Add to Cart')) {
-            btn.addEventListener('click', function() {
-                const originalText = this.textContent;
-                this.textContent = 'Added! ✓';
-                this.classList.add('bg-green-500');
-                this.classList.remove('bg-brand-blue');
+    // document.querySelectorAll('button').forEach(btn => {
+    //     if (btn.textContent.includes('Add to Cart')) {
+    //         btn.addEventListener('click', function() {
+    //             const originalText = this.textContent;
+    //             this.textContent = 'Added! ✓';
+    //             this.classList.add('bg-green-500');
+    //             this.classList.remove('bg-brand-blue');
 
-                setTimeout(() => {
-                    this.textContent = originalText;
-                    this.classList.remove('bg-green-500');
-                    this.classList.add('bg-brand-blue');
-                }, 1500);
-            });
-        }
-    });
+    //             setTimeout(() => {
+    //                 this.textContent = originalText;
+    //                 this.classList.remove('bg-green-500');
+    //                 this.classList.add('bg-brand-blue');
+    //             }, 1500);
+    //         });
+    //     }
+    // });
 
     // ===== Wishlist Toggle =====
-    document.querySelectorAll('.product-card button[aria-label], .product-card .absolute.top-2.right-2').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const icon = this.querySelector('i');
+    // document.querySelectorAll('.product-card button[aria-label], .product-card .absolute.top-2.right-2').forEach(btn => {
+    //     btn.addEventListener('click', function(e) {
+    //         e.preventDefault();
+    //         const icon = this.querySelector('i');
 
-            if (icon) {
-                if (icon.classList.contains('far')) {
-                    // Switch to filled heart
-                    icon.classList.remove('far', 'text-gray-600');
-                    icon.classList.add('fas', 'text-red-500');
-                } else {
-                    // Switch to outline heart
-                    icon.classList.remove('fas', 'text-red-500');
-                    icon.classList.add('far', 'text-gray-600');
-                }
-            }
-        });
-    });
+    //         if (icon) {
+    //             if (icon.classList.contains('far')) {
+    //                 // Switch to filled heart
+    //                 icon.classList.remove('far', 'text-gray-600');
+    //                 icon.classList.add('fas', 'text-red-500');
+    //             } else {
+    //                 // Switch to outline heart
+    //                 icon.classList.remove('fas', 'text-red-500');
+    //                 icon.classList.add('far', 'text-gray-600');
+    //             }
+    //         }
+    //     });
+    // });
 
     // ===== Header shadow on scroll =====
     const header = document.querySelector('header');
