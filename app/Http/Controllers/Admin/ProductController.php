@@ -90,7 +90,7 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(15)->appends($request->query());
-        
+
         $categories = Category::active()->orderBy('name')->get();
 
         return view('admin.products.index', compact('products', 'categories'));
@@ -208,6 +208,188 @@ class ProductController extends Controller
                 ->back()
                 ->withInput()
                 ->with('error', 'Failed to create product: ' . $e->getMessage());
+        }
+    }
+
+    public function edit(Product $product)
+    {
+        $categories = Category::active()->orderBy('name')->get();
+        $sizes = Size::orderBy('sort_order')->get();
+        $colors = Color::orderBy('name')->get();
+        $fitTypes = FitType::cases();
+        $patterns = Pattern::cases();
+        $occasions = Occasion::cases();
+
+        // Load relationships
+        $product->load(['images', 'variants.size', 'variants.color']);
+
+        return view('admin.products.edit', compact(
+            'product',
+            'categories',
+            'sizes',
+            'colors',
+            'fitTypes',
+            'patterns',
+            'occasions'
+        ));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'sku' => 'nullable|string|max:255|unique:products,sku,' . $product->id,
+            'short_description' => 'nullable|string',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'compare_price' => 'nullable|numeric|min:0',
+            'cost_price' => 'nullable|numeric|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'brand' => 'nullable|string|max:255',
+            'material' => 'nullable|string|max:255',
+            'fit_type' => 'nullable|string|in:' . implode(',', FitType::values()),
+            'pattern' => 'nullable|string|in:' . implode(',', Pattern::values()),
+            'occasion' => 'nullable|string|in:' . implode(',', Occasion::values()),
+            'stock_in' => 'required|integer|min:0',
+            'low_stock_threshold' => 'nullable|integer|min:0',
+            'weight' => 'nullable|numeric|min:0',
+            'is_active' => 'boolean',
+            'is_featured' => 'boolean',
+            'is_new_arrival' => 'boolean',
+            'is_best_seller' => 'boolean',
+            'is_on_sale' => 'boolean',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'tags' => 'nullable|string',
+            'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
+            'delete_images' => 'nullable|array',
+            'delete_images.*' => 'exists:product_images,id',
+            'variants' => 'nullable|array',
+            'variants.*.id' => 'nullable|exists:product_variants,id',
+            'variants.*.size_id' => 'nullable|exists:sizes,id',
+            'variants.*.color_id' => 'nullable|exists:colors,id',
+            'variants.*.sku' => 'nullable|string|max:255',
+            'variants.*.stock_in' => 'nullable|integer|min:0',
+            'variants.*.price_adjustment' => 'nullable|numeric',
+            'delete_variants' => 'nullable|array',
+            'delete_variants.*' => 'exists:product_variants,id',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // Update slug if name changed
+            if ($validated['name'] !== $product->name) {
+                $validated['slug'] = Str::slug($validated['name']);
+
+                // Ensure unique slug
+                $originalSlug = $validated['slug'];
+                $counter = 1;
+                while (Product::where('slug', $validated['slug'])->where('id', '!=', $product->id)->exists()) {
+                    $validated['slug'] = $originalSlug . '-' . $counter;
+                    $counter++;
+                }
+            }
+
+            // Convert tags string to array
+            if (!empty($validated['tags'])) {
+                $validated['tags'] = array_map('trim', explode(',', $validated['tags']));
+            }
+
+            // Handle boolean fields
+            $validated['is_active'] = $request->has('is_active');
+            $validated['is_featured'] = $request->has('is_featured');
+            $validated['is_new_arrival'] = $request->has('is_new_arrival');
+            $validated['is_best_seller'] = $request->has('is_best_seller');
+            $validated['is_on_sale'] = $request->has('is_on_sale');
+
+            // Update the product
+            $product->update($validated);
+
+            // Handle image deletions
+            if ($request->has('delete_images')) {
+                foreach ($request->delete_images as $imageId) {
+                    $image = $product->images()->find($imageId);
+                    if ($image) {
+                        Storage::disk('public')->delete($image->image_path);
+                        $image->delete();
+                    }
+                }
+            }
+
+            // Handle new image uploads
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('products', 'public');
+                    $product->images()->create([
+                        'image_path' => $path,
+                    ]);
+                }
+            }
+
+            // Handle variant deletions
+            if ($request->has('delete_variants')) {
+                $product->variants()->whereIn('id', $request->delete_variants)->delete();
+            }
+
+            // Handle variants (create/update)
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variantData) {
+                    // Skip if no size and no color selected
+                    if (empty($variantData['size_id']) && empty($variantData['color_id'])) {
+                        continue;
+                    }
+
+                    $variantData['product_id'] = $product->id;
+                    $variantData['stock_in'] = $variantData['stock_in'] ?? 0;
+                    $variantData['price_adjustment'] = $variantData['price_adjustment'] ?? 0;
+
+                    if (!empty($variantData['id'])) {
+                        // Update existing variant
+                        $variant = $product->variants()->find($variantData['id']);
+                        if ($variant) {
+                            $variant->update($variantData);
+                        }
+                    } else {
+                        // Create new variant
+                        $product->variants()->create($variantData);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Product updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Failed to update product: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy(Product $product)
+    {
+        try {
+            // Delete all product images
+            foreach ($product->images as $image) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+
+            // Soft delete the product (cascades to images and variants)
+            $product->delete();
+
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Product deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Failed to delete product: ' . $e->getMessage());
         }
     }
 }
