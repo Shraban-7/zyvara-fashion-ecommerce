@@ -28,6 +28,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamp('phone_verified_at')->nullable();
             $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('last_seen')->nullable();
             $table->string('last_login_ip')->nullable();
 
             $table->rememberToken();

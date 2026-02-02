@@ -32,7 +32,7 @@
 
             {{-- Login Form --}}
             <div id="loginForm" class="p-6">
-                <form action="#" method="POST" class="space-y-4">
+                <form id="loginFormElement" action="#" method="POST" class="space-y-4">
                     @csrf
 
                     {{-- Phone Number --}}
@@ -43,9 +43,9 @@
                                 <span class="text-lg">🇧🇩</span>
                                 <span class="text-sm font-medium">+88</span>
                             </div>
-                            <input type="tel" id="login_phone" name="phone" placeholder="01XXXXXXXXX" maxlength="10"
+                            <input type="tel" id="login_phone" name="phone" placeholder="01XXXXXXXXX" maxlength="11"
                                 class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-24 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue focus:bg-white transition-all"
-                                pattern="[0-9]{10}" inputmode="numeric" required>
+                                pattern="[0-9]{11}" inputmode="numeric" required>
                         </div>
                         <p class="mt-1 text-xs text-gray-400">Enter 11 digit number without +88</p>
                     </div>
@@ -109,7 +109,7 @@
 
             {{-- Signup Form --}}
             <div id="signupForm" class="p-6 hidden">
-                <form action="#" method="POST" class="space-y-4">
+                <form id="signupFormElement" action="#" method="POST" class="space-y-4">
                     @csrf
 
                     {{-- Full Name --}}
@@ -130,9 +130,9 @@
                                 <span class="text-lg">🇧🇩</span>
                                 <span class="text-sm font-medium">+88</span>
                             </div>
-                            <input type="tel" id="signup_phone" name="phone" placeholder="01XXXXXXXXX" maxlength="10"
+                            <input type="tel" id="signup_phone" name="phone" placeholder="01XXXXXXXXX" maxlength="11"
                                 class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-24 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue focus:bg-white transition-all"
-                                pattern="[0-9]{10}" inputmode="numeric" required>
+                                pattern="[0-9]{11}" inputmode="numeric" required>
                         </div>
                         <p class="mt-1 text-xs text-gray-400">Enter 11 digit number without +88 (e.g., 01712345678)</p>
                     </div>
@@ -209,9 +209,7 @@
     </div>
 </div>
 
-{{-- Auth Modal Scripts --}}
 <script>
-    // Open auth modal
     function openAuthModal(tab = 'login') {
         const modal = document.getElementById('authModal');
         const content = document.getElementById('authModalContent');
@@ -228,7 +226,6 @@
         switchAuthTab(tab);
     }
 
-    // Close auth modal
     function closeAuthModal() {
         const modal = document.getElementById('authModal');
         const content = document.getElementById('authModalContent');
@@ -242,7 +239,6 @@
         }, 200);
     }
 
-    // Switch between login and signup tabs
     function switchAuthTab(tab) {
         const loginTab = document.getElementById('loginTab');
         const signupTab = document.getElementById('signupTab');
@@ -268,7 +264,6 @@
         }
     }
 
-    // Toggle password visibility
     function togglePassword(inputId, btn) {
         const input = document.getElementById(inputId);
         const icon = btn.querySelector('i');
@@ -284,10 +279,8 @@
         }
     }
 
-    // Close modal on backdrop click
     document.getElementById('authModalBackdrop').addEventListener('click', closeAuthModal);
-
-    // Close modal on Escape key
+    
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeAuthModal();
