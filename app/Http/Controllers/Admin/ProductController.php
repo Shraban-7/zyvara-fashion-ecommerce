@@ -270,9 +270,9 @@ class ProductController extends Controller
             'variants.*.color_id' => 'nullable|exists:colors,id',
             'variants.*.sku' => 'nullable|string|max:255',
             'variants.*.stock_in' => 'nullable|integer|min:0',
-            'variants.*.price_adjustment' => 'nullable|numeric',
+            'variants.*.price' => 'nullable|numeric',
             'delete_variants' => 'nullable|array',
-            'delete_variants.*' => 'exists:product_variants,id',
+            'delete_variants.*' => 'nullable|integer|exists:product_variants,id',
         ]);
 
         DB::beginTransaction();
@@ -342,7 +342,7 @@ class ProductController extends Controller
 
                     $variantData['product_id'] = $product->id;
                     $variantData['stock_in'] = $variantData['stock_in'] ?? 0;
-                    $variantData['price_adjustment'] = $variantData['price_adjustment'] ?? 0;
+                    $variantData['price'] = $variantData['price'] ?? 0;
 
                     if (!empty($variantData['id'])) {
                         // Update existing variant

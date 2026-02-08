@@ -13,7 +13,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/create', [ProductController::class, 'create'])->name('create');
         Route::post('/store', [ProductController::class, 'store'])->name('store');
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
-        Route::post('/{product}/update', [ProductController::class, 'update'])->name('update');
+        Route::put('/{product}/update', [ProductController::class, 'update'])->name('update');
     });
 
     Route::prefix('orders')->as('orders.')->group(function () {
