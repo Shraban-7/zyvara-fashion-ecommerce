@@ -285,7 +285,7 @@ class ProductController extends Controller
                     'size_id' => $variant->size_id,
                     'color_id' => $variant->color_id,
                     'stock_in' => $variant->stock_in,
-                    'price_adjustment' => (float) ($variant->price_adjustment ?? 0),
+                    'price' => (float) ($variant->price ?? 0),
                     'size' => $variant->size ? [
                         'id' => $variant->size->id,
                         'name' => $variant->size->name,

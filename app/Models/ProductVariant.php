@@ -16,12 +16,12 @@ class ProductVariant extends Model
         'color_id',
         'sku',
         'stock_in',
-        'price_adjustment',
+        'price',
     ];
 
     protected $casts = [
         'stock_in' => 'integer',
-        'price_adjustment' => 'decimal:2',
+        'price' => 'decimal:2',
     ];
 
     // Relationships
@@ -53,7 +53,7 @@ class ProductVariant extends Model
 
     public function getFinalPriceAttribute(): float
     {
-        return $this->product->price + ($this->price_adjustment ?? 0);
+        return $this->price;
     }
 
     public function getVariantNameAttribute(): string
