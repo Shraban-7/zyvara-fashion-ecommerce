@@ -143,8 +143,15 @@ class CheckoutController extends Controller
                 'notes' => $validated['notes'],
             ]);
 
+
+
             // Create order items from cart items
             foreach ($cart->items as $cartItem) {
+                $unitPrice = $cartItem->product->price;
+                if($cartItem->variant && $cartItem->variant->price != null) {
+                    $unitPrice = $cartItem->variant->price;
+                }
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $cartItem->product_id,
@@ -155,9 +162,9 @@ class CheckoutController extends Controller
                     'size_name' => $cartItem->variant?->size?->name ?? null,
                     'color_name' => $cartItem->variant?->color?->name ?? null,
                     'quantity' => $cartItem->quantity,
-                    'unit_price' => $cartItem->product->price,
-                    'subtotal' => $cartItem->quantity * $cartItem->product->price,
-                    'total' => $cartItem->quantity * $cartItem->product->price,
+                    'unit_price' => $unitPrice,
+                    'subtotal' => $cartItem->quantity * $unitPrice,
+                    'total' => $cartItem->quantity * $unitPrice,
                 ]);
 
                 // Update product stock
@@ -248,7 +255,7 @@ class CheckoutController extends Controller
                 'message' => 'Minimum order amount of ' . money($coupon->minimum_order_amount) . ' required',
             ], 422);
         }
-        
+
         if ($coupon->usage_limit_per_user && Auth::check()) {
             $userUsageCount = Order::where('user_id', Auth::id())
                 ->where('coupon_id', $coupon->id)
