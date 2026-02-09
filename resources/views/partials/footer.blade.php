@@ -89,8 +89,8 @@
 
         {{-- Copyright --}}
         <div class="border-t border-gray-800 pt-6 text-center">
-            <p class="text-gray-500 text-sm">© {{ date('Y') }} SmartFashion. All Rights Reserved.</p>
-            <p class="text-gray-600 text-xs mt-1">Designed & Developed with ❤️ in Bangladesh</p>
+            <p class="text-gray-500 text-sm">© {{ date('Y') }} {{ env('APP_NAME') }}. All Rights Reserved.</p>
+            <p class="text-gray-600 text-xs mt-1">Designed & Developed by <a href="https://spinnertech.dev" target="_blank">Spinner Tech</a></p>
         </div>
 
     </div>

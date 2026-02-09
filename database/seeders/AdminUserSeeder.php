@@ -16,10 +16,10 @@ class AdminUserSeeder extends Seeder
     {
         // Create Super Admin
         User::updateOrCreate(
-            ['email' => 'admin@smartfashion.com.bd'],
+            ['email' => 'admin@spinnerfashion.com.bd'],
             [
                 'name' => 'Super Admin',
-                'email' => 'admin@smartfashion.com.bd',
+                'email' => 'admin@spinnerfashion.com.bd',
                 'phone' => '01700000000',
                 'password' => Hash::make('password'),
                 'role' => UserRole::ADMIN,
@@ -30,10 +30,10 @@ class AdminUserSeeder extends Seeder
 
         // Create Manager
         User::updateOrCreate(
-            ['email' => 'manager@smartfashion.com.bd'],
+            ['email' => 'manager@spinnerfashion.com.bd'],
             [
                 'name' => 'Store Manager',
-                'email' => 'manager@smartfashion.com.bd',
+                'email' => 'manager@spinnerfashion.com.bd',
                 'phone' => '01700000001',
                 'password' => Hash::make('password'),
                 'role' => UserRole::MANAGER,
@@ -44,10 +44,10 @@ class AdminUserSeeder extends Seeder
 
         // Create Staff
         User::updateOrCreate(
-            ['email' => 'staff@smartfashion.com.bd'],
+            ['email' => 'staff@spinnerfashion.com.bd'],
             [
                 'name' => 'Staff Member',
-                'email' => 'staff@smartfashion.com.bd',
+                'email' => 'staff@spinnerfashion.com.bd',
                 'phone' => '01700000002',
                 'password' => Hash::make('password'),
                 'role' => UserRole::STAFF,
