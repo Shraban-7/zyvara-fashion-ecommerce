@@ -15,6 +15,8 @@ class BannerSeeder extends Seeder
             ['image' => 'banners/left1.png', 'order' => 1],
             ['image' => 'banners/left2.png', 'order' => 2],
             ['image' => 'banners/left3.png', 'order' => 3],
+            ['image' => 'banners/left4.png', 'order' => 4],
+            ['image' => 'banners/left5.png', 'order' => 5],
         ];
 
         foreach ($heroSliders as $slider) {
