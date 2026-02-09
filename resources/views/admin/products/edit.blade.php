@@ -250,7 +250,7 @@
                     <div class="variant-row p-4 border border-gray-200 rounded-lg bg-gray-50">
                         <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}">
 
-                        <div class="grid md:grid-cols-5 gap-4">
+                        <div class="grid md:grid-cols-6 gap-4">
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
                                 <select name="variants[{{ $index }}][size_id]" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
@@ -274,6 +274,19 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Price (৳)</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    name="variants[{{ $index }}][price]"
+                                    value="{{ $variant->price }}"
+                                    required
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    placeholder="0.00">
+                            </div>
+
 
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">SKU</label>
@@ -414,7 +427,7 @@
                     <div class="grid grid-cols-2 gap-3">
                         @foreach($product->images as $image)
                         <div class="relative group">
-                            <img src="{{ $image->image_url }}" alt="Product" class="w-full h-32 object-cover rounded-lg border border-gray-200">
+                            <img src="{{ asset('storage/' . $image->image_path) }}" alt="Product" class="w-full h-32 object-cover rounded-lg border border-gray-200">
                             <label class="absolute top-2 right-2 cursor-pointer">
                                 <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="hidden delete-image-checkbox">
                                 <span class="block w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
@@ -483,7 +496,7 @@
         variantRow.className = 'variant-row p-4 border border-gray-200 rounded-lg bg-gray-50';
 
         variantRow.innerHTML = `
-            <div class="grid md:grid-cols-5 gap-4">
+            <div class="grid md:grid-cols-6 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
                     <select 
@@ -507,6 +520,18 @@
                         `).join('')}
                     </select>
                 </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Price (৳)</label>
+                    <input 
+                        type="number"
+                        step="0.01"
+                        name="variants[${variantIndex}][price]"
+                        required
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="0.00">
+                </div>
+
 
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">SKU</label>
