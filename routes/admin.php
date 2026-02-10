@@ -14,6 +14,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/store', [ProductController::class, 'store'])->name('store');
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
         Route::put('/{product}/update', [ProductController::class, 'update'])->name('update');
+        Route::delete('/{product}/delete', [ProductController::class, 'destroy'])->name('delete');
     });
 
     Route::prefix('orders')->as('orders.')->group(function () {
