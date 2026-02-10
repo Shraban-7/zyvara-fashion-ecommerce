@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\CategoryController;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -26,10 +27,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
     });
 
+    Route::prefix('categories')->as('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::delete('/{category}', [OrderController::class, 'destroy'])->name('delete');
+    });
+
     // Categories Routes (placeholder)
-    Route::get('/categories', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('categories.index');
+    // Route::get('/categories', function () {
+    //     return redirect()->route('admin.dashboard');
+    // })->name('categories.index');
 
     // Reviews Routes (placeholder)
     Route::get('/reviews', function () {
