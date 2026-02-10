@@ -68,7 +68,7 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'role' => $user->role->value,
                 ],
-                'redirect' => $user->role === UserRole::ADMIN ? route('admin.dashboard') : route('home'),
+                'redirect' => $user->role === UserRole::CUSTOMER ? route('home') : route('admin.dashboard'),
             ]);
         }
 
