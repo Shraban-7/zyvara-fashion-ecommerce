@@ -80,14 +80,19 @@
 
                 {{-- Profile --}}
                 @auth
+
+                <?php
+                    $user = auth()->user();
+                    $isAdmin = $user->role == \App\Enums\UserRole::CUSTOMER ? false : true;
+                ?>
                 <div class="relative group">
                     <button class="icon-btn p-2 rounded-xl flex items-center gap-2" aria-label="Profile">
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg shadow-brand-blue/25">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
                         <div class="hidden lg:flex flex-col items-start">
                             <span class="text-[10px] text-gray-400">Hello,</span>
-                            <span class="text-sm font-semibold text-gray-700">{{ Str::limit(auth()->user()->name, 12) }}</span>
+                            <span class="text-sm font-semibold text-gray-700">{{ Str::limit($user->name, 12) }}</span>
                         </div>
                         <i class="fas fa-chevron-down text-xs text-gray-400 hidden lg:block"></i>
                     </button>
@@ -95,9 +100,15 @@
                     {{-- Dropdown Menu --}}
                     <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2 z-[60]">
                         <div class="px-4 py-3 border-b border-gray-100">
-                            <p class="font-semibold text-gray-900">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-gray-500">{{ auth()->user()->phone }}</p>
+                            <p class="font-semibold text-gray-900">{{ $user->name }}</p>
+                            <p class="text-xs text-gray-500">{{ $user->phone }}</p>
                         </div>
+                        @if($isAdmin)
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
+                            <i class="fas fa-user text-gray-400 w-5"></i>
+                            <span class="text-sm text-gray-700">Dashboard</span>
+                        </a>
+                        @else
                         <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
                             <i class="fas fa-user text-gray-400 w-5"></i>
                             <span class="text-sm text-gray-700">My Profile</span>
@@ -114,6 +125,7 @@
                             <i class="fas fa-cog text-gray-400 w-5"></i>
                             <span class="text-sm text-gray-700">Settings</span>
                         </a>
+                        @endif
                         <div class="border-t border-gray-100 mt-2 pt-2">
                             <form action="{{ route('auth.logout') }}" method="POST" id="logoutForm">
                                 @csrf
