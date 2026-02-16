@@ -37,23 +37,6 @@ main {
     transform: scale(0.97);
 }
 
-/* Product card hover */
-.product-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.product-card:active {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-@media (min-width: 768px) {
-    .product-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-    }
-}
-
 /* Glassmorphism effect */
 .glass {
     background: rgba(255, 255, 255, 0.85);
