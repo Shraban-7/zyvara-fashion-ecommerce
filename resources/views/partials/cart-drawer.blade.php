@@ -105,10 +105,10 @@
 
         {{-- Payment Methods --}}
         <div class="flex items-center justify-center gap-3 mt-4 pt-4 border-t border-gray-100">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/BKash-bKash-Logo.wine.svg/200px-BKash-bKash-Logo.wine.svg.png" alt="bKash" class="h-6 opacity-60 hover:opacity-100 transition">
-            <img src="https://download.logo.wine/logo/Nagad/Nagad-Logo.wine.png" alt="Nagad" class="h-6 opacity-60 hover:opacity-100 transition">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Visa_2021.svg/200px-Visa_2021.svg.png" alt="Visa" class="h-4 opacity-60 hover:opacity-100 transition">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/200px-MasterCard_Logo.svg.png" alt="Mastercard" class="h-6 opacity-60 hover:opacity-100 transition">
+            <img src="{{ asset('assets/images/bkash.png') }}" alt="bKash" class="h-6 opacity-60 hover:opacity-100 transition">
+            <img src="{{ asset('assets/images/nagad.png') }}" alt="Nagad" class="h-6 opacity-60 hover:opacity-100 transition">
+            <img src="{{ asset('assets/images/visa.png') }}" alt="Visa" class="h-4 opacity-60 hover:opacity-100 transition">
+            <img src="{{ asset('assets/images/mastercard.png') }}" alt="Mastercard" class="h-6 opacity-60 hover:opacity-100 transition">
         </div>
     </div>
 
