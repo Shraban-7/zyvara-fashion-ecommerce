@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -39,6 +40,21 @@ Route::prefix('checkout')->as('checkout.')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Customer Dashboard
+    Route::as('customer.')->group(function () {
+        Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile', [CustomerController::class, 'profile'])->name('profile');
+        Route::put('/profile', [CustomerController::class, 'updateProfile'])->name('profile.update');
+        Route::put('/password', [CustomerController::class, 'updatePassword'])->name('password.update');
+        Route::get('/addresses', [CustomerController::class, 'addresses'])->name('addresses');
+        Route::post('/addresses', [CustomerController::class, 'storeAddress'])->name('addresses.store');
+        Route::put('/addresses/{address}', [CustomerController::class, 'updateAddress'])->name('addresses.update');
+        Route::delete('/addresses/{address}', [CustomerController::class, 'deleteAddress'])->name('addresses.delete');
+        Route::get('/wishlist', [CustomerController::class, 'wishlist'])->name('wishlist');
+        Route::get('/reviews', [CustomerController::class, 'reviews'])->name('reviews');
+    });
+
+    // Orders
     Route::prefix('orders')->as('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order:order_number}/show', [OrderController::class, 'show'])->name('show');

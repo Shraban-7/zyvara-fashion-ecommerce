@@ -109,7 +109,11 @@
                             <span class="text-sm text-gray-700">Dashboard</span>
                         </a>
                         @else
-                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
+                        <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
+                            <i class="fas fa-user text-gray-400 w-5"></i>
+                            <span class="text-sm text-gray-700">Dashboard</span>
+                        </a>
+                        <a href="{{ route('customer.profile') }}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
                             <i class="fas fa-user text-gray-400 w-5"></i>
                             <span class="text-sm text-gray-700">My Profile</span>
                         </a>
@@ -117,7 +121,7 @@
                             <i class="fas fa-box text-gray-400 w-5"></i>
                             <span class="text-sm text-gray-700">Orders</span>
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
+                        <a href="{{ route('customer.addresses') }}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
                             <i class="fas fa-map-marker-alt text-gray-400 w-5"></i>
                             <span class="text-sm text-gray-700">Addresses</span>
                         </a>

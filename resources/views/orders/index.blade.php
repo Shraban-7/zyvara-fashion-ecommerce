@@ -1,14 +1,14 @@
-@extends('layouts.app')
+@extends('customer.layout')
 @section('title', 'Orders')
 
-@section('content')
-<div class="min-h-screen bg-gray-50">
-    <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="mb-4">
-            <h1 class="text-2xl font-bold text-gray-900 mb-0">Order History</h1>
+@section('dashboard-content')
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">Order History</h2>
         </div>
-
+    </div>
+    <div class="space-y-4">
         @if ($orders->isEmpty())
         <!-- Empty State -->
         <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
