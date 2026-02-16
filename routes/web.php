@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
@@ -35,6 +36,13 @@ Route::prefix('checkout')->as('checkout.')->group(function () {
     Route::post('/', [CheckoutController::class, 'store'])->name('store');
     Route::post('/validate-coupon', [CheckoutController::class, 'validateCoupon'])->name('validate-coupon');
     Route::get('/success', [CheckoutController::class, 'success'])->name('success');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('orders')->as('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/{order:order_number}/show', [OrderController::class, 'show'])->name('show');
+    });
 });
 
 Route::post('/logout', function () {

@@ -23,6 +23,10 @@ body {
     overflow-x: hidden;
 }
 
+main {
+    min-height: 80vh;
+}
+
 /* Slider animations */
 .slide {
     transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
