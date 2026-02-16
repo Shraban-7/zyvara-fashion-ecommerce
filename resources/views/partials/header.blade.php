@@ -82,11 +82,11 @@
                 @auth
 
                 <?php
-                    $user = auth()->user();
-                    $isAdmin = $user->role == \App\Enums\UserRole::CUSTOMER ? false : true;
+                $user = auth()->user();
+                $isAdmin = $user->role == \App\Enums\UserRole::CUSTOMER ? false : true;
                 ?>
-                <div class="relative group">
-                    <button class="icon-btn p-2 rounded-xl flex items-center gap-2" aria-label="Profile">
+                <div class="relative group" id="profileDropdown">
+                    <button onclick="toggleProfileDropdown(event)" class="icon-btn p-2 rounded-xl flex items-center gap-2" aria-label="Profile">
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg shadow-brand-blue/25">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
@@ -98,7 +98,7 @@
                     </button>
 
                     {{-- Dropdown Menu --}}
-                    <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2 z-[60]">
+                    <div id="profileDropdownMenu" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2 z-[60]">
                         <div class="px-4 py-3 border-b border-gray-100">
                             <p class="font-semibold text-gray-900">{{ $user->name }}</p>
                             <p class="text-xs text-gray-500">{{ $user->phone }}</p>
@@ -297,6 +297,7 @@
             </nav>
         </div>
     </div>
+
     @endif
 
     {{-- Search Bar (Mobile) --}}
@@ -309,3 +310,31 @@
         </button>
     </div>
 </header>
+
+<script>
+    // Toggle profile dropdown on mobile
+    function toggleProfileDropdown(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('profileDropdownMenu');
+
+        if (dropdown) {
+            const isVisible = !dropdown.classList.contains('opacity-0');
+
+            if (isVisible) {
+                dropdown.classList.add('opacity-0', 'invisible');
+            } else {
+                dropdown.classList.remove('opacity-0', 'invisible');
+            }
+        }
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('profileDropdown');
+        const menu = document.getElementById('profileDropdownMenu');
+
+        if (dropdown && menu && !dropdown.contains(event.target)) {
+            menu.classList.add('opacity-0', 'invisible');
+        }
+    });
+</script>

@@ -199,3 +199,23 @@ if (!function_exists('toast_info')) {
         session()->flash('info', $message);
     }
 }
+
+if (!function_exists('isMobile')) {
+    /**
+     * Check if the user is on a mobile device
+     */
+    function isMobile()
+    {
+        $userAgent = request()->header('User-Agent');
+        $mobileAgents = ['iPhone', 'iPad', 'iPod', 'Android', 'webOS', 'BlackBerry', 'Windows Phone'];
+
+        foreach ($mobileAgents as $agent) {
+            if (stripos($userAgent, $agent) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+

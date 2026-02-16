@@ -21,6 +21,7 @@
 
 <body class="bg-brand-light min-h-screen pb-20 md:pb-0">
     @include('partials.header')
+    @include('partials.mobile-category-drawer')
 
     <main>
         @yield('content')
