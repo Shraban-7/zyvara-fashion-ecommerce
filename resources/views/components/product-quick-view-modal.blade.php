@@ -15,7 +15,7 @@
                 {{-- Product Image --}}
                 <div class="space-y-3">
                     <div class="relative bg-gray-50 rounded-xl overflow-hidden aspect-square">
-                        <img id="quickViewImage" src="" alt="" class="w-full h-full object-cover">
+                        <img id="quickViewImage" src="{{ asset('assets/images/default.png') }}" alt="" class="w-full h-full object-cover">
                         {{-- Badge Container --}}
                         <div id="quickViewBadges" class="absolute top-3 left-3 flex flex-col gap-2"></div>
                     </div>
