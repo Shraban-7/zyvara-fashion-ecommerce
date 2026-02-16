@@ -113,7 +113,7 @@
                             <i class="fas fa-user text-gray-400 w-5"></i>
                             <span class="text-sm text-gray-700">My Profile</span>
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
+                        <a href="{{ route('orders.index') }}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
                             <i class="fas fa-box text-gray-400 w-5"></i>
                             <span class="text-sm text-gray-700">Orders</span>
                         </a>

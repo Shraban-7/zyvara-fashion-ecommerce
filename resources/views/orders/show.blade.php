@@ -13,7 +13,7 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                     <p class="text-sm text-gray-500 mb-1">Order Number</p>
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900">#{{ $order->order_number }}</h1>
                 </div>
                 <div class="flex items-center gap-2 bg-{{ $order->status->color() }}-100 px-4 py-3 rounded-full">
                     <div class="w-3 h-3 rounded-full animate-pulse" style="background-color: currentColor;"></div>

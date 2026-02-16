@@ -37,7 +37,7 @@
                     @foreach ($orders as $order)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4">
-                            <span class="font-semibold text-gray-900">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
+                            <span class="font-semibold text-gray-900">#{{ $order->order_number }}</span>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $order->created_at->format('M d, Y') }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $order->items_count ?? ($order->items ? (is_countable($order->items) ? count($order->items) : 0) : 0) }} item(s)</td>
