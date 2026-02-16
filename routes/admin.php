@@ -29,6 +29,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::prefix('categories')->as('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::post('/store', [CategoryController::class, 'store'])->name('store');
         Route::delete('/{category}', [OrderController::class, 'destroy'])->name('delete');
     });
 
