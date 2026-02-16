@@ -12,7 +12,7 @@
             </a>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5">
             @foreach($bestSelling as $product)
             <x-product-card :product="$product" badgeType="HOT" />
             @endforeach

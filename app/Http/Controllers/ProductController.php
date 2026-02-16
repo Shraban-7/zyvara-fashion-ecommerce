@@ -219,13 +219,12 @@ class ProductController extends Controller
             ->sortBy('name')
             ->values();
 
-        // Get related products from same category
         $relatedProducts = Product::with(['images', 'category'])
-            ->where('category_id', $product->category_id)
+            //->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)
             ->inRandomOrder()
-            ->limit(4)
+            ->limit(10)
             ->get();
 
         // Calculate rating distribution

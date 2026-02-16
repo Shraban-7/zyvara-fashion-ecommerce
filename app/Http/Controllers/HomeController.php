@@ -11,12 +11,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Fetch new arrivals
+        $productLimit = 10;
+
         $newArrivals = Product::where('is_active', true)
             ->where('is_new_arrival', true)
             ->with('category')
             ->orderBy('created_at', 'desc')
-            ->take(8)
+            ->take($productLimit)
             ->get();
 
         // Fetch best selling products
@@ -24,7 +25,7 @@ class HomeController extends Controller
             ->where('is_best_seller', true)
             ->with('category')
             ->orderBy('review_count', 'desc')
-            ->take(8)
+            ->take($productLimit)
             ->get();
 
         // Fetch men's products
@@ -41,7 +42,7 @@ class HomeController extends Controller
                 })
                 ->with('category')
                 ->inRandomOrder()
-                ->take(8)
+                ->take($productLimit)
                 ->get();
         }
 
@@ -59,7 +60,7 @@ class HomeController extends Controller
                 })
                 ->with('category')
                 ->inRandomOrder()
-                ->take(8)
+                ->take($productLimit)
                 ->get();
         }
 

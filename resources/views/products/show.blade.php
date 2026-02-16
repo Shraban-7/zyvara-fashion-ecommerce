@@ -521,15 +521,15 @@
 
         {{-- Related Products --}}
         <div>
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl md:text-2xl font-bold text-brand-black">You May Also Like</h2>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl md:text-xl font-bold text-brand-black">You May Also Like</h2>
                 <a href="{{ route('products.index') }}" class="text-brand-blue text-sm font-semibold flex items-center gap-1 tap-effect">
                     View All
                     <i class="fas fa-chevron-right text-sm"></i>
                 </a>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 md:grid-cols-5 gap-4 mb-4">
                 @foreach($relatedProducts as $relatedProduct)
                 <x-product-card :product="$relatedProduct" />
                 @endforeach
