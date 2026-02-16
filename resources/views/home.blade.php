@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'SmartFashion - Premium Bangladeshi Clothing Brand')
+@section('title', 'Home')
 @section('content')
 
 @include('home.hero-slider-new')

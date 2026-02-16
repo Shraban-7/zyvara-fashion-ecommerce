@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $product->meta_title ?? $product->name . ' - SmartFashion')
+@section('title', $product->meta_title ?? $product->name)
 
 @section('content')
 {{-- Breadcrumb --}}
@@ -73,7 +73,7 @@
                 {{-- Product Info --}}
                 <div class="space-y-4 min-w-0 overflow-hidden">
                     <div>
-                        <p class="text-xs text-brand-blue font-medium mb-1.5">{{ $product->brand ?? 'SmartFashion' }} @if($product->category)• {{ $product->category->name }}@endif</p>
+                        <p class="text-xs text-brand-blue font-medium mb-1.5">{{ $product->brand ?? '' }} @if($product->category)• {{ $product->category->name }}@endif</p>
                         <h1 class="text-xl md:text-2xl font-bold text-brand-black mb-2">{{ $product->name }}</h1>
 
                         <div class="flex flex-wrap items-center gap-2 sm:gap-4">

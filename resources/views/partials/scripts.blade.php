@@ -257,6 +257,6 @@
     }
 
     // ===== Console branding =====
-    console.log('%c SmartFashion ', 'background: #228bcc; color: white; font-size: 20px; font-weight: bold; padding: 10px 20px; border-radius: 5px;');
+    console.log('%c Spinner Fashion ', 'background: #228bcc; color: white; font-size: 20px; font-weight: bold; padding: 10px 20px; border-radius: 5px;');
     console.log('%c Premium Bangladeshi Clothing Brand ', 'color: #6b7280; font-size: 12px;');
 </script>

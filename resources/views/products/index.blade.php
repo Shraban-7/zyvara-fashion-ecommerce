@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Products - SmartFashion')
+@section('title', 'Products')
 
 @section('content')
 {{-- Breadcrumb --}}

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order Confirmed - SmartFashion')
+@section('title', 'Order Confirmed')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-8 md:py-12">

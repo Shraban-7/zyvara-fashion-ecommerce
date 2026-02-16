@@ -53,8 +53,17 @@ class AppServiceProvider extends ServiceProvider
                     ->get();
             });
 
+            $settings = cache()->remember('site_settings', 3600, function () {
+                return collect(\App\Models\Setting::pluck('value', 'key')->toArray());
+            });
+
+            $siteName = $settings->where('key', 'site_name')->first()->value ?? '';
+            
+            View::share('siteName', $siteName);
+
             $view->with('menuCategories', $categories);
             $view->with('allMenuCategories', $allCategories);
+            $view->with('settings', $settings);
         });
     }
 }

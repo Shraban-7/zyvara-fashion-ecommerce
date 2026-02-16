@@ -1,9 +1,8 @@
-{{-- Why SmartFashion (Trust Section) --}}
 <section class="py-8 md:py-12 bg-gradient-to-br from-blue-50 to-white">
     <div class="max-w-7xl mx-auto px-4">
         {{-- Section Header --}}
         <div class="text-center mb-6 md:mb-10">
-            <h2 class="text-xl md:text-3xl font-bold text-brand-black mb-2">Why Choose SmartFashion?</h2>
+            <h2 class="text-xl md:text-3xl font-bold text-brand-black mb-2">Why Choose {{ $siteName }}?</h2>
             <p class="text-sm md:text-base text-brand-gray">Quality, trust, and style - all in one place</p>
         </div>
 

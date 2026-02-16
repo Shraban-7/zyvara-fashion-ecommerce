@@ -151,7 +151,7 @@ class ProductVariantManager {
 
         // Set product info
         document.getElementById("quickViewBrand").textContent =
-            product.brand || "SmartFashion";
+            product.brand || "Spinner Fashion";
         document.getElementById("quickViewName").textContent = product.name;
 
         // Set rating

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Checkout - SmartFashion')
+@section('title', 'Checkout')
 
 @section('content')
 {{-- Breadcrumb --}}
@@ -277,7 +277,7 @@
                     </ol>
 
                     {{-- Quick Pay Button --}}
-                    <a href="https://shop.bkash.com/smart-fashion{{ str_replace('-', '', $bkashNumber) }}/pay" target="_blank" class="mt-4 w-full bg-pink-600 text-white py-3 rounded-xl font-semibold text-sm hover:bg-pink-700 transition flex items-center justify-center gap-2">
+                    <a href="https://shop.bkash.com/spinner-fashion{{ str_replace('-', '', $bkashNumber) }}/pay" target="_blank" class="mt-4 w-full bg-pink-600 text-white py-3 rounded-xl font-semibold text-sm hover:bg-pink-700 transition flex items-center justify-center gap-2">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/BKash-bKash-Logo.wine.svg/200px-BKash-bKash-Logo.wine.svg.png" alt="bKash" class="h-5 brightness-0 invert">
                         Pay with bKash App
                     </a>

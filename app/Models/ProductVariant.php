@@ -53,7 +53,7 @@ class ProductVariant extends Model
 
     public function getFinalPriceAttribute(): float
     {
-        return $this->price;
+        return $this->price ?? $this->product->price;
     }
 
     public function getVariantNameAttribute(): string

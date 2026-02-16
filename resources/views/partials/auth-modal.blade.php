@@ -15,7 +15,7 @@
             {{-- Modal Header --}}
             <div class="pt-8 pb-4 px-6 text-center border-b border-gray-100">
                 <a href="{{ url('/') }}" class="inline-flex items-center gap-1 mb-4">
-                    <span class="text-2xl font-extrabold logo-text tracking-tight">Smart</span>
+                    <span class="text-2xl font-extrabold logo-text tracking-tight">Spinner</span>
                     <span class="text-2xl font-extrabold logo-accent tracking-tight">Fashion</span>
                 </a>
 

@@ -11,7 +11,7 @@
 
             {{-- Map / Image --}}
             <div class="rounded-2xl overflow-hidden shadow-lg">
-                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop" alt="SmartFashion Showroom" class="w-full h-48 sm:h-64 md:h-80 object-cover">
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop" alt="{{ $siteName }} Showroom" class="w-full h-48 sm:h-64 md:h-80 object-cover">
             </div>
 
             {{-- Showroom Details --}}
@@ -51,7 +51,7 @@
                         </div>
                         <div>
                             <h4 class="font-semibold text-brand-black text-sm md:text-base">Contact Us</h4>
-                            <p class="text-brand-gray text-xs md:text-sm">+880 1712-345678<br>info@smartfashion.com.bd</p>
+                            <p class="text-brand-gray text-xs md:text-sm">+880 1712-345678<br>info@spinnerfashion.com.bd</p>
                         </div>
                     </div>
                 </div>

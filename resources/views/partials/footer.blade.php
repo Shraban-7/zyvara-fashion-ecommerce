@@ -7,7 +7,7 @@
             {{-- Logo & About --}}
             <div class="col-span-2 md:col-span-1">
                 <a href="{{ url('/') }}" class="flex items-center mb-4">
-                    <span class="text-xl font-bold text-white">Smart</span>
+                    <span class="text-xl font-bold text-white">Spinner</span>
                     <span class="text-xl font-bold text-brand-blue">Fashion</span>
                 </a>
                 <p class="text-gray-400 text-sm mb-4">Premium Bangladeshi clothing brand offering quality fashion at affordable prices. Your trusted partner for modern style.</p>

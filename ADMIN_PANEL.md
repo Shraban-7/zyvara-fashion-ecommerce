@@ -1,8 +1,8 @@
-# Admin Panel - SmartFashion
+# Admin Panel
 
 ## Overview
 
-A modern, beautiful, and fully responsive admin dashboard for managing the SmartFashion e-commerce store.
+A modern, beautiful, and fully responsive admin dashboard for managing the e-commerce store.
 
 ## Features
 

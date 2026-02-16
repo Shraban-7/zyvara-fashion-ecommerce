@@ -1,13 +1,13 @@
 {{-- Newsletter Section --}}
-<section class="py-8 md:py-12 bg-gradient-to-r from-brand-blue to-blue-600">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">Subscribe for Exclusive Offers</h2>
-        <p class="text-blue-100 text-sm md:text-base mb-6">Get 10% off on your first order!</p>
+<section class="py-12 md:py-16 bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <h2 class="text-xl md:text-3xl font-bold text-brand-black mb-2">Subscribe for Exclusive Offers</h2>
+        <p class="text-gray-700 text-base md:text-lg mb-8">Stay updated with our latest collections and offers.</p>
 
-        <form class="max-w-md mx-auto flex gap-2">
+        <form class="max-w-lg mx-auto flex flex-col md:flex-row gap-4">
             @csrf
-            <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-white">
-            <button type="submit" class="bg-brand-black text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-gray-800 transition tap-effect">Subscribe</button>
+            <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-lg text-gray-800 text-sm border border-gray-300 focus:outline-none focus:ring-4 focus:ring-blue-300">
+            <button type="submit" class="bg-brand-black text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-gray-900 transition-all duration-200">Subscribe</button>
         </form>
     </div>
 </section>

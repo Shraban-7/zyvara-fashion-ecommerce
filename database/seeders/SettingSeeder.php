@@ -14,7 +14,7 @@ class SettingSeeder extends Seeder
     {
         $settings = [
             // General Settings
-            ['key' => 'site_name', 'value' => 'SmartFashion', 'type' => 'text', 'group' => 'general'],
+            ['key' => 'site_name', 'value' => 'Spinner Fashion', 'type' => 'text', 'group' => 'general'],
             ['key' => 'site_tagline', 'value' => 'Your Fashion Destination', 'type' => 'text', 'group' => 'general'],
             ['key' => 'site_logo', 'value' => null, 'type' => 'text', 'group' => 'general'],
             ['key' => 'site_favicon', 'value' => null, 'type' => 'text', 'group' => 'general'],
@@ -22,15 +22,15 @@ class SettingSeeder extends Seeder
             ['key' => 'currency_symbol', 'value' => '৳', 'type' => 'text', 'group' => 'general'],
 
             // Contact Settings
-            ['key' => 'contact_email', 'value' => 'info@smartfashion.com.bd', 'type' => 'text', 'group' => 'contact'],
+            ['key' => 'contact_email', 'value' => 'info@spinnerfashion.com.bd', 'type' => 'text', 'group' => 'contact'],
             ['key' => 'contact_phone', 'value' => '+880 1700-000000', 'type' => 'text', 'group' => 'contact'],
             ['key' => 'whatsapp_number', 'value' => '+8801700000000', 'type' => 'text', 'group' => 'contact'],
             ['key' => 'contact_address', 'value' => 'House #123, Road #45, Gulshan-2, Dhaka-1212, Bangladesh', 'type' => 'text', 'group' => 'contact'],
             ['key' => 'google_maps_embed', 'value' => null, 'type' => 'text', 'group' => 'contact'],
 
             // Social Media
-            ['key' => 'facebook_url', 'value' => 'https://facebook.com/smartfashionbd', 'type' => 'text', 'group' => 'social'],
-            ['key' => 'instagram_url', 'value' => 'https://instagram.com/smartfashionbd', 'type' => 'text', 'group' => 'social'],
+            ['key' => 'facebook_url', 'value' => 'https://facebook.com/spinnerfashionbd', 'type' => 'text', 'group' => 'social'],
+            ['key' => 'instagram_url', 'value' => 'https://instagram.com/spinnerfashionbd', 'type' => 'text', 'group' => 'social'],
             ['key' => 'youtube_url', 'value' => null, 'type' => 'text', 'group' => 'social'],
             ['key' => 'tiktok_url', 'value' => null, 'type' => 'text', 'group' => 'social'],
 
@@ -53,7 +53,7 @@ class SettingSeeder extends Seeder
             ['key' => 'sms_enabled', 'value' => 'true', 'type' => 'boolean', 'group' => 'sms'],
             ['key' => 'sms_provider', 'value' => 'ssl_wireless', 'type' => 'text', 'group' => 'sms'],
             ['key' => 'sms_api_key', 'value' => null, 'type' => 'text', 'group' => 'sms'],
-            ['key' => 'sms_sender_id', 'value' => 'SmartFashion', 'type' => 'text', 'group' => 'sms'],
+            ['key' => 'sms_sender_id', 'value' => 'Spinner Fashion', 'type' => 'text', 'group' => 'sms'],
 
             // Order Settings
             ['key' => 'order_prefix', 'value' => 'SF', 'type' => 'text', 'group' => 'order'],
@@ -62,7 +62,7 @@ class SettingSeeder extends Seeder
             ['key' => 'order_cancellation_hours', 'value' => '24', 'type' => 'number', 'group' => 'order'],
 
             // SEO Settings
-            ['key' => 'meta_title', 'value' => 'SmartFashion - Best Online Fashion Store in Bangladesh', 'type' => 'text', 'group' => 'seo'],
+            ['key' => 'meta_title', 'value' => 'Spinner Fashion - Best Online Fashion Store in Bangladesh', 'type' => 'text', 'group' => 'seo'],
             ['key' => 'meta_description', 'value' => 'Shop latest fashion trends for men, women & kids. Best quality clothing at affordable prices with home delivery across Bangladesh.', 'type' => 'text', 'group' => 'seo'],
             ['key' => 'meta_keywords', 'value' => 'fashion, clothing, online shopping, bangladesh, panjabi, saree, t-shirt', 'type' => 'text', 'group' => 'seo'],
             ['key' => 'google_analytics_id', 'value' => null, 'type' => 'text', 'group' => 'seo'],
