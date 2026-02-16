@@ -31,7 +31,7 @@ if ($product->compare_price && $product->compare_price > $product->price) {
 
 <div class="product-card group bg-white rounded-lg overflow-hidden border border-gray-200 
             hover:border-blue-400 
-            transition-colors duration-300">
+            transition-colors duration-300 flex flex-col h-full">
     <div class="relative overflow-hidden bg-gray-50">
         <a href="{{ route('products.show', $product->slug) }}" class="block">
             <img
@@ -67,7 +67,7 @@ if ($product->compare_price && $product->compare_price > $product->price) {
         </div>
     </div>
 
-    <div class="p-3">
+    <div class="p-3 flex flex-col flex-1">
         {{-- Product Name --}}
         <a href="{{ route('products.show', $product->slug) }}">
             <h3 class="text-sm font-medium text-gray-800 mb-1.5 line-clamp-2 hover:text-brand-blue transition-colors leading-snug">
@@ -105,9 +105,9 @@ if ($product->compare_price && $product->compare_price > $product->price) {
         </div>
 
         {{-- Add to Cart Button --}}
-        <div class="flex gap-1.5">
+        <div class="flex gap-1.5 mt-auto">
             <button
-                class="add-to-cart-btn flex-1 bg-brand-blue text-white py-2.5 rounded-lg font-normal text-sm hover:bg-blue-600 transition-colors flex items-center justify-center gap-1.5 tap-effect min-w-0"
+                class="add-to-cart-btn flex-1 bg-brand-blue text-white py-1.5 rounded-lg font-normal text-sm hover:bg-blue-600 transition-colors flex items-center justify-center gap-1.5 tap-effect min-w-0"
                 onclick="handleProductCardAddToCart({{ $product->id }}, {{ $product->variants->count() }})"
                 data-product-id="{{ $product->id }}"
                 aria-label="Add to cart">
@@ -116,7 +116,7 @@ if ($product->compare_price && $product->compare_price > $product->price) {
                 <span class="inline xs:hidden sm:hidden">Add</span>
             </button>
             <button
-                class="quick-view-btn w-10 flex-shrink-0 bg-gray-100 text-gray-700 py-2.5 rounded-lg hover:bg-gray-200 transition-colors tap-effect"
+                class="quick-view-btn w-10 flex-shrink-0 bg-gray-100 text-gray-700 py-1.5 rounded-lg hover:bg-gray-200 transition-colors tap-effect"
                 data-product-id="{{ $product->id }}"
                 aria-label="Quick view">
                 <i class="far fa-eye text-xs"></i>
