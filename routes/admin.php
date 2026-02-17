@@ -35,15 +35,20 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{category}', [CategoryController::class, 'delete'])->name('delete');
     });
 
+    Route::prefix('reviews')->as('reviews.')->group(function () {
+        Route::get('/', [ReviewController::class, 'index'])->name('index');
+    });
+
+
     // Categories Routes (placeholder)
     // Route::get('/categories', function () {
     //     return redirect()->route('admin.dashboard');
     // })->name('categories.index');
 
     // Reviews Routes (placeholder)
-    Route::get('/reviews', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('reviews.index');
+    // Route::get('/reviews', function () {
+    //     return redirect()->route('admin.dashboard');
+    // })->name('reviews.index');
 
     // Users Routes (placeholder)
     Route::get('/users', function () {
