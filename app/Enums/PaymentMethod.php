@@ -9,6 +9,7 @@ enum PaymentMethod: string
     case NAGAD = 'nagad';
     case CARD = 'card';
     case BANK = 'bank';
+    case ONLINE = 'online';
 
     public function label(): string
     {
@@ -18,6 +19,7 @@ enum PaymentMethod: string
             self::NAGAD => 'Nagad',
             self::CARD => 'Credit/Debit Card',
             self::BANK => 'Bank Transfer',
+            self::ONLINE => 'Online Payment',
         };
     }
 
@@ -29,6 +31,7 @@ enum PaymentMethod: string
             self::NAGAD => 'fa-mobile-alt',
             self::CARD => 'fa-credit-card',
             self::BANK => 'fa-university',
+            self::ONLINE => 'fa-globe',
         };
     }
 

@@ -60,7 +60,7 @@ class CheckoutController extends Controller
             'district' => 'required|string|max:100',
             'city' => 'required|string|max:100',
             'address' => 'required|string|max:500',
-            'payment_method' => 'required|in:cod,bkash,nagad',
+            'payment_method' => 'required|in:cod,online',
             'bkash_trx_id' => 'required_if:payment_method,bkash|nullable|string|max:50',
             'nagad_trx_id' => 'required_if:payment_method,nagad|nullable|string|max:50',
             'notes' => 'nullable|string|max:500',
@@ -113,11 +113,11 @@ class CheckoutController extends Controller
             $paymentStatus = $validated['payment_method'] === 'cod' ? PaymentStatus::PENDING : PaymentStatus::PAID;
             // Get transaction ID
             $transactionId = null;
-            if ($validated['payment_method'] === 'bkash') {
-                $transactionId = $validated['bkash_trx_id'];
-            } elseif ($validated['payment_method'] === 'nagad') {
-                $transactionId = $validated['nagad_trx_id'];
-            }
+            // if ($validated['payment_method'] === 'bkash') {
+            //     $transactionId = $validated['bkash_trx_id'];
+            // } elseif ($validated['payment_method'] === 'nagad') {
+            //     $transactionId = $validated['nagad_trx_id'];
+            // }
 
             // Create the order
             $order = Order::create([
@@ -142,8 +142,6 @@ class CheckoutController extends Controller
                 'delivery_zone' => DeliveryZone::from($validated['delivery_zone']),
                 'notes' => $validated['notes'],
             ]);
-
-
 
             // Create order items from cart items
             foreach ($cart->items as $cartItem) {
@@ -202,7 +200,7 @@ class CheckoutController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            toast_error('Something went wrong. Please try again or contact support.');
+            toast_error($e->getMessage());
             return back()->withInput();
         }
     }
