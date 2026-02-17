@@ -77,4 +77,13 @@ class CategoryController extends Controller
 
         return redirect()->back()->with('success', 'Category updated successfully!');
     }
+
+    public function delete(Category $category)
+    {
+        Category::where('parent_id', $category->id)->update(['parent_id' => null]);
+
+        $category->delete();
+
+        return redirect()->back()->with('success', 'Category deleted successfully!');
+    }
 }
