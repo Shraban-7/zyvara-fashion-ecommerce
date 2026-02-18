@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
@@ -39,12 +40,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('reviews')->as('reviews.')->group(function () {
         Route::get('/', [ReviewController::class, 'index'])->name('index');
     });
+
     Route::prefix('customers')->as('customers.')->group(function () {
         Route::get('/', [CustomerController::class, 'index'])->name('index');
         Route::put('/{customer}/update', [CustomerController::class, 'update'])->name('update');
     });
 
-
+    Route::prefix('banners')->as('banners.')->group(function () {
+        Route::get('/', [BannerController::class, 'index'])->name('index');
+    });
     // Categories Routes (placeholder)
     // Route::get('/categories', function () {
     //     return redirect()->route('admin.dashboard');
@@ -69,9 +73,9 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     })->name('coupons.create');
 
     // Banners Routes (placeholder)
-    Route::get('/banners', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('banners.index');
+    // Route::get('/banners', function () {
+    //     return redirect()->route('admin.dashboard');
+    // })->name('banners.index');
 
     // Settings Routes (placeholder)
     Route::get('/settings', function () {
