@@ -8,6 +8,7 @@ enum PaymentStatus: string
     case PAID = 'paid';
     case FAILED = 'failed';
     case REFUNDED = 'refunded';
+    case COMPLETED = 'completed';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum PaymentStatus: string
             self::PAID => 'Paid',
             self::FAILED => 'Failed',
             self::REFUNDED => 'Refunded',
+            self::COMPLETED => 'Completed',
         };
     }
 
@@ -26,6 +28,7 @@ enum PaymentStatus: string
             self::PAID => 'green',
             self::FAILED => 'red',
             self::REFUNDED => 'blue',
+            self::COMPLETED => 'green',
         };
     }
 
@@ -36,6 +39,7 @@ enum PaymentStatus: string
             self::PAID => 'fa-check-circle',
             self::FAILED => 'fa-times-circle',
             self::REFUNDED => 'fa-undo',
+            self::COMPLETED => 'fa-check-double',
         };
     }
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -59,6 +60,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order:order_number}/show', [OrderController::class, 'show'])->name('show');
     });
+});
+
+Route::prefix('payment')->as('payment.')->group(function () {
+    Route::post('/success', [PaymentController::class, 'success'])->name('success');
+    Route::post('/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');
+    Route::post('/failed', [PaymentController::class, 'failed'])->name('failed');
+    Route::post('/ipn', [PaymentController::class, 'ipn'])->name('ipn');
 });
 
 Route::post('/logout', function () {

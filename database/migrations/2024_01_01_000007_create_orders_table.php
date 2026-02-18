@@ -27,7 +27,8 @@ return new class extends Migration
             // Payment Info
             $table->enum('payment_method', PaymentMethod::values())->default(PaymentMethod::COD->value);
             $table->enum('payment_status', PaymentStatus::values())->default(PaymentStatus::PENDING->value);
-            $table->string('transaction_id')->nullable(); // bKash/Nagad TrxID
+            $table->string('payment_method_name')->nullable();
+            $table->string('payment_id')->nullable();
             $table->timestamp('paid_at')->nullable();
 
             // Amounts
