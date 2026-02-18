@@ -41,6 +41,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     });
     Route::prefix('customers')->as('customers.')->group(function () {
         Route::get('/', [CustomerController::class, 'index'])->name('index');
+        Route::put('/{customer}/update', [CustomerController::class, 'update'])->name('update');
     });
 
 
