@@ -39,7 +39,7 @@
                         <td class="px-6 py-4">
                             <span class="font-semibold text-gray-900">#{{ $order->order_number }}</span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-600">{{ $order->created_at->format('M d, Y') }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ $order->created_at->format('M d, Y h:i a') }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $order->items_count ?? ($order->items ? (is_countable($order->items) ? count($order->items) : 0) : 0) }} item(s)</td>
                         <td class="px-6 py-4">
                             <span class="px-3 py-1 rounded-full text-xs font-semibold text-{{ $order->status->color() }}-600 bg-{{ $order->status->color() }}-100">

@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use App\Models\OrderStatusHistory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CheckoutController extends Controller
 {
@@ -61,14 +63,11 @@ class CheckoutController extends Controller
             'city' => 'required|string|max:100',
             'address' => 'required|string|max:500',
             'payment_method' => 'required|in:cod,online',
-            'bkash_trx_id' => 'required_if:payment_method,bkash|nullable|string|max:50',
-            'nagad_trx_id' => 'required_if:payment_method,nagad|nullable|string|max:50',
             'notes' => 'nullable|string|max:500',
             'coupon' => 'nullable|string|max:50',
         ]);
 
         try {
-            // Get the current cart
             $cart = Auth::check()
                 ? Cart::with(['items.product', 'items.variant.size', 'items.variant.color'])
                 ->where('user_id', Auth::id())
@@ -82,20 +81,17 @@ class CheckoutController extends Controller
                 return redirect()->route('home');
             }
 
-            // Get shipping zone
             $shippingZone = ShippingZone::where('code', $validated['delivery_zone'])->first();
             if (!$shippingZone) {
                 toast_error('Invalid delivery zone selected.');
                 return back()->withInput();
             }
 
-            // Calculate order amounts
             $subtotal = $cart->subtotal;
             $shippingCost = $shippingZone->shipping_cost;
             $discountAmount = 0;
             $couponId = null;
 
-            // Apply coupon if provided
             if (!empty($validated['coupon'])) {
                 $coupon = Coupon::where('code', $validated['coupon'])->valid()->first();
 
@@ -109,26 +105,15 @@ class CheckoutController extends Controller
 
             $total = $subtotal + $shippingCost - $discountAmount;
 
-            // Determine payment status
-            $paymentStatus = $validated['payment_method'] === 'cod' ? PaymentStatus::PENDING : PaymentStatus::PAID;
-            // Get transaction ID
-            $transactionId = null;
-            // if ($validated['payment_method'] === 'bkash') {
-            //     $transactionId = $validated['bkash_trx_id'];
-            // } elseif ($validated['payment_method'] === 'nagad') {
-            //     $transactionId = $validated['nagad_trx_id'];
-            // }
+            DB::beginTransaction();
 
-            // Create the order
             $order = Order::create([
                 'order_number' => Order::generateOrderNumber(),
                 'user_id' => Auth::id(),
                 'coupon_id' => $couponId,
                 'status' => OrderStatus::PENDING,
                 'payment_method' => PaymentMethod::from($validated['payment_method']),
-                'payment_status' => $paymentStatus,
-                'transaction_id' => $transactionId,
-                'paid_at' => $paymentStatus === PaymentStatus::PAID ? now() : null,
+                'payment_status' => PaymentStatus::PENDING,
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shippingCost,
                 'discount_amount' => $discountAmount,
@@ -143,10 +128,9 @@ class CheckoutController extends Controller
                 'notes' => $validated['notes'],
             ]);
 
-            // Create order items from cart items
             foreach ($cart->items as $cartItem) {
                 $unitPrice = $cartItem->product->price;
-                if($cartItem->variant && $cartItem->variant->price != null) {
+                if ($cartItem->variant && $cartItem->variant->price != null) {
                     $unitPrice = $cartItem->variant->price;
                 }
 
@@ -165,7 +149,6 @@ class CheckoutController extends Controller
                     'total' => $cartItem->quantity * $unitPrice,
                 ]);
 
-                // Update product stock
                 if ($cartItem->variant) {
                     $cartItem->variant->increment('stock_out', $cartItem->quantity);
                 } else {
@@ -173,7 +156,6 @@ class CheckoutController extends Controller
                 }
             }
 
-            // Create initial order status history
             OrderStatusHistory::create([
                 'order_id' => $order->id,
                 'status' => OrderStatus::PENDING,
@@ -181,21 +163,31 @@ class CheckoutController extends Controller
                 'updated_by' => Auth::id(),
             ]);
 
-            // Increment coupon usage
             if ($couponId) {
                 $coupon->incrementUsage();
             }
 
-            // Clear the cart
             $cart->items()->delete();
             $cart->delete();
 
-            // Store order ID in session for success page
+            DB::commit();
+
+            if ($request->payment_method == PaymentMethod::ONLINE->value) {
+                $paymentGatewayResponse = Http::post(env('SLASHPAY_PAYMENT_URL'), $this->preparePaymentData($order));
+                $jsonResponse = $paymentGatewayResponse->json();
+                if ($paymentGatewayResponse->successful()) {
+                    $order->payment_id = $jsonResponse['payment_id'];
+                    $order->save();
+                    return redirect()->away($jsonResponse['payment_url']);
+                }
+            }
+
             session(['last_order_id' => $order->id]);
 
             toast_success('Order placed successfully! Thank you for shopping with us.');
             return redirect()->route('checkout.success');
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('Checkout error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
@@ -277,5 +269,43 @@ class CheckoutController extends Controller
             'coupon_type' => $coupon->type->value,
             'coupon_value' => $coupon->value,
         ]);
+    }
+
+    public function payNow(Order $order)
+    {
+        if ($order->payment_status != PaymentStatus::PENDING) {
+            toast_warning('This order has already been paid or is not eligible for payment.');
+            return redirect()->route('orders.show', $order);
+        }
+
+        $paymentGatewayResponse = Http::post(env('SLASHPAY_PAYMENT_URL'), $this->preparePaymentData($order));
+
+        $jsonResponse = $paymentGatewayResponse->json();
+
+        if (!$paymentGatewayResponse->successful()) {
+            toast_error('Failed to initiate payment. Please try again later.');
+            return redirect()->route('orders.show', $order);
+        }
+
+        $order->payment_id = $jsonResponse['payment_id'] ?? null;
+        $order->save();
+
+        return redirect()->away($jsonResponse['payment_url']);
+    }
+
+    private function preparePaymentData(Order $order): array
+    {
+        return [
+            'api_key' => env('SLASHPAY_API_KEY'),
+            'order_id' => (string) $order->id,
+            'amount' => $order->total,
+            'cus_name' => $order->shipping_name,
+            'cus_email_mobile' => $order->shipping_phone,
+            'ipn_url' => route('payment.ipn'),
+            'cancel_url' => route('payment.cancelled'),
+            'success_url' => route('payment.success'),
+            'fail_url' => route('payment.failed'),
+            'currency' => 'BDT',
+        ];
     }
 }

@@ -28,7 +28,7 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
                 <div>
                     <p class="text-sm text-gray-500 mb-1">Order Date</p>
-                    <p class="text-lg font-semibold text-gray-900">{{ $order->created_at->format('F d, Y') }}</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ $order->created_at->format('F d, Y h:i a') }}</p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-500 mb-1">Estimated Delivery</p>
@@ -137,11 +137,19 @@
                             <div>
                                 <p class="text-gray-500 mb-1">Payment Status</p>
                                 @php
-                                $paymentStatusColor = $order->payment_status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+                                $paymentStatusColor = $order->payment_status->isPending() ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700';
                                 @endphp
                                 <span class="inline-block {{ $paymentStatusColor }} px-3 py-1 rounded-lg text-xs font-semibold">
                                     {{ $order->payment_status->label() }}
                                 </span>
+                                @if($order->payment_status->isPending() && $order->payment_method->isOnline())
+                                <form action="{{ route('orders.payNow', $order->order_number) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-semibold">
+                                        Pay Now
+                                    </button>
+                                </form>
+                                @endif
                             </div>
                         </div>
                     </div>

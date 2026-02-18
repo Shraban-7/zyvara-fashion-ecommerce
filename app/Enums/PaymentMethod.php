@@ -49,6 +49,11 @@ enum PaymentMethod: string
         return $this !== self::COD;
     }
 
+    public function isOnline(): bool
+    {
+        return $this == self::ONLINE;
+    }
+
     public static function values(): array
     {
         return array_column(self::cases(), 'value');

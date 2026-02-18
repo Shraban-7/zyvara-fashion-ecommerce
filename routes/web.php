@@ -59,13 +59,14 @@ Route::middleware('auth')->group(function () {
     Route::prefix('orders')->as('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order:order_number}/show', [OrderController::class, 'show'])->name('show');
+        Route::post('/{order:order_number}/pay-now', [CheckoutController::class, 'payNow'])->name('payNow');
     });
 });
 
 Route::prefix('payment')->as('payment.')->group(function () {
-    Route::post('/success', [PaymentController::class, 'success'])->name('success');
-    Route::post('/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');
-    Route::post('/failed', [PaymentController::class, 'failed'])->name('failed');
+    Route::get('/success', [PaymentController::class, 'success'])->name('success');
+    Route::get('/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');
+    Route::get('/failed', [PaymentController::class, 'failed'])->name('failed');
     Route::post('/ipn', [PaymentController::class, 'ipn'])->name('ipn');
 });
 
