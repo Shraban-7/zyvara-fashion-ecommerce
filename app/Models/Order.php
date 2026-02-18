@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -130,14 +129,22 @@ class Order extends Model
     {
         return $query->where('payment_status', PaymentStatus::PENDING);
     }
-    
+
+    // Helpers
     public static function generateOrderNumber(): string
     {
-        do {
-            $orderNumber = 'SF' . strtoupper(Str::random(8));
-        } while (static::where('order_number', $orderNumber)->exists());
+        $prefix = 'SF';
+        
+        $date = now()->format('ymd');
+        
+        $lastOrder = Order::withTrashed()
+            ->whereDate('created_at', today())
+            ->latest()
+            ->first();
 
-        return $orderNumber;
+        $sequence = $lastOrder ? ((int) substr($lastOrder->order_number, -2)) + 1 : 1;
+
+        return $prefix . $date . str_pad($sequence, 2, '0', STR_PAD_LEFT);
     }
 
     public function updateStatus(OrderStatus $status, ?string $comment = null, ?string $updatedBy = null): void
