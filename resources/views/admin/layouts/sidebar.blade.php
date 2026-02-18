@@ -54,7 +54,7 @@
 
             <div class="pt-4">
                 <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Customers</p>
-                <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.customers.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <i class="fas fa-users text-lg w-5"></i>
                     <span>Customers</span>
                 </a>
