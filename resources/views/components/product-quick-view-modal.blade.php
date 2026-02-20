@@ -50,22 +50,22 @@
                     <div id="variantsSection" class="space-y-4 hidden">
                         {{-- Color Selection --}}
                         <div id="colorSection" class="hidden">
-                            <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-sm font-semibold text-gray-900">
-                                    Color: <span id="selectedColorName" class="font-normal text-gray-600">Select</span>
+                                    Color: <span id="selectedColorName" class="font-normal text-gray-600">Select a color</span>
                                 </span>
                             </div>
-                            <div id="colorOptions" class="flex gap-2 flex-wrap"></div>
+                            <div id="colorOptions" class="flex gap-3 flex-wrap"></div>
                         </div>
 
                         {{-- Size Selection --}}
                         <div id="sizeSection" class="hidden">
-                            <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-sm font-semibold text-gray-900">
-                                    Size: <span id="selectedSizeName" class="font-normal text-gray-600">Select</span>
+                                    Size: <span id="selectedSizeName" class="font-normal text-gray-600">Select a size</span>
                                 </span>
                             </div>
-                            <div id="sizeOptions" class="flex gap-2 flex-wrap"></div>
+                            <div id="sizeOptions" class="flex gap-2.5 flex-wrap"></div>
                         </div>
 
                         {{-- Variant Error Message --}}

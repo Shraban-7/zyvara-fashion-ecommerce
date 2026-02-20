@@ -116,11 +116,11 @@
                         <div class="flex items-center justify-between mb-2.5">
                             <span class="text-sm font-semibold text-gray-900">Color: <span id="selectedColorName" class="font-normal text-gray-600">Select a color</span></span>
                         </div>
-                        <div class="flex gap-2.5 flex-wrap">
+                        <div class="flex gap-3 flex-wrap">
                             @foreach($availableColors as $color)
                             <button onclick="selectColor(this, '{{ $color->name }}')"
                                 data-color-id="{{ $color->id }}"
-                                class="color-btn w-10 h-10 rounded-full border-3 border-transparent hover:border-brand-blue transition relative shadow-sm"
+                                class="color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-brand-blue transition p-1 shadow-sm"
                                 style="background-color: {{ $color->hex_code }};"
                                 title="{{ $color->name }}">
                             </button>
@@ -144,8 +144,8 @@
                             @endphp
                             <button onclick="selectSize(this, '{{ $size->name }}')"
                                 data-size-id="{{ $size->id }}"
-                                class="product-size-btn min-w-[60px] h-10 px-4 border-2 rounded-xl text-base font-semibold transition
-                                       {{ $isAvailable ? 'border-gray-300 text-gray-700 hover:border-brand-blue hover:text-brand-blue hover:bg-brand-blue/5' : 'border-gray-200 text-gray-300 cursor-not-allowed' }}"
+                                class="product-size-btn min-w-[56px] h-9 px-3 border border-gray-300 rounded-lg text-sm font-medium transition
+                                       {{ $isAvailable ? 'text-gray-700 hover:border-brand-blue hover:text-brand-blue hover:bg-brand-blue/5' : 'border-gray-200 text-gray-300 cursor-not-allowed' }}"
                                 {{ $isAvailable ? '' : 'disabled' }}>
                                 {{ $size->name }}
                             </button>
@@ -600,22 +600,22 @@
     // Select color
     function selectColor(btn, colorName) {
         document.querySelectorAll('.color-btn').forEach(b => {
-            b.classList.remove('border-brand-blue', 'ring-2', 'ring-brand-blue', 'ring-offset-2');
-            b.classList.add('border-transparent');
+            b.classList.remove('border-brand-blue');
+            b.classList.add('border-gray-300');
         });
-        btn.classList.remove('border-transparent');
-        btn.classList.add('border-brand-blue', 'ring-2', 'ring-brand-blue', 'ring-offset-2');
+        btn.classList.remove('border-gray-300');
+        btn.classList.add('border-brand-blue');
         document.getElementById('selectedColorName').textContent = colorName;
     }
 
     // Select size
     function selectSize(btn, sizeName) {
         document.querySelectorAll('.product-size-btn:not([disabled])').forEach(b => {
-            b.classList.remove('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue');
-            b.classList.add('border-gray-300', 'text-gray-700');
+            b.classList.remove('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue', 'font-semibold');
+            b.classList.add('border-gray-300', 'text-gray-700', 'font-medium');
         });
-        btn.classList.remove('border-gray-300', 'text-gray-700');
-        btn.classList.add('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue');
+        btn.classList.remove('border-gray-300', 'text-gray-700', 'font-medium');
+        btn.classList.add('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue', 'font-semibold');
         document.getElementById('selectedSizeName').textContent = sizeName;
     }
 
@@ -638,13 +638,13 @@
     document.querySelectorAll('.product-size-btn:not([disabled])').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.product-size-btn').forEach(b => {
-                b.classList.remove('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue');
+                b.classList.remove('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue', 'font-semibold');
                 if (!b.disabled) {
-                    b.classList.add('border-gray-300', 'text-gray-700');
+                    b.classList.add('border-gray-300', 'text-gray-700', 'font-medium');
                 }
             });
-            this.classList.remove('border-gray-300', 'text-gray-700');
-            this.classList.add('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue');
+            this.classList.remove('border-gray-300', 'text-gray-700', 'font-medium');
+            this.classList.add('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue', 'font-semibold');
         });
     });
 

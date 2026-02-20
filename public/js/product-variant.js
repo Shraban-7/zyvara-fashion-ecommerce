@@ -16,13 +16,15 @@ class ProductVariantManager {
         //this.setupQuickViewButtons();
 
         // Close modal on outside click
-        document.getElementById("productQuickViewModal")?.addEventListener("click", (e) => {
-            if (e.target.id === "productQuickViewModal") {
-                this.closeQuickView();
-            }
-        });
+        document
+            .getElementById("productQuickViewModal")
+            ?.addEventListener("click", (e) => {
+                if (e.target.id === "productQuickViewModal") {
+                    this.closeQuickView();
+                }
+            });
 
-        document.querySelectorAll(".quick-view-btn").forEach(btn => {
+        document.querySelectorAll(".quick-view-btn").forEach((btn) => {
             btn.addEventListener("click", (e) => {
                 const productId = e.currentTarget.dataset.productId;
 
@@ -31,7 +33,6 @@ class ProductVariantManager {
                 }
             });
         });
-
 
         // Close modal on ESC key
         document.addEventListener("keydown", (e) => {
@@ -257,16 +258,12 @@ class ProductVariantManager {
             colors.forEach((color) => {
                 const btn = document.createElement("button");
                 btn.className =
-                    "color-btn w-10 h-10 rounded-full border-2 border-transparent hover:border-brand-blue transition relative";
+                    "color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-brand-blue transition-all p-1 shadow-sm";
                 btn.style.backgroundColor = color.hex_code;
                 btn.title = color.name;
                 btn.dataset.colorId = color.id;
                 btn.dataset.colorName = color.name;
                 btn.onclick = () => this.selectColor(btn, color);
-
-                // Add checkmark for selection
-                btn.innerHTML =
-                    '<i class="fas fa-check text-white text-sm hidden absolute inset-0 flex items-center justify-center" style="text-shadow: 0 0 2px rgba(0,0,0,0.5);"></i>';
 
                 colorOptions.appendChild(btn);
             });
@@ -281,7 +278,7 @@ class ProductVariantManager {
             sizes.forEach((size) => {
                 const btn = document.createElement("button");
                 btn.className =
-                    "size-btn px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-medium transition hover:border-brand-blue";
+                    "size-btn min-w-[56px] h-9 px-3 border border-gray-300 rounded-lg text-sm font-medium transition hover:border-brand-blue hover:text-brand-blue hover:bg-brand-blue/5";
                 btn.textContent = size.name;
                 btn.dataset.sizeId = size.id;
                 btn.dataset.sizeName = size.name;
@@ -317,23 +314,13 @@ class ProductVariantManager {
     selectColor(btn, color) {
         // Remove previous selection
         document.querySelectorAll("#colorOptions .color-btn").forEach((b) => {
-            b.classList.remove(
-                "border-brand-blue",
-                "ring-2",
-                "ring-brand-blue",
-                "ring-offset-2",
-            );
-            b.querySelector("i").classList.add("hidden");
+            b.classList.remove("border-brand-blue");
+            b.classList.add("border-gray-300");
         });
 
         // Add selection
-        btn.classList.add(
-            "border-brand-blue",
-            "ring-2",
-            "ring-brand-blue",
-            "ring-offset-2",
-        );
-        btn.querySelector("i").classList.remove("hidden");
+        btn.classList.remove("border-gray-300");
+        btn.classList.add("border-brand-blue");
 
         this.selectedColor = color.id;
         document.getElementById("selectedColorName").textContent = color.name;
@@ -348,15 +335,21 @@ class ProductVariantManager {
         document.querySelectorAll("#sizeOptions .size-btn").forEach((b) => {
             b.classList.remove(
                 "border-brand-blue",
-                "bg-brand-blue",
-                "text-white",
+                "bg-brand-blue/5",
+                "text-brand-blue",
+                "font-semibold",
             );
-            b.classList.add("border-gray-200");
+            b.classList.add("border-gray-300", "text-gray-700", "font-medium");
         });
 
         // Add selection
-        btn.classList.remove("border-gray-200");
-        btn.classList.add("border-brand-blue", "bg-brand-blue", "text-white");
+        btn.classList.remove("border-gray-300", "text-gray-700", "font-medium");
+        btn.classList.add(
+            "border-brand-blue",
+            "bg-brand-blue/5",
+            "text-brand-blue",
+            "font-semibold",
+        );
 
         this.selectedSize = size.id;
         document.getElementById("selectedSizeName").textContent = size.name;
