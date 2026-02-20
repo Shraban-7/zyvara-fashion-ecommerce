@@ -328,6 +328,9 @@ class ProductVariantManager {
 
         // Update available sizes based on color
         this.updateAvailableSizes();
+
+        // Update price based on variant
+        this.updateVariantPrice();
     }
 
     selectSize(btn, size) {
@@ -357,6 +360,85 @@ class ProductVariantManager {
 
         // Update available colors based on size
         this.updateAvailableColors();
+
+        // Update price based on variant
+        this.updateVariantPrice();
+    }
+
+    updateVariantPrice() {
+        if (
+            !this.currentProduct ||
+            !this.variants ||
+            this.variants.length === 0
+        ) {
+            return;
+        }
+
+        // Get unique colors and sizes
+        const colors = this.getUniqueColors();
+        const sizes = this.getUniqueSizes();
+        const hasColors = colors.length > 0;
+        const hasSizes = sizes.length > 0;
+
+        // Find matching variant
+        const variant = this.variants.find((v) => {
+            const colorMatch = !hasColors || v.color_id === this.selectedColor;
+            const sizeMatch = !hasSizes || v.size_id === this.selectedSize;
+            return colorMatch && sizeMatch;
+        });
+
+        const priceElement = document.getElementById("quickViewPrice");
+        const comparePriceElement = document.getElementById(
+            "quickViewComparePrice",
+        );
+        const discountElement = document.getElementById("quickViewDiscount");
+
+        // Use variant price if available and not zero
+        if (variant && variant.price && variant.price > 0) {
+            priceElement.textContent = `৳${Number(variant.price).toLocaleString()}`;
+
+            if (
+                variant.compare_price &&
+                variant.compare_price > variant.price
+            ) {
+                comparePriceElement.textContent = `৳${Number(variant.compare_price).toLocaleString()}`;
+                comparePriceElement.classList.remove("hidden");
+
+                const discountPercent = Math.round(
+                    ((variant.compare_price - variant.price) /
+                        variant.compare_price) *
+                        100,
+                );
+                discountElement.textContent = `-${discountPercent}%`;
+                discountElement.classList.remove("hidden");
+            } else {
+                comparePriceElement.classList.add("hidden");
+                discountElement.classList.add("hidden");
+            }
+        } else {
+            // Fallback to base price
+            priceElement.textContent = `৳${Number(this.currentProduct.price).toLocaleString()}`;
+
+            if (
+                this.currentProduct.compare_price &&
+                this.currentProduct.compare_price > this.currentProduct.price
+            ) {
+                comparePriceElement.textContent = `৳${Number(this.currentProduct.compare_price).toLocaleString()}`;
+                comparePriceElement.classList.remove("hidden");
+
+                const discountPercent = Math.round(
+                    ((this.currentProduct.compare_price -
+                        this.currentProduct.price) /
+                        this.currentProduct.compare_price) *
+                        100,
+                );
+                discountElement.textContent = `-${discountPercent}%`;
+                discountElement.classList.remove("hidden");
+            } else {
+                comparePriceElement.classList.add("hidden");
+                discountElement.classList.add("hidden");
+            }
+        }
     }
 
     updateAvailableSizes() {

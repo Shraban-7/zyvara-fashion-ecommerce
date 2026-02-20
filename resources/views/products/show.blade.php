@@ -103,10 +103,13 @@
 
                     {{-- Price --}}
                     <div class="flex flex-wrap items-end gap-2 mb-1.5">
-                        <span class="text-2xl font-bold text-brand-blue">{{ money($product->price) }}</span>
+                        <span id="productPrice" class="text-2xl font-bold text-brand-blue" data-base-price="{{ $product->price }}">{{ money($product->price) }}</span>
                         @if($product->compare_price && $product->compare_price > $product->price)
-                        <span class="text-lg sm:text-xl text-gray-400 line-through">{{ money($product->compare_price) }}</span>
-                        <span class="bg-red-100 text-red-600 text-xs sm:text-sm font-semibold px-2 py-1 rounded-lg">Save {{ money($product->compare_price - $product->price) }}</span>
+                        <span id="productComparePrice" class="text-lg sm:text-xl text-gray-400 line-through" data-base-compare="{{ $product->compare_price }}">{{ money($product->compare_price) }}</span>
+                        <span id="productSavings" class="bg-red-100 text-red-600 text-xs sm:text-sm font-semibold px-2 py-1 rounded-lg">Save {{ money($product->compare_price - $product->price) }}</span>
+                        @else
+                        <span id="productComparePrice" class="text-lg sm:text-xl text-gray-400 line-through hidden" data-base-compare="{{ $product->compare_price ?? 0 }}"></span>
+                        <span id="productSavings" class="bg-red-100 text-red-600 text-xs sm:text-sm font-semibold px-2 py-1 rounded-lg hidden"></span>
                         @endif
                     </div>
 
@@ -553,6 +556,7 @@
 @push('scripts')
 <script>
     const maxQuantity = "{{ $product->stock_in ?? 0 }}";
+    const productVariants = @json($product->variants);
 
     // Change main product image
     function changeMainImage(btn) {
@@ -606,6 +610,7 @@
         btn.classList.remove('border-gray-300');
         btn.classList.add('border-brand-blue');
         document.getElementById('selectedColorName').textContent = colorName;
+        updateVariantPrice();
     }
 
     // Select size
@@ -617,6 +622,7 @@
         btn.classList.remove('border-gray-300', 'text-gray-700', 'font-medium');
         btn.classList.add('border-brand-blue', 'bg-brand-blue/5', 'text-brand-blue', 'font-semibold');
         document.getElementById('selectedSizeName').textContent = sizeName;
+        updateVariantPrice();
     }
 
     // Switch product tabs
@@ -655,11 +661,72 @@
         }
     });
 
+    // Update variant price
+    function updateVariantPrice() {
+        const selectedColorBtn = document.querySelector('.color-btn.border-brand-blue');
+        const selectedSizeBtn = document.querySelector('.product-size-btn.border-brand-blue');
+
+        if (!productVariants || productVariants.length === 0) {
+            return;
+        }
+
+        // Get selected IDs
+        const colorId = selectedColorBtn ? parseInt(selectedColorBtn.dataset.colorId) : null;
+        const sizeId = selectedSizeBtn ? parseInt(selectedSizeBtn.dataset.sizeId) : null;
+
+        // Get unique colors and sizes from variants
+        const colors = [...new Map(productVariants.filter(v => v.color).map(v => [v.color.id, v.color])).values()];
+        const sizes = [...new Map(productVariants.filter(v => v.size).map(v => [v.size.id, v.size])).values()];
+        const hasColors = colors.length > 0;
+        const hasSizes = sizes.length > 0;
+
+        // Find matching variant
+        const variant = productVariants.find(v => {
+            const colorMatch = !hasColors || v.color_id === colorId;
+            const sizeMatch = !hasSizes || v.size_id === sizeId;
+            return colorMatch && sizeMatch;
+        });
+
+        const priceElement = document.getElementById('productPrice');
+        const comparePriceElement = document.getElementById('productComparePrice');
+        const savingsElement = document.getElementById('productSavings');
+        const basePrice = parseFloat(priceElement.dataset.basePrice);
+        const baseCompare = parseFloat(comparePriceElement.dataset.baseCompare || 0);
+
+        // Use variant price if available and not zero
+        if (variant && variant.price && variant.price > 0) {
+            priceElement.textContent = `৳${Number(variant.price).toLocaleString()}`;
+
+            if (variant.compare_price && variant.compare_price > variant.price) {
+                comparePriceElement.textContent = `৳${Number(variant.compare_price).toLocaleString()}`;
+                comparePriceElement.classList.remove('hidden');
+                const savings = variant.compare_price - variant.price;
+                savingsElement.textContent = `Save ৳${Number(savings).toLocaleString()}`;
+                savingsElement.classList.remove('hidden');
+            } else {
+                comparePriceElement.classList.add('hidden');
+                savingsElement.classList.add('hidden');
+            }
+        } else {
+            // Fallback to base price
+            priceElement.textContent = `৳${Number(basePrice).toLocaleString()}`;
+            if (baseCompare && baseCompare > basePrice) {
+                comparePriceElement.textContent = `৳${Number(baseCompare).toLocaleString()}`;
+                comparePriceElement.classList.remove('hidden');
+                const savings = baseCompare - basePrice;
+                savingsElement.textContent = `Save ৳${Number(savings).toLocaleString()}`;
+                savingsElement.classList.remove('hidden');
+            } else {
+                comparePriceElement.classList.add('hidden');
+                savingsElement.classList.add('hidden');
+            }
+        }
+    }
+
     // Add to cart functionality
     document.addEventListener('DOMContentLoaded', function() {
         const addToCartBtn = document.getElementById('addToCartBtn');
         const buyNowBtn = document.getElementById('buyNowBtn');
-        const productVariants = @json($product->variants);
 
         if (addToCartBtn) {
             addToCartBtn.addEventListener('click', function() {
