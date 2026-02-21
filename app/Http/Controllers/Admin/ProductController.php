@@ -148,10 +148,8 @@ class ProductController extends Controller
         DB::beginTransaction();
 
         try {
-            // Generate slug from name
             $validated['slug'] = Str::slug($validated['name']);
 
-            // Ensure unique slug
             $originalSlug = $validated['slug'];
             $counter = 1;
             while (Product::where('slug', $validated['slug'])->exists()) {
@@ -159,7 +157,6 @@ class ProductController extends Controller
                 $counter++;
             }
 
-            // Auto-generate SKU if not provided
             if (empty($validated['sku'])) {
                 $validated['sku'] = 'PRD-' . strtoupper(Str::random(8));
             }
@@ -176,10 +173,8 @@ class ProductController extends Controller
             $validated['is_best_seller'] = $request->has('is_best_seller');
             $validated['is_on_sale'] = $request->has('is_on_sale');
 
-            // Create the product
             $product = Product::create($validated);
 
-            // Handle image uploads
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $index => $image) {
                     $path = $image->store('products', 'public');
@@ -191,17 +186,33 @@ class ProductController extends Controller
             }
             DB::commit();
 
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Product created successfully!',
+                    'redirect' => route('admin.products.index'),
+                    'product' => $product->load('images')
+                ]);
+            }
+
             return redirect()
                 ->route('admin.products.index')
                 ->with('success', 'Product created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // Delete uploaded images if product creation fails
             if (isset($product) && $product->images) {
                 foreach ($product->images as $image) {
                     Storage::disk('public')->delete($image->image_path);
                 }
+            }
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to create product: ' . $e->getMessage(),
+                    'errors' => []
+                ], 422);
             }
 
             return redirect()

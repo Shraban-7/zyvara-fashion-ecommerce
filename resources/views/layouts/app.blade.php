@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') - {{ $siteName }}</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -46,6 +46,22 @@
     <script src="{{ asset('js/auth.js') }}"></script>
     <script src="{{ asset('js/cart.js') }}"></script>
     <script src="{{ asset('js/product-variant.js') }}"></script>
+
+    <script>
+        /**
+         * Keep the admin session alive
+         * This prevents Laravel session expiration (and 419 Page Expired errors)
+         * when the admin spends a long time filling out the form
+         * The request is sent every 5 minutes to refresh the session lifetime.
+         */
+        setInterval(() => {
+            fetch("{{ route('admin.keepAlive') }}", {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+        }, 300000); // every 5 minutes
+    </script>
 
     @stack('scripts')
 

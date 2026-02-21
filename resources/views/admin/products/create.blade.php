@@ -2,21 +2,16 @@
 @section('title', 'Add Product')
 @section('content')
 
-{{-- Page Header --}}
-<div class="mb-6">
+<div class="mb-3">
     <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Add New Product</h1>
-            <p class="text-gray-500">Create a new product for your store</p>
-        </div>
+        <h1 class="text-lg md:text-2xl font-bold text-gray-900 mb-0">Add New Product</h1>
         <a href="{{ route('admin.products.index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
             <i class="fas fa-arrow-left mr-2"></i>Back to Products
         </a>
     </div>
 </div>
 
-{{-- Form --}}
-<form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+<form id="productForm" action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
     @csrf
 
     <div class="grid lg:grid-cols-3 gap-6">
@@ -359,8 +354,9 @@
 
             {{-- Action Buttons --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:ring-blue-300 transition">
-                    <i class="fas fa-plus mr-2"></i>Create Product
+                <button type="submit" id="submitBtn" class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:ring-blue-300 transition">
+                    <i class="fas fa-plus mr-2"></i><span id="btnText">Save Product</span>
+                    <i class="fas fa-spinner fa-spin ml-2 hidden" id="btnSpinner"></i>
                 </button>
                 <a href="{{ route('admin.products.index') }}" class="block w-full px-6 py-3 text-center text-gray-700 font-medium bg-gray-100 rounded-lg hover:bg-gray-200 transition mt-3">
                     Cancel
@@ -394,10 +390,74 @@
         }
     });
 
-    // Auto-generate slug from product name
+    const productForm = document.getElementById('productForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+
+    productForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        submitBtn.disabled = true;
+        btnText.textContent = 'Saving...';
+        btnSpinner.classList.remove('hidden');
+
+        const formData = new FormData(productForm);
+
+        fetch(productForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw {
+                            status: response.status,
+                            data: data
+                        };
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showToast('success', data.message);
+
+                    productForm.reset();
+                    document.getElementById('imagePreview').innerHTML = '';
+
+                    setTimeout(() => {
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        }
+                    }, 2000);
+                } else {
+                    showToast('error', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+
+                if (error.status === 422 && error.data.errors) {
+                    showToast('error', 'error.data.errors');
+                } else {
+                    const message = error.data?.message || 'An unexpected error occurred. Please try again.';
+                    showToast('error', message);
+                }
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Save Product';
+                btnSpinner.classList.add('hidden');
+            });
+    });
+
     document.getElementById('name').addEventListener('input', function(e) {
         const name = e.target.value;
-        // You can add auto-slug generation here if needed
     });
 </script>
 @endpush

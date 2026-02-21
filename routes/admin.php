@@ -81,4 +81,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/settings', function () {
         return redirect()->route('admin.dashboard');
     })->name('settings.index');
+
+    Route::get('/keep-alive', function () {
+        return response()->json(['status' => 'alive']);
+    })->name('keepAlive');
 });
