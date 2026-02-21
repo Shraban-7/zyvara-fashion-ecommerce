@@ -69,7 +69,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="block py-2.5 px-2 text-gray-700 font-medium hover:bg-gray-50 rounded">
+                <a href="{{ route('track-order.index') }}" class="block py-2.5 px-2 text-gray-700 font-medium hover:bg-gray-50 rounded">
                     Track Order
                 </a>
             </li>

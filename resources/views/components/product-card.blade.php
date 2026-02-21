@@ -51,12 +51,12 @@ if ($product->compare_price && $product->compare_price > $product->price) {
         {{-- Top Right Actions --}}
         <div class="absolute top-2.5 right-2.5 flex flex-col gap-2">
             {{-- Wishlist Button --}}
-            <button
+            {{--<button
                 class="wishlist-btn w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-red-50 transition-colors tap-effect"
                 data-product-id="{{ $product->id }}"
                 aria-label="Add to wishlist">
                 <i class="far fa-heart text-gray-600 text-sm"></i>
-            </button>
+            </button>--}}
 
             {{-- Quick View Button --}}
             <!-- <button
@@ -142,11 +142,11 @@ if ($product->compare_price && $product->compare_price > $product->price) {
         @endif
 
         {{-- Wishlist Button --}}
-        <button
+        {{--<button
             class="wishlist-btn absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow hover:bg-white transition tap-effect"
             data-product-id="{{ $product->id }}">
             <i class="far fa-heart text-gray-600"></i>
-        </button>
+        </button>--}}
     </div>
 
     <div class="p-3 md:p-4">

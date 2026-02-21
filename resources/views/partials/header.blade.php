@@ -14,7 +14,7 @@
                 </span>
             </div>
             <div class="flex items-center gap-4">
-                <a href="#" class="hover:text-brand-blue transition">Track Order</a>
+                <a href="{{ route('track-order.index') }}" class="hover:text-brand-blue transition">Track Order</a>
                 <span class="text-gray-500">|</span>
                 <a href="#" class="hover:text-brand-blue transition">Help & Support</a>
             </div>
@@ -56,13 +56,13 @@
                 </button>
 
                 {{-- Wishlist --}}
-                <button class="hidden md:flex icon-btn p-2.5 rounded-xl items-center gap-2 group" aria-label="Wishlist">
+                {{--<button class="hidden md:flex icon-btn p-2.5 rounded-xl items-center gap-2 group" aria-label="Wishlist">
                     <div class="relative">
                         <i class="far fa-heart text-lg text-gray-600 group-hover:text-brand-blue transition-colors"></i>
                         <span class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">2</span>
                     </div>
                     <span class="text-sm text-gray-600 group-hover:text-brand-blue transition-colors hidden lg:block">Wishlist</span>
-                </button>
+                </button>--}}
 
                 {{-- Cart --}}
                 <button class="icon-btn p-2.5 rounded-xl flex items-center gap-2 group" aria-label="Cart" onclick="openCartDrawer()">

@@ -216,25 +216,25 @@
     });
 
     // ===== Newsletter form =====
-    const newsletterForm = document.querySelector('form');
-    if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const input = this.querySelector('input[type="email"]');
-            const btn = this.querySelector('button');
+    // const newsletterForm = document.querySelector('form');
+    // if (newsletterForm) {
+    //     newsletterForm.addEventListener('submit', function(e) {
+    //         e.preventDefault();
+    //         const input = this.querySelector('input[type="email"]');
+    //         const btn = this.querySelector('button');
 
-            if (input.value) {
-                btn.textContent = 'Subscribed! ✓';
-                btn.classList.add('bg-green-600');
-                input.value = '';
+    //         if (input.value) {
+    //             btn.textContent = 'Subscribed! ✓';
+    //             btn.classList.add('bg-green-600');
+    //             input.value = '';
 
-                setTimeout(() => {
-                    btn.textContent = 'Subscribe';
-                    btn.classList.remove('bg-green-600');
-                }, 3000);
-            }
-        });
-    }
+    //             setTimeout(() => {
+    //                 btn.textContent = 'Subscribe';
+    //                 btn.classList.remove('bg-green-600');
+    //             }, 3000);
+    //         }
+    //     });
+    // }
 
     // ===== Lazy loading images =====
     if ('IntersectionObserver' in window) {

@@ -40,6 +40,11 @@ Route::prefix('checkout')->as('checkout.')->group(function () {
     Route::get('/success', [CheckoutController::class, 'success'])->name('success');
 });
 
+// Public Order Tracking (no login required)
+Route::prefix('track-order')->as('track-order.')->group(function () {
+    Route::get('/', [OrderController::class, 'trackOrder'])->name('index');
+});
+
 Route::middleware('auth')->group(function () {
     // Customer Dashboard
     Route::as('customer.')->group(function () {
