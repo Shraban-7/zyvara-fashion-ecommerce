@@ -15,10 +15,14 @@
         </div>
     </div>
     <div class="flex items-center gap-3">
-        <button onclick="window.print()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition flex items-center gap-2">
+        <button onclick="downloadInvoice()" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2">
+            <i class="fas fa-download"></i>
+            <span>Download Invoice</span>
+        </button>
+        <!-- <button onclick="window.print()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition flex items-center gap-2">
             <i class="fas fa-print"></i>
             <span>Print Invoice</span>
-        </button>
+        </button> -->
         @if($order->status->value !== 'cancelled')
         <button onclick="openDeleteModal()" class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition flex items-center gap-2">
             <i class="fas fa-trash"></i>
@@ -316,47 +320,272 @@
     </div>
 </div>
 
-{{-- Delete Confirmation Modal --}}
-<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6">
-        <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+{{-- Invoice Template (Hidden) - A4 Size --}}
+<div id="invoiceTemplate" class="hidden">
+    <div class="invoice-container" style="width: 210mm; min-height: 297mm; padding: 20mm; background: white; font-family: 'Arial', 'Helvetica', sans-serif; color: #000;">
+        {{-- Invoice Header --}}
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 40px; padding-bottom: 15px; border-bottom: 2px solid #000;">
+            <div style="flex: 1;">
+                <h1 style="font-size: 28px; font-weight: 700; color: #000; margin: 0 0 12px 0; letter-spacing: -0.5px;">SPINNER FASHION</h1>
+                <p style="font-size: 11px; color: #333; margin: 0; line-height: 1.7;">
+                    123 Fashion Street, Dhaka 1215<br>
+                    Phone: +880 1711-123456<br>
+                    Email: info@spinnerfashion.com<br>
+                    Web: www.spinnerfashion.com
+                </p>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Order?</h3>
-            <p class="text-gray-600">Are you sure you want to delete this order? This action cannot be undone.</p>
+            <div style="text-align: right;">
+                <h2 style="font-size: 28px; font-weight: 700; color: #000; margin: 0 0 15px 0; letter-spacing: 1px;">INVOICE</h2>
+                <table style="margin-left: auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 4px 8px 4px 0; font-size: 11px; color: #666; text-align: right;">Invoice #:</td>
+                        <td style="padding: 4px 0; font-size: 11px; color: #000; font-weight: 600;">{{ $order->order_number }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px 4px 0; font-size: 11px; color: #666; text-align: right;">Date:</td>
+                        <td style="padding: 4px 0; font-size: 11px; color: #000; font-weight: 600;">{{ $order->created_at->format('M d, Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px 4px 0; font-size: 11px; color: #666; text-align: right;">Status:</td>
+                        <td style="padding: 4px 0; font-size: 11px; color: #000; font-weight: 600;">{{ strtoupper($order->status->label()) }}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div class="flex gap-3">
-            <button onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium">
-                Cancel
-            </button>
-            <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="flex-1">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition font-medium">
-                    Delete
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
 
-@push('scripts')
-<script>
-    function openDeleteModal() {
-        document.getElementById('deleteModal').classList.remove('hidden');
-    }
+        {{-- Bill To & Ship To --}}
+        <div style="display: flex; gap: 40px; margin-bottom: 40px;">
+            <div style="flex: 1;">
+                <h3 style="font-size: 11px; font-weight: 700; color: #000; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Bill To</h3>
+                <p style="font-size: 11px; color: #000; margin: 0; line-height: 1.8;">
+                    <strong style="font-size: 13px; display: block; margin-bottom: 8px;">{{ $order->shipping_name }}</strong>
+                    {{ $order->shipping_address }}<br>
+                    {{ $order->shipping_city }}, {{ $order->shipping_district }}<br>
+                    @if($order->shipping_postal_code){{ $order->shipping_postal_code }}<br>@endif
+                    Phone: {{ $order->shipping_phone }}<br>
+                    @if($order->shipping_email)Email: {{ $order->shipping_email }}@endif
+                </p>
+            </div>
+            <div style="flex: 1;">
+                <h3 style="font-size: 11px; font-weight: 700; color: #000; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Payment Details</h3>
+                <table style="width: 100%; font-size: 11px; line-height: 1.8;">
+                    <tr>
+                        <td style="color: #666; padding: 3px 0; width: 40%;">Payment Method:</td>
+                        <td style="color: #000; padding: 3px 0; font-weight: 600;">{{ $order->payment_method->label() }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #666; padding: 3px 0;">Payment Status:</td>
+                        <td style="color: #000; padding: 3px 0; font-weight: 600;">{{ strtoupper($order->payment_status->label()) }}</td>
+                    </tr>
+                    @if($order->transaction_id)
+                    <tr>
+                        <td style="color: #666; padding: 3px 0; vertical-align: top;">Transaction ID:</td>
+                        <td style="color: #000; padding: 3px 0; font-family: 'Courier New', monospace; font-size: 10px; word-break: break-all;">{{ $order->transaction_id }}</td>
+                    </tr>
+                    @endif
+                    @if($order->paid_at)
+                    <tr>
+                        <td style="color: #666; padding: 3px 0;">Paid Date:</td>
+                        <td style="color: #000; padding: 3px 0;">{{ $order->paid_at->format('M d, Y') }}</td>
+                    </tr>
+                    @endif
+                </table>
 
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.add('hidden');
-    }
+                {{-- Order Items Table --}}
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; border: 1px solid #ddd;">
+                    <thead>
+                        <tr style="background: #f5f5f5; border-bottom: 2px solid #000;">
+                            <th style="padding: 12px 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #000; border-right: 1px solid #ddd; width: 5%;">#</th>
+                            <th style="padding: 12px 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #000; border-right: 1px solid #ddd;">Item Description</th>
+                            <th style="padding: 12px 10px; text-align: center; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #000; border-right: 1px solid #ddd; width: 10%;">Qty</th>
+                            <th style="padding: 12px 10px; text-align: right; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #000; border-right: 1px solid #ddd; width: 15%;">Unit Price</th>
+                            <th style="padding: 12px 10px; text-align: right; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #000; width: 15%;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($order->items as $index => $item)
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 12px 10px; font-size: 11px; color: #333; border-right: 1px solid #ddd; text-align: center;">{{ $index + 1 }}</td>
+                            <td style="padding: 12px 10px; border-right: 1px solid #ddd;">
+                                <div style="font-size: 11px; font-weight: 600; color: #000; margin-bottom: 3px;">{{ $item->product_name }}</div>
+                                @if($item->size_name || $item->color_name)
+                                <div style="font-size: 10px; color: #666;">
+                                    @if($item->size_name)Size: {{ $item->size_name }}@endif
+                                    @if($item->size_name && $item->color_name) | @endif
+                                    @if($item->color_name)Color: {{ $item->color_name }}@endif
+                                </div>
+                                @endif
+                            </td>
+                            <td style="padding: 12px 10px; text-align: center; font-size: 11px; color: #000; border-right: 1px solid #ddd;">{{ $item->quantity }}</td>
+                            <td style="padding: 12px 10px; text-align: right; font-size: 11px; color: #000; border-right: 1px solid #ddd;">{{ money($item->unit_price) }}</td>
+                            <td style="padding: 12px 10px; text-align: right; font-size: 11px; color: #000; font-weight: 600;">{{ money($item->total) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-    // Close modal on outside click
-    document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeDeleteModal();
-        }
-    });
-</script>
-@endpush
-@endsection
+                {{-- Totals Section --}}
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
+                    <div style="width: 300px;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                            <tr style="border-bottom: 1px solid #ddd;">
+                                <td style="padding: 10px; font-size: 11px; color: #000; background: #fafafa;">Subtotal</td>
+                                <td style="padding: 10px; text-align: right; font-size: 11px; color: #000; font-weight: 600;">{{ money($order->subtotal) }}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #ddd;">
+                                <td style="padding: 10px; font-size: 11px; color: #000; background: #fafafa;">Shipping ({{ $order->delivery_zone->label() }})</td>
+                                <td style="padding: 10px; text-align: right; font-size: 11px; color: #000; font-weight: 600;">{{ money($order->shipping_cost) }}</td>
+                            </tr>
+                            @if($order->discount_amount > 0)
+                            <tr style="border-bottom: 1px solid #ddd;">
+                                <td style="padding: 10px; font-size: 11px; color: #000; background: #fafafa;">Discount @if($order->coupon)({{ $order->coupon->code }})@endif</td>
+                                <td style="padding: 10px; text-align: right; font-size: 11px; color: #000; font-weight: 600;">-{{ money($order->discount_amount) }}</td>
+                            </tr>
+                            @endif
+                            <tr style="background: #000;">
+                                <td style="padding: 14px 10px; font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.5px;">Total</td>
+                                <td style="padding: 14px 10px; text-align: right; font-size: 14px; font-weight: 700; color: #fff;">{{ money($order->total) }}</td>
+                        </table>
+                    </div>
+                </div>
+
+                {{-- Tracking Information --}}
+                @if($order->tracking_number)
+                <div style="margin-bottom: 30px; border: 1px solid #ddd; padding: 15px;">
+                    <h3 style="font-size: 11px; font-weight: 700; color: #000; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px;">Shipping & Tracking</h3>
+                    <table style="width: 100%; font-size: 11px;">
+                        <tr>
+                            <td style="padding: 3px 0; color: #666; width: 30%;">Courier Service:</td>
+                            <td style="padding: 3px 0; color: #000; font-weight: 600;">{{ $order->courier }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px 0; color: #666; vertical-align: top;">Tracking Number:</td>
+                            <td style="padding: 3px 0; color: #000; font-family: 'Courier New', monospace; font-size: 10px;">{{ $order->tracking_number }}</td>
+                        </tr>
+                    </table>
+                </div>
+                @endif
+
+                {{-- Notes --}}
+                @if($order->notes)
+                <div style="margin-bottom: 30px; border: 1px solid #ddd; padding: 15px;">
+                    <h3 style="font-size: 11px; font-weight: 700; color: #000; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px;">Customer Notes</h3>
+                    <p style="margin: 0; font-size: 11px; color: #000; line-height: 1.7;">{{ $order->notes }}</p>
+                </div>
+                @endif
+
+                {{-- Terms & Conditions / Footer --}}
+                <div style="border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
+                    <h3 style="font-size: 11px; font-weight: 700; color: #000; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px;">Terms & Conditions</h3>
+                    <p style="margin: 0 0 15px 0; font-size: 10px; color: #666; line-height: 1.6;">
+                        Payment is due within 15 days. Please include the invoice number on your payment.
+                        All sales are final. No returns or exchanges unless the product is defective.
+                    </p>
+                    <div style="text-align: center; border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">
+                        <p style="margin: 0 0 5px 0; font-size: 11px; color: #000; font-weight: 600;">Thank you for your business!</p>
+                        <p style="margin: 0; font-size: 10px; color: #666; line-height: 1.6;">
+                            For inquiries: +880 1711-123456 | info@spinnerfashion.com
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Delete Confirmation Modal --}}
+                <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Order?</h3>
+                            <p class="text-gray-600">Are you sure you want to delete this order? This action cannot be undone.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium">
+                                Cancel
+                            </button>
+                            <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="flex-1">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition font-medium">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                @push('scripts')
+                {{-- html2pdf.js library for PDF generation --}}
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+                <script>
+                    function downloadInvoice() {
+                        const invoiceElement = document.getElementById('invoiceTemplate');
+                        const invoiceNumber = '{{ $order->order_number }}';
+
+                        // Show loading state
+                        const button = event.target.closest('button');
+                        const originalText = button.innerHTML;
+                        button.disabled = true;
+                        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
+
+                        // Clone the element to avoid modifying the original
+                        const clonedElement = invoiceElement.cloneNode(true);
+                        clonedElement.classList.remove('hidden');
+
+                        // Configure pdf options
+                        const opt = {
+                            margin: 0,
+                            filename: `Invoice-${invoiceNumber}.pdf`,
+                            image: {
+                                type: 'jpeg',
+                                quality: 0.98
+                            },
+                            html2canvas: {
+                                scale: 2,
+                                useCORS: true,
+                                letterRendering: true,
+                                scrollY: 0,
+                                scrollX: 0
+                            },
+                            jsPDF: {
+                                unit: 'mm',
+                                format: 'a4',
+                                orientation: 'portrait',
+                                compress: true
+                            },
+                            pagebreak: {
+                                mode: ['avoid-all', 'css', 'legacy']
+                            }
+                        };
+
+                        // Generate and download PDF
+                        html2pdf().set(opt).from(clonedElement).save().then(() => {
+                            // Restore button state
+                            button.disabled = false;
+                            button.innerHTML = originalText;
+                        }).catch((error) => {
+                            console.error('PDF generation error:', error);
+                            button.disabled = false;
+                            button.innerHTML = originalText;
+                            alert('Failed to generate PDF. Please try again.');
+                        });
+                    }
+
+                    function openDeleteModal() {
+                        document.getElementById('deleteModal').classList.remove('hidden');
+                    }
+
+                    function closeDeleteModal() {
+                        document.getElementById('deleteModal').classList.add('hidden');
+                    }
+
+                    // Close modal on outside click
+                    document.getElementById('deleteModal').addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            closeDeleteModal();
+                        }
+                    });
+                </script>
+                @endpush
+                @endsection
