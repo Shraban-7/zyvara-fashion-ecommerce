@@ -17,54 +17,22 @@
     <div class="grid lg:grid-cols-3 gap-6">
         {{-- Main Content --}}
         <div class="lg:col-span-2 space-y-6">
-
-            {{-- Basic Information --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-6">Basic Information</h2>
-
-                {{-- Product Name --}}
                 <div class="mb-5">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Product Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('name') border-red-500 @enderror"
-                        placeholder="e.g., Men's Slim Fit Cotton Shirt">
-                    @error('name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-input name="name" label="Product Name" required placeholder="e.g., Men's Slim Fit Cotton Shirt" />
                 </div>
 
-                {{-- SKU --}}
                 <div class="mb-5">
-                    <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">SKU (Stock Keeping Unit)</label>
-                    <input type="text" name="sku" id="sku" value="{{ old('sku') }}"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('sku') border-red-500 @enderror"
-                        placeholder="e.g., SHIRT-BLU-M-001">
+                    <x-input name="sku" label="SKU (Stock Keeping Unit)" placeholder="e.g., SHIRT-BLU-M-001" />
                     <p class="mt-1 text-xs text-gray-500">Leave empty to auto-generate</p>
-                    @error('sku')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
-                {{-- Short Description --}}
                 <div class="mb-5">
-                    <label for="short_description" class="block text-sm font-medium text-gray-700 mb-2">Short Description</label>
-                    <textarea name="short_description" id="short_description" rows="3"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('short_description') border-red-500 @enderror"
-                        placeholder="Brief description for product listing">{{ old('short_description') }}</textarea>
-                    @error('short_description')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-textarea name="short_description" label="Short Description" rows="3" placeholder="Brief description for product listing" />
                 </div>
-
-                {{-- Full Description --}}
                 <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
-                    <textarea name="description" id="description" rows="6"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('description') border-red-500 @enderror"
-                        placeholder="Detailed product description, features, and specifications">{{ old('description') }}</textarea>
-                    @error('description')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-textarea name="description" label="Full Description" rows="6" placeholder="Detailed product description, features, and specifications" />
                 </div>
             </div>
 
@@ -73,39 +41,16 @@
                 <h2 class="text-lg font-bold text-gray-900 mb-6">Pricing</h2>
 
                 <div class="grid md:grid-cols-3 gap-5">
-                    {{-- Regular Price --}}
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Regular Price (৳) <span class="text-red-500">*</span></label>
-                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price') }}" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('price') border-red-500 @enderror"
-                            placeholder="0.00">
-                        @error('price')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Compare Price --}}
+                        <x-input name="price" label="Regular Price (৳)" placeholder="0.00" required />
+                    </div>   
                     <div>
-                        <label for="compare_price" class="block text-sm font-medium text-gray-700 mb-2">Compare Price (৳)</label>
-                        <input type="number" step="0.01" name="compare_price" id="compare_price" value="{{ old('compare_price') }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('compare_price') border-red-500 @enderror"
-                            placeholder="0.00">
+                        <x-input name="compare_price" label="Compare Price (৳)" placeholder="0.00" />
                         <p class="mt-1 text-xs text-gray-500">Original price before discount</p>
-                        @error('compare_price')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
-
-                    {{-- Cost Price --}}
                     <div>
-                        <label for="cost_price" class="block text-sm font-medium text-gray-700 mb-2">Cost Price (৳)</label>
-                        <input type="number" step="0.01" name="cost_price" id="cost_price" value="{{ old('cost_price') }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('cost_price') border-red-500 @enderror"
-                            placeholder="0.00">
+                        <x-input name="cost_price" label="Cost Price (৳)" placeholder="0.00" />
                         <p class="mt-1 text-xs text-gray-500">For profit calculation</p>
-                        @error('cost_price')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
             </div>
@@ -115,28 +60,12 @@
                 <h2 class="text-lg font-bold text-gray-900 mb-6">Product Details</h2>
 
                 <div class="grid md:grid-cols-2 gap-5">
-                    {{-- Brand --}}
                     <div>
-                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
-                        <input type="text" name="brand" id="brand" value="{{ old('brand') }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('brand') border-red-500 @enderror"
-                            placeholder="e.g., Nike, Adidas">
-                        @error('brand')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="brand" label="Brand" placeholder="e.g., Nike, Adidas" />
                     </div>
-
-                    {{-- Material --}}
                     <div>
-                        <label for="material" class="block text-sm font-medium text-gray-700 mb-2">Material</label>
-                        <input type="text" name="material" id="material" value="{{ old('material') }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('material') border-red-500 @enderror"
-                            placeholder="e.g., 100% Cotton">
-                        @error('material')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="material" label="Material" placeholder="e.g., 100% Cotton" />
                     </div>
-
                     {{-- Fit Type --}}
                     <div>
                         <label for="fit_type" class="block text-sm font-medium text-gray-700 mb-2">Fit Type</label>
@@ -188,45 +117,22 @@
                         @enderror
                     </div>
 
-                    {{-- Weight --}}
                     <div>
-                        <label for="weight" class="block text-sm font-medium text-gray-700 mb-2">Weight (grams)</label>
-                        <input type="number" step="0.01" name="weight" id="weight" value="{{ old('weight') }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('weight') border-red-500 @enderror"
-                            placeholder="0.00">
-                        @error('weight')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="weight" label="Weight (grams)" type="number" step="0.01" placeholder="0.00" />
                     </div>
                 </div>
             </div>
 
-            {{-- Inventory --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-6">Inventory</h2>
 
                 <div class="grid md:grid-cols-2 gap-5">
-                    {{-- Stock Quantity --}}
                     <div>
-                        <label for="stock_in" class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity <span class="text-red-500">*</span></label>
-                        <input type="number" name="stock_in" id="stock_in" value="{{ old('stock_in', 0) }}" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('stock_in') border-red-500 @enderror"
-                            placeholder="0">
-                        @error('stock_in')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="stock_in" label="Stock Quantity" type="number" required placeholder="0" />
                     </div>
-
-                    {{-- Low Stock Threshold --}}
                     <div>
-                        <label for="low_stock_threshold" class="block text-sm font-medium text-gray-700 mb-2">Low Stock Alert</label>
-                        <input type="number" name="low_stock_threshold" id="low_stock_threshold" value="{{ old('low_stock_threshold', 5) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('low_stock_threshold') border-red-500 @enderror"
-                            placeholder="5">
+                        <x-input name="low_stock_threshold" label="Low Stock Alert" type="number" value="{{ old('low_stock_threshold', 5) }}" placeholder="5" />
                         <p class="mt-1 text-xs text-gray-500">Alert when stock reaches this level</p>
-                        @error('low_stock_threshold')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
             </div>
@@ -234,39 +140,15 @@
             {{-- SEO Settings --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-6">SEO Settings</h2>
-
-                {{-- Meta Title --}}
                 <div class="mb-5">
-                    <label for="meta_title" class="block text-sm font-medium text-gray-700 mb-2">Meta Title</label>
-                    <input type="text" name="meta_title" id="meta_title" value="{{ old('meta_title') }}"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('meta_title') border-red-500 @enderror"
-                        placeholder="SEO title for search engines">
-                    @error('meta_title')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-input name="meta_title" label="Meta Title" placeholder="SEO title for search engines" />
                 </div>
-
-                {{-- Meta Description --}}
                 <div class="mb-5">
-                    <label for="meta_description" class="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
-                    <textarea name="meta_description" id="meta_description" rows="3"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('meta_description') border-red-500 @enderror"
-                        placeholder="SEO description for search engines">{{ old('meta_description') }}</textarea>
-                    @error('meta_description')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-textarea name="meta_description" label="Meta Description" placeholder="SEO description for search engines" />
                 </div>
-
-                {{-- Tags --}}
                 <div>
-                    <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                    <input type="text" name="tags" id="tags" value="{{ old('tags') }}"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('tags') border-red-500 @enderror"
-                        placeholder="e.g., summer, casual, cotton">
+                    <x-input name="tags" label="Tags" placeholder="e.g., summer, casual, cotton" />
                     <p class="mt-1 text-xs text-gray-500">Separate tags with commas</p>
-                    @error('tags')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
             </div>
         </div>
@@ -329,16 +211,43 @@
                 </div>
             </div>
 
-            {{-- Product Images --}}
+            {{-- Product Media --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Product Images</h2>
+                <h2 class="text-lg font-bold text-gray-900 mb-6">Product Media</h2>
 
+                {{-- image --}}
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">image Image <span class="text-red-500">*</span></label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition relative">
+                        <input type="file" name="image" id="image" accept="image/*" class="hidden" required>
+                        <div id="imagePlaceholder">
+                            <i class="fas fa-image text-4xl text-gray-400 mb-3"></i>
+                            <p class="text-sm text-gray-600 mb-2">Click to upload image</p>
+                            <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 2MB</p>
+                        </div>
+                        <div id="imagePreview" class="hidden">
+                            <img src="" class="mx-auto h-32 object-cover rounded-lg border border-gray-200">
+                            <button type="button" id="removeimage" class="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <button type="button" onclick="document.getElementById('image').click()"
+                            class="mt-3 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition" id="imageBtn">
+                            Choose File
+                        </button>
+                    </div>
+                    @error('image')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Gallery --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Upload Images</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Gallery Images (Max 5)</label>
                     <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition">
-                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                        <i class="fas fa-images text-4xl text-gray-400 mb-3"></i>
                         <p class="text-sm text-gray-600 mb-2">Drop images here or click to upload</p>
-                        <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB</p>
+                        <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB. Max 5 images.</p>
                         <input type="file" name="images[]" id="images" multiple accept="image/*" class="hidden">
                         <button type="button" onclick="document.getElementById('images').click()"
                             class="mt-3 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
@@ -347,6 +256,9 @@
                     </div>
                     <div id="imagePreview" class="mt-4 grid grid-cols-2 gap-3"></div>
                     @error('images')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    @error('images.*')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -368,27 +280,104 @@
 
 @push('scripts')
 <script>
-    // Image preview functionality
-    document.getElementById('images').addEventListener('change', function(e) {
-        const preview = document.getElementById('imagePreview');
-        preview.innerHTML = '';
+    // image preview functionality
+    const imgInput = document.getElementById('image');
+    const imagePlaceholder = document.getElementById('imagePlaceholder');
+    const imagePreview = document.getElementById('imagePreview');
+    const imageBtn = document.getElementById('imageBtn');
 
-        if (this.files) {
-            Array.from(this.files).forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'relative';
-                    div.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-32 object-cover rounded-lg border border-gray-200">
-                        <span class="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">Image ${index + 1}</span>
-                    `;
-                    preview.appendChild(div);
-                }
-                reader.readAsDataURL(file);
-            });
+    imgInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.querySelector('img').src = e.target.result;
+                imagePreview.classList.remove('hidden');
+                imagePlaceholder.classList.add('hidden');
+                imageBtn.textContent = 'Change image';
+            }
+            reader.readAsDataURL(this.files[0]);
         }
     });
+
+    // Remove image functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#removeimage')) {
+            imgInput.value = '';
+            imagePreview.classList.add('hidden');
+            imagePlaceholder.classList.remove('hidden');
+            imageBtn.textContent = 'Choose File';
+        }
+    });
+
+    // Gallery images logic
+    const galleryInput = document.getElementById('images');
+    const imagePreviewContainer = document.getElementById('imagePreview');
+    let galleryFiles = new DataTransfer();
+
+    galleryInput.addEventListener('change', function(e) {
+        // Append new files instead of replacing
+        const files = Array.from(this.files);
+
+        if (galleryFiles.files.length + files.length > 5) {
+            showToast('error', 'Maximum 5 images allowed for gallery.');
+            // Reset input to current valid selection
+            this.files = galleryFiles.files;
+            return;
+        }
+
+        files.forEach(file => {
+            galleryFiles.items.add(file);
+        });
+
+        // Update input with all files
+        this.files = galleryFiles.files;
+        renderGalleryPreviews();
+    });
+
+    // Event delegation for remove buttons
+    imagePreviewContainer.addEventListener('click', function(e) {
+        const btn = e.target.closest('.remove-gallery-image');
+        if (!btn) return;
+
+        const indexToRemove = parseInt(btn.dataset.index);
+        const dt = new DataTransfer();
+
+        // Rebuild DataTransfer excluding the removed file
+        Array.from(galleryFiles.files).forEach((file, i) => {
+            if (i !== indexToRemove) {
+                dt.items.add(file);
+            }
+        });
+
+        galleryFiles = dt;
+        galleryInput.files = galleryFiles.files;
+        renderGalleryPreviews();
+    });
+
+    function renderGalleryPreviews() {
+        imagePreviewContainer.innerHTML = '';
+
+        if (galleryFiles.files.length === 0) return;
+
+        Array.from(galleryFiles.files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'relative group';
+                div.innerHTML = `
+                    <div class="relative w-full h-32">
+                        <img src="${e.target.result}" class="w-full h-full object-cover rounded-lg border border-gray-200">
+                        <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md remove-gallery-image" data-index="${index}" title="Remove image">
+                            <i class="fas fa-times text-xs"></i>
+                        </button>
+                        <span class="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">Image ${index + 1}</span>
+                    </div>
+                `;
+                imagePreviewContainer.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     const productForm = document.getElementById('productForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -428,7 +417,13 @@
                     showToast('success', data.message);
 
                     productForm.reset();
-                    document.getElementById('imagePreview').innerHTML = '';
+                    document.getElementById('imagePreview').innerHTML = ''; // Reset managed gallery files
+                    galleryFiles = new DataTransfer();
+                    // Reset image preview
+                    document.getElementById('image').value = '';
+                    document.getElementById('imagePreview').classList.add('hidden');
+                    document.getElementById('imagePlaceholder').classList.remove('hidden');
+                    document.getElementById('imageBtn').textContent = 'Choose File';
 
                     setTimeout(() => {
                         if (data.redirect) {

@@ -21,6 +21,7 @@ class Product extends Model
         'name',
         'slug',
         'sku',
+        'image',
         'short_description',
         'description',
         'price',
@@ -214,8 +215,9 @@ class Product extends Model
 
     public function thumbnail(): Attribute
     {
-        $default = "assets/images/products/default" . rand(1, 5) . '.webp';
-        
+        //$default = "assets/images/products/default" . rand(1, 5) . '.webp';
+        $default = "assets/images/default.png";
+
         return Attribute::make(
             get: fn() => $this->image ? storage_url($this->image) : asset($default),
             // get: fn() => $this->image ? storage_url($this->image) : asset('assets/images/default.png'),

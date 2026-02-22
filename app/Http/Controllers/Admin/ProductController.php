@@ -142,10 +142,14 @@ class ProductController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'tags' => 'nullable|string',
+            'image' => 'required|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'images' => 'nullable|array|max:5',
             'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
         ]);
 
         DB::beginTransaction();
+        $imgPath = null;
+        $galleryPaths = [];
 
         try {
             $validated['slug'] = Str::slug($validated['name']);
@@ -173,11 +177,16 @@ class ProductController extends Controller
             $validated['is_best_seller'] = $request->has('is_best_seller');
             $validated['is_on_sale'] = $request->has('is_on_sale');
 
+            if ($request->hasFile('image')) {
+                $validated['image'] = upload_file($request->file('image'), 'products');
+            }
+
             $product = Product::create($validated);
 
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $index => $image) {
-                    $path = $image->store('products', 'public');
+                    $path = upload_file($image, 'products');
+                    $galleryPaths[] = $path;
 
                     $product->images()->create([
                         'image_path' => $path,
@@ -201,20 +210,13 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            if (isset($product) && $product->images) {
-                foreach ($product->images as $image) {
-                    Storage::disk('public')->delete($image->image_path);
-                }
+            if ($imgPath) {
+                Storage::disk('public')->delete($imgPath);
             }
 
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to create product: ' . $e->getMessage(),
-                    'errors' => []
-                ], 422);
+            foreach ($galleryPaths as $path) {
+                Storage::disk('public')->delete($path);
             }
-
             return redirect()
                 ->back()
                 ->withInput()
@@ -231,7 +233,6 @@ class ProductController extends Controller
         $patterns = Pattern::cases();
         $occasions = Occasion::cases();
 
-        // Load relationships
         $product->load(['images', 'variants.size', 'variants.color']);
 
         return view('admin.products.edit', compact(
@@ -272,6 +273,8 @@ class ProductController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'tags' => 'nullable|string',
+            'thumbnail' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'images' => 'nullable|array|max:5',
             'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
             'delete_images' => 'nullable|array',
             'delete_images.*' => 'exists:product_images,id',
@@ -289,11 +292,9 @@ class ProductController extends Controller
         DB::beginTransaction();
 
         try {
-            // Update slug if name changed
             if ($validated['name'] !== $product->name) {
                 $validated['slug'] = Str::slug($validated['name']);
 
-                // Ensure unique slug
                 $originalSlug = $validated['slug'];
                 $counter = 1;
                 while (Product::where('slug', $validated['slug'])->where('id', '!=', $product->id)->exists()) {
@@ -302,48 +303,64 @@ class ProductController extends Controller
                 }
             }
 
-            // Convert tags string to array
             if (!empty($validated['tags'])) {
                 $validated['tags'] = array_map('trim', explode(',', $validated['tags']));
             }
 
-            // Handle boolean fields
             $validated['is_active'] = $request->has('is_active');
             $validated['is_featured'] = $request->has('is_featured');
             $validated['is_new_arrival'] = $request->has('is_new_arrival');
             $validated['is_best_seller'] = $request->has('is_best_seller');
             $validated['is_on_sale'] = $request->has('is_on_sale');
 
-            // Update the product
+            if ($request->hasFile('thumbnail')) {
+                // Delete old thumbnail
+                if ($product->thumbnail) {
+                    Storage::disk('public')->delete($product->thumbnail);
+                }
+
+                $validated['thumbnail'] = $request->file('thumbnail')->store('products/thumbnails', 'public');
+            }
+
             $product->update($validated);
 
-            // Handle image deletions
             if ($request->has('delete_images')) {
                 foreach ($request->delete_images as $imageId) {
                     $image = $product->images()->find($imageId);
                     if ($image) {
-                        Storage::disk('public')->delete($image->image_path);
-                        $image->delete();
+                        try {
+                            Storage::disk('public')->delete($image->image_path);
+                            // Also delete the database record
+                            $image->delete();
+                        } catch (\Exception $e) {
+                            // Log error or ignore if delete fails
+                        }
                     }
                 }
             }
 
-            // Handle new image uploads
             if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
-                    $path = $image->store('products', 'public');
-                    $product->images()->create([
-                        'image_path' => $path,
-                    ]);
+                // Check if total images (existing - deleted + new) <= 5
+                $currentImageCount = $product->images()->count();
+                $deletedCount = $request->has('delete_images') ? count($request->delete_images) : 0;
+                $newCount = count($request->file('images'));
+
+                if (($currentImageCount - $deletedCount + $newCount) <= 5) {
+                    foreach ($request->file('images') as $image) {
+                        $path = $image->store('products', 'public');
+                        $product->images()->create([
+                            'image_path' => $path,
+                        ]);
+                    }
+                } else {
+                    // Optionally handle error, throw exception, or skip excess images
                 }
             }
 
-            // Handle variant deletions
             if ($request->has('delete_variants')) {
                 $product->variants()->whereIn('id', $request->delete_variants)->delete();
             }
 
-            // Handle variants (create/update)
             if ($request->has('variants')) {
                 foreach ($request->variants as $variantData) {
                     // Skip if no size and no color selected

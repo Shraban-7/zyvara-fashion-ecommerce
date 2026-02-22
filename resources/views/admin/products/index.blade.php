@@ -123,15 +123,9 @@
                 <tr class="hover:bg-gray-50 transition">
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
-                            @if($product->images->first())
-                            <img src="{{ asset('storage/' . $product->images->first()->image_path) }}"
-                                alt="{{ $product->name }}"
+                            <img src="{{ $product->thumbnail }}"
+                                alt="image"
                                 class="w-12 h-12 rounded-lg object-cover bg-gray-100">
-                            @else
-                            <div class="w-12 h-12 rounded-lg bg-gray-200 flex items-center justify-center">
-                                <i class="fas fa-image text-gray-400"></i>
-                            </div>
-                            @endif
                             <div class="min-w-0">
                                 <p class="text-sm font-medium text-gray-900 truncate">{{ $product->name }}</p>
                                 @if($product->brand)

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('sku')->unique()->nullable();
+            $table->string('thumbnail')->nullable();
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
             $table->decimal('price', 10, 2);
