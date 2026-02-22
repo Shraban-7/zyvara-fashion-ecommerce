@@ -273,10 +273,10 @@ class ProductController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'tags' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
             'images' => 'nullable|array|max:5',
             'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
-            'delete_images' => 'nullable|array',
+            'delete_images' => 'nullable|string',
             'delete_images.*' => 'exists:product_images,id',
             'variants' => 'nullable|array',
             'variants.*.id' => 'nullable|exists:product_variants,id',
@@ -313,27 +313,30 @@ class ProductController extends Controller
             $validated['is_best_seller'] = $request->has('is_best_seller');
             $validated['is_on_sale'] = $request->has('is_on_sale');
 
-            if ($request->hasFile('thumbnail')) {
+            if ($request->hasFile('image')) {
                 // Delete old thumbnail
                 if ($product->thumbnail) {
                     Storage::disk('public')->delete($product->thumbnail);
                 }
 
-                $validated['thumbnail'] = $request->file('thumbnail')->store('products/thumbnails', 'public');
+                $validated['thumbnail'] = $request->file('image')->store('products/thumbnails', 'public');
             }
 
             $product->update($validated);
 
-            if ($request->has('delete_images')) {
-                foreach ($request->delete_images as $imageId) {
-                    $image = $product->images()->find($imageId);
-                    if ($image) {
-                        try {
-                            Storage::disk('public')->delete($image->image_path);
-                            // Also delete the database record
-                            $image->delete();
-                        } catch (\Exception $e) {
-                            // Log error or ignore if delete fails
+            // Handle image deletions
+            if ($request->filled('delete_images')) {
+                $deleteImageIds = json_decode($request->delete_images, true);
+                if (is_array($deleteImageIds)) {
+                    foreach ($deleteImageIds as $imageId) {
+                        $image = $product->images()->find($imageId);
+                        if ($image) {
+                            try {
+                                Storage::disk('public')->delete($image->image_path);
+                                $image->delete();
+                            } catch (\Exception $e) {
+                                // Log error or ignore if delete fails
+                            }
                         }
                     }
                 }
@@ -387,11 +390,27 @@ class ProductController extends Controller
 
             DB::commit();
 
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Product updated successfully!',
+                    'redirect' => route('admin.products.index'),
+                    'product' => $product->load('images')
+                ]);
+            }
+
             return redirect()
                 ->back()
                 ->with('success', 'Product updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to update product: ' . $e->getMessage()
+                ], 422);
+            }
 
             return redirect()
                 ->back()

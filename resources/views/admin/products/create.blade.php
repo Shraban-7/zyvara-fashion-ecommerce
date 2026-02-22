@@ -43,7 +43,7 @@
                 <div class="grid md:grid-cols-3 gap-5">
                     <div>
                         <x-input name="price" label="Regular Price (৳)" placeholder="0.00" required />
-                    </div>   
+                    </div>
                     <div>
                         <x-input name="compare_price" label="Compare Price (৳)" placeholder="0.00" />
                         <p class="mt-1 text-xs text-gray-500">Original price before discount</p>
@@ -254,7 +254,7 @@
                             Choose Files
                         </button>
                     </div>
-                    <div id="imagePreview" class="mt-4 grid grid-cols-2 gap-3"></div>
+                    <div id="galleryPreview" class="mt-4 grid grid-cols-2 gap-3"></div>
                     @error('images')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -311,31 +311,58 @@
 
     // Gallery images logic
     const galleryInput = document.getElementById('images');
-    const imagePreviewContainer = document.getElementById('imagePreview');
+    const galleryPreviewContainer = document.getElementById('galleryPreview');
     let galleryFiles = new DataTransfer();
 
     galleryInput.addEventListener('change', function(e) {
-        // Append new files instead of replacing
-        const files = Array.from(this.files);
+        // Get the newly selected files
+        const newFiles = Array.from(this.files);
 
-        if (galleryFiles.files.length + files.length > 5) {
+        // If no files selected, ignore
+        if (newFiles.length === 0) return;
+
+        // If the new selection is exactly the same as our stored state, it's likely our own update
+        const currentFiles = Array.from(galleryFiles.files);
+        if (newFiles.length === currentFiles.length &&
+            newFiles.every((f, i) => f.name === currentFiles[i].name && f.size === currentFiles[i].size)) {
+            return;
+        }
+
+        // Check if adding these files would exceed the limit
+        // Note: We only count NEW unique files that aren't already in the gallery
+        const uniqueNewFiles = newFiles.filter(file =>
+            !currentFiles.some(existing => existing.name === file.name && existing.size === file.size)
+        );
+
+        if (galleryFiles.files.length + uniqueNewFiles.length > 5) {
             showToast('error', 'Maximum 5 images allowed for gallery.');
-            // Reset input to current valid selection
+            // Restore previous valid state
             this.files = galleryFiles.files;
             return;
         }
 
-        files.forEach(file => {
-            galleryFiles.items.add(file);
+        // Create a new DataTransfer to hold the combined list
+        const dt = new DataTransfer();
+
+        // Add existing files
+        currentFiles.forEach(file => dt.items.add(file));
+
+        // Add new unique files
+        uniqueNewFiles.forEach(file => {
+            dt.items.add(file);
         });
 
-        // Update input with all files
+        // Update our state
+        galleryFiles = dt;
+
+        // Update the input to hold all currently selected files
         this.files = galleryFiles.files;
+
         renderGalleryPreviews();
     });
 
     // Event delegation for remove buttons
-    imagePreviewContainer.addEventListener('click', function(e) {
+    galleryPreviewContainer.addEventListener('click', function(e) {
         const btn = e.target.closest('.remove-gallery-image');
         if (!btn) return;
 
@@ -355,7 +382,7 @@
     });
 
     function renderGalleryPreviews() {
-        imagePreviewContainer.innerHTML = '';
+        galleryPreviewContainer.innerHTML = '';
 
         if (galleryFiles.files.length === 0) return;
 
@@ -373,7 +400,7 @@
                         <span class="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">Image ${index + 1}</span>
                     </div>
                 `;
-                imagePreviewContainer.appendChild(div);
+                galleryPreviewContainer.appendChild(div);
             };
             reader.readAsDataURL(file);
         });

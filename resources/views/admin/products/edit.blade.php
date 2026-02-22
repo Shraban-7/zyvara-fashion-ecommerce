@@ -16,7 +16,7 @@
 </div>
 
 {{-- Form --}}
-<form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+<form id="productForm" action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
     @csrf
     @method('PUT')
 
@@ -30,46 +30,22 @@
 
                 {{-- Product Name --}}
                 <div class="mb-5">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Product Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}" required
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('name') border-red-500 @enderror"
-                        placeholder="e.g., Men's Slim Fit Cotton Shirt">
-                    @error('name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-input name="name" label="Product Name" required placeholder="e.g., Men's Slim Fit Cotton Shirt" value="{{ old('name', $product->name) }}" />
                 </div>
 
                 {{-- SKU --}}
                 <div class="mb-5">
-                    <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">SKU (Stock Keeping Unit)</label>
-                    <input type="text" name="sku" id="sku" value="{{ old('sku', $product->sku) }}"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('sku') border-red-500 @enderror"
-                        placeholder="e.g., SHIRT-BLU-M-001">
-                    @error('sku')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-input name="sku" label="SKU (Stock Keeping Unit)" placeholder="e.g., SHIRT-BLU-M-001" value="{{ old('sku', $product->sku) }}" />
                 </div>
 
                 {{-- Short Description --}}
                 <div class="mb-5">
-                    <label for="short_description" class="block text-sm font-medium text-gray-700 mb-2">Short Description</label>
-                    <textarea name="short_description" id="short_description" rows="3"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('short_description') border-red-500 @enderror"
-                        placeholder="Brief description for product listing">{{ old('short_description', $product->short_description) }}</textarea>
-                    @error('short_description')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-textarea name="short_description" label="Short Description" rows="3" placeholder="Brief description for product listing">{{ old('short_description', $product->short_description) }}</x-textarea>
                 </div>
 
                 {{-- Full Description --}}
                 <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
-                    <textarea name="description" id="description" rows="6"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('description') border-red-500 @enderror"
-                        placeholder="Detailed product description, features, and specifications">{{ old('description', $product->description) }}</textarea>
-                    @error('description')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-textarea name="description" label="Full Description" rows="6" placeholder="Detailed product description, features, and specifications">{{ old('description', $product->description) }}</x-textarea>
                 </div>
             </div>
 
@@ -80,37 +56,19 @@
                 <div class="grid md:grid-cols-3 gap-5">
                     {{-- Regular Price --}}
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Regular Price (৳) <span class="text-red-500">*</span></label>
-                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $product->price) }}" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('price') border-red-500 @enderror"
-                            placeholder="0.00">
-                        @error('price')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="price" type="number" label="Regular Price (৳)" required placeholder="0.00" value="{{ old('price', $product->price) }}" step="0.01" />
                     </div>
 
                     {{-- Compare Price --}}
                     <div>
-                        <label for="compare_price" class="block text-sm font-medium text-gray-700 mb-2">Compare Price (৳)</label>
-                        <input type="number" step="0.01" name="compare_price" id="compare_price" value="{{ old('compare_price', $product->compare_price) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('compare_price') border-red-500 @enderror"
-                            placeholder="0.00">
+                        <x-input name="compare_price" type="number" label="Compare Price (৳)" placeholder="0.00" value="{{ old('compare_price', $product->compare_price) }}" step="0.01" />
                         <p class="mt-1 text-xs text-gray-500">Original price before discount</p>
-                        @error('compare_price')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     {{-- Cost Price --}}
                     <div>
-                        <label for="cost_price" class="block text-sm font-medium text-gray-700 mb-2">Cost Price (৳)</label>
-                        <input type="number" step="0.01" name="cost_price" id="cost_price" value="{{ old('cost_price', $product->cost_price) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('cost_price') border-red-500 @enderror"
-                            placeholder="0.00">
+                        <x-input name="cost_price" type="number" label="Cost Price (৳)" placeholder="0.00" value="{{ old('cost_price', $product->cost_price) }}" step="0.01" />
                         <p class="mt-1 text-xs text-gray-500">For profit calculation</p>
-                        @error('cost_price')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
             </div>
@@ -122,24 +80,12 @@
                 <div class="grid md:grid-cols-2 gap-5">
                     {{-- Brand --}}
                     <div>
-                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
-                        <input type="text" name="brand" id="brand" value="{{ old('brand', $product->brand) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('brand') border-red-500 @enderror"
-                            placeholder="e.g., Nike, Adidas">
-                        @error('brand')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="brand" label="Brand" placeholder="e.g., Nike, Adidas" value="{{ old('brand', $product->brand) }}" />
                     </div>
 
                     {{-- Material --}}
                     <div>
-                        <label for="material" class="block text-sm font-medium text-gray-700 mb-2">Material</label>
-                        <input type="text" name="material" id="material" value="{{ old('material', $product->material) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('material') border-red-500 @enderror"
-                            placeholder="e.g., 100% Cotton">
-                        @error('material')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="material" label="Material" placeholder="e.g., 100% Cotton" value="{{ old('material', $product->material) }}" />
                     </div>
 
                     {{-- Fit Type --}}
@@ -195,13 +141,7 @@
 
                     {{-- Weight --}}
                     <div>
-                        <label for="weight" class="block text-sm font-medium text-gray-700 mb-2">Weight (grams)</label>
-                        <input type="number" step="0.01" name="weight" id="weight" value="{{ old('weight', $product->weight) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('weight') border-red-500 @enderror"
-                            placeholder="0.00">
-                        @error('weight')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="weight" type="number" label="Weight (grams)" placeholder="0.00" value="{{ old('weight', $product->weight) }}" step="0.01" />
                     </div>
                 </div>
             </div>
@@ -213,25 +153,13 @@
                 <div class="grid md:grid-cols-2 gap-5">
                     {{-- Stock Quantity --}}
                     <div>
-                        <label for="stock_in" class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity <span class="text-red-500">*</span></label>
-                        <input type="number" name="stock_in" id="stock_in" value="{{ old('stock_in', $product->stock_in) }}" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('stock_in') border-red-500 @enderror"
-                            placeholder="0">
-                        @error('stock_in')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <x-input name="stock_in" type="number" label="Stock Quantity" required placeholder="0" value="{{ old('stock_in', $product->stock_in) }}" />
                     </div>
 
                     {{-- Low Stock Threshold --}}
                     <div>
-                        <label for="low_stock_threshold" class="block text-sm font-medium text-gray-700 mb-2">Low Stock Alert</label>
-                        <input type="number" name="low_stock_threshold" id="low_stock_threshold" value="{{ old('low_stock_threshold', $product->low_stock_threshold) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('low_stock_threshold') border-red-500 @enderror"
-                            placeholder="5">
+                        <x-input name="low_stock_threshold" type="number" label="Low Stock Alert" placeholder="5" value="{{ old('low_stock_threshold', $product->low_stock_threshold) }}" />
                         <p class="mt-1 text-xs text-gray-500">Alert when stock reaches this level</p>
-                        @error('low_stock_threshold')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
             </div>
@@ -324,36 +252,18 @@
 
                 {{-- Meta Title --}}
                 <div class="mb-5">
-                    <label for="meta_title" class="block text-sm font-medium text-gray-700 mb-2">Meta Title</label>
-                    <input type="text" name="meta_title" id="meta_title" value="{{ old('meta_title', $product->meta_title) }}"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('meta_title') border-red-500 @enderror"
-                        placeholder="SEO title for search engines">
-                    @error('meta_title')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-input name="meta_title" label="Meta Title" placeholder="SEO title for search engines" value="{{ old('meta_title', $product->meta_title) }}" />
                 </div>
 
                 {{-- Meta Description --}}
                 <div class="mb-5">
-                    <label for="meta_description" class="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
-                    <textarea name="meta_description" id="meta_description" rows="3"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('meta_description') border-red-500 @enderror"
-                        placeholder="SEO description for search engines">{{ old('meta_description', $product->meta_description) }}</textarea>
-                    @error('meta_description')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-textarea name="meta_description" label="Meta Description" rows="3" placeholder="SEO description for search engines">{{ old('meta_description', $product->meta_description) }}</x-textarea>
                 </div>
 
                 {{-- Tags --}}
                 <div>
-                    <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                    <input type="text" name="tags" id="tags" value="{{ old('tags', is_array($product->tags) ? implode(', ', $product->tags) : '') }}"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('tags') border-red-500 @enderror"
-                        placeholder="e.g., summer, casual, cotton">
+                    <x-input name="tags" label="Tags" placeholder="e.g., summer, casual, cotton" value="{{ old('tags', is_array($product->tags) ? implode(', ', $product->tags) : '') }}" />
                     <p class="mt-1 text-xs text-gray-500">Separate tags with commas</p>
-                    @error('tags')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
             </div>
         </div>
@@ -418,35 +328,62 @@
 
             {{-- Product Images --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Product Images</h2>
+                <h2 class="text-lg font-bold text-gray-900 mb-6">Product Media</h2>
 
-                {{-- Existing Images --}}
-                @if($product->images->count() > 0)
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        @foreach($product->images as $image)
-                        <div class="relative group">
-                            <img src="{{ asset('storage/' . $image->image_path) }}" alt="Product" class="w-full h-32 object-cover rounded-lg border border-gray-200">
-                            <label class="absolute top-2 right-2 cursor-pointer">
-                                <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="hidden delete-image-checkbox">
-                                <span class="block w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                    <i class="fas fa-trash text-xs"></i>
-                                </span>
-                            </label>
+                {{-- Thumbnail Image --}}
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Thumbnail Image <span class="text-red-500">*</span></label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition relative">
+                        <input type="file" name="image" id="image" accept="image/*" class="hidden">
+                        <div id="imagePlaceholder" class="{{ $product->image ? 'hidden' : '' }}">
+                            <i class="fas fa-image text-4xl text-gray-400 mb-3"></i>
+                            <p class="text-sm text-gray-600 mb-2">Click to upload thumbnail</p>
+                            <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 2MB</p>
                         </div>
-                        @endforeach
+                        <div id="thumbnailPreview" class="{{ $product->image ? '' : 'hidden' }}">
+                            <img src="{{ $product->image ? storage_url($product->image) : '' }}" class="mx-auto h-32 object-cover rounded-lg border border-gray-200">
+                            <button type="button" id="removeThumbnail" class="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <button type="button" onclick="document.getElementById('image').click()"
+                            class="mt-3 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition" id="thumbnailBtn">
+                            {{ $product->image ? 'Change Thumbnail' : 'Choose File' }}
+                        </button>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2">Hover over image and click trash icon to delete</p>
+                    @error('image')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
-                @endif
 
-                {{-- Upload New Images --}}
+                {{-- Gallery --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Add New Images</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Gallery Images (Max 5)</label>
+
+                    {{-- Existing Images --}}
+                    @if($product->images && $product->images->count() > 0)
+                    <div class="mb-4">
+                        <p class="text-xs text-gray-600 mb-2">Existing Images ({{ $product->images->count() }})</p>
+                        <div class="grid grid-cols-2 gap-3" id="existingImagesContainer">
+                            @foreach($product->images as $image)
+                            <div class="relative group existing-image-item" data-image-id="{{ $image->id }}">
+                                <div class="relative w-full h-32">
+                                    <img src="{{ storage_url($image->image_path) }}" class="w-full h-full object-cover rounded-lg border border-gray-200">
+                                    <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md remove-existing-image" data-image-id="{{ $image->id }}" title="Remove image">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        <input type="hidden" name="delete_images" id="deleteImages" value="">
+                    </div>
+                    @endif
+
+                    {{-- New Images Upload --}}
                     <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition">
-                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
-                        <p class="text-sm text-gray-600 mb-2">Drop images here or click to upload</p>
+                        <i class="fas fa-images text-4xl text-gray-400 mb-3"></i>
+                        <p class="text-sm text-gray-600 mb-2">Add more images ({{ 5 - ($product->images ? $product->images->count() : 0) }} remaining)</p>
                         <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB</p>
                         <input type="file" name="images[]" id="images" multiple accept="image/*" class="hidden">
                         <button type="button" onclick="document.getElementById('images').click()"
@@ -454,8 +391,11 @@
                             Choose Files
                         </button>
                     </div>
-                    <div id="imagePreview" class="mt-4 grid grid-cols-2 gap-3"></div>
+                    <div id="galleryPreview" class="mt-4 grid grid-cols-2 gap-3"></div>
                     @error('images')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    @error('images.*')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -463,8 +403,9 @@
 
             {{-- Action Buttons --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:ring-blue-300 transition">
-                    <i class="fas fa-save mr-2"></i>Update Product
+                <button type="submit" id="submitBtn" class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:ring-blue-300 transition">
+                    <i class="fas fa-save mr-2"></i><span id="btnText">Update Product</span>
+                    <i class="fas fa-spinner fa-spin ml-2 hidden" id="btnSpinner"></i>
                 </button>
                 <a href="{{ route('admin.products.index') }}" class="block w-full px-6 py-3 text-center text-gray-700 font-medium bg-gray-100 rounded-lg hover:bg-gray-200 transition mt-3">
                     Cancel
@@ -592,44 +533,194 @@
         });
     }
 
-    // Image preview functionality
-    document.getElementById('images').addEventListener('change', function(e) {
-        const preview = document.getElementById('imagePreview');
-        preview.innerHTML = '';
+    // Thumbnail preview functionality
+    const thumbnailInput = document.getElementById('image');
+    const imagePlaceholder = document.getElementById('imagePlaceholder');
+    const thumbnailPreview = document.getElementById('thumbnailPreview');
+    const thumbnailBtn = document.getElementById('thumbnailBtn');
 
-        if (this.files) {
-            Array.from(this.files).forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'relative';
-                    div.innerHTML = ` <
-        img src = "${e.target.result}"
-        class = "w-full h-32 object-cover rounded-lg border border-gray-200" >
-        <
-        span class = "absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded" > New $ {
-            index + 1
-        } < /span>
-        `;
-                    preview.appendChild(div);
-                }
-                reader.readAsDataURL(file);
-            });
+    thumbnailInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                thumbnailPreview.querySelector('img').src = e.target.result;
+                thumbnailPreview.classList.remove('hidden');
+                imagePlaceholder.classList.add('hidden');
+                thumbnailBtn.textContent = 'Change Thumbnail';
+            }
+            reader.readAsDataURL(this.files[0]);
         }
     });
 
-    // Handle delete image checkbox clicks
-    document.querySelectorAll('.delete-image-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const imageContainer = this.closest('.relative');
-            if (this.checked) {
-                imageContainer.classList.add('opacity-50');
-                imageContainer.querySelector('img').classList.add('grayscale');
-            } else {
-                imageContainer.classList.remove('opacity-50');
-                imageContainer.querySelector('img').classList.remove('grayscale');
+    // Remove thumbnail functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#removeThumbnail')) {
+            thumbnailInput.value = '';
+            thumbnailPreview.classList.add('hidden');
+            imagePlaceholder.classList.remove('hidden');
+            thumbnailBtn.textContent = 'Choose File';
+        }
+    });
+
+    // Gallery images logic
+    const galleryInput = document.getElementById('images');
+    const galleryPreviewContainer = document.getElementById('galleryPreview');
+    let galleryFiles = new DataTransfer();
+    const existingImagesCount = {
+        {
+            $product - > images ? $product - > images - > count() : 0
+        }
+    };
+    const deleteImagesArray = [];
+
+    // Handle existing images removal
+    document.addEventListener('click', function(e) {
+        const removeBtn = e.target.closest('.remove-existing-image');
+        if (!removeBtn) return;
+
+        const imageId = removeBtn.dataset.imageId;
+        const imageItem = removeBtn.closest('.existing-image-item');
+
+        // Add to delete array
+        deleteImagesArray.push(imageId);
+        document.getElementById('deleteImages').value = JSON.stringify(deleteImagesArray);
+
+        // Remove from DOM
+        imageItem.remove();
+
+        // Update remaining count
+        const remainingCount = 5 - (document.querySelectorAll('.existing-image-item').length + galleryFiles.files.length);
+        document.querySelector('.text-sm.text-gray-600').textContent = `Add more images (${remainingCount} remaining)`;
+    });
+
+    galleryInput.addEventListener('change', function(e) {
+        // Calculate how many slots are available
+        const currentExistingCount = document.querySelectorAll('.existing-image-item').length;
+        const availableSlots = 5 - currentExistingCount - galleryFiles.files.length;
+        const files = Array.from(this.files);
+
+        if (files.length > availableSlots) {
+            showToast('error', `You can only add ${availableSlots} more image(s). Maximum 5 images total.`);
+            this.files = galleryFiles.files;
+            return;
+        }
+
+        files.forEach(file => {
+            galleryFiles.items.add(file);
+        });
+
+        // Update input with all files
+        this.files = galleryFiles.files;
+        renderGalleryPreviews();
+    });
+
+    // Event delegation for remove new gallery image buttons
+    galleryPreviewContainer.addEventListener('click', function(e) {
+        const btn = e.target.closest('.remove-gallery-image');
+        if (!btn) return;
+
+        const indexToRemove = parseInt(btn.dataset.index);
+        const dt = new DataTransfer();
+
+        // Rebuild DataTransfer excluding the removed file
+        Array.from(galleryFiles.files).forEach((file, i) => {
+            if (i !== indexToRemove) {
+                dt.items.add(file);
             }
         });
+
+        galleryFiles = dt;
+        galleryInput.files = galleryFiles.files;
+        renderGalleryPreviews();
+    });
+
+    function renderGalleryPreviews() {
+        galleryPreviewContainer.innerHTML = '';
+
+        if (galleryFiles.files.length === 0) return;
+
+        Array.from(galleryFiles.files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'relative group';
+                div.innerHTML = `
+                    <div class="relative w-full h-32">
+                        <img src="${e.target.result}" class="w-full h-full object-cover rounded-lg border border-gray-200">
+                        <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md remove-gallery-image" data-index="${index}" title="Remove image">
+                            <i class="fas fa-times text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                galleryPreviewContainer.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // AJAX Form Submission
+    const productForm = document.getElementById('productForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+
+    productForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        submitBtn.disabled = true;
+        btnText.textContent = 'Updating...';
+        btnSpinner.classList.remove('hidden');
+
+        const formData = new FormData(productForm);
+
+        fetch(productForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw {
+                            status: response.status,
+                            data: data
+                        };
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showToast('success', data.message);
+
+                    setTimeout(() => {
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        }
+                    }, 1500);
+                } else {
+                    showToast('error', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+
+                if (error.status === 422 && error.data.errors) {
+                    const firstError = Object.values(error.data.errors)[0][0];
+                    showToast('error', firstError);
+                } else {
+                    const message = error.data?.message || 'An unexpected error occurred. Please try again.';
+                    showToast('error', message);
+                }
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Update Product';
+                btnSpinner.classList.add('hidden');
+            });
     });
 </script>
 @endpush
