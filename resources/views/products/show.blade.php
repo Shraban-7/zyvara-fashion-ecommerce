@@ -62,7 +62,7 @@
                         <div class="flex gap-3 w-max">
                             @foreach($product->images as $index => $image)
                             <button onclick="changeMainImage(this)" class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 {{ $loop->first ? 'border-brand-blue' : 'border-transparent hover:border-brand-blue' }} transition">
-                                <img src="{{ $image->image_url }}" alt="{{ $product->name }} - Image {{ $loop->iteration }}" class="w-full h-full object-cover">
+                                <img src="{{ storage_url($image->image_path) }}" alt="{{ $product->name }} - Image {{ $loop->iteration }}" class="w-full h-full object-cover">
                             </button>
                             @endforeach
                         </div>

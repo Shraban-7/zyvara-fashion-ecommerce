@@ -142,9 +142,9 @@
                     </td>
                     <td class="px-6 py-4">
                         <div>
-                            <p class="text-sm font-semibold text-gray-900">৳{{ number_format($product->price, 2) }}</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ money($product->price) }}</p>
                             @if($product->compare_price && $product->compare_price > $product->price)
-                            <p class="text-xs text-gray-500 line-through">৳{{ number_format($product->compare_price, 2) }}</p>
+                            <p class="text-xs text-gray-500 line-through">{{ money($product->compare_price) }}</p>
                             @endif
                         </div>
                     </td>

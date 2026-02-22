@@ -422,6 +422,7 @@
 
     const sizes = @json($sizes);
     const colors = @json($colors);
+    const productPrice = "{{ $product->price }}";
 
     // Add new variant
     function addVariant() {
@@ -469,6 +470,7 @@
                         step="0.01"
                         name="variants[${variantIndex}][price]"
                         required
+                        value="${productPrice}"
                         class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                         placeholder="0.00">
                 </div>
@@ -566,11 +568,7 @@
     const galleryInput = document.getElementById('images');
     const galleryPreviewContainer = document.getElementById('galleryPreview');
     let galleryFiles = new DataTransfer();
-    const existingImagesCount = {
-        {
-            $product - > images ? $product - > images - > count() : 0
-        }
-    };
+    const existingImagesCount = "{{ $product->images ? $product->images->count() : 0 }}";
     const deleteImagesArray = [];
 
     // Handle existing images removal

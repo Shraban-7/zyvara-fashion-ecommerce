@@ -12,7 +12,6 @@ use App\Models\Product;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -178,7 +177,7 @@ class ProductController extends Controller
             $validated['is_on_sale'] = $request->has('is_on_sale');
 
             if ($request->hasFile('image')) {
-                $validated['image'] = upload_file($request->file('image'), 'products');
+                $validated['image'] = upload_file($request->file('image'), 'products/thumbnails');
             }
 
             $product = Product::create($validated);
@@ -211,11 +210,11 @@ class ProductController extends Controller
             DB::rollBack();
 
             if ($imgPath) {
-                Storage::disk('public')->delete($imgPath);
+                delete_file($imgPath);
             }
 
             foreach ($galleryPaths as $path) {
-                Storage::disk('public')->delete($path);
+                delete_file($path);
             }
             return redirect()
                 ->back()
@@ -314,17 +313,15 @@ class ProductController extends Controller
             $validated['is_on_sale'] = $request->has('is_on_sale');
 
             if ($request->hasFile('image')) {
-                // Delete old thumbnail
-                if ($product->thumbnail) {
-                    Storage::disk('public')->delete($product->thumbnail);
+                if ($product->imag) {
+                    delete_file($product->image);
                 }
 
-                $validated['thumbnail'] = $request->file('image')->store('products/thumbnails', 'public');
+                $validated['image'] = upload_file($request->file('image'), 'products/thumbnails');
             }
 
             $product->update($validated);
 
-            // Handle image deletions
             if ($request->filled('delete_images')) {
                 $deleteImageIds = json_decode($request->delete_images, true);
                 if (is_array($deleteImageIds)) {
@@ -332,7 +329,7 @@ class ProductController extends Controller
                         $image = $product->images()->find($imageId);
                         if ($image) {
                             try {
-                                Storage::disk('public')->delete($image->image_path);
+                                delete_file($image->image_path);
                                 $image->delete();
                             } catch (\Exception $e) {
                                 // Log error or ignore if delete fails
@@ -422,12 +419,10 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
-            // Delete all product images
             foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image->image_path);
+                delete_file($image->image_path);
             }
 
-            // Soft delete the product (cascades to images and variants)
             $product->delete();
 
             return redirect()

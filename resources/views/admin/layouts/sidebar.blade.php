@@ -9,7 +9,7 @@
                 <i class="fas fa-bolt text-white text-lg"></i>
             </div>
             <div>
-                <h1 class="text-lg font-bold text-gray-900">{{ env('APP_NAME') }}</h1>
+                <h1 class="text-lg font-bold text-gray-900">{{ $siteName }}</h1>
                 <p class="text-xs text-gray-500">Admin Panel</p>
             </div>
         </a>
