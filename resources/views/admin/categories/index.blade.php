@@ -2,7 +2,7 @@
 @section('title', 'Categories')
 
 @section('content')
-<div x-data="{ showModal: false }">
+<div>
 
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
@@ -10,7 +10,8 @@
             <p class="text-sm text-gray-500">Manage your product hierarchy and visibility</p>
         </div>
 
-        <button @click="showModal = true" class="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition shadow-sm">
+        <button onclick="openCreateModal()"
+            class="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition shadow-sm">
             <i class="fas fa-plus mr-2"></i> Add New Category
         </button>
     </div>
@@ -70,106 +71,19 @@
                         </td>
                         <td class="px-6 py-4 text-right space-x-2">
                             <div class="flex justify-end gap-2">
-                                <div x-data="{ editModal{{ $category->id }}: false }">
-                                    <button @click="editModal{{ $category->id }} = true" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded-md transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
+                                <button onclick="openEditModal({{ $category->id }}, '{{ addslashes($category->name) }}', {{ $category->parent_id ?? 'null' }}, '{{ addslashes($category->icon ?? '') }}', {{ $category->sort_order }}, {{ $category->is_active ? 'true' : 'false' }}, {{ $category->is_featured ? 'true' : 'false' }})"
+                                    class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded-md transition-colors"
+                                    title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
 
-                                    <div x-show="editModal{{ $category->id }}" class="fixed inset-0 z-50 overflow-y-auto text-left" style="display: none;">
-                                        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-
-                                            {{-- 1. Backdrop with Smooth Fade --}}
-                                            <div x-show="editModal{{ $category->id }}"
-                                                x-transition:enter="ease-out duration-300"
-                                                x-transition:enter-start="opacity-0"
-                                                x-transition:enter-end="opacity-100"
-                                                x-transition:leave="ease-in duration-200"
-                                                x-transition:leave-start="opacity-100"
-                                                x-transition:leave-end="opacity-0"
-                                                @click="editModal{{ $category->id }} = false"
-                                                class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
-
-                                            {{-- This span centers the modal --}}
-                                            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-                                            {{-- 2. Modal Content with Smooth Slide/Scale --}}
-                                            <div x-show="editModal{{ $category->id }}"
-                                                x-transition:enter="ease-out duration-300"
-                                                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                                                x-transition:leave="ease-in duration-200"
-                                                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                                                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                                class="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl relative z-10">
-
-                                                <div class="flex items-center justify-between mb-6">
-                                                    <h3 class="text-lg font-bold text-gray-900">Edit Category: {{ $category->name }}</h3>
-                                                    <button @click="editModal{{ $category->id }} = false" class="text-gray-400 hover:text-gray-500 text-2xl">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-
-                                                <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <div class="space-y-4">
-                                                        {{-- Form fields go here (keeping same as your original) --}}
-                                                        <div>
-                                                            <label class="block text-sm font-medium text-gray-700">Category Name</label>
-                                                            <input type="text" name="name" value="{{ $category->name }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                                                        </div>
-
-                                                        <div>
-                                                            <label class="block text-sm font-medium text-gray-700">Parent Category</label>
-                                                            <select name="parent_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                                                                <option value="">None (Root)</option>
-                                                                @foreach($categories as $parentOption)
-                                                                @if($parentOption->id != $category->id)
-                                                                <option value="{{ $parentOption->id }}" {{ $category->parent_id == $parentOption->id ? 'selected' : '' }}>
-                                                                    {{ $parentOption->name }}
-                                                                </option>
-                                                                @endif
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-
-                                                        <div class="grid grid-cols-2 gap-4">
-                                                            <div>
-                                                                <label class="block text-sm font-medium text-gray-700">Icon Class</label>
-                                                                <input type="text" name="icon" value="{{ $category->icon }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                                                            </div>
-                                                            <div>
-                                                                <label class="block text-sm font-medium text-gray-700">Sort Order</label>
-                                                                <input type="number" name="sort_order" value="{{ $category->sort_order }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="flex items-center gap-6 pt-2">
-                                                            <label class="inline-flex items-center">
-                                                                <input type="checkbox" name="is_active" {{ $category->is_active ? 'checked' : '' }} class="rounded border-gray-300 text-blue-600">
-                                                                <span class="ml-2 text-sm text-gray-600">Active</span>
-                                                            </label>
-                                                            <label class="inline-flex items-center">
-                                                                <input type="checkbox" name="is_featured" {{ $category->is_featured ? 'checked' : '' }} class="rounded border-gray-300 text-blue-600">
-                                                                <span class="ml-2 text-sm text-gray-600">Featured</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mt-8 flex justify-end gap-3">
-                                                        <button type="button" @click="editModal{{ $category->id }} = false" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition">Cancel</button>
-                                                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-sm transition">Update Category</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <form action="{{ route('admin.categories.delete', $category->id) }}" method="POST" onsubmit="return confirm('Delete this category?')" class="inline">
+                                <form action="{{ route('admin.categories.delete', $category->id) }}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this category?')" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-md transition-colors" title="Delete">
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-md transition-colors"
+                                        title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -194,30 +108,18 @@
         @endif
     </div>
 
-    <div x-show="showModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+    {{-- Add Category Modal --}}
+    <div id="createModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-
             {{-- Background Backdrop --}}
-            <div x-show="showModal" @click="showModal = false"
-                x-transition:enter="ease-out duration-300"
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
-
-            {{-- This span centers the modal --}}
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div onclick="closeCreateModal()" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
             {{-- Modal Content --}}
-            <div x-show="showModal"
-                x-transition:enter="ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                class="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-
+            <div class="inline-block w-full max-w-lg p-6 my-8 text-left align-middle bg-white shadow-xl rounded-2xl relative">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-bold text-gray-900">Add New Category</h3>
-                    <button @click="showModal = false" class="text-gray-400 hover:text-gray-500">
-                        <i class="fas fa-times"></i>
+                    <button type="button" onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-500 transition">
+                        <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
 
@@ -225,14 +127,17 @@
                     @csrf
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Category Name</label>
-                            <input type="text" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="e.g. Electronics">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category Name <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" required
+                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
+                                placeholder="e.g. Men's Fashion">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Parent Category</label>
-                            <select name="parent_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                                <option value="">None (Root)</option>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Parent Category</label>
+                            <select name="parent_id"
+                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                                <option value="">None (Root Category)</option>
                                 @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                 @endforeach
@@ -241,34 +146,173 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Icon Class</label>
-                                <input type="text" name="icon" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="fas fa-tag">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Icon Class</label>
+                                <input type="text" name="icon"
+                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
+                                    placeholder="fas fa-tag">
+                                <p class="mt-1 text-xs text-gray-500">FontAwesome icon class</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Sort Order</label>
-                                <input type="number" name="sort_order" value="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sort Order</label>
+                                <input type="number" name="sort_order" value="0"
+                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
                             </div>
                         </div>
 
                         <div class="flex items-center gap-6 pt-2">
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="is_active" checked class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
-                                <span class="ml-2 text-sm text-gray-600">Active</span>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="is_active" checked
+                                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 focus:ring-2">
+                                <span class="ml-2 text-sm text-gray-700">Active</span>
                             </label>
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="is_featured" class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
-                                <span class="ml-2 text-sm text-gray-600">Featured</span>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="is_featured"
+                                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 focus:ring-2">
+                                <span class="ml-2 text-sm text-gray-700">Featured</span>
                             </label>
                         </div>
                     </div>
 
                     <div class="mt-8 flex justify-end gap-3">
-                        <button type="button" @click="showModal = false" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">Cancel</button>
-                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-sm">Save Category</button>
+                        <button type="button" onclick="closeCreateModal()"
+                            class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition">
+                            <i class="fas fa-save mr-2"></i>Save Category
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Edit Category Modal --}}
+    <div id="editModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            {{-- Background Backdrop --}}
+            <div onclick="closeEditModal()" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+            {{-- Modal Content --}}
+            <div class="inline-block w-full max-w-lg p-6 my-8 text-left align-middle bg-white shadow-xl rounded-2xl relative">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-bold text-gray-900">Edit Category</h3>
+                    <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-500 transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category Name <span class="text-red-500">*</span></label>
+                            <input type="text" id="edit_name" name="name" required
+                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Parent Category</label>
+                            <select id="edit_parent_id" name="parent_id"
+                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                                <option value="">None (Root Category)</option>
+                                @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Icon Class</label>
+                                <input type="text" id="edit_icon" name="icon"
+                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
+                                    placeholder="fas fa-tag">
+                                <p class="mt-1 text-xs text-gray-500">FontAwesome icon class</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sort Order</label>
+                                <input type="number" id="edit_sort_order" name="sort_order"
+                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-6 pt-2">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="edit_is_active" name="is_active"
+                                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 focus:ring-2">
+                                <span class="ml-2 text-sm text-gray-700">Active</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="edit_is_featured" name="is_featured"
+                                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 focus:ring-2">
+                                <span class="ml-2 text-sm text-gray-700">Featured</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end gap-3">
+                        <button type="button" onclick="closeEditModal()"
+                            class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition">
+                            <i class="fas fa-save mr-2"></i>Update Category
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    function openCreateModal() {
+        document.getElementById('createModal').classList.remove('hidden');
+    }
+
+    function closeCreateModal() {
+        document.getElementById('createModal').classList.add('hidden');
+    }
+
+    function openEditModal(id, name, parentId, icon, sortOrder, isActive, isFeatured) {
+        document.getElementById('editForm').action = '{{ route("admin.categories.index") }}/' + id + '/update';
+        document.getElementById('edit_name').value = name;
+        document.getElementById('edit_parent_id').value = parentId || '';
+        document.getElementById('edit_icon').value = icon;
+        document.getElementById('edit_sort_order').value = sortOrder;
+        document.getElementById('edit_is_active').checked = isActive;
+        document.getElementById('edit_is_featured').checked = isFeatured;
+
+        // Hide the parent option that matches the current category
+        const parentSelect = document.getElementById('edit_parent_id');
+        Array.from(parentSelect.options).forEach(option => {
+            if (option.value == id) {
+                option.style.display = 'none';
+            } else {
+                option.style.display = 'block';
+            }
+        });
+
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.add('hidden');
+    }
+
+    // Close modals on ESC key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeCreateModal();
+            closeEditModal();
+        }
+    });
+</script>
+@endpush
+
 @endsection
