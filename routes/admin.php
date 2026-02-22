@@ -19,6 +19,12 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
         Route::put('/{product}/update', [ProductController::class, 'update'])->name('update');
         Route::delete('/{product}/delete', [ProductController::class, 'destroy'])->name('delete');
+
+        // Stock Management
+        Route::get('/{product}/manage-stock', [ProductController::class, 'manageStock'])->name('manage-stock');
+        Route::get('/{product}/stock-history', [ProductController::class, 'stockHistory'])->name('stock-history');
+        Route::post('/stock/add', [ProductController::class, 'addStock'])->name('stock.add');
+        Route::post('/stock/remove', [ProductController::class, 'removeStock'])->name('stock.remove');
     });
 
     Route::prefix('orders')->as('orders.')->group(function () {

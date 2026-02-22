@@ -9,9 +9,14 @@
             <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Edit Product</h1>
             <p class="text-gray-500">Update product information</p>
         </div>
-        <a href="{{ route('admin.products.index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-            <i class="fas fa-arrow-left mr-2"></i>Back to Products
-        </a>
+        <div class="flex gap-3">
+            <a href="{{ route('admin.products.manage-stock', $product) }}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg hover:from-purple-600 hover:to-purple-700 transition">
+                <i class="fas fa-boxes mr-2"></i>Manage Stock
+            </a>
+            <a href="{{ route('admin.products.index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Products
+            </a>
+        </div>
     </div>
 </div>
 

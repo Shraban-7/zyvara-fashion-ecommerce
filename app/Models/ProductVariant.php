@@ -45,6 +45,11 @@ class ProductVariant extends Model
         return $this->hasMany(CartItem::class);
     }
 
+    public function stockLogs()
+    {
+        return $this->hasMany(StockLog::class);
+    }
+
     // Helpers
     public function isInStock(): bool
     {

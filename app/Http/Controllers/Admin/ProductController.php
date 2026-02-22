@@ -9,8 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Size;
+use App\Models\StockLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -141,7 +144,7 @@ class ProductController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'tags' => 'nullable|string',
-            'image' => 'required|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
             'images' => 'nullable|array|max:5',
             'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
         ]);
@@ -432,6 +435,210 @@ class ProductController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'Failed to delete product: ' . $e->getMessage());
+        }
+    }
+
+    public function manageStock(Product $product)
+    {
+        $product->load(['variants.size', 'variants.color', 'category']);
+
+        return view('admin.products.manage-stock', compact('product'));
+    }
+
+    public function stockHistory(Product $product)
+    {
+        $product->load(['variants.size', 'variants.color', 'category']);
+
+        $stockLogs = StockLog::where(function ($query) use ($product) {
+            $query->where('product_id', $product->id)
+                ->orWhereIn('product_variant_id', $product->variants->pluck('id'));
+        })
+            ->with(['user', 'product', 'productVariant.size', 'productVariant.color'])
+            ->latest()
+            ->paginate(20);
+
+        return view('admin.products.stock-history', compact('product', 'stockLogs'));
+    }
+
+    public function addStock(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'product_id' => 'nullable|exists:products,id',
+                'variant_id' => 'nullable|exists:product_variants,id',
+                'quantity' => 'required|integer|min:1',
+                'note' => 'nullable|string|max:500',
+            ]);
+
+            if (empty($validated['product_id']) && empty($validated['variant_id'])) {
+                throw new \Exception('Either product or variant must be specified');
+            }
+
+            DB::beginTransaction();
+
+            $stockBefore = 0;
+            $stockAfter = 0;
+
+            if (isset($validated['variant_id'])) {
+                // Add stock to variant
+                $variant = ProductVariant::findOrFail($validated['variant_id']);
+                $stockBefore = $variant->stock_in;
+                $stockAfter = $stockBefore + $validated['quantity'];
+                $variant->update(['stock_in' => $stockAfter]);
+
+                // Create stock log
+                StockLog::create([
+                    'product_id' => $variant->product_id,
+                    'product_variant_id' => $variant->id,
+                    'user_id' => Auth::id(),
+                    'type' => 'in',
+                    'quantity' => $validated['quantity'],
+                    'stock_before' => $stockBefore,
+                    'stock_after' => $stockAfter,
+                    'note' => $validated['note'] ?? null,
+                ]);
+            } else {
+                // Add stock to product
+                $product = Product::findOrFail($validated['product_id']);
+                $stockBefore = $product->stock_in;
+                $stockAfter = $stockBefore + $validated['quantity'];
+                $product->update(['stock_in' => $stockAfter]);
+
+                // Create stock log
+                StockLog::create([
+                    'product_id' => $product->id,
+                    'product_variant_id' => null,
+                    'user_id' => Auth::id(),
+                    'type' => 'in',
+                    'quantity' => $validated['quantity'],
+                    'stock_before' => $stockBefore,
+                    'stock_after' => $stockAfter,
+                    'note' => $validated['note'] ?? null,
+                ]);
+            }
+
+            DB::commit();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Stock added successfully!',
+                    'stock_after' => $stockAfter,
+                ]);
+            }
+
+            return redirect()
+                ->back()
+                ->with('success', 'Stock added successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to add stock: ' . $e->getMessage()
+                ], 422);
+            }
+
+            return redirect()
+                ->back()
+                ->with('error', 'Failed to add stock: ' . $e->getMessage());
+        }
+    }
+
+    public function removeStock(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'product_id' => 'nullable|exists:products,id',
+                'variant_id' => 'nullable|exists:product_variants,id',
+                'quantity' => 'required|integer|min:1',
+                'note' => 'nullable|string|max:500',
+            ]);
+
+            if (empty($validated['product_id']) && empty($validated['variant_id'])) {
+                throw new \Exception('Either product or variant must be specified');
+            }
+
+            DB::beginTransaction();
+
+            $stockBefore = 0;
+            $stockAfter = 0;
+
+            if (isset($validated['variant_id'])) {
+                // Remove stock from variant
+                $variant = ProductVariant::findOrFail($validated['variant_id']);
+                $stockBefore = $variant->stock_in;
+
+                if ($stockBefore < $validated['quantity']) {
+                    throw new \Exception('Cannot remove more stock than available');
+                }
+
+                $stockAfter = $stockBefore - $validated['quantity'];
+                $variant->update(['stock_in' => $stockAfter]);
+
+                // Create stock log
+                StockLog::create([
+                    'product_id' => $variant->product_id,
+                    'product_variant_id' => $variant->id,
+                    'user_id' => Auth::id(),
+                    'type' => 'out',
+                    'quantity' => $validated['quantity'],
+                    'stock_before' => $stockBefore,
+                    'stock_after' => $stockAfter,
+                    'note' => $validated['note'] ?? null,
+                ]);
+            } else {
+                // Remove stock from product
+                $product = Product::findOrFail($validated['product_id']);
+                $stockBefore = $product->stock_in;
+
+                if ($stockBefore < $validated['quantity']) {
+                    throw new \Exception('Cannot remove more stock than available');
+                }
+
+                $stockAfter = $stockBefore - $validated['quantity'];
+                $product->update(['stock_in' => $stockAfter]);
+
+                // Create stock log
+                StockLog::create([
+                    'product_id' => $product->id,
+                    'product_variant_id' => null,
+                    'user_id' => Auth::id(),
+                    'type' => 'out',
+                    'quantity' => $validated['quantity'],
+                    'stock_before' => $stockBefore,
+                    'stock_after' => $stockAfter,
+                    'note' => $validated['note'] ?? null,
+                ]);
+            }
+
+            DB::commit();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Stock removed successfully!',
+                    'stock_after' => $stockAfter,
+                ]);
+            }
+
+            return redirect()
+                ->back()
+                ->with('success', 'Stock removed successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to remove stock: ' . $e->getTraceAsString()
+                ], 422);
+            }
+
+            return redirect()
+                ->back()
+                ->with('error', 'Failed to remove stock: ' . $e->getMessage());
         }
     }
 }

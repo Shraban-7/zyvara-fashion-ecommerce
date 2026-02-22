@@ -132,6 +132,11 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function stockLogs(): HasMany
+    {
+        return $this->hasMany(StockLog::class);
+    }
+
     // Scopes
     public function scopeActive($query)
     {
