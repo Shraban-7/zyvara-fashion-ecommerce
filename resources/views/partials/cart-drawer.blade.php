@@ -28,7 +28,7 @@
     </div>
 
     {{-- Free Shipping Progress --}}
-    <div class="px-5 py-3 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-gray-100">
+    <div class="hidden px-5 py-3 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-gray-100">
         <div class="flex items-center justify-between mb-2">
             <span class="text-xs text-gray-600" id="shippingRemaining">Add <span class="font-semibold text-green-600">৳1,500</span> more for free shipping!</span>
             <i class="fas fa-truck text-green-500 text-sm"></i>
