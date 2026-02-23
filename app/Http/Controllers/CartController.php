@@ -44,10 +44,15 @@ class CartController extends Controller
     {
         $cart = $this->getOrCreateCart();
         $cart->load(['items.product.images', 'items.variant.size', 'items.variant.color']);
+        
+        $deliveryCharge = 0;
+        if($cart->items->count() > 0) {
+            $deliveryCharge = 60;
+        }
 
         $subtotal = (float) $cart->subtotal;
         $freeShippingThreshold = 1500;
-        $shippingFee = $subtotal >= $freeShippingThreshold ? 0 : 60;
+        $shippingFee = $subtotal >= $freeShippingThreshold ? 0 : $deliveryCharge;
         $discount = 0;
         $tax = 0;
         $total = $subtotal + $shippingFee + $tax - $discount;
