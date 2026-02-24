@@ -33,7 +33,7 @@
             </div>
             <div class="text-right">
                 <p class="text-sm text-gray-600">Current Stock</p>
-                <p class="text-3xl font-bold text-gray-900" id="product-stock-{{ $product->id }}">{{ $product->stock_in }}</p>
+                <p class="text-3xl font-bold text-gray-900" id="product-stock-{{ $product->id }}">{{ $product->currentStock }}</p>
             </div>
         </div>
 
@@ -101,7 +101,7 @@
             </div>
             <div class="text-right">
                 <p class="text-sm text-gray-600">Current Stock</p>
-                <p class="text-3xl font-bold text-gray-900" id="variant-stock-{{ $variant->id }}">{{ $variant->stock_in }}</p>
+                <p class="text-3xl font-bold text-gray-900" id="variant-stock-{{ $variant->id }}">{{ $variant->currentStock }}</p>
             </div>
         </div>
 
