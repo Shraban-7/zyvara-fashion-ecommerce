@@ -84,7 +84,7 @@
 <script>
     let timeLeft = 3.5;
     const countdownElement = document.getElementById('countdown');
-    const redirectUrl = "<?php echo auth()->check() ? route('orders.index') : route('home'); ?>";
+    const redirectUrl = "<?php echo auth()->check() ? route('orders.index') : route('track-order.index', ['order_number' => $order->order_number]); ?>";
 
     const timer = setInterval(() => {
         timeLeft -= 0.1;

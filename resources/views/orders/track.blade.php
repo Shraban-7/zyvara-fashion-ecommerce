@@ -27,7 +27,7 @@
                             type="text"
                             name="order_number"
                             id="order_number"
-                            value="{{ old('order_number') }}"
+                            value="{{ old('order_number') ?? request()->get('order_number') }}"
                             placeholder="e.g., SF240221001"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue transition text-sm">
                         @error('order_number')
@@ -44,8 +44,8 @@
                             type="text"
                             name="phone"
                             id="phone"
-                            value="{{ old('phone') }}"
-                            placeholder="e.g., 01712345678"
+                            value="{{ old('phone') ?? request()->get('phone') }}"
+                            placeholder="e.g., 017XXXXXXXX"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue transition text-sm">
                         @error('phone')
                         <p class="mt-1 text-xs text-red-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>

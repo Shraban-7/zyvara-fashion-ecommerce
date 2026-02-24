@@ -120,7 +120,7 @@ class CheckoutController extends Controller
                 'tax_amount' => 0,
                 'total' => $total,
                 'shipping_name' => $validated['name'],
-                'shipping_phone' => '+88' . $validated['phone'],
+                'shipping_phone' => $validated['phone'],
                 'shipping_district' => $validated['district'],
                 'shipping_city' => $validated['city'],
                 'shipping_address' => $validated['address'],
@@ -170,22 +170,36 @@ class CheckoutController extends Controller
             $cart->items()->delete();
             $cart->delete();
 
-            DB::commit();
-
             if ($request->payment_method == PaymentMethod::ONLINE->value) {
-                $paymentGatewayResponse = Http::post(env('SLASHPAY_PAYMENT_URL'), $this->preparePaymentData($order));
+                $paymentData = $this->preparePaymentData($order);
+                $paymentGatewayResponse = Http::post(env('SLASHPAY_PAYMENT_URL'), $paymentData);
                 $jsonResponse = $paymentGatewayResponse->json();
                 if ($paymentGatewayResponse->successful()) {
                     $order->payment_id = $jsonResponse['payment_id'];
                     $order->save();
+
+                    DB::commit();
+
                     return redirect()->away($jsonResponse['payment_url']);
+                } else {
+                    DB::rollBack();
+                    Log::error('Checkout error: Payment gateway response unsuccessful', [
+                        'order_id' => $order->id,
+                        'response' => $jsonResponse,
+                        'paymentData' => $paymentData,
+                    ]);
+                    toast_error('Payment gateway error. Please try again.');
+                    return back()->withInput();
                 }
+            } else {
+                DB::commit();
             }
 
             session(['last_order_id' => $order->id]);
 
             toast_success('Order placed successfully! Thank you for shopping with us.');
-            return redirect()->route('checkout.success');
+            return redirect()->route('track-order.index', ['order_number' => $order->order_number]);
+            //return redirect()->route('checkout.success');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Checkout error: ' . $e->getMessage(), [
