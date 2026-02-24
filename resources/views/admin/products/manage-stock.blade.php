@@ -68,7 +68,6 @@
                 <input type="number"
                     name="quantity"
                     min="1"
-                    max="{{ $product->stock_in }}"
                     required
                     placeholder="Enter quantity"
                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -106,7 +105,7 @@
             </div>
         </div>
 
-        <form class="stock-form" data-variant-id="{{ $variant->id }}" data-max-stock="{{ $variant->stock_in }}">
+        <form class="stock-form" data-variant-id="{{ $variant->id }}">
             @csrf
             <input type="hidden" name="variant_id" value="{{ $variant->id }}">
 
@@ -137,7 +136,6 @@
                 <input type="number"
                     name="quantity"
                     min="1"
-                    max="{{ $variant->stock_in }}"
                     required
                     placeholder="Enter quantity"
                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -170,18 +168,6 @@
         forms.forEach(form => {
             const quantityInput = form.querySelector('input[name="quantity"]');
             const actionRadios = form.querySelectorAll('input[name="action_type"]');
-
-            // Update quantity max based on action type
-            actionRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'remove') {
-                        const maxStock = form.dataset.maxStock || quantityInput.getAttribute('max');
-                        quantityInput.setAttribute('max', maxStock);
-                    } else {
-                        quantityInput.removeAttribute('max');
-                    }
-                });
-            });
 
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -221,29 +207,22 @@
                             if (stockDisplay) {
                                 stockDisplay.textContent = data.stock_after;
                             }
-                            // Update max value for quantity input
-                            form.dataset.maxStock = data.stock_after;
-                            const removeRadio = form.querySelector('input[name="action_type"][value="remove"]');
-                            if (removeRadio && removeRadio.checked) {
-                                quantityInput.setAttribute('max', data.stock_after);
-                            }
+                           
                         } else if (productId) {
                             const stockDisplay = document.getElementById('product-stock-' + productId);
                             if (stockDisplay) {
                                 stockDisplay.textContent = data.stock_after;
                             }
-                            // Update max value for quantity input
-                            const removeRadio = form.querySelector('input[name="action_type"][value="remove"]');
-                            if (removeRadio && removeRadio.checked) {
-                                quantityInput.setAttribute('max', data.stock_after);
-                            }
+                          
+                           
+                            
                         }
 
                         // Reset form
                         form.reset();
                         // Reset to "add" action
                         form.querySelector('input[name="action_type"][value="add"]').checked = true;
-                        quantityInput.removeAttribute('max');
+                        
 
                         // Show success message
                         showToast('success', data.message);

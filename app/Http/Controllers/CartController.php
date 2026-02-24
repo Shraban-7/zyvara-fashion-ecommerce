@@ -44,9 +44,9 @@ class CartController extends Controller
     {
         $cart = $this->getOrCreateCart();
         $cart->load(['items.product.images', 'items.variant.size', 'items.variant.color']);
-        
+
         $deliveryCharge = 0;
-        if($cart->items->count() > 0) {
+        if ($cart->items->count() > 0) {
             $deliveryCharge = 60;
         }
 
@@ -120,7 +120,7 @@ class CartController extends Controller
                     ->firstOrFail();
 
                 // Check variant stock
-                if ($variant->stock_in < $request->quantity) {
+                if ($variant->currentStock < $request->quantity) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Selected variant does not have enough stock'
@@ -128,7 +128,7 @@ class CartController extends Controller
                 }
             } else {
                 // Check product stock if no variant
-                if ($product->stock_in < $request->quantity) {
+                if ($product->currentStock < $request->quantity) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Product does not have enough stock'
@@ -147,7 +147,7 @@ class CartController extends Controller
                 $newQuantity = $cartItem->quantity + $request->quantity;
 
                 // Check stock for updated quantity
-                $availableStock = $variant ? $variant->stock_in : $product->stock_in;
+                $availableStock = $variant ? $variant->currentStock : $product->currentStock;
                 if ($newQuantity > $availableStock) {
                     return response()->json([
                         'success' => false,
@@ -203,6 +203,19 @@ class CartController extends Controller
             $cartItem = CartItem::where('cart_id', $cart->id)
                 ->where('id', $itemId)
                 ->firstOrFail();
+
+            if ($cartItem->variant) {
+                $availableStock = $cartItem->variant->currentStock;
+            } else {
+                $availableStock = $cartItem->product->currentStock;
+            }
+
+            if ($request->quantity > $availableStock) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Cannot update quantity. Only {$availableStock} items available"
+                ], 400);
+            }
 
             $cartItem->quantity = $request->quantity;
             $cartItem->save();

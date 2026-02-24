@@ -228,4 +228,13 @@ class Product extends Model
             // get: fn() => $this->image ? storage_url($this->image) : asset('assets/images/default.png'),
         );
     }
+
+     public function currentStock(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->stock_in - $this->stock_out;
+            }
+        );
+    }
 }
