@@ -64,22 +64,12 @@
 
             {{-- Quantity Input --}}
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
-                <input type="number"
-                    name="quantity"
-                    min="1"
-                    required
-                    placeholder="Enter quantity"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <x-input name="quantity" label="Quantity" type="number" min="1" required placeholder="Enter quantity" />
             </div>
 
             {{-- Note Input --}}
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Note <span class="text-gray-400 font-normal">(optional)</span></label>
-                <textarea name="note"
-                    rows="2"
-                    placeholder="Add a note for this transaction..."
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"></textarea>
+                <x-textarea name="note" label="Note(optional)" rows="3" placeholder="Add a note for this transaction..." />
             </div>
 
             {{-- Submit Button --}}
@@ -207,22 +197,22 @@
                             if (stockDisplay) {
                                 stockDisplay.textContent = data.stock_after;
                             }
-                           
+
                         } else if (productId) {
                             const stockDisplay = document.getElementById('product-stock-' + productId);
                             if (stockDisplay) {
                                 stockDisplay.textContent = data.stock_after;
                             }
-                          
-                           
-                            
+
+
+
                         }
 
                         // Reset form
                         form.reset();
                         // Reset to "add" action
                         form.querySelector('input[name="action_type"][value="add"]').checked = true;
-                        
+
 
                         // Show success message
                         showToast('success', data.message);
