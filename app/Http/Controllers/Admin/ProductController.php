@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Size;
 use App\Models\StockLog;
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -153,6 +154,8 @@ class ProductController extends Controller
         $imgPath = null;
         $galleryPaths = [];
 
+        $imageService = new ImageOptimizerService;
+
         try {
             $validated['slug'] = Str::slug($validated['name']);
 
@@ -180,14 +183,14 @@ class ProductController extends Controller
             $validated['is_on_sale'] = $request->has('is_on_sale');
 
             if ($request->hasFile('image')) {
-                $validated['image'] = upload_file($request->file('image'), 'products/thumbnails');
+                $validated['image'] = $imageService->uploadAndOptimize($request->file('image'), 'products/thumbnails');
             }
 
             $product = Product::create($validated);
 
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $index => $image) {
-                    $path = upload_file($image, 'products');
+                    $path = $imageService->uploadAndOptimize($image, 'products');
                     $galleryPaths[] = $path;
 
                     $product->images()->create([
@@ -291,6 +294,8 @@ class ProductController extends Controller
             'delete_variants.*' => 'nullable|integer|exists:product_variants,id',
         ]);
 
+        $imageService = new ImageOptimizerService;
+
         DB::beginTransaction();
 
         try {
@@ -316,11 +321,11 @@ class ProductController extends Controller
             $validated['is_on_sale'] = $request->has('is_on_sale');
 
             if ($request->hasFile('image')) {
-                if ($product->imag) {
+                if ($product->image) {
                     delete_file($product->image);
                 }
 
-                $validated['image'] = upload_file($request->file('image'), 'products/thumbnails');
+                $validated['image'] = $imageService->uploadAndOptimize($request->file('image'), 'products/thumbnails');
             }
 
             $product->update($validated);
@@ -350,7 +355,7 @@ class ProductController extends Controller
 
                 if (($currentImageCount - $deletedCount + $newCount) <= 5) {
                     foreach ($request->file('images') as $image) {
-                        $path = $image->store('products', 'public');
+                        $path = $imageService->uploadAndOptimize($image, 'products');
                         $product->images()->create([
                             'image_path' => $path,
                         ]);
@@ -422,6 +427,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
+
             foreach ($product->images as $image) {
                 delete_file($image->image_path);
             }
