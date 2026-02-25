@@ -127,10 +127,7 @@
                     @csrf
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category Name <span class="text-red-500">*</span></label>
-                            <input type="text" name="name" required
-                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
-                                placeholder="e.g. Men's Fashion">
+                            <x-input name="name" type="text" label="Category Name *" placeholder="e.g. Men's Fashion" required />
                         </div>
 
                         <div>
@@ -146,16 +143,11 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Icon Class</label>
-                                <input type="text" name="icon"
-                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
-                                    placeholder="fas fa-tag">
+                                <x-input name="icon" type="text" label="Icon Class" placeholder="fas fa-tag" required />
                                 <p class="mt-1 text-xs text-gray-500">FontAwesome icon class</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Sort Order</label>
-                                <input type="number" name="sort_order" value="0"
-                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                                <x-input name="sort_order" type="number" value="0" label="Sort Order" placeholder="fas fa-tag" required />
                             </div>
                         </div>
 
@@ -208,9 +200,7 @@
                     @method('PUT')
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category Name <span class="text-red-500">*</span></label>
-                            <input type="text" id="edit_name" name="name" required
-                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                            <x-input name="name" type="text" label="Category Name *" id="edit_name" placeholder="e.g. Men's Fashion" required />
                         </div>
 
                         <div>
@@ -226,16 +216,11 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Icon Class</label>
-                                <input type="text" id="edit_icon" name="icon"
-                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
-                                    placeholder="fas fa-tag">
+                                <x-input name="icon" type="text" label="Icon Class" id="edit_icon" required />
                                 <p class="mt-1 text-xs text-gray-500">FontAwesome icon class</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Sort Order</label>
-                                <input type="number" id="edit_sort_order" name="sort_order"
-                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                                <x-input name="sort_order" type="number" id="edit_sort_order" label="Sort Order" required />
                             </div>
                         </div>
 
