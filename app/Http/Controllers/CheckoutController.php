@@ -81,6 +81,22 @@ class CheckoutController extends Controller
                 return redirect()->route('home');
             }
 
+            foreach($cart->items as $item) {
+                $product = $item->product;
+                if ($item->variant) {
+                    $variant = $item->variant;
+                    if ($variant->currentStock < $item->quantity) {
+                        toast_error("Insufficient stock for {$product->name} ({$variant->size?->name}, {$variant->color?->name}). Available: " . $variant->currentStock);
+                        return back()->withInput();
+                    }
+                } else {
+                    if ($product->currentStock < $item->quantity) {
+                        toast_error("Insufficient stock for {$product->name}. Available: " . $product->currentStock);
+                        return back()->withInput();
+                    }
+                }
+            }
+
             $shippingZone = ShippingZone::where('code', $validated['delivery_zone'])->first();
             if (!$shippingZone) {
                 toast_error('Invalid delivery zone selected.');

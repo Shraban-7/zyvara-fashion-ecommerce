@@ -34,7 +34,7 @@
                     <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Contact Us</a></li>
                     <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Size Guide</a></li>
                     <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">FAQs</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Track Order</a></li>
+                    <li><a href="{{ route('track-order.index') }}" class="text-gray-400 text-sm hover:text-brand-blue transition">Track Order</a></li>
                 </ul>
             </div>
 
