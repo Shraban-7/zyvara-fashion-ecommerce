@@ -15,7 +15,7 @@
         </a>
 
         {{-- Cart --}}
-        <a href="#" class="flex flex-col items-center px-3 py-1 tap-effect relative">
+        <a href="#" class="flex flex-col items-center px-3 py-1 tap-effect relative" onclick="openCartDrawer()">
             <i class="fas fa-shopping-cart text-xl text-gray-500"></i>
             <span class="absolute -top-1 right-1 bg-brand-blue text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
             <span class="text-[10px] font-medium text-gray-500 mt-0.5">Cart</span>
