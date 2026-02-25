@@ -211,13 +211,15 @@ class ProductController extends Controller
             ->pluck('size')
             ->unique('id')
             ->sortBy('sort_order')
-            ->values();
+            ->values()
+            ->filter();
 
         $availableColors = $product->variants
             ->pluck('color')
             ->unique('id')
             ->sortBy('name')
-            ->values();
+            ->values()
+            ->filter();
 
         $relatedProducts = Product::with(['images', 'category'])
             //->where('category_id', $product->category_id)
@@ -274,7 +276,7 @@ class ProductController extends Controller
             'images' => $product->images->map(function ($image) {
                 return [
                     'id' => $image->id,
-                    'image_url' => $image->image_url,
+                    'image_url' => storage_url($image->image_path),
                     'is_primary' => $image->is_primary,
                 ];
             }),
