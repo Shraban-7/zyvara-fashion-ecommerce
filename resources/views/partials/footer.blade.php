@@ -48,11 +48,9 @@
             <div>
                 <h4 class="font-semibold text-base mb-4">Categories</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Men's Wear</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Ladies Wear</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Panjabi</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Saree & 3-Piece</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">New Arrivals</a></li>
+                    @foreach ($allMenuCategories->take(5) as $category)
+                        <li><a href="{{ route('products.index') }}?category={{ $category->slug }}" class="text-gray-400 text-sm hover:text-brand-blue transition">{{ $category->name }}</a></li>
+                    @endforeach
                 </ul>
             </div>
 

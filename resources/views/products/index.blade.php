@@ -33,7 +33,7 @@
                 {{-- Filter Header --}}
                 <div class="flex items-center justify-between mb-5">
                     <h2 class="text-lg font-bold text-brand-black">Filters</h2>
-                    <a href="{{ route('products.index') }}" class="text-sm text-brand-blue hover:underline font-medium">Clear All</a>
+                    <button onclick="clearAllFilters()" class="text-sm text-brand-blue hover:underline font-medium">Clear All</button>
                 </div>
 
                 {{-- Category Filter --}}
@@ -237,15 +237,7 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-3">
-                    {{-- View Toggle --}}
-                    <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                        <button class="p-2 rounded-md bg-white shadow-sm text-brand-blue">
-                            <i class="fas fa-th-large"></i>
-                        </button>
-                        <button class="p-2 rounded-md text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
+
                     {{-- Sort Dropdown --}}
                     <div class="relative">
                         <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue cursor-pointer">
@@ -273,18 +265,110 @@
             </div>
 
             {{-- Active Filters --}}
+            @php
+            $hasFilters = request()->hasAny(['categories', 'sizes', 'colors', 'min_price', 'max_price', 'min_rating']);
+            $selectedCategories = request('categories', []);
+            if (!is_array($selectedCategories)) {
+            $selectedCategories = explode(',', $selectedCategories);
+            }
+            $selectedSizes = request('sizes', []);
+            if (!is_array($selectedSizes)) {
+            $selectedSizes = explode(',', $selectedSizes);
+            }
+            $selectedColors = request('colors', []);
+            if (!is_array($selectedColors)) {
+            $selectedColors = explode(',', $selectedColors);
+            }
+            @endphp
+
+            @if($hasFilters)
             <div class="flex flex-wrap items-center gap-2 mb-5">
-                <span class="text-sm text-gray-500">Active Filters:</span>
+                <span class="text-sm text-gray-500 font-medium">Active Filters:</span>
+
+                {{-- Category Filters --}}
+                @foreach($selectedCategories as $categoryId)
+                @php
+                $category = $categories->firstWhere('id', $categoryId);
+                @endphp
+                @if($category)
                 <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
-                    Size: M
-                    <button class="hover:text-blue-700"><i class="fas fa-times text-xs"></i></button>
+                    {{ $category->name }}
+                    <button onclick="removeFilter('categories', '{{ $categoryId }}')" class="hover:text-blue-700">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
                 </span>
+                @endif
+                @endforeach
+
+                {{-- Size Filters --}}
+                @foreach($selectedSizes as $sizeId)
+                @php
+                $size = $sizes->firstWhere('id', $sizeId);
+                @endphp
+                @if($size)
                 <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
-                    Color: Black
-                    <button class="hover:text-blue-700"><i class="fas fa-times text-xs"></i></button>
+                    Size: {{ $size->name }}
+                    <button onclick="removeFilter('sizes', '{{ $sizeId }}')" class="hover:text-blue-700">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
                 </span>
-                <button class="text-sm text-red-500 hover:underline font-medium ml-2">Clear All</button>
+                @endif
+                @endforeach
+
+                {{-- Color Filters --}}
+                @foreach($selectedColors as $colorId)
+                @php
+                $color = $colors->firstWhere('id', $colorId);
+                @endphp
+                @if($color)
+                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                    <span class="w-3 h-3 rounded-full border border-gray-300" style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}"></span>
+                    {{ $color->name }}
+                    <button onclick="removeFilter('colors', '{{ $colorId }}')" class="hover:text-blue-700">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </span>
+                @endif
+                @endforeach
+
+                {{-- Price Range Filter --}}
+                @if(request('min_price') || request('max_price'))
+                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                    Price:
+                    @if(request('min_price') && request('max_price'))
+                    ৳{{ number_format(request('min_price')) }} - ৳{{ number_format(request('max_price')) }}
+                    @elseif(request('min_price'))
+                    Above ৳{{ number_format(request('min_price')) }}
+                    @else
+                    Below ৳{{ number_format(request('max_price')) }}
+                    @endif
+                    <button onclick="removeFilter('price')" class="hover:text-blue-700">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </span>
+                @endif
+
+                {{-- Rating Filter --}}
+                @if(request('min_rating'))
+                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                    <div class="flex text-yellow-500">
+                        @for($i = 1; $i <= request('min_rating'); $i++)
+                            <i class="fas fa-star text-xs"></i>
+                            @endfor
+                    </div>
+                    & up
+                    <button onclick="removeFilter('min_rating')" class="hover:text-blue-700">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </span>
+                @endif
+
+                {{-- Clear All Button --}}
+                <button onclick="clearAllFilters()" class="text-sm text-red-500 hover:text-red-600 hover:underline font-medium ml-2 transition">
+                    Clear All
+                </button>
             </div>
+            @endif
 
             {{-- Products Grid --}}
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -360,6 +444,54 @@
 
         // Redirect with filters
         window.location.href = `${url.pathname}?${searchParams.toString()}`;
+    }
+
+    // Remove a specific filter
+    function removeFilter(filterType, value = null) {
+        const url = new URL(window.location.href);
+        const searchParams = new URLSearchParams(url.searchParams);
+
+        if (filterType === 'categories' || filterType === 'sizes' || filterType === 'colors') {
+            // Get current values
+            const currentValues = searchParams.get(filterType);
+            if (currentValues) {
+                const valuesArray = currentValues.split(',').filter(v => v !== value);
+
+                if (valuesArray.length > 0) {
+                    searchParams.set(filterType, valuesArray.join(','));
+                } else {
+                    searchParams.delete(filterType);
+                }
+            }
+        } else if (filterType === 'price') {
+            // Remove both min and max price
+            searchParams.delete('min_price');
+            searchParams.delete('max_price');
+        } else {
+            // Remove single parameter (like min_rating)
+            searchParams.delete(filterType);
+        }
+
+        // Redirect with updated filters
+        window.location.href = `${url.pathname}?${searchParams.toString()}`;
+    }
+
+    // Clear all filters
+    function clearAllFilters() {
+        const url = new URL(window.location.href);
+        const searchParams = new URLSearchParams();
+
+        // Keep only sort and search parameters
+        if (url.searchParams.get('sort')) {
+            searchParams.set('sort', url.searchParams.get('sort'));
+        }
+        if (url.searchParams.get('search')) {
+            searchParams.set('search', url.searchParams.get('search'));
+        }
+
+        // Redirect without filters
+        const queryString = searchParams.toString();
+        window.location.href = queryString ? `${url.pathname}?${queryString}` : url.pathname;
     }
 
     // Toggle filter checkbox (for size and color buttons)
