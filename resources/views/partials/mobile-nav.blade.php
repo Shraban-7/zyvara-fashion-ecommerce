@@ -9,6 +9,11 @@
         </a>
 
         {{-- Categories --}}
+        <a href="{{ route('products.index') }}" class="flex flex-col items-center px-3 py-1 tap-effect">
+            <i class="fas fa-th-large text-xl text-gray-500"></i>
+            <span class="text-[10px] font-medium text-gray-500 mt-0.5">Shop</span>
+        </a>
+
         <a href="javascript:void(0)" onclick="toggleMobileMenu(true)" class="flex flex-col items-center px-3 py-1 tap-effect">
             <i class="fas fa-th-large text-xl text-gray-500"></i>
             <span class="text-[10px] font-medium text-gray-500 mt-0.5">Categories</span>
@@ -22,14 +27,14 @@
         </a>
 
         {{-- Wishlist --}}
-        <a href="#" class="flex flex-col items-center px-3 py-1 tap-effect">
+        <!-- <a href="#" class="flex flex-col items-center px-3 py-1 tap-effect">
             <i class="far fa-heart text-xl text-gray-500"></i>
             <span class="text-[10px] font-medium text-gray-500 mt-0.5">Wishlist</span>
-        </a>
+        </a> -->
 
         {{-- Account --}}
         @auth
-        <a href="#" class="flex flex-col items-center px-3 py-1 tap-effect">
+        <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center px-3 py-1 tap-effect">
             <i class="fas fa-user text-xl text-gray-500"></i>
             <span class="text-[10px] font-medium text-gray-500 mt-0.5">Account</span>
         </a>
