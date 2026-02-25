@@ -10,30 +10,23 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of products.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
-     */
     public function index(Request $request)
     {
         $query = Product::with('category')->where('is_active', true);
 
-        // Category filter
         if ($request->has('categories') && !empty($request->categories)) {
-            $categoryIds = is_array($request->categories) ? $request->categories : explode(',', $request->categories);
-            $query->whereIn('category_id', $categoryIds);
+            $categorySlugs = is_array($request->categories) ? $request->categories : explode(',', $request->categories);
+            $categoryIds = Category::whereIn('slug', $categorySlugs)->pluck('id')->toArray();
+            if (!empty($categoryIds)) {
+                $query->whereIn('category_id', $categoryIds);
+            }
         } elseif ($request->has('category')) {
-            // Handle single category slug
-            $category = Category::where('slug', 'like', '%' . $request->category . '%')->first();
+            $category = Category::where('slug', $request->category)->first();
             if ($category) {
-                // Get category and all its descendants
                 $categoryIds = [$category->id];
                 $children = Category::where('parent_id', $category->id)->pluck('id')->toArray();
                 $categoryIds = array_merge($categoryIds, $children);
 
-                // Get grandchildren
                 if (!empty($children)) {
                     $grandChildren = Category::whereIn('parent_id', $children)->pluck('id')->toArray();
                     $categoryIds = array_merge($categoryIds, $grandChildren);

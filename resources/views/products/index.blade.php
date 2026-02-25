@@ -53,8 +53,8 @@
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox"
                                 name="categories[]"
-                                value="{{ $category->id }}"
-                                {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }}
+                                value="{{ $category->slug }}"
+                                {{ in_array($category->slug, $selectedCategories) ? 'checked' : '' }}
                                 onchange="applyFilters()"
                                 class="w-4 h-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue">
                             <span class="text-sm text-gray-600 group-hover:text-gray-900">{{ $category->name }}</span>
@@ -65,8 +65,8 @@
                         <label class="flex items-center gap-3 cursor-pointer group ml-6">
                             <input type="checkbox"
                                 name="categories[]"
-                                value="{{ $child->id }}"
-                                {{ in_array($child->id, $selectedCategories) ? 'checked' : '' }}
+                                value="{{ $child->slug }}"
+                                {{ in_array($child->slug, $selectedCategories) ? 'checked' : '' }}
                                 onchange="applyFilters()"
                                 class="w-4 h-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue">
                             <span class="text-sm text-gray-500 group-hover:text-gray-900">{{ $child->name }}</span>
@@ -286,14 +286,14 @@
                 <span class="text-sm text-gray-500 font-medium">Active Filters:</span>
 
                 {{-- Category Filters --}}
-                @foreach($selectedCategories as $categoryId)
+                @foreach($selectedCategories as $categorySlug)
                 @php
-                $category = $categories->firstWhere('id', $categoryId);
+                $category = $categories->firstWhere('slug', $categorySlug);
                 @endphp
                 @if($category)
                 <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
                     {{ $category->name }}
-                    <button onclick="removeFilter('categories', '{{ $categoryId }}')" class="hover:text-blue-700">
+                    <button onclick="removeFilter('categories', '{{ $categorySlug }}')" class="hover:text-blue-700">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
