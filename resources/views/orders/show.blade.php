@@ -190,45 +190,96 @@
                 Order Timeline
             </h2>
             <div class="space-y-4">
-                <div class="flex gap-4">
-                    <div class="flex flex-col items-center">
-                        <div class="w-4 h-4 bg-green-500 rounded-full border-4 border-green-100"></div>
-                        <div class="w-1 h-12 bg-gray-300 mt-2"></div>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-gray-900">Order Placed</p>
-                        <p class="text-sm text-gray-500">{{ $order->created_at->format('M d, Y \a\t g:i A') }}</p>
-                    </div>
-                </div>
+
 
                 @php
-                $statusSteps = ['pending', 'processing', 'shipped', 'delivered'];
-                $currentIndex = array_search($order->status, $statusSteps);
+                $statuses = [
+                ['key' => 'placed', 'label' => 'Placed', 'date' => $order->created_at, 'always' => true],
+                ['key' => 'confirmed', 'label' => 'Confirmed', 'date' => $order->confirmed_at],
+                ['key' => 'processing', 'label' => 'Processing', 'date' => null],
+                ['key' => 'shipped', 'label' => 'Shipped', 'date' => $order->shipped_at],
+                ['key' => 'delivered', 'label' => 'Delivered', 'date' => $order->delivered_at],
+                ];
+
+                $statusOrder = [
+                'pending' => 0,
+                'confirmed' => 1,
+                'processing' => 2,
+                'shipped' => 3,
+                'delivered' => 4,
+                ];
+
+                $currentIndex = $statusOrder[$order->status->value] ?? 0;
                 @endphp
 
-                @foreach(['Processing', 'Shipped', 'Delivered'] as $index => $step)
+                @foreach($statuses as $index => $status)
                 @php
-                $stepIndex = $index + 1;
-                $isCompleted = $currentIndex >= $stepIndex;
-                $statusMap = ['Processing' => 'processing', 'Shipped' => 'shipped', 'Delivered' => 'delivered'];
+                $isCompleted = ($status['always'] ?? false) || $currentIndex > $index;
+                $isCurrent = $currentIndex === $index;
+                $isLast = $loop->last;
                 @endphp
+
                 <div class="flex gap-4">
+
+                    <!-- Left Timeline Indicator -->
                     <div class="flex flex-col items-center">
-                        <div class="w-4 h-4 rounded-full border-4 {{ $isCompleted ? 'bg-green-500 border-green-100' : 'bg-gray-300 border-gray-200' }}"></div>
-                        @if($step !== 'Delivered')
-                        <div class="w-1 h-12 {{ $isCompleted ? 'bg-green-300' : 'bg-gray-300' }} mt-2"></div>
-                        @endif
+
+                        <!-- Circle -->
+                        <div class="w-4 h-4 rounded-full border-4
+            @if($isCompleted)
+                bg-green-500 border-green-100
+            @elseif($isCurrent)
+                bg-blue-500 border-blue-100
+            @else
+                bg-gray-300 border-gray-200
+            @endif
+        "></div>
+
+                        <!-- Vertical Line -->
+                        @unless($isLast)
+                        <div class="w-1 h-12 mt-2
+            @if($currentIndex > $index)
+                bg-green-300
+            @else
+                bg-gray-300
+            @endif
+        "></div>
+                        @endunless
                     </div>
+
+                    <!-- Right Content -->
                     <div>
-                        <p class="font-semibold {{ $isCompleted ? 'text-gray-900' : 'text-gray-500' }}">{{ $step }}</p>
-                        @if($isCompleted)
-                        <p class="text-sm text-gray-500">{{ $order->updated_at->format('M d, Y') }}</p>
+                        <p class="font-semibold
+            @if($isCompleted)
+                text-gray-900
+            @elseif($isCurrent)
+                text-blue-600
+            @else
+                text-gray-400
+            @endif
+        ">
+                            {{ $status['label'] }}
+                        </p>
+
+                        @if($status['date'])
+                        <p class="text-sm text-gray-500">
+                            {{ $status['date']->format('M d, Y h:i A') }}
+                        </p>
+                        @elseif($isCurrent)
+                        <p class="text-sm text-blue-500">
+                            In progress
+                        </p>
                         @else
-                        <p class="text-sm text-gray-400">In progress</p>
+                        <p class="text-sm text-gray-400">
+                            Pending
+                        </p>
                         @endif
                     </div>
+
                 </div>
                 @endforeach
+
+
             </div>
         </div>
 
