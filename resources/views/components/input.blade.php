@@ -1,4 +1,4 @@
-@props(['disabled' => false, 'label' => null, 'name' => '', 'type' => 'text'])
+@props(['disabled' => false, 'label' => null, 'name' => '', 'type' => 'text', 'id' => null])
 
 <div class="w-full">
     @if($label)
@@ -8,7 +8,7 @@
     @endif
     <input 
         type="{{ $type }}" 
-        id="{{ $name }}" 
+        id="{{ $id == null ? $name : $id }}" 
         name="{{ $name }}"
         {{ $disabled ? 'disabled' : '' }}
         {!! $attributes->merge([
