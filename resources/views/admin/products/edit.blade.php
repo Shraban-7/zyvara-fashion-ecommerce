@@ -183,7 +183,7 @@
                     <div class="variant-row p-4 border border-gray-200 rounded-lg bg-gray-50">
                         <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}">
 
-                        <div class="grid md:grid-cols-6 gap-4">
+                        <div class="grid md:grid-cols-5 gap-4">
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
                                 <select name="variants[{{ $index }}][size_id]" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
@@ -226,13 +226,6 @@
                                 <input type="text" name="variants[{{ $index }}][sku]" value="{{ $variant->sku }}"
                                     class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                     placeholder="Optional">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Stock</label>
-                                <input type="number" name="variants[{{ $index }}][stock_in]" value="{{ $variant->stock_in }}"
-                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                    placeholder="0" min="0">
                             </div>
 
                             <div class="flex items-end">
@@ -443,7 +436,7 @@
         variantRow.className = 'variant-row p-4 border border-gray-200 rounded-lg bg-gray-50';
 
         variantRow.innerHTML = `
-            <div class="grid md:grid-cols-6 gap-4">
+            <div class="grid md:grid-cols-5 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
                     <select 
@@ -488,16 +481,6 @@
                         name="variants[${variantIndex}][sku]"
                         class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                         placeholder="Optional">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Stock</label>
-                    <input 
-                        type="number"
-                        name="variants[${variantIndex}][stock_in]"
-                        value="0"
-                        min="0"
-                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                 </div>
                 
                 <div class="flex items-end">

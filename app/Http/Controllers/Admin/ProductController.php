@@ -285,7 +285,7 @@ class ProductController extends Controller
             'variants.*.size_id' => 'nullable|exists:sizes,id',
             'variants.*.color_id' => 'nullable|exists:colors,id',
             'variants.*.sku' => 'nullable|string|max:255',
-            'variants.*.stock_in' => 'nullable|integer|min:0',
+            //'variants.*.stock_in' => 'nullable|integer|min:0',
             'variants.*.price' => 'nullable|numeric',
             'delete_variants' => 'nullable|array',
             'delete_variants.*' => 'nullable|integer|exists:product_variants,id',
