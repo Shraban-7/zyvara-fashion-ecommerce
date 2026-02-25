@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SettingController;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -83,10 +84,11 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     //     return redirect()->route('admin.dashboard');
     // })->name('banners.index');
 
-    // Settings Routes (placeholder)
-    Route::get('/settings', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('settings.index');
+    // Settings Routes
+    Route::prefix('settings')->as('settings.')->group(function () {
+        Route::get('/', [SettingController::class, 'index'])->name('index');
+        Route::put('/update', [SettingController::class, 'update'])->name('update');
+    });
 
     Route::get('/keep-alive', function () {
         return response()->json(['status' => 'alive']);

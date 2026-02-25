@@ -14,15 +14,21 @@
 
                 {{-- Social Links --}}
                 <div class="flex gap-3">
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
+                    @if($settings['facebook_url'] ?? false)
+                    <a href="{{ $settings['facebook_url'] }}" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
+                    @endif
+                    @if($settings['instagram_url'] ?? false)
+                    <a href="{{ $settings['instagram_url'] }}" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
+                    @endif
+                    @if($settings['tiktok_url'] ?? false)
+                    <a href="{{ $settings['tiktok_url'] }}" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
                         <i class="fab fa-tiktok"></i>
                     </a>
+                    @endif
                 </div>
             </div>
 

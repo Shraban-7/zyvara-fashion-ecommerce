@@ -1,0 +1,366 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Settings')
+
+@section('content')
+{{-- Page Header --}}
+<div class="mb-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Settings</h1>
+    <p class="text-gray-500">Manage your store settings and preferences</p>
+</div>
+
+{{-- Settings Form --}}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <form action="{{ route('admin.settings.update') }}" method="POST" x-data="{ activeTab: 'general' }" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        {{-- Tabs Navigation --}}
+        <div class="border-b border-gray-200 bg-white">
+            <div class="flex overflow-x-auto">
+                <button type="button" @click="activeTab = 'general'" :class="activeTab === 'general' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-cog mr-2"></i>General
+                </button>
+                <button type="button" @click="activeTab = 'contact'" :class="activeTab === 'contact' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-phone mr-2"></i>Contact
+                </button>
+                <button type="button" @click="activeTab = 'social'" :class="activeTab === 'social' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-share-alt mr-2"></i>Social Media
+                </button>
+                <button type="button" @click="activeTab = 'shipping'" :class="activeTab === 'shipping' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-truck mr-2"></i>Shipping
+                </button>
+                <button type="button" @click="activeTab = 'payment'" :class="activeTab === 'payment' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-credit-card mr-2"></i>Payment
+                </button>
+                <button type="button" @click="activeTab = 'order'" :class="activeTab === 'order' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-shopping-cart mr-2"></i>Orders
+                </button>
+                <button type="button" @click="activeTab = 'sms'" :class="activeTab === 'sms' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-sms mr-2"></i>SMS
+                </button>
+                <button type="button" @click="activeTab = 'seo'" :class="activeTab === 'seo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-search mr-2"></i>SEO
+                </button>
+                <button type="button" @click="activeTab = 'policy'" :class="activeTab === 'policy' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
+                    <i class="fas fa-file-alt mr-2"></i>Policies
+                </button>
+            </div>
+        </div>
+
+        {{-- Tab Content --}}
+        <div class="p-6 md:p-8">
+            {{-- General Settings --}}
+            <div x-show="activeTab === 'general'" x-transition>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">General Settings</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Site Name</label>
+                        <input type="text" name="site_name" value="{{ old('site_name', $all_settings['general']['site_name']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter site name">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Site Tagline</label>
+                        <input type="text" name="site_tagline" value="{{ old('site_tagline', $all_settings['general']['site_tagline']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter site tagline">
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Currency</label>
+                            <input type="text" name="currency" value="{{ old('currency', $all_settings['general']['currency']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="BDT">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Currency Symbol</label>
+                            <input type="text" name="currency_symbol" value="{{ old('currency_symbol', $all_settings['general']['currency_symbol']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="৳">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Site Logo</label>
+                        <input type="file" name="site_logo" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <p class="text-xs text-gray-500 mt-1">Upload your logo image</p>
+                        @if($all_settings['general']['site_logo']['value'] ?? false)
+                            <img src="{{ storage_url($all_settings['general']['site_logo']['value']) }}" alt="Site Logo" class="mt-2 h-12">
+                        @endif
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Site Favicon</label>
+                        <input type="file" name="site_favicon" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <p class="text-xs text-gray-500 mt-1">Upload your favicon image</p>
+                        @if($all_settings['general']['site_favicon']['value'] ?? false)
+                            <img src="{{ storage_url($all_settings['general']['site_favicon']['value']) }}" alt="Site Favicon" class="mt-2 h-12">
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            {{-- Contact Settings --}}
+            <div x-show="activeTab === 'contact'" x-transition x-cloak>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Contact Information</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Contact Email</label>
+                        <input type="email" name="contact_email" value="{{ old('contact_email', $all_settings['contact']['contact_email']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="info@example.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Contact Phone</label>
+                        <input type="text" name="contact_phone" value="{{ old('contact_phone', $all_settings['contact']['contact_phone']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="+880 1700-000000">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">WhatsApp Number</label>
+                        <input type="text" name="whatsapp_number" value="{{ old('whatsapp_number', $all_settings['contact']['whatsapp_number']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="+8801700000000">
+                        <p class="text-xs text-gray-500 mt-1">Without spaces or dashes</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Contact Address</label>
+                        <textarea name="contact_address" rows="3" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter your business address">{{ old('contact_address', $all_settings['contact']['contact_address']['value'] ?? '') }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Google Maps Embed Code</label>
+                        <textarea name="google_maps_embed" rows="3" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Paste Google Maps embed code">{{ old('google_maps_embed', $all_settings['contact']['google_maps_embed']['value'] ?? '') }}</textarea>
+                        <p class="text-xs text-gray-500 mt-1">Paste the entire iframe embed code from Google Maps</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Social Media Settings --}}
+            <div x-show="activeTab === 'social'" x-transition x-cloak>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Social Media Links</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fab fa-facebook text-blue-600"></i> Facebook URL
+                        </label>
+                        <input type="url" name="facebook_url" value="{{ old('facebook_url', $all_settings['social']['facebook_url']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="https://facebook.com/yourpage">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fab fa-instagram text-pink-600"></i> Instagram URL
+                        </label>
+                        <input type="url" name="instagram_url" value="{{ old('instagram_url', $all_settings['social']['instagram_url']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="https://instagram.com/yourpage">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fab fa-youtube text-red-600"></i> YouTube URL
+                        </label>
+                        <input type="url" name="youtube_url" value="{{ old('youtube_url', $all_settings['social']['youtube_url']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="https://youtube.com/yourchannel">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fab fa-tiktok text-gray-800"></i> TikTok URL
+                        </label>
+                        <input type="url" name="tiktok_url" value="{{ old('tiktok_url', $all_settings['social']['tiktok_url']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="https://tiktok.com/@yourpage">
+                    </div>
+                </div>
+            </div>
+
+            {{-- Shipping Settings --}}
+            <div x-show="activeTab === 'shipping'" x-transition x-cloak>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Shipping Settings</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Shipping Inside Dhaka (৳)</label>
+                            <input type="number" name="shipping_inside_dhaka" value="{{ old('shipping_inside_dhaka', $all_settings['shipping']['shipping_inside_dhaka']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="60">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Shipping Outside Dhaka (৳)</label>
+                            <input type="number" name="shipping_outside_dhaka" value="{{ old('shipping_outside_dhaka', $all_settings['shipping']['shipping_outside_dhaka']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="120">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Free Shipping Threshold - Dhaka (৳)</label>
+                            <input type="number" name="free_shipping_threshold_dhaka" value="{{ old('free_shipping_threshold_dhaka', $all_settings['shipping']['free_shipping_threshold_dhaka']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="2000">
+                            <p class="text-xs text-gray-500 mt-1">Minimum order for free shipping</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Free Shipping Threshold - Outside (৳)</label>
+                            <input type="number" name="free_shipping_threshold_outside" value="{{ old('free_shipping_threshold_outside', $all_settings['shipping']['free_shipping_threshold_outside']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="3000">
+                            <p class="text-xs text-gray-500 mt-1">Minimum order for free shipping</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Delivery Time - Dhaka</label>
+                            <input type="text" name="delivery_time_dhaka" value="{{ old('delivery_time_dhaka', $all_settings['shipping']['delivery_time_dhaka']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="1-2 business days">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Delivery Time - Outside Dhaka</label>
+                            <input type="text" name="delivery_time_outside" value="{{ old('delivery_time_outside', $all_settings['shipping']['delivery_time_outside']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="3-5 business days">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Payment Settings --}}
+            <div x-show="activeTab === 'payment'" x-transition x-cloak>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Payment Settings</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="cod_enabled" value="true" {{ old('cod_enabled', $all_settings['payment']['cod_enabled']['value'] ?? '') == 'true' ? 'checked' : '' }} class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <div class="flex-1">
+                                <span class="text-sm font-semibold text-gray-900">Enable Cash on Delivery (COD)</span>
+                                <p class="text-xs text-gray-500 mt-1">Allow customers to pay with cash on delivery</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Order Settings --}}
+            <div x-show="activeTab === 'order'" x-transition x-cloak>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Order Settings</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Order Prefix</label>
+                        <input type="text" name="order_prefix" value="{{ old('order_prefix', $all_settings['order']['order_prefix']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="SF">
+                        <p class="text-xs text-gray-500 mt-1">Orders will be numbered as: PREFIX-001, PREFIX-002, etc.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Minimum Order Amount (৳)</label>
+                        <input type="number" name="min_order_amount" value="{{ old('min_order_amount', $all_settings['order']['min_order_amount']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="500">
+                        <p class="text-xs text-gray-500 mt-1">Minimum amount required to place an order</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Maximum Order Quantity</label>
+                        <input type="number" name="max_order_quantity" value="{{ old('max_order_quantity', $all_settings['order']['max_order_quantity']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="10">
+                        <p class="text-xs text-gray-500 mt-1">Maximum quantity per product in a single order</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Order Cancellation Window (Hours)</label>
+                        <input type="number" name="order_cancellation_hours" value="{{ old('order_cancellation_hours', $all_settings['order']['order_cancellation_hours']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="24">
+                        <p class="text-xs text-gray-500 mt-1">Hours within which customers can cancel orders</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- SMS Settings --}}
+            <div x-show="activeTab === 'sms'" x-transition x-cloak>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">SMS Notification Settings</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="sms_enabled" value="true" {{ old('sms_enabled', $all_settings['sms']['sms_enabled']['value'] ?? '') == 'true' ? 'checked' : '' }} class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <div class="flex-1">
+                                <span class="text-sm font-semibold text-gray-900">Enable SMS Notifications</span>
+                                <p class="text-xs text-gray-500 mt-1">Send SMS notifications to customers</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">SMS Provider</label>
+                        <input type="text" name="sms_provider" value="{{ old('sms_provider', $all_settings['sms']['sms_provider']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="ssl_wireless">
+                        <p class="text-xs text-gray-500 mt-1">e.g., ssl_wireless, twilio, etc.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">SMS API Key</label>
+                        <input type="text" name="sms_api_key" value="{{ old('sms_api_key', $all_settings['sms']['sms_api_key']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter API Key">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">SMS Sender ID</label>
+                        <input type="text" name="sms_sender_id" value="{{ old('sms_sender_id', $all_settings['sms']['sms_sender_id']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Spinner Fashion">
+                        <p class="text-xs text-gray-500 mt-1">Name that appears as sender in SMS</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- SEO Settings --}}
+            <div x-show="activeTab === 'seo'" x-transition x-cloak>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">SEO & Analytics Settings</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Meta Title</label>
+                        <input type="text" name="meta_title" value="{{ old('meta_title', $all_settings['seo']['meta_title']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Your site title for SEO">
+                        <p class="text-xs text-gray-500 mt-1">Appears in search engine results (50-60 characters)</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Meta Description</label>
+                        <textarea name="meta_description" rows="3" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Brief description of your site">{{ old('meta_description', $all_settings['seo']['meta_description']['value'] ?? '') }}</textarea>
+                        <p class="text-xs text-gray-500 mt-1">Brief description for search engines (150-160 characters)</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Meta Keywords</label>
+                        <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $all_settings['seo']['meta_keywords']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="keyword1, keyword2, keyword3">
+                        <p class="text-xs text-gray-500 mt-1">Comma-separated keywords</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Google Analytics ID</label>
+                        <input type="text" name="google_analytics_id" value="{{ old('google_analytics_id', $all_settings['seo']['google_analytics_id']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="G-XXXXXXXXXX">
+                        <p class="text-xs text-gray-500 mt-1">Google Analytics tracking ID</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Facebook Pixel ID</label>
+                        <input type="text" name="facebook_pixel_id" value="{{ old('facebook_pixel_id', $all_settings['seo']['facebook_pixel_id']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="123456789012345">
+                        <p class="text-xs text-gray-500 mt-1">Facebook Pixel ID for tracking</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Policy Settings --}}
+            <div x-show="activeTab === 'policy'" x-transition x-cloak>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Store Policies</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Return Policy</label>
+                        <textarea name="return_policy" rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter your return policy">{{ old('return_policy', $all_settings['policy']['return_policy']['value'] ?? '') }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Exchange Policy</label>
+                        <textarea name="exchange_policy" rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter your exchange policy">{{ old('exchange_policy', $all_settings['policy']['exchange_policy']['value'] ?? '') }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Refund Policy</label>
+                        <textarea name="refund_policy" rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter your refund policy">{{ old('refund_policy', $all_settings['policy']['refund_policy']['value'] ?? '') }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Form Actions --}}
+        <div class="flex items-center justify-end gap-4 px-6 md:px-8 py-6 bg-gray-50 border-t border-gray-200">
+            <a href="{{ route('admin.dashboard') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition">
+                Cancel
+            </a>
+            <button type="submit" class="px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transition">
+                <i class="fas fa-save mr-2"></i>Save Settings
+            </button>
+        </div>
+    </form>
+</div>
+@endsection
+
+@push('styles')
+<style>
+    [x-cloak] {
+        display: none !important;
+    }
+</style>
+@endpush

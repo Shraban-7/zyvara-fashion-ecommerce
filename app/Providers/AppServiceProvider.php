@@ -54,10 +54,10 @@ class AppServiceProvider extends ServiceProvider
             });
 
             $settings = cache()->remember('site_settings', 3600, function () {
-                return \App\Models\Setting::select('value', 'key')->get();
+                return \App\Models\Setting::select('value', 'key')->pluck('value', 'key');
             });
 
-            $siteName = collect($settings)->where('key', 'site_name')->first()->value;
+            $siteName = $settings['site_name'] ?? null;
 
             View::share('siteName', $siteName);
 

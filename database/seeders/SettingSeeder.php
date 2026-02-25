@@ -16,8 +16,8 @@ class SettingSeeder extends Seeder
             // General Settings
             ['key' => 'site_name', 'value' => 'Spinner Fashion', 'type' => 'text', 'group' => 'general'],
             ['key' => 'site_tagline', 'value' => 'Your Fashion Destination', 'type' => 'text', 'group' => 'general'],
-            ['key' => 'site_logo', 'value' => null, 'type' => 'text', 'group' => 'general'],
-            ['key' => 'site_favicon', 'value' => null, 'type' => 'text', 'group' => 'general'],
+            ['key' => 'site_logo', 'value' => null, 'type' => 'file', 'group' => 'general'],
+            ['key' => 'site_favicon', 'value' => null, 'type' => 'file', 'group' => 'general'],
             ['key' => 'currency', 'value' => 'BDT', 'type' => 'text', 'group' => 'general'],
             ['key' => 'currency_symbol', 'value' => '৳', 'type' => 'text', 'group' => 'general'],
 
@@ -44,10 +44,6 @@ class SettingSeeder extends Seeder
 
             // Payment Settings
             ['key' => 'cod_enabled', 'value' => 'true', 'type' => 'boolean', 'group' => 'payment'],
-            ['key' => 'bkash_enabled', 'value' => 'true', 'type' => 'boolean', 'group' => 'payment'],
-            ['key' => 'nagad_enabled', 'value' => 'true', 'type' => 'boolean', 'group' => 'payment'],
-            ['key' => 'bkash_merchant_number', 'value' => '01700000000', 'type' => 'text', 'group' => 'payment'],
-            ['key' => 'nagad_merchant_number', 'value' => '01700000001', 'type' => 'text', 'group' => 'payment'],
 
             // SMS Settings
             ['key' => 'sms_enabled', 'value' => 'true', 'type' => 'boolean', 'group' => 'sms'],
