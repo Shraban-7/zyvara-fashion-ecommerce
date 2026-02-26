@@ -370,10 +370,16 @@ class ProductController extends Controller
             }
 
             if ($request->has('variants')) {
+
+                $variantIds = [];
+
                 foreach ($request->variants as $variantData) {
-                    // Skip if no size and no color selected
                     if (empty($variantData['size_id']) && empty($variantData['color_id'])) {
                         continue;
+                    }
+
+                    if(!empty($variantData['id'])) {
+                        $variantIds[] = $variantData['id'];
                     }
 
                     $variantData['product_id'] = $product->id;
@@ -382,14 +388,16 @@ class ProductController extends Controller
                     $variantData['sku'] = $variantData['sku'] ?? ProductVariant::generate_sku();
 
                     if (!empty($variantData['id'])) {
-                        // Update existing variant
                         $variant = $product->variants()->find($variantData['id']);
                         if ($variant) {
                             $variant->update($variantData);
                         }
                     } else {
-                        // Create new variant
                         $product->variants()->create($variantData);
+                    }
+
+                    if(count($variantIds) > 0) {
+                        $product->variants()->whereNotIn('id', $variantIds)->delete();
                     }
                 }
             }
