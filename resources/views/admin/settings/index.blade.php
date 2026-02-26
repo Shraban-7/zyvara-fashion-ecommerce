@@ -319,19 +319,31 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">SMS Provider</label>
-                        <input type="text" name="sms_provider" value="{{ old('sms_provider', $all_settings['sms']['sms_provider']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="ssl_wireless">
+                        <x-input
+                            type="text"
+                            name="sms_provider"
+                            label="SMS Provider"
+                            placeholder="ssl_wireless"
+                            value="{{ old('sms_provider', $all_settings['sms']['sms_provider']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">e.g., ssl_wireless, twilio, etc.</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">SMS API Key</label>
-                        <input type="text" name="sms_api_key" value="{{ old('sms_api_key', $all_settings['sms']['sms_api_key']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter API Key">
+                        <x-input
+                            type="text"
+                            name="sms_api_key"
+                            label="SMS API Key"
+                            placeholder="Enter API Key"
+                            value="{{ old('sms_api_key', $all_settings['sms']['sms_api_key']['value'] ?? '') }}" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">SMS Sender ID</label>
-                        <input type="text" name="sms_sender_id" value="{{ old('sms_sender_id', $all_settings['sms']['sms_sender_id']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Spinner Fashion">
+                        <x-input
+                            type="text"
+                            name="sms_sender_id"
+                            label="SMS Sender ID"
+                            placeholder="Spinner Fashion"
+                            value="{{ old('sms_sender_id', $all_settings['sms']['sms_sender_id']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Name that appears as sender in SMS</p>
                     </div>
                 </div>
