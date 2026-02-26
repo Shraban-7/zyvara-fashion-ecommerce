@@ -263,26 +263,42 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Order Settings</h2>
                 <div class="space-y-6 max-w-2xl">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Order Prefix</label>
-                        <input type="text" name="order_prefix" value="{{ old('order_prefix', $all_settings['order']['order_prefix']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="SF">
+                        <x-input
+                            type="text"
+                            name="order_prefix"
+                            label="Order Prefix"
+                            placeholder="SF"
+                            value="{{ old('order_prefix', $all_settings['order']['order_prefix']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Orders will be numbered as: PREFIX-001, PREFIX-002, etc.</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Minimum Order Amount (৳)</label>
-                        <input type="number" name="min_order_amount" value="{{ old('min_order_amount', $all_settings['order']['min_order_amount']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="500">
+                        <x-input
+                            type="number"
+                            name="min_order_amount"
+                            label="Minimum Order Amount (৳)"
+                            placeholder="500"
+                            value="{{ old('min_order_amount', $all_settings['order']['min_order_amount']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Minimum amount required to place an order</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Maximum Order Quantity</label>
-                        <input type="number" name="max_order_quantity" value="{{ old('max_order_quantity', $all_settings['order']['max_order_quantity']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="10">
+                        <x-input
+                            type="number"
+                            name="max_order_quantity"
+                            label="Maximum Order Quantity"
+                            placeholder="10"
+                            value="{{ old('max_order_quantity', $all_settings['order']['max_order_quantity']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Maximum quantity per product in a single order</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Order Cancellation Window (Hours)</label>
-                        <input type="number" name="order_cancellation_hours" value="{{ old('order_cancellation_hours', $all_settings['order']['order_cancellation_hours']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="24">
+                        <x-input
+                            type="number"
+                            name="order_cancellation_hours"
+                            label="Order Cancellation Window (Hours)"
+                            placeholder="24"
+                            value="{{ old('order_cancellation_hours', $all_settings['order']['order_cancellation_hours']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Hours within which customers can cancel orders</p>
                     </div>
                 </div>
