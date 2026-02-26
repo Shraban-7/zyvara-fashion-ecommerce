@@ -406,18 +406,27 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Store Policies</h2>
                 <div class="space-y-6 max-w-2xl">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Return Policy</label>
-                        <textarea name="return_policy" rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter your return policy">{{ old('return_policy', $all_settings['policy']['return_policy']['value'] ?? '') }}</textarea>
+                        <x-textarea
+                            name="return_policy"
+                            label="Return Policy"
+                            rows="4"
+                            placeholder="Enter your return policy">{{ old('return_policy', $all_settings['policy']['return_policy']['value'] ?? '') }}</x-textarea>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Exchange Policy</label>
-                        <textarea name="exchange_policy" rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter your exchange policy">{{ old('exchange_policy', $all_settings['policy']['exchange_policy']['value'] ?? '') }}</textarea>
+                        <x-textarea
+                            name="exchange_policy"
+                            label="Exchange Policy"
+                            rows="4"
+                            placeholder="Enter your exchange policy">{{ old('exchange_policy', $all_settings['policy']['exchange_policy']['value'] ?? '') }}</x-textarea>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Refund Policy</label>
-                        <textarea name="refund_policy" rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter your refund policy">{{ old('refund_policy', $all_settings['policy']['refund_policy']['value'] ?? '') }}</textarea>
+                        <x-textarea
+                            name="refund_policy"
+                            label="Refund Policy"
+                            rows="4"
+                            placeholder="Enter your refund policy">{{ old('refund_policy', $all_settings['policy']['refund_policy']['value'] ?? '') }}</x-textarea>
                     </div>
                 </div>
             </div>
