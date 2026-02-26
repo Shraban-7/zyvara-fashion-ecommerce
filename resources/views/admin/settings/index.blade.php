@@ -354,32 +354,48 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-6">SEO & Analytics Settings</h2>
                 <div class="space-y-6 max-w-2xl">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Meta Title</label>
-                        <input type="text" name="meta_title" value="{{ old('meta_title', $all_settings['seo']['meta_title']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Your site title for SEO">
+                        <x-input
+                            name="meta_title"
+                            label="Meta Title"
+                            placeholder="Your site title for SEO"
+                            value="{{ old('meta_title', $all_settings['seo']['meta_title']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Appears in search engine results (50-60 characters)</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Meta Description</label>
-                        <textarea name="meta_description" rows="3" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Brief description of your site">{{ old('meta_description', $all_settings['seo']['meta_description']['value'] ?? '') }}</textarea>
+                        <x-textarea
+                            name="meta_description"
+                            label="Meta Description"
+                            rows="3"
+                            placeholder="Brief description of your site">{{ old('meta_description', $all_settings['seo']['meta_description']['value'] ?? '') }}
+                        </x-textarea>
                         <p class="text-xs text-gray-500 mt-1">Brief description for search engines (150-160 characters)</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Meta Keywords</label>
-                        <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $all_settings['seo']['meta_keywords']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="keyword1, keyword2, keyword3">
+                        <x-input
+                            name="meta_keywords"
+                            label="Meta Keywords"
+                            placeholder="keyword1, keyword2, keyword3"
+                            value="{{ old('meta_keywords', $all_settings['seo']['meta_keywords']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Comma-separated keywords</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Google Analytics ID</label>
-                        <input type="text" name="google_analytics_id" value="{{ old('google_analytics_id', $all_settings['seo']['google_analytics_id']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="G-XXXXXXXXXX">
+                        <x-input
+                            name="google_analytics_id"
+                            label="Google Analytics ID"
+                            placeholder="G-XXXXXXXXXX"
+                            value="{{ old('google_analytics_id', $all_settings['seo']['google_analytics_id']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Google Analytics tracking ID</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Facebook Pixel ID</label>
-                        <input type="text" name="facebook_pixel_id" value="{{ old('facebook_pixel_id', $all_settings['seo']['facebook_pixel_id']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="123456789012345">
+                        <x-input
+                            name="facebook_pixel_id"
+                            label="Facebook Pixel ID"
+                            placeholder="123456789012345"
+                            value="{{ old('facebook_pixel_id', $all_settings['seo']['facebook_pixel_id']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Facebook Pixel ID for tracking</p>
                     </div>
                 </div>
