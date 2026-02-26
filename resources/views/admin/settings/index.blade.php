@@ -100,29 +100,49 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Contact Information</h2>
                 <div class="space-y-6 max-w-2xl">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Contact Email</label>
-                        <input type="email" name="contact_email" value="{{ old('contact_email', $all_settings['contact']['contact_email']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="info@example.com">
+                        <x-input
+                            type="email"
+                            name="contact_email"
+                            label="Contact Email"
+                            placeholder="info@example.com"
+                            value="{{ old('contact_email', $all_settings['contact']['contact_email']['value'] ?? '') }}" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Contact Phone</label>
-                        <input type="text" name="contact_phone" value="{{ old('contact_phone', $all_settings['contact']['contact_phone']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="+880 1700-000000">
+                        <x-input
+                            type="text"
+                            name="contact_phone"
+                            label="Contact Phone"
+                            placeholder="+880 1700-000000"
+                            value="{{ old('contact_phone', $all_settings['contact']['contact_phone']['value'] ?? '') }}" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">WhatsApp Number</label>
-                        <input type="text" name="whatsapp_number" value="{{ old('whatsapp_number', $all_settings['contact']['whatsapp_number']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="+8801700000000">
+                        <x-input
+                            type="text"
+                            name="whatsapp_number"
+                            label="WhatsApp Number"
+                            placeholder="+8801700000000"
+                            value="{{ old('whatsapp_number', $all_settings['contact']['whatsapp_number']['value'] ?? '') }}" />
                         <p class="text-xs text-gray-500 mt-1">Without spaces or dashes</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Contact Address</label>
-                        <textarea name="contact_address" rows="3" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter your business address">{{ old('contact_address', $all_settings['contact']['contact_address']['value'] ?? '') }}</textarea>
+                        <x-textarea
+                            name="contact_address"
+                            label="Contact Address"
+                            rows="3"
+                            placeholder="Enter your business address">{{ old('contact_address', $all_settings['contact']['contact_address']['value'] ?? '') }}
+                        </x-textarea>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Google Maps Embed Code</label>
-                        <textarea name="google_maps_embed" rows="3" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Paste Google Maps embed code">{{ old('google_maps_embed', $all_settings['contact']['google_maps_embed']['value'] ?? '') }}</textarea>
+                        <x-textarea
+                            name="google_maps_embed"
+                            label="Google Maps Embed Code"
+                            rows="3"
+                            placeholder="Paste Google Maps embed code">{{ old('google_maps_embed', $all_settings['contact']['google_maps_embed']['value'] ?? '') }}
+                        </x-textarea>
                         <p class="text-xs text-gray-500 mt-1">Paste the entire iframe embed code from Google Maps</p>
                     </div>
                 </div>
