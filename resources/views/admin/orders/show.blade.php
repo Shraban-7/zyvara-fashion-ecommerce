@@ -488,104 +488,109 @@
                         </p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- End Invoice Template --}}
 
-                {{-- Delete Confirmation Modal --}}
-                <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-                    <div class="bg-white rounded-2xl max-w-md w-full p-6">
-                        <div class="text-center mb-6">
-                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Order?</h3>
-                            <p class="text-gray-600">Are you sure you want to delete this order? This action cannot be undone.</p>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium">
-                                Cancel
-                            </button>
-                            <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="flex-1">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition font-medium">
-                                    Delete
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+{{-- Delete Confirmation Modal --}}
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Order?</h3>
+            <p class="text-gray-600">Are you sure you want to delete this order? This action cannot be undone.</p>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium">
+                Cancel
+            </button>
+            <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="flex-1">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition font-medium">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
-                @push('scripts')
-                {{-- html2pdf.js library for PDF generation --}}
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+@push('scripts')
+{{-- html2pdf.js library for PDF generation --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-                <script>
-                    function downloadInvoice() {
-                        const invoiceElement = document.getElementById('invoiceTemplate');
-                        const invoiceNumber = '{{ $order->order_number }}';
+<script>
+    function downloadInvoice() {
+        const invoiceElement = document.getElementById('invoiceTemplate');
+        const invoiceNumber = '{{ $order->order_number }}';
 
-                        // Show loading state
-                        const button = event.target.closest('button');
-                        const originalText = button.innerHTML;
-                        button.disabled = true;
-                        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
+        // Show loading state
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
 
-                        // Clone the element to avoid modifying the original
-                        const clonedElement = invoiceElement.cloneNode(true);
-                        clonedElement.classList.remove('hidden');
+        // Clone the element to avoid modifying the original
+        const clonedElement = invoiceElement.cloneNode(true);
+        clonedElement.classList.remove('hidden');
 
-                        // Configure pdf options
-                        const opt = {
-                            margin: 0,
-                            filename: `Invoice-${invoiceNumber}.pdf`,
-                            image: {
-                                type: 'jpeg',
-                                quality: 0.98
-                            },
-                            html2canvas: {
-                                scale: 2,
-                                useCORS: true,
-                                letterRendering: true,
-                                scrollY: 0,
-                                scrollX: 0
-                            },
-                            jsPDF: {
-                                unit: 'mm',
-                                format: 'a4',
-                                orientation: 'portrait',
-                                compress: true
-                            },
-                            pagebreak: {
-                                mode: ['avoid-all', 'css', 'legacy']
-                            }
-                        };
+        // Configure pdf options
+        const opt = {
+            margin: 0,
+            filename: `Invoice-${invoiceNumber}.pdf`,
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                letterRendering: true,
+                scrollY: 0,
+                scrollX: 0
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait',
+                compress: true
+            },
+            pagebreak: {
+                mode: ['avoid-all', 'css', 'legacy']
+            }
+        };
 
-                        // Generate and download PDF
-                        html2pdf().set(opt).from(clonedElement).save().then(() => {
-                            // Restore button state
-                            button.disabled = false;
-                            button.innerHTML = originalText;
-                        }).catch((error) => {
-                            console.error('PDF generation error:', error);
-                            button.disabled = false;
-                            button.innerHTML = originalText;
-                            alert('Failed to generate PDF. Please try again.');
-                        });
-                    }
+        // Generate and download PDF
+        html2pdf().set(opt).from(clonedElement).save().then(() => {
+            // Restore button state
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }).catch((error) => {
+            console.error('PDF generation error:', error);
+            button.disabled = false;
+            button.innerHTML = originalText;
+            alert('Failed to generate PDF. Please try again.');
+        });
+    }
 
-                    function openDeleteModal() {
-                        document.getElementById('deleteModal').classList.remove('hidden');
-                    }
+    function openDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
 
-                    function closeDeleteModal() {
-                        document.getElementById('deleteModal').classList.add('hidden');
-                    }
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
 
-                    // Close modal on outside click
-                    document.getElementById('deleteModal').addEventListener('click', function(e) {
-                        if (e.target === this) {
-                            closeDeleteModal();
-                        }
-                    });
-                </script>
-                @endpush
-                @endsection
+    // Close modal on outside click
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+</script>
+@endpush
+@endsection
