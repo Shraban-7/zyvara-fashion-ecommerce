@@ -488,11 +488,10 @@ class ProductController extends Controller
             if (isset($validated['variant_id'])) {
                 // Add stock to variant
                 $variant = ProductVariant::findOrFail($validated['variant_id']);
-                $stockBefore = $variant->stock_in;
+                $stockBefore = $variant->currentStock;
                 $stockAfter = $stockBefore + $validated['quantity'];
-                $variant->update(['stock_in' => $stockAfter]);
+                $variant->increment('stock_in', $validated['quantity']);
 
-                // Create stock log
                 StockLog::create([
                     'product_id' => $variant->product_id,
                     'product_variant_id' => $variant->id,
@@ -504,13 +503,11 @@ class ProductController extends Controller
                     'note' => $validated['note'] ?? null,
                 ]);
             } else {
-                // Add stock to product
                 $product = Product::findOrFail($validated['product_id']);
-                $stockBefore = $product->stock_in;
+                $stockBefore = $product->currentStock;
                 $stockAfter = $stockBefore + $validated['quantity'];
-                $product->update(['stock_in' => $stockAfter]);
-
-                // Create stock log
+                $product->increment('stock_in', $validated['quantity']);
+                
                 StockLog::create([
                     'product_id' => $product->id,
                     'product_variant_id' => null,
@@ -572,18 +569,16 @@ class ProductController extends Controller
             $stockAfter = 0;
 
             if (isset($validated['variant_id'])) {
-                // Remove stock from variant
                 $variant = ProductVariant::findOrFail($validated['variant_id']);
-                $stockBefore = $variant->stock_in;
+                $stockBefore = $variant->currentStock;
 
                 if ($stockBefore < $validated['quantity']) {
                     throw new \Exception('Cannot remove more stock than available');
                 }
 
                 $stockAfter = $stockBefore - $validated['quantity'];
-                $variant->update(['stock_in' => $stockAfter]);
+                $variant->decrement('stock_in', $validated['quantity']);
 
-                // Create stock log
                 StockLog::create([
                     'product_id' => $variant->product_id,
                     'product_variant_id' => $variant->id,
@@ -595,18 +590,16 @@ class ProductController extends Controller
                     'note' => $validated['note'] ?? null,
                 ]);
             } else {
-                // Remove stock from product
                 $product = Product::findOrFail($validated['product_id']);
-                $stockBefore = $product->stock_in;
+                $stockBefore = $product->currentStock;
 
                 if ($stockBefore < $validated['quantity']) {
                     throw new \Exception('Cannot remove more stock than available');
                 }
 
                 $stockAfter = $stockBefore - $validated['quantity'];
-                $product->update(['stock_in' => $stockAfter]);
+                $product->decrement('stock_in', $validated['quantity']);
 
-                // Create stock log
                 StockLog::create([
                     'product_id' => $product->id,
                     'product_variant_id' => null,
