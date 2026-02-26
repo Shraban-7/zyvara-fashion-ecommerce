@@ -83,4 +83,18 @@ class ProductVariant extends Model
             }
         );
     }
+
+    public static function generate_sku($length = 8): string
+    {
+        $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+        do {
+            $sku = 'V';
+            for ($i = 0; $i < $length; $i++) {
+                $sku .= $characters[random_int(0, strlen($characters) - 1)];
+            }
+        } while (ProductVariant::where('sku', $sku)->exists());
+
+        return $sku;
+    }
 }

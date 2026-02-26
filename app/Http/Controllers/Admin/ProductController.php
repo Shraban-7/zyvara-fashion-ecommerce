@@ -167,7 +167,7 @@ class ProductController extends Controller
             }
 
             if (empty($validated['sku'])) {
-                $validated['sku'] = 'PRD-' . strtoupper(Str::random(8));
+                $validated['sku'] = Product::generate_sku();
             }
 
             // Convert tags string to array
@@ -378,7 +378,8 @@ class ProductController extends Controller
 
                     $variantData['product_id'] = $product->id;
                     $variantData['stock_in'] = $variantData['stock_in'] ?? 0;
-                    $variantData['price'] = $variantData['price'] ?? 0;
+                    $variantData['price'] = $variantData['price'] ?? $product->price;
+                    $variantData['sku'] = $variantData['sku'] ?? ProductVariant::generate_sku();
 
                     if (!empty($variantData['id'])) {
                         // Update existing variant
@@ -507,7 +508,7 @@ class ProductController extends Controller
                 $stockBefore = $product->currentStock;
                 $stockAfter = $stockBefore + $validated['quantity'];
                 $product->increment('stock_in', $validated['quantity']);
-                
+
                 StockLog::create([
                     'product_id' => $product->id,
                     'product_variant_id' => null,

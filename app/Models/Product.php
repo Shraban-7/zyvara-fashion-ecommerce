@@ -229,12 +229,26 @@ class Product extends Model
         );
     }
 
-     public function currentStock(): Attribute
+    public function currentStock(): Attribute
     {
         return Attribute::make(
             get: function () {
                 return $this->stock_in - $this->stock_out;
             }
         );
+    }
+
+    public static function generate_sku($length = 8): string
+    {
+        $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+        do {
+            $sku = 'P';
+            for ($i = 0; $i < $length; $i++) {
+                $sku .= $characters[random_int(0, strlen($characters) - 1)];
+            }
+        } while (Product::where('sku', $sku)->exists());
+
+        return $sku;
     }
 }
