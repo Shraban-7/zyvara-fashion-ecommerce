@@ -7,13 +7,9 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $this->call([
-            // Core data (order matters)
             ShippingZoneSeeder::class,
             DistrictSeeder::class,
             SizeSeeder::class,
@@ -21,13 +17,16 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             SettingSeeder::class,
 
-            // Users
             AdminUserSeeder::class,
 
-            // Sample data
             CouponSeeder::class,
-            ProductSeeder::class,
             BannerSeeder::class,
         ]);
+
+        if (app()->environment('local')) {
+            $this->call([
+                ProductSeeder::class,
+            ]);
+        }
     }
 }
