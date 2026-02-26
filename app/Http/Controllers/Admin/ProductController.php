@@ -390,6 +390,7 @@ class ProductController extends Controller
                     if (!empty($variantData['id'])) {
                         $variant = $product->variants()->find($variantData['id']);
                         if ($variant) {
+                            $variantData['stock_in'] = $variantData['stock_in'] == 0 ? $variant->stock_in : $variantData['stock_in'];
                             $variant->update($variantData);
                         }
                     } else {
