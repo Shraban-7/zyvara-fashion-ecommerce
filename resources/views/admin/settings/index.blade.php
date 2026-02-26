@@ -55,42 +55,41 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-6">General Settings</h2>
                 <div class="space-y-6 max-w-2xl">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Site Name</label>
-                        <input type="text" name="site_name" value="{{ old('site_name', $all_settings['general']['site_name']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter site name">
+                        <x-input name="site_name" type="text" value="{{ old('site_name', $all_settings['general']['site_name']['value'] ?? '') }}"
+                            label="Site Name" placeholder="Enter site name" />
+
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Site Tagline</label>
-                        <input type="text" name="site_tagline" value="{{ old('site_tagline', $all_settings['general']['site_tagline']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Enter site tagline">
+                        <x-input name="site_tagline" type="text" value="{{ old('site_tagline', $all_settings['general']['site_tagline']['value'] ?? '') }}"
+                            label="Site Tagline" placeholder="Enter site tagline" />
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Currency</label>
-                            <input type="text" name="currency" value="{{ old('currency', $all_settings['general']['currency']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="BDT">
+                            <x-input name="currency" type="text" value="{{ old('currency', $all_settings['general']['currency']['value'] ?? '') }}"
+                                label="Currency" placeholder="BDT" />
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Currency Symbol</label>
-                            <input type="text" name="currency_symbol" value="{{ old('currency_symbol', $all_settings['general']['currency_symbol']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="৳">
+                            <x-input name="currency_symbol" type="text" value="{{ old('currency_symbol', $all_settings['general']['currency_symbol']['value'] ?? '') }}"
+                                label="Currency Symbol" placeholder="৳" />
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Site Logo</label>
-                        <input type="file" name="site_logo" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <x-file-input name="site_logo" label="Site Logo" accept="image/*" />
                         <p class="text-xs text-gray-500 mt-1">Upload your logo image</p>
                         @if($all_settings['general']['site_logo']['value'] ?? false)
-                            <img src="{{ storage_url($all_settings['general']['site_logo']['value']) }}" alt="Site Logo" class="mt-2 h-12">
+                        <img src="{{ storage_url($all_settings['general']['site_logo']['value']) }}" alt="Site Logo" class="mt-2 h-12">
                         @endif
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Site Favicon</label>
-                        <input type="file" name="site_favicon" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <x-file-input name="site_favicon" label="Site Favicon" accept="image/*" />
                         <p class="text-xs text-gray-500 mt-1">Upload your favicon image</p>
                         @if($all_settings['general']['site_favicon']['value'] ?? false)
-                            <img src="{{ storage_url($all_settings['general']['site_favicon']['value']) }}" alt="Site Favicon" class="mt-2 h-12">
+                        <img src="{{ storage_url($all_settings['general']['site_favicon']['value']) }}" alt="Site Favicon" class="mt-2 h-12">
                         @endif
                     </div>
                 </div>
