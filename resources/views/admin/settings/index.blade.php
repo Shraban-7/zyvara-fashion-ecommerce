@@ -187,41 +187,57 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Shipping Settings</h2>
                 <div class="space-y-6 max-w-2xl">
                     <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Shipping Inside Dhaka (৳)</label>
-                            <input type="number" name="shipping_inside_dhaka" value="{{ old('shipping_inside_dhaka', $all_settings['shipping']['shipping_inside_dhaka']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="60">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Shipping Outside Dhaka (৳)</label>
-                            <input type="number" name="shipping_outside_dhaka" value="{{ old('shipping_outside_dhaka', $all_settings['shipping']['shipping_outside_dhaka']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="120">
-                        </div>
+                        <x-input
+                            type="number"
+                            name="shipping_inside_dhaka"
+                            label="Shipping Inside Dhaka (৳)"
+                            placeholder="60"
+                            value="{{ old('shipping_inside_dhaka', $all_settings['shipping']['shipping_inside_dhaka']['value'] ?? '') }}" />
+                        <x-input
+                            type="number"
+                            name="shipping_outside_dhaka"
+                            label="Shipping Outside Dhaka (৳)"
+                            placeholder="120"
+                            value="{{ old('shipping_outside_dhaka', $all_settings['shipping']['shipping_outside_dhaka']['value'] ?? '') }}" />
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Free Shipping Threshold - Dhaka (৳)</label>
-                            <input type="number" name="free_shipping_threshold_dhaka" value="{{ old('free_shipping_threshold_dhaka', $all_settings['shipping']['free_shipping_threshold_dhaka']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="2000">
+                            <x-input
+                                type="number"
+                                name="free_shipping_threshold_dhaka"
+                                label="Free Shipping Threshold - Dhaka (৳)"
+                                placeholder="2000"
+                                value="{{ old('free_shipping_threshold_dhaka', $all_settings['shipping']['free_shipping_threshold_dhaka']['value'] ?? '') }}" />
                             <p class="text-xs text-gray-500 mt-1">Minimum order for free shipping</p>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Free Shipping Threshold - Outside (৳)</label>
-                            <input type="number" name="free_shipping_threshold_outside" value="{{ old('free_shipping_threshold_outside', $all_settings['shipping']['free_shipping_threshold_outside']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="3000">
+                            <x-input
+                                type="number"
+                                name="free_shipping_threshold_outside"
+                                label="Free Shipping Threshold - Outside (৳)"
+                                placeholder="3000"
+                                value="{{ old('free_shipping_threshold_outside', $all_settings['shipping']['free_shipping_threshold_outside']['value'] ?? '') }}" />
                             <p class="text-xs text-gray-500 mt-1">Minimum order for free shipping</p>
                         </div>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Delivery Time - Dhaka</label>
-                            <input type="text" name="delivery_time_dhaka" value="{{ old('delivery_time_dhaka', $all_settings['shipping']['delivery_time_dhaka']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="1-2 business days">
-                        </div>
 
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Delivery Time - Outside Dhaka</label>
-                            <input type="text" name="delivery_time_outside" value="{{ old('delivery_time_outside', $all_settings['shipping']['delivery_time_outside']['value'] ?? '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="3-5 business days">
-                        </div>
+                        <x-input
+                            type="text"
+                            name="delivery_time_dhaka"
+                            label="Delivery Time - Dhaka"
+                            placeholder="1-2 business days"
+                            value="{{ old('delivery_time_dhaka', $all_settings['shipping']['delivery_time_dhaka']['value'] ?? '') }}" />
+
+                        <x-input
+                            type="text"
+                            name="delivery_time_outside"
+                            label="Delivery Time - Outside Dhaka"
+                            placeholder="3-5 business days"
+                            value="{{ old('delivery_time_outside', $all_settings['shipping']['delivery_time_outside']['value'] ?? '') }}" />
                     </div>
                 </div>
             </div>
