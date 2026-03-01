@@ -127,7 +127,7 @@
                                 alt="image"
                                 class="w-12 h-12 rounded-lg object-cover bg-gray-100">
                             <div class="min-w-0">
-                                <p class="text-sm font-medium text-gray-900 truncate">{{ $product->name }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $product->name }}</p>
                                 @if($product->brand)
                                 <p class="text-xs text-gray-500">{{ $product->brand }}</p>
                                 @endif
