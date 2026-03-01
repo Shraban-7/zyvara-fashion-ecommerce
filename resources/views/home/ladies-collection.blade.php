@@ -1,6 +1,6 @@
 @if($womensProducts->isNotEmpty())
 <section class="py-6 md:py-10">
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4">
         <div class="flex items-center justify-between mb-4 md:mb-6">
             <div>
                 <h2 class="text-lg md:text-2xl font-bold text-brand-black">Ladies Collection</h2>

@@ -1,7 +1,7 @@
 {{-- New Arrivals Section --}}
 @if($newArrivals->isNotEmpty())
 <section class="py-6 md:py-10">
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4">
         {{-- Section Header --}}
         <div class="flex items-center justify-between mb-4 md:mb-6">
             <div>
