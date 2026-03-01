@@ -121,12 +121,21 @@
                         </div>
                         <div class="flex gap-3 flex-wrap">
                             @foreach($availableColors as $color)
+                            @if($color->hex_code)
                             <button onclick="selectColor(this, '{{ $color->name }}')"
                                 data-color-id="{{ $color->id }}"
                                 class="color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-brand-blue transition p-1 shadow-sm"
                                 style="background-color: {{ $color->hex_code }};"
                                 title="{{ $color->name }}">
                             </button>
+                            @else
+                            <button onclick="selectColor(this, '{{ $color->name }}')"
+                                data-color-id="{{ $color->id }}"
+                                class="color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-brand-blue transition p-1 shadow-sm flex items-center justify-center text-xs text-gray-600"
+                                title="{{ $color->name }}">
+                                {{ strtoupper(substr($color->name, 0, 3)) }}
+                            </button>
+                            @endif
                             @endforeach
                         </div>
                     </div>

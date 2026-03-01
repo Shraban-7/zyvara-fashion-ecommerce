@@ -257,9 +257,18 @@ class ProductVariantManager {
             colorOptions.innerHTML = "";
             colors.forEach((color) => {
                 const btn = document.createElement("button");
-                btn.className =
+                if(color.hex_code) {
+                    btn.style.backgroundColor = color.hex_code;
+                    btn.className =
                     "color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-brand-blue transition-all p-1 shadow-sm";
-                btn.style.backgroundColor = color.hex_code;
+                } else {
+                    //if no hex code, then use color name inside div
+                    btn.style.backgroundColor = "#f0f0f0";
+                    btn.textContent = color.name;
+                    btn.className =
+                        "size-btn min-w-[56px] h-9 px-3 border border-gray-300 rounded-lg text-sm font-medium transition hover:border-brand-blue hover:text-brand-blue hover:bg-brand-blue/5";
+                }                
+               
                 btn.title = color.name;
                 btn.dataset.colorId = color.id;
                 btn.dataset.colorName = color.name;
