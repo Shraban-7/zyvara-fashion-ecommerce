@@ -89,5 +89,7 @@ class Setting extends Model
         foreach ($groups as $group) {
             Cache::forget("settings.group.{$group}");
         }
+
+        cache()->forget('site_settings');
     }
 }
