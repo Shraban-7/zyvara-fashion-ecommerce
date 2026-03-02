@@ -6,9 +6,9 @@
             <p class="text-sm md:text-base text-gray-500">Discover our wide range of fashion collections</p>
         </div>
 
-        <div class="flex flex-wrap justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-20 max-w-5xl mx-auto">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
             @foreach($allMenuCategories as $category)
-            <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="group flex-shrink-0">
+            <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="group">
                 <div class="flex flex-col items-center text-center gap-4">
                     {{-- Image Container - Increased sizing slightly --}}
                     <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28">
