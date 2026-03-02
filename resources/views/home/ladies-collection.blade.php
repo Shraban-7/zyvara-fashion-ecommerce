@@ -14,7 +14,9 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5">
             @foreach($womensProducts as $product)
-            <x-product-card :product="$product" />
+            <div class="max-w-[220px] mx-auto w-full">
+                <x-product-card :product="$product" />
+            </div>
             @endforeach
         </div>
     </div>

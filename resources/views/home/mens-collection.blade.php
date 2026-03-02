@@ -15,7 +15,7 @@
         {{-- Horizontal Scroll Products --}}
         <div class="flex gap-3 md:gap-5 overflow-x-auto hide-scrollbar pb-2">
             @foreach($mensProducts as $product)
-            <div class="min-w-[160px] sm:min-w-[180px] md:min-w-[220px]">
+            <div class="min-w-[160px] sm:min-w-[180px] md:min-w-[220px] max-w-[160px] sm:max-w-[180px] md:max-w-[220px]">
                 <x-product-card :product="$product" />
             </div>
             @endforeach
