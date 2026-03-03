@@ -78,7 +78,7 @@
                 </form>
 
                 {{-- Social Login --}}
-                <div class="mt-6">
+                {{--<div class="mt-6">
                     <div class="relative">
                         <div class="absolute inset-0 flex items-center">
                             <div class="w-full border-t border-gray-200"></div>
@@ -98,7 +98,7 @@
                             <span class="text-sm font-medium text-gray-700">Facebook</span>
                         </button>
                     </div>
-                </div>
+                </div>--}}
 
                 {{-- Switch to Signup --}}
                 <p class="mt-6 text-center text-sm text-gray-500">
@@ -176,7 +176,7 @@
                 </form>
 
                 {{-- Social Signup --}}
-                <div class="mt-6">
+                {{--<div class="mt-6">
                     <div class="relative">
                         <div class="absolute inset-0 flex items-center">
                             <div class="w-full border-t border-gray-200"></div>
@@ -196,7 +196,7 @@
                             <span class="text-sm font-medium text-gray-700">Facebook</span>
                         </button>
                     </div>
-                </div>
+                </div>--}}
 
                 {{-- Switch to Login --}}
                 <p class="mt-6 text-center text-sm text-gray-500">
