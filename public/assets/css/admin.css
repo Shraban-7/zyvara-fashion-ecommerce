@@ -96,6 +96,7 @@ body {
 #sidebar nav {
     scrollbar-width: thin;
     scrollbar-color: rgba(120, 120, 120, 0.4) transparent;
+    scroll-behavior: smooth;
 }
 
 /* Sidebar collapsed state */

@@ -77,6 +77,35 @@ handleResize();
 // Handle resize events
 window.addEventListener('resize', handleResize);
 
+// Scroll active menu item into view
+function scrollToActiveMenuItem() {
+    const activeLink = sidebar.querySelector('.sidebar-link.active');
+    if (activeLink) {
+        const sidebarNav = sidebar.querySelector('nav');
+        if (sidebarNav) {
+            // Get positions
+            const navRect = sidebarNav.getBoundingClientRect();
+            const linkRect = activeLink.getBoundingClientRect();
+            
+            // Calculate if link is out of view
+            const isAboveView = linkRect.top < navRect.top;
+            const isBelowView = linkRect.bottom > navRect.bottom;
+            
+            if (isAboveView || isBelowView) {
+                // Scroll to center the active link
+                const scrollTop = activeLink.offsetTop - sidebarNav.offsetTop - (sidebarNav.clientHeight / 2) + (activeLink.clientHeight / 2);
+                sidebarNav.scrollTo({
+                    top: scrollTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    }
+}
+
+// Scroll to active menu on page load (after a small delay to ensure CSS is applied)
+setTimeout(scrollToActiveMenuItem, 100);
+
 window.toggleModal = function(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
