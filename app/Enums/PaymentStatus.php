@@ -7,6 +7,7 @@ enum PaymentStatus: string
     case PENDING = 'pending';
     case PAID = 'paid';
     case FAILED = 'failed';
+    case CANCELLED = 'cancelled';
     case REFUNDED = 'refunded';
     case COMPLETED = 'completed';
 
@@ -16,6 +17,7 @@ enum PaymentStatus: string
             self::PENDING => 'Pending',
             self::PAID => 'Paid',
             self::FAILED => 'Failed',
+            self::CANCELLED => 'Cancelled',
             self::REFUNDED => 'Refunded',
             self::COMPLETED => 'Completed',
         };
@@ -27,6 +29,7 @@ enum PaymentStatus: string
             self::PENDING => 'yellow',
             self::PAID => 'green',
             self::FAILED => 'red',
+            self::CANCELLED => 'orange',
             self::REFUNDED => 'blue',
             self::COMPLETED => 'green',
         };
@@ -38,6 +41,7 @@ enum PaymentStatus: string
             self::PENDING => 'fa-clock',
             self::PAID => 'fa-check-circle',
             self::FAILED => 'fa-times-circle',
+            self::CANCELLED => 'fa-ban',
             self::REFUNDED => 'fa-undo',
             self::COMPLETED => 'fa-check-double',
         };

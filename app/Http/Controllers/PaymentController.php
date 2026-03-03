@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Order;
@@ -61,6 +62,10 @@ class PaymentController extends Controller
             return view('errors.404');
         }
 
+        $order->payment_status = PaymentStatus::CANCELLED->value;
+        $order->status = OrderStatus::CANCELLED->value;
+        $order->save();
+
         if ($order->user_id) {
             Auth::loginUsingId($order->user_id);
         }
@@ -80,6 +85,9 @@ class PaymentController extends Controller
         if ($order->user_id) {
             Auth::loginUsingId($order->user_id);
         }
+
+        $order->payment_status = PaymentStatus::FAILED->value;
+        $order->save();
         
         return view('payment.failed');
     }
