@@ -7,6 +7,9 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Category;
+use App\Models\Review;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -73,10 +76,32 @@ class DashboardController extends Controller
         // Low Stock Products Count
         $lowStockCount = Product::where('stock_in', '<', 10)->count();
 
+        // Additional metrics
+        $totalProducts = Product::count();
+        $totalCategories = Category::count();
+        $outOfStock = Product::where('stock_in', '<=', 0)->count();
+        $totalReviews = Review::count();
+        $activeCoupons = Coupon::where('expires_at', '>', now())->count();
+
+        // Today's metrics
+        $todayOrders = Order::whereDate('created_at', today())->count();
+        $todayRevenue = Order::whereDate('created_at', today())->sum('total');
+
+        // Average Order Value
+        $avgOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+
         $widgets['totalRevenue'] = $totalRevenue;
         $widgets['totalOrders'] = $totalOrders;
         $widgets['totalCustomers'] = $totalCustomers;
         $widgets['pendingOrders'] = $pendingOrders;
+        $widgets['totalProducts'] = $totalProducts;
+        $widgets['totalCategories'] = $totalCategories;
+        $widgets['outOfStock'] = $outOfStock;
+        $widgets['totalReviews'] = $totalReviews;
+        $widgets['activeCoupons'] = $activeCoupons;
+        $widgets['todayOrders'] = $todayOrders;
+        $widgets['todayRevenue'] = $todayRevenue;
+        $widgets['avgOrderValue'] = $avgOrderValue;
 
         return view('admin.dashboard', compact(
             'widgets',

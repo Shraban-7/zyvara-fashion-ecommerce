@@ -10,58 +10,145 @@
 </div>--}}
 
 {{-- Quick Stats Grid --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
     {{-- Total Revenue --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                <i class="fas fa-dollar-sign text-white text-xl"></i>
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-dollar-sign text-white text-base"></i>
             </div>
-            <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">+12.5%</span>
+            <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
         </div>
-        <h3 class="text-gray-500 text-sm font-medium mb-1">Total Revenue</h3>
-        <p class="text-3xl font-bold text-gray-900 mb-1">{{ money($widgets['totalRevenue']) }}</p>
-        <p class="text-xs text-gray-400">vs last month</p>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Total Revenue</h3>
+        <p class="text-xl font-bold text-gray-900">{{ money($widgets['totalRevenue']) }}</p>
     </div>
 
     {{-- Total Orders --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <i class="fas fa-shopping-bag text-white text-xl"></i>
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-shopping-bag text-white text-base"></i>
             </div>
-            <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">+8.2%</span>
+            <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">+8%</span>
         </div>
-        <h3 class="text-gray-500 text-sm font-medium mb-1">Total Orders</h3>
-        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($widgets['totalOrders'], 0) }}</p>
-        <p class="text-xs text-gray-400">vs last month</p>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Total Orders</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalOrders'], 0) }}</p>
     </div>
 
     {{-- Total Customers --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                <i class="fas fa-users text-white text-xl"></i>
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-users text-white text-base"></i>
             </div>
-            <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">+15.3%</span>
+            <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">+15%</span>
         </div>
-        <h3 class="text-gray-500 text-sm font-medium mb-1">Total Customers</h3>
-        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($widgets['totalCustomers'], 0) }}</p>
-        <p class="text-xs text-gray-400">vs last month</p>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Customers</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalCustomers'], 0) }}</p>
     </div>
 
     {{-- Pending Orders --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-                <i class="fas fa-clock text-white text-xl"></i>
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-clock text-white text-base"></i>
             </div>
-            <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Needs Attention</span>
+            <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">Pending</span>
         </div>
-        <h3 class="text-gray-500 text-sm font-medium mb-1">Pending Orders</h3>
-        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($widgets['pendingOrders'], 0) }}</p>
-        <p class="text-xs text-gray-400">awaiting processing</p>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Pending Orders</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['pendingOrders'], 0) }}</p>
     </div>
+
+    {{-- Total Products --}}
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-box text-white text-base"></i>
+            </div>
+        </div>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Total Products</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalProducts'], 0) }}</p>
+    </div>
+
+    {{-- Total Categories --}}
+    <!-- <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-tags text-white text-base"></i>
+            </div>
+        </div>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Categories</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalCategories'], 0) }}</p>
+    </div> -->
+
+    {{-- Average Order Value --}}
+    <!-- <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-chart-line text-white text-base"></i>
+            </div>
+        </div>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Avg Order Value</h3>
+        <p class="text-xl font-bold text-gray-900">{{ money($widgets['avgOrderValue']) }}</p>
+    </div> -->
+
+    {{-- Today's Orders --}}
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-calendar-day text-white text-base"></i>
+            </div>
+        </div>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Today's Orders</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['todayOrders'], 0) }}</p>
+    </div>
+
+    {{-- Today's Revenue --}}
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-coins text-white text-base"></i>
+            </div>
+        </div>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Today's Revenue</h3>
+        <p class="text-xl font-bold text-gray-900">{{ money($widgets['todayRevenue']) }}</p>
+    </div>
+
+    {{-- Out of Stock --}}
+    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-exclamation-triangle text-white text-base"></i>
+            </div>
+            @if($widgets['outOfStock'] > 0)
+            <span class="text-xs font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Alert</span>
+            @endif
+        </div>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Out of Stock</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['outOfStock'], 0) }}</p>
+    </div>
+
+    {{-- Total Reviews --}}
+    <!-- <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-star text-white text-base"></i>
+            </div>
+        </div>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Reviews</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalReviews'], 0) }}</p>
+    </div> -->
+
+    {{-- Active Coupons --}}
+    <!-- <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-violet-500 to-violet-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-ticket-alt text-white text-base"></i>
+            </div>
+        </div>
+        <h3 class="text-gray-500 text-xs font-medium mb-1">Active Coupons</h3>
+        <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['activeCoupons'], 0) }}</p>
+    </div> -->
 </div>
 
 {{-- Charts and Recent Activity --}}
