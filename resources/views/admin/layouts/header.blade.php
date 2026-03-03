@@ -1,6 +1,6 @@
 <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 sticky top-0 z-40">
-    {{-- Mobile Menu Button --}}
-    <button id="sidebarToggle" class="lg:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
+    {{-- Menu Toggle Button (All Screens) --}}
+    <button id="sidebarToggle" class="text-gray-500 hover:text-gray-700 hover:bg-gray-100 p-2 rounded-xl transition focus:outline-none">
         <i class="fas fa-bars text-xl"></i>
     </button>
 

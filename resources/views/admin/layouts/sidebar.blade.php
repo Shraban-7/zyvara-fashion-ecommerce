@@ -1,8 +1,8 @@
 <?php
-    $pendingOrdersCount = \App\Models\Order::where('status', \App\Enums\OrderStatus::PENDING)->count();
+$pendingOrdersCount = \App\Models\Order::where('status', \App\Enums\OrderStatus::PENDING)->count();
 ?>
 
-<aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0">
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0 -translate-x-full flex flex-col">
     <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
             <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
@@ -13,9 +13,6 @@
                 <p class="text-xs text-gray-500">Admin Panel</p>
             </div>
         </a>
-        <button id="sidebarClose" class="lg:hidden text-gray-500 hover:text-gray-700">
-            <i class="fas fa-times text-xl"></i>
-        </button>
     </div>
 
     <nav class="flex-1 overflow-y-auto py-6 px-4">
