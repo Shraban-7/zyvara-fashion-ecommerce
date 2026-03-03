@@ -6,7 +6,7 @@
             <p class="text-sm md:text-base text-gray-500">Discover our wide range of fashion collections</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
+        <div class="grid grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
             @foreach($allMenuCategories as $category)
             <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="group">
                 <div class="flex flex-col items-center text-center gap-4">
@@ -20,7 +20,7 @@
                         </div>
                     </div>
 
-                    <span class="text-xs sm:text-sm font-bold text-gray-800 group-hover:text-brand-blue transition-colors tracking-wide uppercase">
+                    <span class="text-xs sm:text-sm font-bold text-gray-800 group-hover:text-brand-blue transition-colors tracking-wide">
                         {{ $category->name }}
                     </span>
                 </div>
