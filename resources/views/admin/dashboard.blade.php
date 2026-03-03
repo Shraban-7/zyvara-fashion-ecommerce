@@ -10,7 +10,7 @@
 </div>--}}
 
 {{-- Quick Stats Grid --}}
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
     {{-- Total Revenue --}}
     <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
         <div class="flex items-center justify-between mb-3">
