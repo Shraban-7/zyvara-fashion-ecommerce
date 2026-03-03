@@ -2,6 +2,7 @@
 @section('title', 'Categories')
 
 @section('content')
+
 <div>
 
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -14,6 +15,73 @@
             class="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition shadow-sm">
             <i class="fas fa-plus mr-2"></i> Add New Category
         </button>
+    </div>
+
+    <div class="space-y-6">
+        @foreach($categories as $category)
+        <div class="border rounded-lg bg-white">
+
+            {{-- Parent Category --}}
+            <div class="flex justify-between items-center bg-gray-100 px-4 py-3 rounded-t-lg">
+
+                <h3 class="font-semibold text-gray-800">
+                    {{ $category->name }}
+                </h3>
+
+                <div class="space-x-3">
+                    <a href=""
+                        class="text-blue-500 text-sm hover:underline">
+                        Edit
+                    </a>
+
+                    <form action=""
+                        method="POST"
+                        class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button class="text-red-500 text-sm hover:underline">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Subcategories --}}
+            <div class="divide-y">
+                @forelse($category->children as $sub)
+                <div class="flex justify-between items-center px-6 py-3">
+
+                    <span class="text-gray-700">
+                        {{ $sub->name }}
+                    </span>
+
+                    <div class="space-x-3">
+                        <a href=""
+                            class="text-blue-500 text-sm hover:underline">
+                            Edit
+                        </a>
+
+                        <form action=""
+                            method="POST"
+                            class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="text-red-500 text-sm hover:underline">
+                                Delete
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+                @empty
+                <div class="px-6 py-3 text-sm text-gray-400">
+                    No subcategories
+                </div>
+                @endforelse
+            </div>
+
+        </div>
+        @endforeach
     </div>
 
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
