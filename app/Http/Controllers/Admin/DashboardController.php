@@ -73,11 +73,13 @@ class DashboardController extends Controller
         // Low Stock Products Count
         $lowStockCount = Product::where('stock_in', '<', 10)->count();
 
+        $widgets['totalRevenue'] = $totalRevenue;
+        $widgets['totalOrders'] = $totalOrders;
+        $widgets['totalCustomers'] = $totalCustomers;
+        $widgets['pendingOrders'] = $pendingOrders;
+
         return view('admin.dashboard', compact(
-            'totalRevenue',
-            'totalOrders',
-            'totalCustomers',
-            'pendingOrders',
+            'widgets',
             'recentOrders',
             'topProducts',
             'lowStockCount'

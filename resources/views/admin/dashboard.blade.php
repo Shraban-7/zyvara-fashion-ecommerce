@@ -1,13 +1,13 @@
 @extends('admin.layouts.app')
-
 @section('title', 'Dashboard')
 
 @section('content')
+
 {{-- Page Header --}}
-<div class="mb-8">
+{{--<div class="mb-8">
     <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
     <p class="text-gray-500">Welcome back! Here's what's happening with your store today.</p>
-</div>
+</div>--}}
 
 {{-- Quick Stats Grid --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -20,7 +20,7 @@
             <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">+12.5%</span>
         </div>
         <h3 class="text-gray-500 text-sm font-medium mb-1">Total Revenue</h3>
-        <p class="text-3xl font-bold text-gray-900 mb-1">৳{{ number_format($totalRevenue ?? 425000, 0) }}</p>
+        <p class="text-3xl font-bold text-gray-900 mb-1">{{ money($widgets['totalRevenue']) }}</p>
         <p class="text-xs text-gray-400">vs last month</p>
     </div>
 
@@ -33,7 +33,7 @@
             <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">+8.2%</span>
         </div>
         <h3 class="text-gray-500 text-sm font-medium mb-1">Total Orders</h3>
-        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($totalOrders ?? 1245, 0) }}</p>
+        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($widgets['totalOrders'], 0) }}</p>
         <p class="text-xs text-gray-400">vs last month</p>
     </div>
 
@@ -46,7 +46,7 @@
             <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">+15.3%</span>
         </div>
         <h3 class="text-gray-500 text-sm font-medium mb-1">Total Customers</h3>
-        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($totalCustomers ?? 3842, 0) }}</p>
+        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($widgets['totalCustomers'], 0) }}</p>
         <p class="text-xs text-gray-400">vs last month</p>
     </div>
 
@@ -59,7 +59,7 @@
             <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Needs Attention</span>
         </div>
         <h3 class="text-gray-500 text-sm font-medium mb-1">Pending Orders</h3>
-        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($pendingOrders ?? 24, 0) }}</p>
+        <p class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($widgets['pendingOrders'], 0) }}</p>
         <p class="text-xs text-gray-400">awaiting processing</p>
     </div>
 </div>
@@ -100,28 +100,12 @@
             </div>
             @empty
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gray-100 rounded-lg"></div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate">Premium Cotton Shirt</p>
-                    <p class="text-xs text-gray-500">156 sold</p>
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                    <i class="fas fa-box text-gray-400"></i>
                 </div>
-                <span class="text-sm font-bold text-gray-900">৳42,500</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gray-100 rounded-lg"></div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate">Casual Denim Jeans</p>
-                    <p class="text-xs text-gray-500">132 sold</p>
+                    <p class="text-sm font-medium text-gray-900 truncate">No products available</p>
                 </div>
-                <span class="text-sm font-bold text-gray-900">৳38,280</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gray-100 rounded-lg"></div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate">Classic T-Shirt</p>
-                    <p class="text-xs text-gray-500">98 sold</p>
-                </div>
-                <span class="text-sm font-bold text-gray-900">৳24,500</span>
             </div>
             @endforelse
         </div>
@@ -195,61 +179,9 @@
                         </td>
                     </tr>
                     @empty
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-semibold text-gray-900">#10245</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">R</div>
-                                <span class="text-sm text-gray-900">Rakib Hasan</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 24, 2026</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">৳3,450</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-3 py-1 text-xs font-semibold text-orange-700 bg-orange-100 rounded-full">Pending</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                            <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View</a>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-semibold text-gray-900">#10244</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">M</div>
-                                <span class="text-sm text-gray-900">Mehedi Rahman</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 24, 2026</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">৳2,800</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">Processing</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                            <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View</a>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-semibold text-gray-900">#10243</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold">F</div>
-                                <span class="text-sm text-gray-900">Farhana Islam</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 23, 2026</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">৳5,200</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Completed</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                            <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View</a>
+                    <tr>
+                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                            No recent orders available.
                         </td>
                     </tr>
                     @endforelse
