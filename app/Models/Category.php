@@ -48,6 +48,11 @@ class Category extends Model
     }
 
     // Scopes
+    public function scopeCategory($query)
+    {
+        return $query->whereNull('parent_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

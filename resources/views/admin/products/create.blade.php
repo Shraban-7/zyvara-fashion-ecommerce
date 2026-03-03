@@ -167,12 +167,24 @@
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('category_id') border-red-500 @enderror">
                         <option value="">Select Category</option>
                         @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
+                        <option value="{{ $category['id'] }}" {{ old('category_id') == $category['id'] ? 'selected' : '' }}>
+                            {{ $category['name'] }}
                         </option>
                         @endforeach
                     </select>
                     @error('category_id')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-5">
+                    <label for="subcategory_id" class="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
+                    <select name="subcategory_id" id="subcategory_id"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('subcategory_id') border-red-500 @enderror">
+                        <option value="">Select Subcategory</option>
+                       
+                    </select>
+                    @error('subcategory_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -280,6 +292,32 @@
 
 @push('scripts')
 <script>
+    const CATEGORIES = @json($categories);
+
+    const subcatId = "{{ old('subcategory_id', 'null') }}";
+
+    document.getElementById('category_id').addEventListener('change', function() {
+        loadSubcategories(this.value);
+    });
+
+    function loadSubcategories(categoryId) {
+        const subcategorySelect = document.getElementById('subcategory_id');
+        subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+
+        const category = CATEGORIES.find(cat => cat.id == categoryId);
+        if (category && category.children) {
+            category.children.forEach(subcat => {
+                const option = document.createElement('option');
+                option.value = subcat.id;
+                option.textContent = subcat.name;
+                if (subcat.id == subcatId) {
+                    option.selected = true;
+                }
+                subcategorySelect.appendChild(option);
+            });
+        }
+    }
+    
     // image preview functionality
     const imgInput = document.getElementById('image');
     const imagePlaceholder = document.getElementById('imagePlaceholder');

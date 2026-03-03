@@ -99,9 +99,31 @@ class ProductController extends Controller
         return view('admin.products.index', compact('products', 'categories'));
     }
 
+    private function getCategories()
+    {
+        $categories = Category::category()->active()->orderBy('name')->with('children')->get();
+
+        $data = [];
+
+        foreach ($categories as $category) {
+            $data[] = [
+                'id' => $category->id,
+                'name' => $category->name,
+                'children' => $category->children->map(function ($child) {
+                    return [
+                        'id' => $child->id,
+                        'name' => $child->name,
+                    ];
+                }),
+            ];
+        }
+
+        return $data;
+    }
+
     public function create()
     {
-        $categories = Category::active()->orderBy('name')->get();
+        $categories = $this->getCategories();
         $sizes = Size::orderBy('sort_order')->get();
         $colors = Color::orderBy('name')->get();
         $fitTypes = FitType::cases();
@@ -129,6 +151,7 @@ class ProductController extends Controller
             'compare_price' => 'nullable|numeric|min:0',
             'cost_price' => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'nullable|exists:categories,id',
             'brand' => 'nullable|string|max:255',
             'material' => 'nullable|string|max:255',
             'fit_type' => 'nullable|string|in:' . implode(',', FitType::values()),
@@ -231,7 +254,7 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $categories = Category::active()->orderBy('name')->get();
+        $categories = $this->getCategories();
         $sizes = Size::orderBy('sort_order')->get();
         $colors = Color::orderBy('name')->get();
         $fitTypes = FitType::cases();
@@ -262,6 +285,7 @@ class ProductController extends Controller
             'compare_price' => 'nullable|numeric|min:0',
             'cost_price' => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'nullable|exists:categories,id',
             'brand' => 'nullable|string|max:255',
             'material' => 'nullable|string|max:255',
             'fit_type' => 'nullable|string|in:' . implode(',', FitType::values()),
@@ -378,7 +402,7 @@ class ProductController extends Controller
                         continue;
                     }
 
-                    if(!empty($variantData['id'])) {
+                    if (!empty($variantData['id'])) {
                         $variantIds[] = $variantData['id'];
                     }
 
@@ -397,7 +421,7 @@ class ProductController extends Controller
                         $product->variants()->create($variantData);
                     }
 
-                    if(count($variantIds) > 0) {
+                    if (count($variantIds) > 0) {
                         $product->variants()->whereNotIn('id', $variantIds)->delete();
                     }
                 }
