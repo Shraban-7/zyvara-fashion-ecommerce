@@ -17,7 +17,7 @@
             placeholder-gray-400
             transition duration-200 ease-in-out
             focus:outline-none
-            focus:ring-2 focus:ring-blue-500
+            focus:border-blue-500
             disabled:opacity-50 disabled:cursor-not-allowed']) }}
     >{{ $slot }}</textarea>
 
