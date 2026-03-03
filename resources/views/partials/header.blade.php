@@ -26,11 +26,15 @@
         <div class="flex items-center justify-between h-16 md:h-20">
             {{-- Logo --}}
             <a href="{{ url('/') }}" class="flex items-center gap-1 group">
-                <div class="relative">
-                    <span class="text-2xl md:text-3xl font-extrabold logo-text tracking-tight">Spinner</span>
-                    <span class="text-2xl md:text-3xl font-extrabold logo-accent tracking-tight">Fashion</span>
-                    <div class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-blue to-blue-400 group-hover:w-full transition-all duration-300"></div>
-                </div>
+                @if($settings['site_logo'])
+                <img src="{{ storage_url($settings['site_logo']) }}" alt="logo" class="h-14">
+                @else
+                    <div class="relative">
+                        <span class="text-2xl md:text-3xl font-extrabold logo-text tracking-tight">Spinner</span>
+                        <span class="text-2xl md:text-3xl font-extrabold logo-accent tracking-tight">Fashion</span>
+                        <div class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-blue to-blue-400 group-hover:w-full transition-all duration-300"></div>
+                    </div>
+                @endif
             </a>
 
             {{-- Desktop Search Bar --}}

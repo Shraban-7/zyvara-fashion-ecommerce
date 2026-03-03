@@ -1,10 +1,14 @@
 <?php
 $pendingOrdersCount = \App\Models\Order::where('status', \App\Enums\OrderStatus::PENDING)->count();
+$user = auth()->user();
 ?>
 
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0 -translate-x-full flex flex-col">
     <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
+            @if($settings['site_logo'])
+            <img src="{{ storage_url($settings['site_logo']) }}" alt="logo">
+            @else
             <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
                 <i class="fas fa-bolt text-white text-lg"></i>
             </div>
@@ -12,6 +16,7 @@ $pendingOrdersCount = \App\Models\Order::where('status', \App\Enums\OrderStatus:
                 <h1 class="text-lg font-bold text-gray-900">{{ $siteName }}</h1>
                 <p class="text-xs text-gray-500">Admin Panel</p>
             </div>
+            @endif
         </a>
     </div>
 
@@ -82,11 +87,11 @@ $pendingOrdersCount = \App\Models\Order::where('status', \App\Enums\OrderStatus:
     <div class="border-t border-gray-200 p-4">
         <div class="flex items-center gap-3 px-2 py-2 rounded-xl bg-gray-50">
             <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                {{ substr(Auth::user()->name ?? 'A', 0, 1) }}
+                {{ substr($user->name, 0, 1) }}
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->name ?? 'Admin User' }}</p>
-                <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email ?? 'admin@example.com' }}</p>
+                <p class="text-sm font-semibold text-gray-900 truncate">{{ $user->name }}</p>
+                <p class="text-xs text-gray-500 truncate">{{ $user->phone }}</p>
             </div>
         </div>
     </div>

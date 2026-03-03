@@ -7,6 +7,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') - {{ $siteName }}</title>
 
+    @if($settings['site_favicon'])
+    <link rel="icon" href="{{ storage_url($settings['site_favicon']) }}" type="image/x-icon">
+    @endif
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
