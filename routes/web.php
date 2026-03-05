@@ -33,8 +33,15 @@ Route::get('save-products', function () {
     $products = json_decode($json, true);
 
     foreach ($products as $product) {
-        $alreadyExists = \App\Models\Product::where('name', $product['name'])->exists();
+        $alreadyExists = \App\Models\Product::where('name', $product['name'])->first();
         if ($alreadyExists) {
+            $alreadyExists->update([
+                'sku' => $product['sku'],
+                'price' => $product['price'] ?? 0,
+                'cost_price' => $product['buying_price'] ?? 0,
+                'stock_in' => $product['stock'],
+                'stock_out' => 0,
+            ]);
             continue; // Skip if product already exists
         }
 
@@ -71,6 +78,7 @@ Route::get('save-products', function () {
 
             'brand' => $product['brand'] ?? null,
             'stock_in' => $product['stock'],
+            'stock_out' => 0,
         ]);
 
         foreach ($product['images'] as $imageUrl) {
@@ -82,8 +90,14 @@ Route::get('save-products', function () {
 
         foreach ($product['variants'] as $variant) {
 
-            $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->exists();
+            $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->first();
             if ($alreadyExists) {
+                $alreadyExists->update([
+                    'stock_in' => $variant['stock'],
+                    'stock_out' => 0,
+                    'price' => $variant['price'] ?? 0,
+                    'cost_price' => $variant['buying_price'] ?? 0,
+                ]);
                 continue; // Skip if variant already exists
             }
 
