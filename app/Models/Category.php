@@ -88,4 +88,10 @@ class Category extends Model
     {
         return $this->products()->where('is_active', true)->count();
     }
+
+    public static function clearCache()
+    {
+        cache()->forget('categories_menu');
+        cache()->forget('all_categories_menu');
+    }
 }

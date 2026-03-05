@@ -14,7 +14,7 @@
                     <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28">
                         <div class="absolute inset-0 rounded-full overflow-hidden group-hover:scale-110 transition-all ring-2 ring-white shadow-md group-hover:shadow-xl group-hover:ring-brand-blue/50">
                             <img
-                                src="{{ $category->image ? asset('storage/' . $category->image) : asset('assets/images/default.png') }}"
+                                src="{{ $category->image ? storage_url($category->image) : asset('assets/images/default.png') }}"
                                 alt="{{ $category->name }}"
                                 class="w-full h-full object-cover">
                         </div>

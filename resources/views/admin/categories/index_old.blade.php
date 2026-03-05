@@ -6,7 +6,10 @@
 <div>
 
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <h3 class="text-2xl font-bold text-gray-800">Categories</h3>
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">Categories</h2>
+            <p class="text-sm text-gray-500">Manage your product hierarchy and visibility</p>
+        </div>
 
         <button onclick="openCreateModal()"
             class="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition shadow-sm">
@@ -14,93 +17,96 @@
         </button>
     </div>
 
-    <div class="space-y-6">
-        @foreach($categories as $category)
-        <div class="border rounded-lg bg-white">
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Parent</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Sort</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Status</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Featured</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse($categories as $category)
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ $category->id }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                @if($category->icon)
+                                <div class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 mr-3">
+                                    <i class="{{ $category->icon }} text-lg"></i>
+                                </div>
+                                @endif
+                                <div>
+                                    <div class="text-sm font-semibold text-gray-900">{{ $category->name }}</div>
+                                    <div class="text-xs text-gray-500">{{ $category->slug }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border">
+                                {{ $category->parent ? $category->parent->name : 'Root' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ $category->sort_order }}</td>
+                        <td class="px-6 py-4 text-center">
+                            @if($category->is_active)
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> Active </span>
+                            @else
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"> Inactive </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            @if($category->is_featured)
+                            <span class="text-amber-500" title="Featured Category">
+                                <i class="fas fa-star"></i>
+                            </span>
+                            @else
+                            <span class="text-gray-300">-</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <div class="flex justify-end gap-2">
+                                <button onclick="openEditModal({{ $category->id }}, '{{ addslashes($category->name) }}', {{ $category->parent_id ?? 'null' }}, '{{ addslashes($category->icon ?? '') }}', {{ $category->sort_order }}, {{ $category->is_active ? 'true' : 'false' }}, {{ $category->is_featured ? 'true' : 'false' }})"
+                                    class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded-md transition-colors"
+                                    title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
 
-            {{-- Parent Category --}}
-            <div class="flex justify-between items-center bg-gray-100 px-4 py-3 rounded-t-lg">
-
-                <div class="flex items-center gap-3">
-                    @if($category->image)
-                    <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-12 h-12 object-cover rounded-lg border border-gray-300">
-                    @else
-                    <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <i class="{{ $category->icon ?? 'fas fa-image' }} text-gray-400"></i>
-                    </div>
-                    @endif
-                    <h3 class="font-semibold text-gray-800">
-                        {{ $category->name }}
-                    </h3>
-                </div>
-
-                <div class="space-x-3">
-                    <button type="button"
-                        onclick="openEditModal({{ $category->id }}, '{{ addslashes($category->name) }}', {{ $category->parent_id ?? 'null' }}, '{{ $category->icon }}', {{ $category->sort_order }}, {{ $category->is_active ? 'true' : 'false' }}, {{ $category->is_featured ? 'true' : 'false' }}, '{{ $category->image }}')"
-                        class="text-blue-500 text-sm hover:underline">
-                        Edit
-                    </button>
-
-                    <form action="{{ route('admin.categories.delete', $category->id) }}"
-                        method="POST"
-                        class="inline"
-                        onsubmit="return confirm('Are you sure you want to delete this category?');">
-                        @csrf
-                        @method('DELETE')
-                        <button class="text-red-500 text-sm hover:underline">
-                            Delete
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            {{-- Subcategories --}}
-            <div class="divide-y">
-                @forelse($category->children as $sub)
-                <div class="flex justify-between items-center px-6 py-3">
-
-                    <div class="flex items-center gap-3">
-                        @if($sub->image)
-                        <img src="{{ asset('storage/' . $sub->image) }}" alt="{{ $sub->name }}" class="w-10 h-10 object-cover rounded-lg border border-gray-300">
-                        @else
-                        <div class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
-                            <i class="{{ $sub->icon ?? 'fas fa-image' }} text-gray-400 text-sm"></i>
-                        </div>
-                        @endif
-                        <span class="text-gray-700">
-                            {{ $sub->name }}
-                        </span>
-                    </div>
-
-                    <div class="space-x-3">
-                        <button type="button"
-                            onclick="openEditModal({{ $sub->id }}, '{{ addslashes($sub->name) }}', {{ $sub->parent_id ?? 'null' }}, '{{ $sub->icon }}', {{ $sub->sort_order }}, {{ $sub->is_active ? 'true' : 'false' }}, {{ $sub->is_featured ? 'true' : 'false' }}, '{{ $sub->image }}')"
-                            class="text-blue-500 text-sm hover:underline">
-                            Edit
-                        </button>
-
-                        <form action="{{ route('admin.categories.delete', $sub->id) }}"
-                            method="POST"
-                            class="inline"
-                            onsubmit="return confirm('Are you sure you want to delete this subcategory?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="text-red-500 text-sm hover:underline">
-                                Delete
-                            </button>
-                        </form>
-
-                    </div>
-                </div>
-                @empty
-                <div class="px-6 py-3 text-sm text-gray-400">
-                    No subcategories
-                </div>
-                @endforelse
-            </div>
-
+                                <form action="{{ route('admin.categories.delete', $category->id) }}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this category?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-md transition-colors"
+                                        title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">
+                            No categories found in the database.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-        @endforeach
+
+        @if(method_exists($categories, 'hasPages') && $categories->hasPages())
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            {{ $categories->links() }}
+        </div>
+        @endif
     </div>
 
     {{-- Add Category Modal --}}
@@ -118,7 +124,7 @@
                     </button>
                 </div>
 
-                <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.categories.store') }}" method="POST">
                     @csrf
                     <div class="space-y-4">
                         <div>
@@ -134,16 +140,6 @@
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category Image</label>
-                            <input type="file" name="image" accept="image/*"
-                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
-                                onchange="previewCreateImage(event)">
-                            <div id="createImagePreview" class="mt-3 hidden">
-                                <img src="" alt="Preview" class="w-24 h-24 object-cover rounded-lg border border-gray-300">
-                            </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -200,7 +196,7 @@
                     </button>
                 </div>
 
-                <form id="editForm" method="POST" enctype="multipart/form-data">
+                <form id="editForm" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="space-y-4">
@@ -217,17 +213,6 @@
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category Image</label>
-                            <input type="file" name="image" accept="image/*"
-                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
-                                onchange="previewEditImage(event)">
-                            <div id="editImagePreview" class="mt-3">
-                                <img id="edit_image_preview" src="" alt="Preview" class="w-24 h-24 object-cover rounded-lg border border-gray-300">
-                            </div>
-                            <p class="mt-1 text-xs text-gray-500">Leave empty to keep current image</p>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -280,7 +265,7 @@
         document.getElementById('createModal').classList.add('hidden');
     }
 
-    function openEditModal(id, name, parentId, icon, sortOrder, isActive, isFeatured, image) {
+    function openEditModal(id, name, parentId, icon, sortOrder, isActive, isFeatured) {
         document.getElementById('editForm').action = '{{ route("admin.categories.index") }}/' + id + '/update';
         document.getElementById('edit_name').value = name;
         document.getElementById('edit_parent_id').value = parentId || '';
@@ -288,16 +273,6 @@
         document.getElementById('edit_sort_order').value = sortOrder;
         document.getElementById('edit_is_active').checked = isActive;
         document.getElementById('edit_is_featured').checked = isFeatured;
-
-        // Update image preview
-        const imagePreview = document.getElementById('editImagePreview');
-        const imagePreviewImg = document.getElementById('edit_image_preview');
-        if (image) {
-            imagePreviewImg.src = '{{ asset("storage") }}/' + image;
-            imagePreview.classList.remove('hidden');
-        } else {
-            imagePreview.classList.add('hidden');
-        }
 
         // Hide the parent option that matches the current category
         const parentSelect = document.getElementById('edit_parent_id');
@@ -323,38 +298,6 @@
             closeEditModal();
         }
     });
-
-    // Image preview functions
-    function previewCreateImage(event) {
-        const preview = document.getElementById('createImagePreview');
-        const img = preview.querySelector('img');
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                img.src = e.target.result;
-                preview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        } else {
-            preview.classList.add('hidden');
-        }
-    }
-
-    function previewEditImage(event) {
-        const img = document.getElementById('edit_image_preview');
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                img.src = e.target.result;
-                document.getElementById('editImagePreview').classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        }
-    }
 </script>
 @endpush
 
