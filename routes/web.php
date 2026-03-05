@@ -13,8 +13,21 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SubscriberController;
 use App\Models\Size;
 
+Route::get('/image-path', function(){
+    $products = \App\Models\Product::select('id', 'image')->get();
+    foreach ($products as $product) {
+        $product->image = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $product->image);
+        $product->save();
+    }
+
+    $productImages = \App\Models\ProductImage::select('id', 'image_path')->get();
+    foreach ($productImages as $productImage) {
+        $productImage->image_path = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $productImage->image_path);
+        $productImage->save();
+    }
+});
+
 Route::get('save-products', function () {
-    return '';
     ini_set('max_execution_time', 3600);
     $json = file_get_contents('sp_products.json');
     $products = json_decode($json, true);
@@ -73,7 +86,7 @@ Route::get('save-products', function () {
             if ($alreadyExists) {
                 continue; // Skip if variant already exists
             }
-            
+
             $size = $color = null;
             if ($variant['size']) {
                 $size = Size::firstOrCreate([
