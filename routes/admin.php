@@ -55,6 +55,9 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::prefix('banners')->as('banners.')->group(function () {
         Route::get('/', [BannerController::class, 'index'])->name('index');
+        Route::post('/store', [BannerController::class, 'store'])->name('store');
+        Route::put('/{banner}/update', [BannerController::class, 'update'])->name('update');
+        Route::delete('/{banner}/delete', [BannerController::class, 'delete'])->name('delete');
     });
     // Categories Routes (placeholder)
     // Route::get('/categories', function () {
