@@ -30,9 +30,11 @@ Route::get('save-products', function () {
             'slug' => str_slug($product['category']),
         ]);
 
+        $subcategory = null;
+
         if ($product['subcategory']) {
             $cat_id = $category->id;
-            $category = \App\Models\Category::firstOrCreate([
+            $subcategory = \App\Models\Category::firstOrCreate([
                 'name' => $product['subcategory'],
                 'parent_id' => $cat_id,
                 'slug' => str_slug($product['subcategory']),
@@ -51,7 +53,9 @@ Route::get('save-products', function () {
             'price' => $product['price'] ?? 0,
             'cost_price' => $product['buying_price'] ?? 0,
 
-            'category_id' => $category->id ?? $category->id ?? null,
+            'category_id' => $category->id ?? null,
+            'subcategory_id' => $subcategory->id ?? null,
+
             'brand' => $product['brand'] ?? null,
             'stock_in' => $product['stock'],
         ]);
@@ -64,6 +68,12 @@ Route::get('save-products', function () {
         }
 
         foreach ($product['variants'] as $variant) {
+
+            $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->exists();
+            if ($alreadyExists) {
+                continue; // Skip if variant already exists
+            }
+            
             $size = $color = null;
             if ($variant['size']) {
                 $size = Size::firstOrCreate([
