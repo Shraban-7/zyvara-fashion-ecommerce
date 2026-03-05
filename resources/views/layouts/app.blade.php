@@ -51,7 +51,7 @@
 
     <script src="{{ asset('js/auth.js') }}"></script>
     <script src="{{ asset('js/cart.js') }}"></script>
-    <script src="{{ asset('js/product-variant.js') }}"></script>
+    <script src="{{ asset('js/product-variant.js') }}?v={{ time() }}"></script>
 
     <script>
         /**
