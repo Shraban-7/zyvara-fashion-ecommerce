@@ -29,37 +29,33 @@ class HomeController extends Controller
             ->get();
 
         // Fetch men's products
-        $menCategory = Category::where('slug', 'like', '%men%')
-            ->where('parent_id', null)
-            ->first();
+        $menCategoryIds = Category::where('slug', 'like', '%men%')->pluck('id')->toArray();
 
         $mensProducts = collect();
-        if ($menCategory) {
+        if (count($menCategoryIds)) {
             $mensProducts = Product::where('is_active', true)
-                ->whereHas('category', function ($query) use ($menCategory) {
-                    $query->where('parent_id', $menCategory->id)
-                        ->orWhere('id', $menCategory->id);
+                ->where(function ($query) use ($menCategoryIds) {
+                    $query->whereIn('category_id', $menCategoryIds)
+                        ->orWhereIn('subcategory_id', $menCategoryIds);
                 })
                 ->with('category')
-                ->inRandomOrder()
+                ->latest('id')
                 ->take($productLimit)
                 ->get();
         }
 
         // Fetch women's products
-        $womenCategory = Category::where('slug', 'like', '%women%')
-            ->where('parent_id', null)
-            ->first();
+        $womenCategoryIds = Category::where('slug', 'like', '%women%')->pluck('id')->toArray();
 
         $womensProducts = collect();
-        if ($womenCategory) {
+        if (count($womenCategoryIds)) {
             $womensProducts = Product::where('is_active', true)
-                ->whereHas('category', function ($query) use ($womenCategory) {
-                    $query->where('parent_id', $womenCategory->id)
-                        ->orWhere('id', $womenCategory->id);
+                ->where(function ($query) use ($womenCategoryIds) {
+                    $query->whereIn('category_id', $womenCategoryIds)
+                        ->orWhereIn('subcategory_id', $womenCategoryIds);
                 })
                 ->with('category')
-                ->inRandomOrder()
+                ->latest('id')
                 ->take($productLimit)
                 ->get();
         }
