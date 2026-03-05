@@ -20,6 +20,14 @@ class HomeController extends Controller
             ->take($productLimit)
             ->get();
 
+        if ($newArrivals->count() != $productLimit) {
+            $newArrivals = Product::where('is_active', true)
+                ->with('category')
+                ->orderBy('created_at', 'desc')
+                ->take($productLimit)
+                ->get();
+        }
+
         // Fetch best selling products
         $bestSelling = Product::where('is_active', true)
             ->where('is_best_seller', true)
