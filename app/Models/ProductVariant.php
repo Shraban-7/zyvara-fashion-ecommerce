@@ -52,12 +52,6 @@ class ProductVariant extends Model
         return $this->hasMany(StockLog::class);
     }
 
-    // Helpers
-    public function isInStock(): bool
-    {
-        return $this->stock_in > 0;
-    }
-
     public function getFinalPriceAttribute(): float
     {
         return $this->price ?? $this->product->price;

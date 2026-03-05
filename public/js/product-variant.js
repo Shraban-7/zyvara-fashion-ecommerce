@@ -204,14 +204,14 @@ class ProductVariantManager {
         }
 
         // Set stock status
-        const stockContainer = document.getElementById("quickViewStock");
-        if (product.stock_in > 0) {
-            stockContainer.innerHTML =
-                '<i class="fas fa-check-circle text-green-600"></i><span class="text-sm text-green-600 font-medium">In Stock</span>';
-        } else {
-            stockContainer.innerHTML =
-                '<i class="fas fa-times-circle text-red-600"></i><span class="text-sm text-red-600 font-medium">Out of Stock</span>';
-        }
+        // const stockContainer = document.getElementById("quickViewStock");
+        // if (product.stock_in > 0) {
+        //     stockContainer.innerHTML =
+        //         '<i class="fas fa-check-circle text-green-600"></i><span class="text-sm text-green-600 font-medium">In Stock</span>';
+        // } else {
+        //     stockContainer.innerHTML =
+        //         '<i class="fas fa-times-circle text-red-600"></i><span class="text-sm text-red-600 font-medium">Out of Stock</span>';
+        // }
 
         // Set description
         document.getElementById("quickViewDescription").textContent =

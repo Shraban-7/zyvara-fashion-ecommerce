@@ -93,7 +93,7 @@
                                 <span class="text-xs sm:text-sm text-gray-400">({{ $product->review_count }} {{ Str::plural('review', $product->review_count) }})</span>
                             </div>
                             <span class="text-gray-300 hidden sm:inline">|</span>
-                            @if($product->isInStock())
+                            @if($product->totalStock > 0)
                             <span class="text-xs sm:text-sm text-green-600 font-medium"><i class="fas fa-check-circle mr-1"></i>In Stock</span>
                             @else
                             <span class="text-xs sm:text-sm text-red-600 font-medium"><i class="fas fa-times-circle mr-1"></i>Out of Stock</span>
@@ -189,7 +189,7 @@
 
                     {{-- Action Buttons --}}
                     <div class="flex flex-col sm:flex-row gap-3 pt-2 w-full">
-                        @if($product->isInStock())
+                        @if($product->totalStock > 0)
                         <button id="addToCartBtn" class="w-full sm:flex-1 bg-brand-blue text-white py-3 rounded-xl font-bold text-base hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-2">
                             <i class="fas fa-shopping-cart text-lg"></i>
                             Add to Cart

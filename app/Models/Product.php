@@ -198,11 +198,6 @@ class Product extends Model
         return (int) round((($this->compare_price - $this->price) / $this->compare_price) * 100);
     }
 
-    public function isInStock(): bool
-    {
-        return $this->stock_in > 0;
-    }
-
     public function isLowStock(): bool
     {
         return $this->stock_in > 0 && $this->stock_in <= $this->low_stock_threshold;
@@ -237,6 +232,21 @@ class Product extends Model
         return Attribute::make(
             get: function () {
                 return $this->stock_in - $this->stock_out;
+            }
+        );
+    }
+
+    public function totalStock(): Attribute
+    {
+        $stock = $this->stock_in - $this->stock_out;
+        
+        foreach ($this->variants as $variant) {
+            $stock += $variant->totalStock;
+        }
+
+        return Attribute::make(
+            get: function () use ($stock) {
+                return $stock;
             }
         );
     }
