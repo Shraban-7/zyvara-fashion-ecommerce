@@ -241,7 +241,7 @@ class Product extends Model
         $stock = $this->stock_in - $this->stock_out;
         
         foreach ($this->variants as $variant) {
-            $stock += $variant->totalStock;
+            $stock += $variant->stock_in - $variant->stock_out;
         }
 
         return Attribute::make(
