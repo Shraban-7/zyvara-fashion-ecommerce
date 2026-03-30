@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\SettingController;
 
@@ -59,6 +60,13 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::put('/{banner}/update', [BannerController::class, 'update'])->name('update');
         Route::delete('/{banner}/delete', [BannerController::class, 'delete'])->name('delete');
     });
+
+    Route::prefix('pos')->as('pos.')->group(function () {
+        Route::get('/', [PosController::class, 'index'])->name('index');
+        Route::post('/store', [PosController::class, 'store'])->name('store');
+        Route::get('/search', [PosController::class, 'searchProducts'])->name('search');
+    });
+    
     // Categories Routes (placeholder)
     // Route::get('/categories', function () {
     //     return redirect()->route('admin.dashboard');
