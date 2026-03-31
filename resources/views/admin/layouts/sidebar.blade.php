@@ -36,6 +36,11 @@ $user = auth()->user();
                     <span class="ml-auto bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">{{ $pendingOrdersCount }}</span>
                     @endif
                 </a>
+
+                <a href="{{ route('admin.pos.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.pos.*') ? 'active' : '' }}">
+                    <i class="fas fa-shopping-bag text-lg w-5"></i>
+                    <span>POS</span>
+                </a>
             </div>
 
             <div class="pt-4">
