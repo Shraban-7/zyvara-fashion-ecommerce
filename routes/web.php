@@ -13,6 +13,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SubscriberController;
 use App\Models\Size;
 
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
+
 Route::get('/image-path', function(){
     $products = \App\Models\Product::select('id', 'image')->get();
     foreach ($products as $product) {
