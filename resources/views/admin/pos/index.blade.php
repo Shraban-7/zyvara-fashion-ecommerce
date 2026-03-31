@@ -300,8 +300,7 @@
         // Show Variant Modal
         function showVariantModal(product) {
             $('#modalProductName').text(product.name);
-            var imageSrc = product.image ? '/storage/' + product.image : defaultImage;
-            $('#modalProductImage').attr('src', imageSrc).attr('alt', product.name);
+            $('#modalProductImage').attr('src', product.thumbnail).attr('alt', product.name);
 
             var $variantsList = $('#variantsList');
             $variantsList.empty();
@@ -310,27 +309,23 @@
                 $('#noVariantsMessage').addClass('hidden');
 
                 product.variants.forEach(function(variant) {
-                    var disabled = variant.stock_in <= 0 ? 'disabled' : '';
-                    var borderClass = variant.stock_in > 0 ? 'border-gray-200' : 'border-red-200 bg-red-50';
-                    var stockText = variant.stock_in > 0 ? `Stock: ${variant.stock_in}` : 'Out of Stock';
-                    var stockClass = variant.stock_in > 0 ? 'text-green-600' : 'text-red-600';
-                    var hexCode = variant.color && variant.color.hex_code ? variant.color.hex_code : '#ccc';
-                    var sizeName = variant.size ? variant.size.name : 'N/A';
-                    var colorName = variant.color ? variant.color.name : 'N/A';
-                    var price = parseFloat(variant.price).toFixed(2);
+                    var disabled = variant.stock <= 0 ? 'disabled' : '';
+                    var borderClass = variant.stock > 0 ? 'border-gray-200' : 'border-red-200 bg-red-50';
+                    var stockText = variant.stock > 0 ? `Stock: ${variant.stock}` : 'Out of Stock';
+                    var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                     var variantBtn = `
                     <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
                             data-variant-id="${variant.id}" ${disabled}>
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${hexCode}"></div>
+                            <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
                             <div class="text-left">
-                                <p class="font-semibold text-gray-900">${sizeName} - ${colorName}</p>
+                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
                                 <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-lg font-bold text-blue-600">৳${price}</p>
+                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
                             <p class="text-xs ${stockClass}">${stockText}</p>
                         </div>
                     </button>
@@ -372,7 +367,7 @@
             );
 
             if (existingItemIndex !== -1) {
-                if (cart[existingItemIndex].quantity < variant.stock_in) {
+                if (cart[existingItemIndex].quantity < variant.stock) {
                     cart[existingItemIndex].quantity++;
                 } else {
                     alert('Cannot add more than available stock');
@@ -383,11 +378,11 @@
                     product_id: product.id,
                     variant_id: variant.id,
                     name: product.name,
-                    variant_name: (variant.size ? variant.size.name : '') + ' - ' + (variant.color ? variant.color.name : ''),
-                    image: product.image,
+                    variant_name: (variant.size_name ? variant.size_name : '') + ' - ' + (variant.color_name ? variant.color_name : ''),
+                    image: product.thumbnail,
                     price: parseFloat(variant.price),
                     quantity: 1,
-                    stock: variant.stock_in
+                    stock: variant.stock
                 });
             }
 
@@ -445,14 +440,13 @@
                 $('#holdOrderBtn, #completeOrderBtn').prop('disabled', false);
 
                 cart.forEach(function(item, index) {
-                    var imageSrc = item.image ? '/storage/' + item.image : defaultImage;
                     var itemTotal = (item.price * item.quantity).toFixed(2);
                     var itemPrice = item.price.toFixed(2);
 
                     var cartItem = `
                     <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
                         <div class="flex gap-3">
-                            <img src="${imageSrc}" alt="${item.name}" class="w-16 h-16 rounded object-cover">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded object-cover">
                             <div class="flex-1 min-w-0">
                                 <h4 class="text-sm font-semibold text-gray-900 truncate">${item.name}</h4>
                                 <p class="text-xs text-gray-500">${item.variant_name}</p>
