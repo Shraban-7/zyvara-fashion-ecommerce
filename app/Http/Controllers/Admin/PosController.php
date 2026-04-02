@@ -87,7 +87,7 @@ class PosController extends Controller
 
             // Create order
             $order = Order::create([
-                'order_number' => 'ORD-' . strtoupper(uniqid()),
+                'order_number' => 'POS-' . strtoupper(uniqid()),
                 'user_id' => null, // POS orders don't require user
                 'shipping_name' => $request->customer_name ?? 'Walk-in Customer',
                 'shipping_phone' => null,
