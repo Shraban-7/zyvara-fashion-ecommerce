@@ -133,10 +133,6 @@
                             <span>Subtotal</span>
                             <span class="font-semibold">৳<span id="subtotalAmount">0.00</span></span>
                         </div>
-                        <div class="flex justify-between text-sm text-gray-600">
-                            <span>Tax (0%)</span>
-                            <span class="font-semibold">৳0.00</span>
-                        </div>
                         <div id="discountRow" class="hidden flex justify-between text-sm text-green-600">
                             <span>Discount</span>
                             <span class="font-semibold">-৳<span id="discountDisplay">0.00</span></span>
