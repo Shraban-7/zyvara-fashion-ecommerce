@@ -65,8 +65,16 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [PosController::class, 'index'])->name('index');
         Route::post('/store', [PosController::class, 'store'])->name('store');
         Route::get('/search', [PosController::class, 'searchProducts'])->name('search');
+
+        Route::prefix('cart')->as('cart.')->group(function () {
+            Route::get('/', [PosController::class, 'getCart'])->name('get');
+            Route::post('/add', [PosController::class, 'addToCart'])->name('add');
+            Route::put('/update/{itemId}', [PosController::class, 'updateQuantity'])->name('update');
+            Route::delete('/remove/{itemId}', [PosController::class, 'removeItem'])->name('remove');
+            Route::delete('/clear', [PosController::class, 'clearCart'])->name('clear');
+        });
     });
-    
+
     // Categories Routes (placeholder)
     // Route::get('/categories', function () {
     //     return redirect()->route('admin.dashboard');

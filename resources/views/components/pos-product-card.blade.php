@@ -8,7 +8,7 @@ if (($product->stock_in ?? 0) <= 0) {
 
 $imageSrc = $product->image ? asset('storage/' . $product->image) : asset('assets/images/default.png');
 $price = number_format($product->price, 2);
-$stock = $product->stock_in ?? 0;
+$stock = $product->total_stock ?? 0;
 
 // Check if product has variants
 $variantCount = $product->variants ? count($product->variants) : 0;
@@ -28,6 +28,7 @@ foreach ($product->variants as $variant) {
 
 $productData = [
     'id' => $product->id,
+    'category_id' => $product->category_id,
     'name' => $product->name,
     'sku' => $product->sku,
     'price' => $product->price,
