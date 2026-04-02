@@ -395,22 +395,22 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                                                                                                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                                                                                                        data-variant-id="${variant.id}" ${disabled}>
-                                                                                                    <div class="flex items-center gap-3">
-                                                                                                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                                                                                                        <div class="text-left">
-                                                                                                            <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                                                                            <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                    <div class="text-right">
-                                                                                                        <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                                                                                                        <p class="text-xs ${stockClass}">${stockText}</p>
-                                                                                                    </div>
-                                                                                                </button>
+                                    <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                        data-variant-id="${variant.id}" ${disabled}>
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                                <div class="text-left">
+                                                    <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                                    <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                                </div>
+                                            </div>
+                                             <div class="text-right">
+                                                <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                                <p class="text-xs ${stockClass}">${stockText}</p>
+                                            </div>
+                                    </button>
 
-                                                                                                `;
+                                    `;
 
                             $variantsList.append(btn);
                         });

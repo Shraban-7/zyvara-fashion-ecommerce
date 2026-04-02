@@ -11,6 +11,8 @@ enum PaymentMethod: string
     case BANK = 'bank';
     case ONLINE = 'online';
 
+    case CASH = 'cash';
+
     public function label(): string
     {
         return match ($this) {
@@ -20,6 +22,7 @@ enum PaymentMethod: string
             self::CARD => 'Credit/Debit Card',
             self::BANK => 'Bank Transfer',
             self::ONLINE => 'Online Payment',
+            self::CASH => 'Cash Payment'
         };
     }
 
@@ -32,6 +35,7 @@ enum PaymentMethod: string
             self::CARD => 'fa-credit-card',
             self::BANK => 'fa-university',
             self::ONLINE => 'fa-globe',
+            self::CASH => 'fa-money-bill',
         };
     }
 

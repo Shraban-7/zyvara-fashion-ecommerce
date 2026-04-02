@@ -58,9 +58,14 @@ class PosController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+       $data = $request->validate([
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
+            'items.*.product_name' => 'required|string',
+            'items.*.product_image' => 'nullable|string',
+            'items.*.sku' => 'nullable|string',
+            'items.*.color' => 'nullable|string',
+            'items.*.size' => 'nullable|string',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.price' => 'required|numeric|min:0',
             'subtotal' => 'required|numeric|min:0',
@@ -75,7 +80,7 @@ class PosController extends Controller
             $paymentMethodEnum = match (strtolower($request->payment_method)) {
                 'cash' => PaymentMethod::CASH,
                 'card' => PaymentMethod::CARD,
-                // 'mobile' => PaymentMethod::MOBILE_BANKING,
+                'online' => PaymentMethod::ONLINE,
                 default => PaymentMethod::CASH,
             };
 
@@ -91,8 +96,8 @@ class PosController extends Controller
                 'shipping_cost' => 0,
                 'tax_amount' => 0,
                 'total' => $request->total,
-                'status' => OrderStatus::COMPLETED,
-                'payment_method' => $paymentMethodEnum,
+                'status' => OrderStatus::DELIVERED,
+                'payment_method' => $paymentMethodEnum->value,
                 'payment_status' => PaymentStatus::PAID,
                 'notes' => 'POS Order',
                 'paid_at' => now(),
@@ -103,10 +108,15 @@ class PosController extends Controller
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
+                    'product_name' => $item['product_name'],
+                    'product_sku' => $item['sku'],
                     'product_variant_id' => $item['variant_id'] ?? null,
+                    'size_name' => $item['size'],
+                    'color_name' => $item['color'],
                     'quantity' => $item['quantity'],
-                    'price' => $item['price'],
+                    'unit_price' => $item['price'],
                     'subtotal' => $item['price'] * $item['quantity'],
+                    'total' => ($item['price'] * $item['quantity']),
                 ]);
 
                 // Update stock
@@ -174,14 +184,18 @@ class PosController extends Controller
 
             $size = $item->variant?->size?->name;
             $color = $item->variant?->color?->name;
+            $sku = $item->product_variant_id ? $item->variant->sku : $item->product->sku;
 
             return [
                 'id' => $item->id,
                 'product_id' => $item->product_id,
+                'sku' => $sku,
                 'product_name' => $item->product->name ?? '',
                 'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
                 'variant_id' => $item->product_variant_id,
                 'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
+                'size' => $size,
+                'color' => $color,
                 'quantity' => (int) $item->quantity,
                 'price' => (float) $item->unit_price,
                 'stock' => (int) ($item->variant->stock ?? 999),
