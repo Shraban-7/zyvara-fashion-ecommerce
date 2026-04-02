@@ -71,6 +71,7 @@ class PosController extends Controller
             'subtotal' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'payment_method' => 'required|string',
+            'discount' => 'nullable'
         ]);
 
         try {

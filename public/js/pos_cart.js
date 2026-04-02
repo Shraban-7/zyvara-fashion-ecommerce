@@ -164,7 +164,7 @@ class PosCartManager {
         const holdBtn = document.getElementById("holdOrderBtn");
         const completeBtn = document.getElementById("completeOrderBtn");
 
-        if (cart.items.length > 0) {
+        if (cart.items && cart.items.length > 0) {
             holdBtn.disabled = false;
             completeBtn.disabled = false;
         } else {
@@ -173,7 +173,6 @@ class PosCartManager {
         }
 
         // ===== CLEAR CART =====
-
         const clearBtn = document.getElementById("clearCartBtn");
 
         if (cart.items && cart.items.length > 0) {
@@ -182,20 +181,40 @@ class PosCartManager {
             if (clearBtn) clearBtn.classList.add("hidden");
         }
 
-        // ===== TOTALS =====
+        // ===== TOTALS (WITH FRONTEND DISCOUNT) =====
         const subtotalEl = document.getElementById("subtotalAmount");
         const totalEl = document.getElementById("totalAmount");
         const discountEl = document.getElementById("discountDisplay");
         const discountRow = document.getElementById("discountRow");
 
-        if (subtotalEl) subtotalEl.textContent = cart.subtotal.toFixed(2);
-        if (totalEl) totalEl.textContent = cart.total.toFixed(2);
+        let subtotal = parseFloat(cart.subtotal || 0);
 
-        if (cart.discount > 0) {
-            discountEl.textContent = cart.discount.toFixed(2);
-            discountRow.classList.remove("hidden");
+        // 🔥 GET DISCOUNT INPUT
+        let discountValue = parseFloat($('#discountInput').val());
+        let discountType = $('#discountType').val();
+
+        let discount = 0;
+
+        if (discountValue && discountValue > 0) {
+            if (discountType === 'percent') {
+                if (discountValue > 100) discountValue = 100;
+                discount = subtotal * (discountValue / 100);
+            } else {
+                discount = Math.min(discountValue, subtotal);
+            }
+        }
+
+        let total = Math.max(0, subtotal - discount);
+
+        // ===== UPDATE UI =====
+        if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
+        if (totalEl) totalEl.textContent = total.toFixed(2);
+
+        if (discount > 0) {
+            if (discountEl) discountEl.textContent = discount.toFixed(2);
+            if (discountRow) discountRow.classList.remove("hidden");
         } else {
-            discountRow.classList.add("hidden");
+            if (discountRow) discountRow.classList.add("hidden");
         }
     }
 

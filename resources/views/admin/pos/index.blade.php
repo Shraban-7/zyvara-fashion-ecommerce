@@ -107,14 +107,20 @@
                     {{-- Discount Section --}}
                     <div class="mb-4">
                         <div class="flex gap-2 mb-3">
-                            <input type="text" id="discountCode" placeholder="Discount code or %"
-                                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
-                            <button id="applyDiscountBtn"
-                                class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium">
-                                Apply
-                            </button>
+
+                            <!-- Discount Type -->
+                            <select id="discountType"
+                                class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                                <option value="fixed">৳ Fixed</option>
+                                <option value="percent">%</option>
+                            </select>
+
+                            <!-- Discount Input -->
+                            <input type="number" id="discountInput" placeholder="Enter discount"
+                                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
                         </div>
 
+                        <!-- Applied Info -->
                         <div id="discountApplied" class="hidden flex items-center justify-between text-sm text-green-600">
                             <span><i class="fas fa-tag mr-1"></i>Discount Applied</span>
                             <span class="font-semibold">-৳<span id="discountAmount">0.00</span></span>
@@ -256,7 +262,7 @@
                     return productData.name.toLowerCase().includes(query);
                 }
 
-                function matchesCategory(productData, categoryId) {            
+                function matchesCategory(productData, categoryId) {
                     if (!categoryId) return true;
                     return productData.category_id == categoryId;
                 }
@@ -395,22 +401,22 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                                    <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                                        data-variant-id="${variant.id}" ${disabled}>
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                                                <div class="text-left">
-                                                    <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                    <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                                                </div>
-                                            </div>
-                                             <div class="text-right">
-                                                <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                                                <p class="text-xs ${stockClass}">${stockText}</p>
-                                            </div>
-                                    </button>
+                                                                    <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                                                        data-variant-id="${variant.id}" ${disabled}>
+                                                                        <div class="flex items-center gap-3">
+                                                                            <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                                                                <div class="text-left">
+                                                                                    <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                                                                    <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                             <div class="text-right">
+                                                                                <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                                                                <p class="text-xs ${stockClass}">${stockText}</p>
+                                                                            </div>
+                                                                    </button>
 
-                                    `;
+                                                                    `;
 
                             $variantsList.append(btn);
                         });
@@ -499,6 +505,16 @@
                     paymentMethod = $(this).data('payment');
                 });
 
+                // Discount
+
+                $('#discountInput, #discountType').on('input change', function () {
+                    if (window.posCartManager) {
+                        window.posCartManager.loadCart();
+                    }
+                });
+
+
+
                 // =========================
                 // COMPLETE ORDER (API CART)
                 // =========================
@@ -507,6 +523,8 @@
                     const res = await fetch('/admin/pos/cart');
                     const data = await res.json();
 
+                    const discount = $("#discountDisplay").text();
+                    
                     if (!data.success || !data.cart.items.length) {
                         alert('Cart is empty');
                         return;
@@ -526,8 +544,8 @@
                             payment_method: paymentMethod,
                             items: data.cart.items,
                             subtotal: data.cart.subtotal,
-                            discount: data.cart.discount,
-                            total: data.cart.total
+                            discount: discount,
+                            total: (data.cart.total - discount)
                         }),
                         success: function (res) {
                             if (res.success) {
