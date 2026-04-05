@@ -97,9 +97,9 @@ class PosController extends Controller
             'employee_id' => 'nullable',
             'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
             'customer_phone' => ['nullable', 'string', 'max:20', 'required_with:customer_name'],
+            'cash_received' => 'nullable',
+            'cash_returned' => 'nullable',
         ]);
-
-        // dd($data);
 
         try {
             DB::beginTransaction();
@@ -144,6 +144,8 @@ class PosController extends Controller
                 'payable' => $request->payable,
                 'paid' => $request->paid,
                 'due' => $request->due,
+                'cash_received' => $request->cash_received,
+                'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DELIVERED,
                 'payment_method' => $paymentMethodEnum->value,
                 'payment_status' => PaymentStatus::PAID,

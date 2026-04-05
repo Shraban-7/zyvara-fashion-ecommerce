@@ -89,8 +89,9 @@
                         <!-- Customer Name -->
                         <div class="relative">
                             <input type="text" id="customerName" name="customer_name" placeholder="Customer Name"
-                                autocomplete="off" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                           focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                autocomplete="off"
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
+                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerNameDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -99,8 +100,9 @@
                         <!-- Customer Phone -->
                         <div class="relative">
                             <input type="text" id="customerPhone" name="customer_phone" placeholder="Phone Number"
-                                autocomplete="off" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                           focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                autocomplete="off"
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
+                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerPhoneDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -187,9 +189,32 @@
                     </div>
 
                     <!-- DUE -->
-                    <div class="flex justify-between text-sm text-red-600 mt-2">
+                    <div class="flex justify-between text-sm text-red-600 mt-2 mb-2">
                         <span>Due</span>
                         <span class="font-semibold">৳<span id="dueAmount">0.00</span></span>
+                    </div>
+
+                    <div class="flex justify-between gap-2 mb-2">
+                        <!-- CASH RECEIVED -->
+                        <div class="mt-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Cash Received
+                            </label>
+
+                            <input type="number" id="cash_received" min="0" step="0.01"
+                                class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring"
+                                placeholder="Enter cash received" />
+                        </div>
+
+                        <!-- CASH RETURNED -->
+                        <div class="mt-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Cash Returned
+                            </label>
+
+                            <input type="number" id="cash_returned" readonly
+                                class="w-full border rounded px-3 py-2 text-sm bg-gray-100" />
+                        </div>
                     </div>
 
                     <div class="space-y-2 mb-4">
@@ -461,22 +486,22 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                                                                                                            <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                                                                                                                data-variant-id="${variant.id}" ${disabled}>
-                                                                                                                <div class="flex items-center gap-3">
-                                                                                                                    <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                                                                                                                        <div class="text-left">
-                                                                                                                            <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                                                                                            <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                     <div class="text-right">
-                                                                                                                        <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                                                                                                                        <p class="text-xs ${stockClass}">${stockText}</p>
-                                                                                                                     </div>
-                                                                                                            </button>                                                                                                   
+                                                                                                                            <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                                                                                                                data-variant-id="${variant.id}" ${disabled}>
+                                                                                                                                <div class="flex items-center gap-3">
+                                                                                                                                    <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                                                                                                                        <div class="text-left">
+                                                                                                                                            <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                                                                                                                            <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                                     <div class="text-right">
+                                                                                                                                        <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                                                                                                                        <p class="text-xs ${stockClass}">${stockText}</p>
+                                                                                                                                     </div>
+                                                                                                                            </button>                                                                                                   
 
-                                                                                                            `;
+                                                                                                                            `;
 
                             $variantsList.append(btn);
                         });
@@ -609,9 +634,11 @@
                             discount: discount,
                             total: (data.cart.total - discount),
                             employee_id: employee_id,
-                            paid : $('#paidAmount').val(),
-                            payable : $('#totalAmount').text(),
-                            due : $('#totalAmount').text() - $('#paidAmount').val(),
+                            paid: $('#paidAmount').val(),
+                            payable: parseFloat($("#totalAmount").text()),
+                            due: parseFloat($("#totalAmount").text()) - $('#paidAmount').val(),
+                            cash_received: $("#cash_received").val(),
+                            cash_returned: $("#cash_returned").val()
                         }),
                         success: function (res) {
                             if (res.success) {
@@ -623,6 +650,8 @@
                                 $('#paidAmount').val('');
                                 $('#discountInput').val('');
                                 $('#dueAmount').text(0.00);
+                                $("#cash_received").val('');
+                                $("#cash_returned").val("0.00");
                             }
                         },
                         error: function () {
@@ -688,12 +717,12 @@
                                             : `${c.phone} (${c.value})`;
 
                                         html += `
-                                                                                    <button type="button"
-                                                                                        class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100"
-                                                                                        data-index="${i}">
-                                                                                        ${text}
-                                                                                    </button>
-                                                                                `;
+                                                                                                    <button type="button"
+                                                                                                        class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100"
+                                                                                                        data-index="${i}">
+                                                                                                        ${text}
+                                                                                                    </button>
+                                                                                                `;
                                     });
 
                                     $dropdown.html(html).removeClass('hidden');
@@ -843,6 +872,57 @@
                 // =========================
                 window.refreshPaymentUI = function () {
                     updateDue();
+                };
+
+                // =========================
+                // GET PAYABLE (TOTAL)
+                // =========================
+                function getTotal() {
+                    return parseFloat($("#totalAmount").text()) || 0;
+                }
+
+                // =========================
+                // UPDATE CASH LOGIC
+                // =========================
+                function updateCash() {
+
+                    let total = getTotal();
+                    let cash = parseFloat($("#cash_received").val()) || 0;
+
+                    if (cash < 0) cash = 0;
+
+                    let returned = 0;
+
+                    // CASE 1: Enough or extra cash
+                    if (cash >= total) {
+                        returned = cash - total;
+                    } else {
+                        returned = 0;
+                    }
+
+                    $("#cash_returned").val(returned.toFixed(2));
+                }
+
+                // =========================
+                // INPUT EVENT
+                // =========================
+                $("#cash_received").on("input", function () {
+                    updateCash();
+                });
+
+
+
+
+                // =========================
+                // INIT
+                // =========================
+                updateCash();
+
+                // =========================
+                // EXTERNAL REFRESH SUPPORT
+                // =========================
+                window.refreshCashUI = function () {
+                    updateCash();
                 };
 
                 // =========================
