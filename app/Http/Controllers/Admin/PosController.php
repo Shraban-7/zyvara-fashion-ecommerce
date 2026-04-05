@@ -14,6 +14,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,7 +32,9 @@ class PosController extends Controller
 
         $cart = $this->getCart();
 
-        return view('admin.pos.index', compact('products', 'categories', 'cart'));
+        $employees = User::where('role','staff')->get();
+
+        return view('admin.pos.index', compact('products', 'categories', 'cart','employees'));
     }
 
     public function searchProducts(Request $request)
@@ -71,7 +74,8 @@ class PosController extends Controller
             'subtotal' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'payment_method' => 'required|string',
-            'discount' => 'nullable'
+            'discount' => 'nullable',
+            'employee_id' => 'nullable'
         ]);
 
         try {
@@ -88,7 +92,8 @@ class PosController extends Controller
             // Create order
             $order = Order::create([
                 'order_number' => 'POS-' . strtoupper(uniqid()),
-                'user_id' => null, // POS orders don't require user
+                'user_id' => null,
+                'employee_id' => $request->employee_id ? $request->employee_id : null,
                 'shipping_name' => $request->customer_name ?? 'Walk-in Customer',
                 'shipping_phone' => null,
                 'shipping_email' => null,

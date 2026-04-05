@@ -143,6 +143,21 @@
                         </div>
                     </div>
 
+                    <div class="space-y-2 mb-4">
+                        <label for="employee-select" class="block text-xs font-semibold text-gray-700 mb-2">
+                            Select Employee
+                        </label>
+                        <div class="relative">
+                            <select id="employeeId" name="employee_id"
+                                class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                                <option value="" disabled selected>Choose an employee...</option>
+                                @foreach ($employees as $employee)
+                                    <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     {{-- Payment Method --}}
                     <div class="mb-4">
                         <label class="block text-xs font-semibold text-gray-700 mb-2">Payment Method</label>
@@ -397,22 +412,22 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                                                                    <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                                                                        data-variant-id="${variant.id}" ${disabled}>
-                                                                        <div class="flex items-center gap-3">
-                                                                            <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                                                                                <div class="text-left">
-                                                                                    <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                                                    <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                             <div class="text-right">
-                                                                                <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                                                                                <p class="text-xs ${stockClass}">${stockText}</p>
-                                                                            </div>
-                                                                    </button>
+                                                                                    <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                                                                        data-variant-id="${variant.id}" ${disabled}>
+                                                                                        <div class="flex items-center gap-3">
+                                                                                            <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                                                                                <div class="text-left">
+                                                                                                    <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                                                                                    <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                             <div class="text-right">
+                                                                                                <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                                                                                <p class="text-xs ${stockClass}">${stockText}</p>
+                                                                                            </div>
+                                                                                    </button>
 
-                                                                    `;
+                                                                                    `;
 
                             $variantsList.append(btn);
                         });
@@ -520,7 +535,8 @@
                     const data = await res.json();
 
                     const discount = $("#discountDisplay").text();
-                    
+                    const employee_id = $("#employeeId").val();
+
                     if (!data.success || !data.cart.items.length) {
                         alert('Cart is empty');
                         return;
@@ -541,7 +557,8 @@
                             items: data.cart.items,
                             subtotal: data.cart.subtotal,
                             discount: discount,
-                            total: (data.cart.total - discount)
+                            total: (data.cart.total - discount),
+                            employee_id: employee_id
                         }),
                         success: function (res) {
                             if (res.success) {
