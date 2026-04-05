@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -32,9 +33,9 @@ class PosController extends Controller
 
         $cart = $this->getCart();
 
-        $employees = User::where('role','staff')->get();
+        $employees = User::where('role', 'staff')->get();
 
-        return view('admin.pos.index', compact('products', 'categories', 'cart','employees'));
+        return view('admin.pos.index', compact('products', 'categories', 'cart', 'employees'));
     }
 
     public function searchProducts(Request $request)
@@ -59,9 +60,24 @@ class PosController extends Controller
         return response()->json($products);
     }
 
+    public function searchCustomers(Request $request)
+    {
+        $term = $request->term;
+
+        return Customer::select(
+            'id',
+            'name as value',
+            'phone'
+        )
+            ->where('name', 'like', "%$term%")
+            ->orWhere('phone', 'like', "%$term%")
+            ->limit(8)
+            ->get();
+    }
+
     public function store(Request $request)
     {
-       $data = $request->validate([
+        $data = $request->validate([
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.product_name' => 'required|string',
@@ -75,7 +91,9 @@ class PosController extends Controller
             'total' => 'required|numeric|min:0',
             'payment_method' => 'required|string',
             'discount' => 'nullable',
-            'employee_id' => 'nullable'
+            'employee_id' => 'nullable',
+            'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
+            'customer_phone' => ['nullable', 'string', 'max:20', 'required_with:customer_name'],
         ]);
 
         try {
@@ -89,10 +107,25 @@ class PosController extends Controller
                 default => PaymentMethod::CASH,
             };
 
+
+            $customer_id = null;
+
+            if (!$customer_id && $request->filled('customer_name') && $request->filled('customer_phone')) {
+
+                $customer = Customer::firstOrCreate(
+                    ['phone' => $request->customer_phone],
+                    ['name' => $request->customer_name]
+                );
+
+                $customer_id = $customer->id;
+            }
+
+
             // Create order
             $order = Order::create([
                 'order_number' => 'POS-' . strtoupper(uniqid()),
                 'user_id' => null,
+                'customer_id' => $customer_id,
                 'employee_id' => $request->employee_id ? $request->employee_id : null,
                 'shipping_name' => $request->customer_name ?? 'Walk-in Customer',
                 'shipping_phone' => null,
@@ -335,7 +368,7 @@ class PosController extends Controller
         }
     }
 
-     public function updateQuantity(Request $request, $itemId)
+    public function updateQuantity(Request $request, $itemId)
     {
         $request->validate([
             'quantity' => 'required|integer|min:1',
