@@ -202,6 +202,108 @@ class PosController extends Controller
         }
     }
 
+    public function saveDraft(Request $request)
+    {
+        $data = $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.product_name' => 'required|string',
+            'items.*.product_image' => 'nullable|string',
+            'items.*.sku' => 'nullable|string',
+            'items.*.color' => 'nullable|string',
+            'items.*.size' => 'nullable|string',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+            'subtotal' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0',
+            'payable' => 'required|numeric|min:0',
+            'discount' => 'nullable',
+            'employee_id' => 'nullable',
+            'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
+            'customer_phone' => ['nullable', 'string', 'max:20', 'required_with:customer_name'],
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $customer_id = null;
+
+            if (!$customer_id && $request->filled('customer_name') && $request->filled('customer_phone')) {
+
+                $customer = Customer::firstOrCreate(
+                    ['phone' => $request->customer_phone],
+                    ['name' => $request->customer_name]
+                );
+
+                $customer_id = $customer->id;
+            }
+
+
+            // Create order
+            $order = Order::create([
+                'order_number' => 'POS-' . strtoupper(uniqid()),
+                'is_pos' => 1,
+                'user_id' => null,
+                'customer_id' => $customer_id,
+                'employee_id' => $request->employee_id ? $request->employee_id : null,
+                'subtotal' => $request->subtotal,
+                'discount_amount' => $request->discount ?? 0,
+                'tax_amount' => 0,
+                'total' => $request->total,
+                'payable' => $request->payable,
+                'status' => OrderStatus::DRAFT,
+                'notes' => 'POS Order',
+            ]);
+
+            // Create order items and update stock
+            foreach ($request->items as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
+                    'product_name' => $item['product_name'],
+                    'product_sku' => $item['sku'],
+                    'product_variant_id' => $item['variant_id'] ?? null,
+                    'size_name' => $item['size'],
+                    'color_name' => $item['color'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                    'subtotal' => $item['price'] * $item['quantity'],
+                    'total' => ($item['price'] * $item['quantity']),
+                ]);
+
+                // Update stock
+                if (isset($item['variant_id']) && $item['variant_id']) {
+                    $variant = ProductVariant::find($item['variant_id']);
+                    if ($variant) {
+                        $variant->decrement('stock_in', $item['quantity']);
+                    }
+                } else {
+                    $product = Product::find($item['product_id']);
+                    if ($product) {
+                        $product->decrement('stock_in', $item['quantity']);
+                        $product->increment('sold_count', $item['quantity']);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order completed successfully',
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to complete order: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function getOrCreateCart()
     {
         $sessionId = session()->getId();

@@ -616,8 +616,6 @@
                         return;
                     }
 
-                    if (!confirm('Complete order for ৳' + data.cart.total + '?')) return;
-
                     $.ajax({
                         url: '{{ route("admin.pos.store") }}',
                         method: 'POST',
@@ -643,6 +641,59 @@
                         success: function (res) {
                             if (res.success) {
                                 alert('Order completed');
+                                window.posCartManager.clearCart();
+                                $('#customerName').val('');
+                                $('#customerPhone').val('');
+                                $("#employeeId").val('');
+                                $('#paidAmount').val('');
+                                $('#discountInput').val('');
+                                $('#dueAmount').text(0.00);
+                                $("#cash_received").val('');
+                                $("#cash_returned").val("0.00");
+                            }
+                        },
+                        error: function () {
+                            alert('Failed to complete order');
+                        }
+                    });
+                });
+
+                // =========================
+                // DRAFT ORDER (API CART)
+                // =========================
+                $('#holdOrderBtn').on('click', async function () {
+
+                    const res = await fetch('/admin/pos/cart');
+                    const data = await res.json();
+
+                    const discount = $("#discountDisplay").text();
+                    const employee_id = $("#employeeId").val();
+
+                    if (!data.success || !data.cart.items.length) {
+                        alert('Cart is empty');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '{{ route("admin.pos.saveDraft") }}',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        data: JSON.stringify({
+                            customer_name: $('#customerName').val(),
+                            customer_phone: $('#customerPhone').val(),
+                            items: data.cart.items,
+                            subtotal: data.cart.subtotal,
+                            discount: discount,
+                            total: (data.cart.total - discount),
+                            employee_id: employee_id,
+                            payable: parseFloat($("#totalAmount").text()),
+                        }),
+                        success: function (res) {
+                            if (res.success) {
+                                alert('Order Draft Save successfully');
                                 window.posCartManager.clearCart();
                                 $('#customerName').val('');
                                 $('#customerPhone').val('');
