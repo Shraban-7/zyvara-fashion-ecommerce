@@ -89,12 +89,17 @@ class PosController extends Controller
             'items.*.price' => 'required|numeric|min:0',
             'subtotal' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
+            'payable' => 'required|numeric|min:0',
+            'paid' => 'required|numeric|min:0',
+            'due' => 'required|numeric|min:0',
             'payment_method' => 'required|string',
             'discount' => 'nullable',
             'employee_id' => 'nullable',
             'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
             'customer_phone' => ['nullable', 'string', 'max:20', 'required_with:customer_name'],
         ]);
+
+        // dd($data);
 
         try {
             DB::beginTransaction();
@@ -124,6 +129,7 @@ class PosController extends Controller
             // Create order
             $order = Order::create([
                 'order_number' => 'POS-' . strtoupper(uniqid()),
+                'is_pos' => 1,
                 'user_id' => null,
                 'customer_id' => $customer_id,
                 'employee_id' => $request->employee_id ? $request->employee_id : null,
@@ -135,6 +141,9 @@ class PosController extends Controller
                 'shipping_cost' => 0,
                 'tax_amount' => 0,
                 'total' => $request->total,
+                'payable' => $request->payable,
+                'paid' => $request->paid,
+                'due' => $request->due,
                 'status' => OrderStatus::DELIVERED,
                 'payment_method' => $paymentMethodEnum->value,
                 'payment_status' => PaymentStatus::PAID,

@@ -90,7 +90,7 @@
                         <div class="relative">
                             <input type="text" id="customerName" name="customer_name" placeholder="Customer Name"
                                 autocomplete="off" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                           focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerNameDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -100,7 +100,7 @@
                         <div class="relative">
                             <input type="text" id="customerPhone" name="customer_phone" placeholder="Phone Number"
                                 autocomplete="off" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                           focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerPhoneDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -166,6 +166,30 @@
                             <span class="text-lg font-bold text-gray-900">Total</span>
                             <span class="text-2xl font-bold text-blue-600">৳<span id="totalAmount">0.00</span></span>
                         </div>
+                    </div>
+
+                    <!-- PAID INPUT + FULL PAID BUTTON -->
+                    <div class="mt-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Paid Amount
+                        </label>
+
+                        <div class="flex gap-2">
+                            <input type="number" id="paidAmount" min="0" step="0.01"
+                                class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring"
+                                placeholder="Enter paid amount" />
+
+                            <button type="button" id="fullPaidBtn"
+                                class="bg-green-600 text-white px-3 py-2 rounded text-sm hover:bg-green-700 whitespace-nowrap">
+                                Full Paid
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- DUE -->
+                    <div class="flex justify-between text-sm text-red-600 mt-2">
+                        <span>Due</span>
+                        <span class="font-semibold">৳<span id="dueAmount">0.00</span></span>
                     </div>
 
                     <div class="space-y-2 mb-4">
@@ -437,22 +461,22 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                                                                                            <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                                                                                                data-variant-id="${variant.id}" ${disabled}>
-                                                                                                <div class="flex items-center gap-3">
-                                                                                                    <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                                                                                                        <div class="text-left">
-                                                                                                            <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                                                                            <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                     <div class="text-right">
-                                                                                                        <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                                                                                                        <p class="text-xs ${stockClass}">${stockText}</p>
-                                                                                                     </div>
-                                                                                            </button>                                                                                                   
+                                                                                                            <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                                                                                                data-variant-id="${variant.id}" ${disabled}>
+                                                                                                                <div class="flex items-center gap-3">
+                                                                                                                    <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                                                                                                        <div class="text-left">
+                                                                                                                            <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                                                                                                            <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                     <div class="text-right">
+                                                                                                                        <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                                                                                                        <p class="text-xs ${stockClass}">${stockText}</p>
+                                                                                                                     </div>
+                                                                                                            </button>                                                                                                   
 
-                                                                                            `;
+                                                                                                            `;
 
                             $variantsList.append(btn);
                         });
@@ -584,7 +608,10 @@
                             subtotal: data.cart.subtotal,
                             discount: discount,
                             total: (data.cart.total - discount),
-                            employee_id: employee_id
+                            employee_id: employee_id,
+                            paid : $('#paidAmount').val(),
+                            payable : $('#totalAmount').text(),
+                            due : $('#totalAmount').text() - $('#paidAmount').val(),
                         }),
                         success: function (res) {
                             if (res.success) {
@@ -592,7 +619,10 @@
                                 window.posCartManager.clearCart();
                                 $('#customerName').val('');
                                 $('#customerPhone').val('');
-                                $("#employeeId").val('')
+                                $("#employeeId").val('');
+                                $('#paidAmount').val('');
+                                $('#discountInput').val('');
+                                $('#dueAmount').text(0.00);
                             }
                         },
                         error: function () {
@@ -658,12 +688,12 @@
                                             : `${c.phone} (${c.value})`;
 
                                         html += `
-                                                                    <button type="button"
-                                                                        class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100"
-                                                                        data-index="${i}">
-                                                                        ${text}
-                                                                    </button>
-                                                                `;
+                                                                                    <button type="button"
+                                                                                        class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100"
+                                                                                        data-index="${i}">
+                                                                                        ${text}
+                                                                                    </button>
+                                                                                `;
                                     });
 
                                     $dropdown.html(html).removeClass('hidden');
@@ -674,7 +704,7 @@
 
                         // INPUT → unlock + search
                         $input.on('input', function () {
-                            isSelected = false; 
+                            isSelected = false;
                             fetchCustomers();
                         });
 
@@ -755,6 +785,65 @@
                     setupDropdown($('#customerPhone'), $('#customerPhoneDropdown'), 'phone');
 
                 })();
+
+                // =========================
+                // GET VALUES
+                // =========================
+                function getTotal() {
+                    return parseFloat($("#totalAmount").text()) || 0;
+                }
+
+                function getPaid() {
+                    return parseFloat($("#paidAmount").val()) || 0;
+                }
+
+                // =========================
+                // UPDATE DUE CALCULATION
+                // =========================
+                function updateDue() {
+                    let total = getTotal();
+                    let paid = getPaid();
+
+                    if (paid < 0) paid = 0;
+
+                    if (paid > total) {
+                        paid = total;
+                        $("#paidAmount").val(total.toFixed(2));
+                    }
+
+                    let due = total - paid;
+
+                    $("#dueAmount").text(due.toFixed(2));
+                }
+
+                // =========================
+                // PAID INPUT EVENT
+                // =========================
+                $("#paidAmount").on("input", function () {
+                    updateDue();
+                });
+
+                // =========================
+                // FULL PAID BUTTON
+                // =========================
+                $("#fullPaidBtn").on("click", function () {
+                    let total = getTotal();
+
+                    $("#paidAmount").val(total.toFixed(2));
+                    updateDue();
+                });
+
+                // =========================
+                // SAFE INIT
+                // =========================
+                updateDue();
+
+                // =========================
+                // EXTERNAL CALL (when cart/total changes)
+                // =========================
+                window.refreshPaymentUI = function () {
+                    updateDue();
+                };
 
                 // =========================
                 // INIT CALL
