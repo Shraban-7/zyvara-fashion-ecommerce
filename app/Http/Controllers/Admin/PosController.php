@@ -105,12 +105,15 @@ class PosController extends Controller
             DB::beginTransaction();
 
             // Map payment method string to enum
-            $paymentMethodEnum = match (strtolower($request->payment_method)) {
+            $paymentMethodEnum = match (strtolower($request->payment_method ?? '')) {
                 'cash' => PaymentMethod::CASH,
                 'card' => PaymentMethod::CARD,
-                'online' => PaymentMethod::ONLINE,
-                default => PaymentMethod::CASH,
+                'bkash' => PaymentMethod::BKASH,
+                'nagad' => PaymentMethod::NAGAD,
+                '' => null, 
+                default => null, 
             };
+
 
 
             $customer_id = null;
@@ -147,7 +150,7 @@ class PosController extends Controller
                 'cash_received' => $request->cash_received,
                 'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DELIVERED,
-                'payment_method' => $paymentMethodEnum->value,
+                'payment_method' => $paymentMethodEnum->value??'',
                 'payment_status' => PaymentStatus::PAID,
                 'notes' => 'POS Order',
                 'paid_at' => now(),
