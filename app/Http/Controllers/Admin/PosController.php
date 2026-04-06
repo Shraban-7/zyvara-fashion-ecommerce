@@ -220,14 +220,28 @@ class PosController extends Controller
             'subtotal' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'payable' => 'required|numeric|min:0',
+            'paid' => 'nullable|numeric|min:0',
+            'due' => 'nullable|numeric|min:0',
+            'payment_method' => 'required|string',
             'discount' => 'nullable',
             'employee_id' => 'nullable',
             'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
             'customer_phone' => ['nullable', 'string', 'max:20', 'required_with:customer_name'],
+            'cash_received' => 'nullable',
+            'cash_returned' => 'nullable',
         ]);
 
         try {
             DB::beginTransaction();
+
+            $paymentMethodEnum = match (strtolower($request->payment_method ?? '')) {
+                'cash' => PaymentMethod::CASH,
+                'card' => PaymentMethod::CARD,
+                'bkash' => PaymentMethod::BKASH,
+                'nagad' => PaymentMethod::NAGAD,
+                '' => null, 
+                default => null, 
+            };
 
             $customer_id = null;
 
@@ -249,13 +263,24 @@ class PosController extends Controller
                 'user_id' => null,
                 'customer_id' => $customer_id,
                 'employee_id' => $request->employee_id ? $request->employee_id : null,
+                'shipping_name' => $request->customer_name ?? 'Walk-in Customer',
+                'shipping_phone' => null,
+                'shipping_email' => null,
                 'subtotal' => $request->subtotal,
                 'discount_amount' => $request->discount ?? 0,
+                'shipping_cost' => 0,
                 'tax_amount' => 0,
                 'total' => $request->total,
                 'payable' => $request->payable,
+                'paid' => $request->paid,
+                'due' => $request->due,
+                'cash_received' => $request->cash_received,
+                'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DRAFT,
+                'payment_method' => $paymentMethodEnum->value??'',
+                'payment_status' => PaymentStatus::PAID,
                 'notes' => 'POS Order',
+                'paid_at' => now(),
             ]);
 
             // Create order items and update stock

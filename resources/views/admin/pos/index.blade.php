@@ -743,12 +743,17 @@
                         data: JSON.stringify({
                             customer_name: $('#customerName').val(),
                             customer_phone: $('#customerPhone').val(),
+                            payment_method: paymentMethod,
                             items: data.cart.items,
                             subtotal: data.cart.subtotal,
                             discount: discount,
                             total: (data.cart.total - discount),
                             employee_id: employee_id,
+                            paid: $('#paidAmount').val(),
                             payable: parseFloat($("#totalAmount").text()),
+                            due: parseFloat($("#totalAmount").text()) - $('#paidAmount').val(),
+                            cash_received: $("#cash_received").val(),
+                            cash_returned: $("#cash_returned").val()
                         }),
                         success: function (res) {
                             if (res.success) {
@@ -762,6 +767,7 @@
                                 $('#dueAmount').text(0.00);
                                 $("#cash_received").val('');
                                 $("#cash_returned").val("0.00");
+                                $('input[name="payment_method"][value=""]').prop('checked', true);
                             }
                         },
                         error: function () {
@@ -827,12 +833,11 @@
                                             : `${c.phone} (${c.value})`;
 
                                         html += `
-                                                                                                                                    <button type="button"
-                                                                                                                                        class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100"
-                                                                                                                                        data-index="${i}">
-                                                                                                                                        ${text}
-                                                                                                                                    </button>
-                                                                                                                                `;
+                                             <button type="button"
+                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100" data-index="${i}">
+                                                ${text}
+                                             </button>                                                                                       
+                                            `;
                                     });
 
                                     $dropdown.html(html).removeClass('hidden');
