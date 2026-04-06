@@ -17,6 +17,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $query = Order::with(['user', 'items'])
+            ->whereNot('status', OrderStatus::DRAFT)
             ->orderByDesc('created_at');
 
         // Filter by status

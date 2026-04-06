@@ -91,7 +91,7 @@
                             <input type="text" id="customerName" name="customer_name" placeholder="Customer Name"
                                 autocomplete="off"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                                           focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerNameDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -102,7 +102,7 @@
                             <input type="text" id="customerPhone" name="customer_phone" placeholder="Phone Number"
                                 autocomplete="off"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                                           focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerPhoneDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -174,32 +174,30 @@
 
                         <!-- PAID -->
                         <div class="flex-1">
-                            <label class="block text-xs font-medium text-gray-600 mb-1">
-                                Paid
-                            </label>
+                            <div class="flex justify-between">
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    Due
+                                </label>
+
+                                <div class="text-xs font-bold text-red-600">
+                                    ৳<span id="dueAmount">0.00</span>
+                                </div>
+                            </div>
 
                             <div class="flex gap-2">
                                 <input type="number" id="paidAmount" min="0" step="0.01"
                                     class="w-full border rounded px-2 py-2 text-sm focus:outline-none focus:ring"
-                                    placeholder="0.00" />
+                                    placeholder="Enter paid amount" />
 
                                 <button type="button" id="fullPaidBtn"
                                     class="bg-green-600 text-white px-2 py-2 rounded text-xs hover:bg-green-700 whitespace-nowrap">
-                                    Full
+                                    Full Paid
                                 </button>
                             </div>
                         </div>
 
                         <!-- DUE -->
-                        <div class="min-w-27.5 text-right">
-                            <label class="block text-xs font-medium text-gray-600 mb-1">
-                                Due
-                            </label>
 
-                            <div class="text-lg font-bold text-red-600">
-                                ৳<span id="dueAmount">0.00</span>
-                            </div>
-                        </div>
 
                     </div>
 
@@ -245,13 +243,13 @@
 
                             <!-- NONE / DRAFT -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="" class="hidden peer payment_method" checked>
+                                <input type="radio" name="payment_method" value="" class="hidden peer payment_method"
+                                    checked>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                border-gray-300 text-gray-500 text-xs
-                                peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700
-                                transition">
-                                    <i class="fas fa-minus-circle text-sm mb-1"></i>
+                                        border-gray-300 text-gray-500 text-xs
+                                        peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700
+                                        transition">
                                     None
                                 </div>
                             </label>
@@ -261,10 +259,10 @@
                                 <input type="radio" name="payment_method" value="cash" class="hidden peer">
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                border-gray-300 text-gray-600 text-xs
-                                peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
-                                transition">
-                                    <i class="fas fa-money-bill-wave text-sm mb-1"></i>
+                                        border-gray-300 text-gray-600 text-xs
+                                        peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
+                                        transition">
+
                                     Cash
                                 </div>
                             </label>
@@ -274,10 +272,10 @@
                                 <input type="radio" name="payment_method" value="card" class="hidden peer">
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                border-gray-300 text-gray-600 text-xs
-                                peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
-                                transition">
-                                    <i class="fas fa-credit-card text-sm mb-1"></i>
+                                        border-gray-300 text-gray-600 text-xs
+                                        peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
+                                        transition">
+
                                     Card
                                 </div>
                             </label>
@@ -287,11 +285,11 @@
                                 <input type="radio" name="payment_method" value="bkash" class="hidden peer">
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                border-gray-300 text-gray-600 text-xs
-                                peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600
-                                transition">
-                                    <span class="font-semibold text-xs mb-1">bKash</span>
-                                    <i class="fas fa-mobile-alt text-sm"></i>
+                                        border-gray-300 text-gray-600 text-xs
+                                        peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600
+                                        transition">
+                                    <span class="font-semibold text-xs">bKash</span>
+
                                 </div>
                             </label>
 
@@ -300,11 +298,11 @@
                                 <input type="radio" name="payment_method" value="nagad" class="hidden peer">
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                border-gray-300 text-gray-600 text-xs
-                                peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600
-                                transition">
-                                    <span class="font-semibold text-xs mb-1">Nagad</span>
-                                    <i class="fas fa-mobile-alt text-sm"></i>
+                                        border-gray-300 text-gray-600 text-xs
+                                        peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600
+                                        transition">
+                                    <span class="font-semibold text-xs">Nagad</span>
+
                                 </div>
                             </label>
 
@@ -546,22 +544,21 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                                                                                                                                            <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                                                                                                                                                data-variant-id="${variant.id}" ${disabled}>
-                                                                                                                                                <div class="flex items-center gap-3">
-                                                                                                                                                    <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                                                                                                                                                        <div class="text-left">
-                                                                                                                                                            <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                                                                                                                            <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                                                                                                                                                        </div>
-                                                                                                                                                    </div>
-                                                                                                                                                     <div class="text-right">
-                                                                                                                                                        <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                                                                                                                                                        <p class="text-xs ${stockClass}">${stockText}</p>
-                                                                                                                                                     </div>
-                                                                                                                                            </button>                                                                                                   
-
-                                                                                                                                            `;
+                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                    data-variant-id="${variant.id}" ${disabled}>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                            <div class="text-left">
+                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                            <p class="text-xs ${stockClass}">${stockText}</p>
+                        </div>
+                </button>                                                                                                   
+                `;
 
                             $variantsList.append(btn);
                         });
@@ -711,7 +708,7 @@
                                 $("#cash_received").val('');
                                 $("#cash_returned").val("0.00");
                                 $('input[name="payment_method"][value=""]').prop('checked', true);
-                                
+
                             }
                         },
                         error: function () {
@@ -830,12 +827,12 @@
                                             : `${c.phone} (${c.value})`;
 
                                         html += `
-                                                                                                                    <button type="button"
-                                                                                                                        class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100"
-                                                                                                                        data-index="${i}">
-                                                                                                                        ${text}
-                                                                                                                    </button>
-                                                                                                                `;
+                                                                                                                                    <button type="button"
+                                                                                                                                        class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100"
+                                                                                                                                        data-index="${i}">
+                                                                                                                                        ${text}
+                                                                                                                                    </button>
+                                                                                                                                `;
                                     });
 
                                     $dropdown.html(html).removeClass('hidden');

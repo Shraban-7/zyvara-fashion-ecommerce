@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -44,13 +45,14 @@ class DashboardController extends Controller
 
         // Recent Orders
         $recentOrders = Order::with('user')
+            ->whereNot('status', OrderStatus::DRAFT)
             ->latest()
             ->take(10)
             ->get()
             ->map(function ($order) {
                 return [
                     'id' => $order->id,
-                    'customer_name' => $order->shipping_name ?? $order->user->name,
+                    'customer_name' => $order->shipping_name ?? $order->user->name ?? $order->customer->name ?? 'Walk-In Customer',
                     'created_at' => $order->created_at->format('M d, Y'),
                     'total' => $order->total,
                     'status' => $order->status->value ?? 'pending',
