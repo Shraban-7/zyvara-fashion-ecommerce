@@ -17,12 +17,43 @@
                         class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
                         <i class="fas fa-refresh mr-2"></i>New Sale
                     </button>
-                    <button
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
-                        <i class="fas fa-history mr-2"></i>Orders
+                    <button id="draftOrdersBtn"
+                        class="px-4 py-2 text-sm font-medium text-yellow-700 bg-yellow-100 hover:bg-yellow-200 rounded-lg transition">
+                        <i class="fas fa-file-alt mr-2"></i>Draft
+                    </button>
+
+                    <button id="salesOrdersBtn"
+                        class="px-4 py-2 text-sm font-medium text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition">
+                        <i class="fas fa-history mr-2"></i>Sales
                     </button>
                 </div>
             </div>
+        </div>
+
+        <div id="ordersModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+
+            <div class="bg-white w-full max-w-2xl h-[80vh] rounded-xl shadow-lg flex flex-col">
+
+                <!-- Header (fixed) -->
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h2 id="ordersModalTitle" class="text-lg font-semibold">Orders</h2>
+                    <button id="closeOrdersModal" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+                </div>
+
+                <!-- Body (SCROLLABLE) -->
+                <div id="ordersList" class="flex-1 overflow-y-auto p-4 space-y-2">
+                    <!-- dynamic content -->
+                </div>
+
+                <!-- Footer (optional fixed) -->
+                <div class="p-3 border-t text-right">
+                    <button onclick="closeModal()" class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+
         </div>
 
         {{-- Main Content --}}
@@ -91,7 +122,7 @@
                             <input type="text" id="customerName" name="customer_name" placeholder="Customer Name"
                                 autocomplete="off"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerNameDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -102,7 +133,7 @@
                             <input type="text" id="customerPhone" name="customer_phone" placeholder="Phone Number"
                                 autocomplete="off"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerPhoneDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -247,9 +278,9 @@
                                     checked>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                        border-gray-300 text-gray-500 text-xs
-                                        peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700
-                                        transition">
+                                                                        border-gray-300 text-gray-500 text-xs
+                                                                        peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700
+                                                                        transition">
                                     None
                                 </div>
                             </label>
@@ -259,9 +290,9 @@
                                 <input type="radio" name="payment_method" value="cash" class="hidden peer">
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                        border-gray-300 text-gray-600 text-xs
-                                        peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
-                                        transition">
+                                                                        border-gray-300 text-gray-600 text-xs
+                                                                        peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
+                                                                        transition">
 
                                     Cash
                                 </div>
@@ -272,9 +303,9 @@
                                 <input type="radio" name="payment_method" value="card" class="hidden peer">
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                        border-gray-300 text-gray-600 text-xs
-                                        peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
-                                        transition">
+                                                                        border-gray-300 text-gray-600 text-xs
+                                                                        peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
+                                                                        transition">
 
                                     Card
                                 </div>
@@ -285,9 +316,9 @@
                                 <input type="radio" name="payment_method" value="bkash" class="hidden peer">
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                        border-gray-300 text-gray-600 text-xs
-                                        peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600
-                                        transition">
+                                                                        border-gray-300 text-gray-600 text-xs
+                                                                        peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600
+                                                                        transition">
                                     <span class="font-semibold text-xs">bKash</span>
 
                                 </div>
@@ -298,9 +329,9 @@
                                 <input type="radio" name="payment_method" value="nagad" class="hidden peer">
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                        border-gray-300 text-gray-600 text-xs
-                                        peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600
-                                        transition">
+                                                                        border-gray-300 text-gray-600 text-xs
+                                                                        peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600
+                                                                        transition">
                                     <span class="font-semibold text-xs">Nagad</span>
 
                                 </div>
@@ -376,6 +407,7 @@
 
                 var selectedProduct = null;
                 var paymentMethod = 'cash';
+                const posOrdersUrl = "{{ route('admin.pos.loadOrders') }}";
 
                 // =========================
                 // INIT
@@ -544,21 +576,21 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                    data-variant-id="${variant.id}" ${disabled}>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                            <div class="text-left">
-                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                            <p class="text-xs ${stockClass}">${stockText}</p>
-                        </div>
-                </button>                                                                                                   
-                `;
+                                                                                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                                                                    data-variant-id="${variant.id}" ${disabled}>
+                                                                                    <div class="flex items-center gap-3">
+                                                                                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                                                                            <div class="text-left">
+                                                                                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                                                                                <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="text-right">
+                                                                                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                                                                            <p class="text-xs ${stockClass}">${stockText}</p>
+                                                                                        </div>
+                                                                                </button>                                                                                                   
+                                                                                `;
 
                             $variantsList.append(btn);
                         });
@@ -588,6 +620,77 @@
                         $('#variantModal').addClass('hidden');
                         selectedProduct = null;
                     }
+                });
+
+                // =========================
+                // Load Orders
+                // =========================
+
+                function openModal() {
+                    $('#ordersModal').removeClass('hidden').addClass('flex');
+                }
+
+                function closeModal() {
+                    $('#ordersModal').addClass('hidden').removeClass('flex');
+                }
+
+                // close button
+                $(document).on('click', '#closeOrdersModal', function () {
+                    closeModal();
+                });
+
+                // click outside to close
+                $(document).on('click', '#ordersModal', function (e) {
+                    if (e.target.id === 'ordersModal') {
+                        closeModal();
+                    }
+                });
+
+                function loadOrders(type) {
+                    openModal();
+
+                    $('#ordersList').html('<p>Loading...</p>');
+
+                    $.ajax({
+                        url: posOrdersUrl,
+                        method: 'GET',
+                        data: { type: type },
+                        success: function (res) {
+                            let html = '';
+
+                            if (res.data.length === 0) {
+                                html = '<p class="text-center text-gray-500">No orders found</p>';
+                            } else {
+                                res.data.forEach(order => {
+                                    html += `
+                                                <div class="border-b py-3 flex justify-between hover:bg-gray-50 cursor-pointer px-2 rounded">
+                                                    <div>
+                                                        <p class="font-semibold">#${order.order_number}</p>
+                                                        <p class="text-sm text-gray-500">${order.customer_name}</p>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <p class="font-semibold">${order.total}</p>
+                                                        <p class="text-xs text-gray-500">${order.status}</p>
+                                                    </div>
+                                                </div>
+                                            `;
+                                });
+                            }
+
+                            $('#ordersList').html(html);
+                        }
+                    });
+                }
+
+                // buttons
+                $(document).on('click', '#draftOrdersBtn', function () {
+                    $('#ordersModalTitle').text('Today Draft Orders');
+                    loadOrders('draft');
+                });
+
+                $(document).on('click', '#salesOrdersBtn', function () {
+                    $('#ordersModalTitle').text('Today Sales');
+                    loadOrders('sales');
                 });
 
                 // =========================
@@ -833,11 +936,11 @@
                                             : `${c.phone} (${c.value})`;
 
                                         html += `
-                                             <button type="button"
-                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100" data-index="${i}">
-                                                ${text}
-                                             </button>                                                                                       
-                                            `;
+                                                                                                             <button type="button"
+                                                                                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100" data-index="${i}">
+                                                                                                                ${text}
+                                                                                                             </button>                                                                                       
+                                                                                                            `;
                                     });
 
                                     $dropdown.html(html).removeClass('hidden');

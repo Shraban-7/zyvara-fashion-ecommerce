@@ -63,6 +63,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::prefix('pos')->as('pos.')->group(function () {
         Route::get('/', [PosController::class, 'index'])->name('index');
+        Route::get('/sales', [PosController::class, 'posSales'])->name('sales');
+        Route::get('/load-orders', [PosController::class, 'getPosOrders'])->name('loadOrders');
         Route::post('/store', [PosController::class, 'store'])->name('store');
         Route::post('/draft', [PosController::class, 'saveDraft'])->name('saveDraft');
         Route::get('/search', [PosController::class, 'searchProducts'])->name('search');

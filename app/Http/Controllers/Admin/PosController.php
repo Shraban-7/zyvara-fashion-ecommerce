@@ -110,8 +110,8 @@ class PosController extends Controller
                 'card' => PaymentMethod::CARD,
                 'bkash' => PaymentMethod::BKASH,
                 'nagad' => PaymentMethod::NAGAD,
-                '' => null, 
-                default => null, 
+                '' => null,
+                default => null,
             };
 
 
@@ -150,7 +150,7 @@ class PosController extends Controller
                 'cash_received' => $request->cash_received,
                 'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DELIVERED,
-                'payment_method' => $paymentMethodEnum->value??'',
+                'payment_method' => $paymentMethodEnum->value ?? '',
                 'payment_status' => PaymentStatus::PAID,
                 'notes' => 'POS Order',
                 'paid_at' => now(),
@@ -239,8 +239,8 @@ class PosController extends Controller
                 'card' => PaymentMethod::CARD,
                 'bkash' => PaymentMethod::BKASH,
                 'nagad' => PaymentMethod::NAGAD,
-                '' => null, 
-                default => null, 
+                '' => null,
+                default => null,
             };
 
             $customer_id = null;
@@ -277,7 +277,7 @@ class PosController extends Controller
                 'cash_received' => $request->cash_received,
                 'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DRAFT,
-                'payment_method' => $paymentMethodEnum->value??'',
+                'payment_method' => $paymentMethodEnum->value ?? '',
                 'payment_status' => PaymentStatus::PAID,
                 'notes' => 'POS Order',
                 'paid_at' => now(),
@@ -617,5 +617,103 @@ class PosController extends Controller
                 'message' => 'Failed to clear cart: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function getPosOrders(Request $request)
+    {
+        $type = $request->type;
+        $query = Order::with(['user', 'customer'])->limit(8)
+        ;
+
+        if ($type === OrderStatus::DRAFT->value) {
+            $query->where('status', OrderStatus::DRAFT);
+        } else {
+            $query->whereNot('status', OrderStatus::DRAFT);
+        }
+
+        $orders = $query->latest()->get()->map(function ($order) {
+            return [
+                'order_number' => $order->order_number,
+                'customer_name' => $order->shipping_name
+                    ?? $order->user?->name
+                    ?? $order->customer?->name
+                    ?? 'Guest',
+                'total' => $order->total,
+                'status' => $order->status,
+            ];
+        });
+
+        return response()->json(['data' => $orders]);
+    }
+
+
+    public function posSales(Request $request)
+    {
+        $query = Order::with(['user', 'items'])
+            ->where('is_pos', 1);
+
+        // =========================
+        // STATUS FILTER (NEW)
+        // =========================
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        } else {
+            // default allowed POS statuses
+            $query->whereIn('status', [
+                OrderStatus::DELIVERED,
+                OrderStatus::CANCELLED,
+                OrderStatus::DRAFT,
+            ]);
+        }
+
+        // =========================
+        // SEARCH
+        // =========================
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhere('shipping_name', 'like', "%{$search}%")
+                    ->orWhere('shipping_phone', 'like', "%{$search}%");
+            });
+        }
+
+        // =========================
+        // DATE FILTER
+        // =========================
+        if ($request->filled('date_from') && $request->filled('date_to')) {
+            $query->whereBetween('created_at', [
+                $request->date_from . ' 00:00:00',
+                $request->date_to . ' 23:59:59',
+            ]);
+        } elseif ($request->filled('date_from')) {
+            $query->where('created_at', '>=', $request->date_from . ' 00:00:00');
+        } elseif ($request->filled('date_to')) {
+            $query->where('created_at', '<=', $request->date_to . ' 23:59:59');
+        }
+
+        $orders = $query->orderByDesc('created_at')->paginate(20);
+
+        // =========================
+        // COUNTS
+        // =========================
+        $statusCounts = [
+            'delivered' => Order::where('is_pos', 1)
+                ->where('status', OrderStatus::DELIVERED)
+                ->count(),
+
+            'cancelled' => Order::where('is_pos', 1)
+                ->where('status', OrderStatus::CANCELLED)
+                ->count(),
+
+            'draft' => Order::where('is_pos', 1)
+                ->where('status', OrderStatus::DRAFT)
+                ->count(),
+            'all' => Order::where('is_pos', 1)
+                ->count(),
+        ];
+
+        return view('admin.pos.sales', compact('orders', 'statusCounts'));
     }
 }

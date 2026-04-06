@@ -76,7 +76,7 @@
             <div class="space-y-4">
                 @foreach($order->items as $item)
                 <div class="flex gap-4 p-4 bg-gray-50 rounded-xl">
-                    <div class="w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-white">
+                    <div class="w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-white">
                         <img src="{{ $item->product_image }}" alt="{{ $item->product_name }}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1 min-w-0">
@@ -132,7 +132,7 @@
                 @forelse($order->statusHistories as $history)
                 <div class="flex gap-4">
                     <div class="flex flex-col items-center">
-                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
                             <i class="fas fa-circle text-blue-600 text-xs"></i>
                         </div>
                         @if(!$loop->last)
@@ -206,7 +206,7 @@
                 <div class="pt-3 border-t border-gray-200">
                     <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
                         <i class="fas fa-truck"></i>
-                        {{ $order->delivery_zone->label() }}
+                        {{ $order->delivery_zone ? $order->delivery_zone->label() : '' }}
                     </span>
                 </div>
             </div>
@@ -433,7 +433,7 @@
                         <td style="padding: 8px 12px; text-align: right; font-size: 10px; color: #000; font-weight: 600; background: #fff;">{{ money($order->subtotal) }}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #e5e7eb;">
-                        <td style="padding: 8px 12px; font-size: 10px; color: #000; background: #f9fafb; font-weight: 600;">Shipping Charge<br><span style="font-size: 8px; color: #666; font-weight: 400;">({{ $order->delivery_zone->label() }})</span></td>
+                        <td style="padding: 8px 12px; font-size: 10px; color: #000; background: #f9fafb; font-weight: 600;">Shipping Charge<br><span style="font-size: 8px; color: #666; font-weight: 400;">({{ $order->delivery_zone ? $order->delivery_zone->label() : '' }})</span></td>
                         <td style="padding: 8px 12px; text-align: right; font-size: 10px; color: #000; font-weight: 600; background: #fff;">{{ money($order->shipping_cost) }}</td>
                     </tr>
                     @if($order->discount_amount > 0)
