@@ -57,12 +57,12 @@ class OrderController extends Controller
 
         // Get counts for filters
         $statusCounts = [
-            'all' => Order::count(),
-            'pending' => Order::where('status', OrderStatus::PENDING)->count(),
-            'confirmed' => Order::where('status', OrderStatus::CONFIRMED)->count(),
-            'shipped' => Order::where('status', OrderStatus::SHIPPED)->count(),
-            'delivered' => Order::where('status', OrderStatus::DELIVERED)->count(),
-            'cancelled' => Order::where('status', OrderStatus::CANCELLED)->count(),
+            'all' => Order::where('is_pos',0)->count(),
+            'pending' => Order::where('is_pos',0)->where('status', OrderStatus::PENDING)->count(),
+            'confirmed' => Order::where('is_pos',0)->where('status', OrderStatus::CONFIRMED)->count(),
+            'shipped' => Order::where('is_pos',0)->where('status', OrderStatus::SHIPPED)->count(),
+            'delivered' => Order::where('is_pos',0)->where('status', OrderStatus::DELIVERED)->count(),
+            'cancelled' => Order::where('is_pos',0)->where('status', OrderStatus::CANCELLED)->count(),
         ];
 
         return view('admin.orders.index', compact('orders', 'statusCounts'));
@@ -180,5 +180,12 @@ class OrderController extends Controller
 
         toast_success('Order deleted successfully!');
         return redirect()->route('admin.orders.index');
+    }
+
+    public function invoice($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->with('customer', 'items')->first();
+
+        return view('admin.orders.invoice', compact('order'));
     }
 }

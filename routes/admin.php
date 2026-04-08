@@ -36,6 +36,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/update-tracking', [OrderController::class, 'updateTracking'])->name('update-tracking');
         Route::post('/{id}/update-notes', [OrderController::class, 'updateNotes'])->name('update-notes');
         Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
+        Route::get('/{orderNumber}/invoice', [OrderController::class, 'invoice'])->name('invoice');
+
     });
 
     Route::prefix('categories')->as('categories.')->group(function () {
@@ -70,6 +72,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/draft', [PosController::class, 'saveDraft'])->name('saveDraft');
         Route::get('/search', [PosController::class, 'searchProducts'])->name('search');
         Route::get('/search/customer', [PosController::class, 'searchCustomers'])->name('searchCustomers');
+        Route::get('/{orderNumber}/receipt', [PosController::class, 'receipt'])->name('receipt');
+
 
         Route::prefix('cart')->as('cart.')->group(function () {
             Route::get('/', [PosController::class, 'getCart'])->name('get');

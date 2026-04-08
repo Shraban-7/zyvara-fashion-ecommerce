@@ -1310,4 +1310,11 @@ class PosController extends Controller
 
         return view('admin.pos.sales', compact('orders', 'statusCounts'));
     }
+
+    public function receipt($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->with('customer', 'items')->first();
+
+        return view('admin.pos.receipt', compact('order'));
+    }
 }

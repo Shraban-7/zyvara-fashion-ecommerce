@@ -128,13 +128,18 @@ if (!function_exists('currency')) {
     }
 }
 if (!function_exists('money')) {
-    function money($amount, $currencyType = 'symbol')
+    function money($amount,$showCurrency = true, $currencyType = 'symbol')
     {
         $money = number_format($amount, 2);
         $decimal = explode('.', $money);
         if ($decimal[1] == '00') {
             $money = str_replace('.00', '', $money);
         }
+
+        if(!$showCurrency) {
+            return $money;
+        }
+
         return currency($currencyType) . $money;
     }
 }
