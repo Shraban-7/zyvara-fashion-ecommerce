@@ -19,12 +19,12 @@
                     </button>
                     <button id="draftOrdersBtn"
                         class="px-4 py-2 text-sm font-medium text-yellow-700 bg-yellow-100 hover:bg-yellow-200 rounded-lg transition">
-                        <i class="fas fa-file-alt mr-2"></i>Recent Draft
+                        <i class="fas fa-file-alt mr-2"></i>Draft
                     </button>
 
                     <button id="salesOrdersBtn"
                         class="px-4 py-2 text-sm font-medium text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition">
-                        <i class="fas fa-history mr-2"></i>Recent Sales
+                        <i class="fas fa-history mr-2"></i>Today Sales
                     </button>
                 </div>
             </div>
@@ -715,7 +715,7 @@
 
                 // buttons
                 $(document).on('click', '#draftOrdersBtn', function () {
-                    $('#ordersModalTitle').text('Today Draft Orders');
+                    $('#ordersModalTitle').text('Draft Orders');
                     loadOrders('draft');
                 });
 
