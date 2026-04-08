@@ -595,9 +595,6 @@ class PosController extends Controller
             'items.variant.color'
         ]);
 
-
-        // dd($cart->items);
-
         // =========================
         // CART ITEMS
         // =========================
@@ -627,8 +624,6 @@ class PosController extends Controller
                 'total_price' => (float) $item->total_price,
             ];
         });
-
-        // dd($cartItems);
 
         // =========================
         // ORDER ITEMS (EDIT MODE)
@@ -676,10 +671,6 @@ class PosController extends Controller
         $items = collect($cartItems)
             ->merge(collect($orderItems))
             ->values();
-
-
-
-        // dd($items);
 
         // =========================
         // TOTALS
