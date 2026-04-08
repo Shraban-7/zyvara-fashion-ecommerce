@@ -19,12 +19,12 @@
                     </button>
                     <button id="draftOrdersBtn"
                         class="px-4 py-2 text-sm font-medium text-yellow-700 bg-yellow-100 hover:bg-yellow-200 rounded-lg transition">
-                        <i class="fas fa-file-alt mr-2"></i>Draft
+                        <i class="fas fa-file-alt mr-2"></i>Recent Draft
                     </button>
 
                     <button id="salesOrdersBtn"
                         class="px-4 py-2 text-sm font-medium text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition">
-                        <i class="fas fa-history mr-2"></i>Sales
+                        <i class="fas fa-history mr-2"></i>Recent Sales
                     </button>
                 </div>
             </div>

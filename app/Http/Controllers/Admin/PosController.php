@@ -15,6 +15,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -1216,16 +1217,24 @@ class PosController extends Controller
     public function getPosOrders(Request $request)
     {
         $type = $request->type;
-        $query = Order::with(['user', 'customer'])->limit(8)
-        ;
+
+        $query = Order::where('is_pos', 1)
+            ->with(['user', 'customer'])
+            ->latest();
 
         if ($type === OrderStatus::DRAFT->value) {
+
             $query->where('status', OrderStatus::DRAFT);
         } else {
-            $query->whereNot('status', OrderStatus::DRAFT);
+
+            $query->where('status', OrderStatus::DELIVERED)
+                ->whereBetween('created_at', [
+                    Carbon::today(),
+                    Carbon::now()
+                ]);
         }
 
-        $orders = $query->latest()->get()->map(function ($order) {
+        $orders = $query->get()->map(function ($order) {
             return [
                 'order_number' => $order->order_number,
                 'customer_name' => $order->shipping_name
