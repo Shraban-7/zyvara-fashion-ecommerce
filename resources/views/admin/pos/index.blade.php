@@ -15,7 +15,7 @@
                 <div class="flex items-center gap-3">
                     <button id="clearCartBtn"
                         class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
-                        <i class="fas fa-refresh mr-2"></i>New Sale
+                        <i class="fas fa-refresh mr-2"></i>Clear Cart
                     </button>
                     <button id="draftOrdersBtn"
                         class="px-4 py-2 text-sm font-medium text-yellow-700 bg-yellow-100 hover:bg-yellow-200 rounded-lg transition">
@@ -119,10 +119,11 @@
 
                         <!-- Customer Name -->
                         <div class="relative">
-                            <input type="text" id="customerName" name="customer_name" placeholder="Customer Name"
-                                autocomplete="off"
+                            <input type="text" id="customerName" name="customer_name"
+                                value="{{ request()->order_number ? $order->customer?->name : '' }}"
+                                placeholder="Customer Name" autocomplete="off"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerNameDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -130,10 +131,11 @@
 
                         <!-- Customer Phone -->
                         <div class="relative">
-                            <input type="text" id="customerPhone" name="customer_phone" placeholder="Phone Number"
-                                autocomplete="off"
+                            <input type="text" id="customerPhone" name="customer_phone"
+                                value="{{ request()->order_number ? $order->customer?->phone : '' }}"
+                                placeholder="Phone Number" autocomplete="off"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <div id="customerPhoneDropdown"
                                 class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
@@ -169,13 +171,22 @@
                             <!-- Discount Type -->
                             <select id="discountType"
                                 class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
-                                <option value="fixed">৳ Fixed</option>
-                                <option value="percent">%</option>
+
+                                <option value="fixed" {{ isset($order) && $order->discount_type == 'fixed' ? 'selected' : '' }}>
+                                    ৳ Fixed
+                                </option>
+
+                                <option value="percent" {{ isset($order) && $order->discount_type == 'percent' ? 'selected' : '' }}>
+                                    %
+                                </option>
+
                             </select>
 
                             <!-- Discount Input -->
                             <input type="number" id="discountInput" placeholder="Enter discount"
+                                value="{{ isset($order) ? $order->discount_amount : '' }}"
                                 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+
                         </div>
 
                         <!-- Applied Info -->
@@ -211,129 +222,139 @@
                                 </label>
 
                                 <div class="text-xs font-bold text-red-600">
-                                    ৳<span id="dueAmount">0.00</span>
+                                    ৳<span id="dueAmount">{{ isset($order) ? $order->due : 0 }}</span>
                                 </div>
                             </div>
 
                             <div class="flex gap-2">
-                                <input type="number" id="paidAmount" min="0" step="0.01"
+
+                                <!-- PAID INPUT -->
+                                <input type="number" id="paidAmount" name="paid" min="0" step="0.01"
+                                    value="{{ isset($order) ? $order->paid : '' }}"
                                     class="w-full border rounded px-2 py-2 text-sm focus:outline-none focus:ring"
                                     placeholder="Enter paid amount" />
 
+                                <!-- FULL PAID BUTTON -->
                                 <button type="button" id="fullPaidBtn"
                                     class="bg-green-600 text-white px-2 py-2 rounded text-xs hover:bg-green-700 whitespace-nowrap">
                                     Full Paid
                                 </button>
+
                             </div>
                         </div>
-
-                        <!-- DUE -->
-
-
                     </div>
 
                     <div class="flex justify-between gap-2 mb-2">
+
                         <!-- CASH RECEIVED -->
-                        <div class="mt-3">
+                        <div class="mt-3 w-full">
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 Cash Received
                             </label>
 
-                            <input type="number" id="cash_received" min="0" step="0.01"
+                            <input type="number" id="cash_received" name="cash_received" min="0" step="0.01"
+                                value="{{ isset($order) ? $order->cash_received : '' }}"
                                 class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring"
                                 placeholder="Enter cash received" />
                         </div>
 
                         <!-- CASH RETURNED -->
-                        <div class="mt-3">
+                        <div class="mt-3 w-full">
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 Cash Returned
                             </label>
 
-                            <input type="number" id="cash_returned" readonly
+                            <input type="number" id="cash_returned" name="cash_returned" value="{{ isset($order) ? $order->cash_returned : 0 }}" readonly                               
                                 class="w-full border rounded px-3 py-2 text-sm bg-gray-100" />
                         </div>
+
                     </div>
 
                     <div class="space-y-2 mb-4">
                         <div class="relative">
                             <select id="employeeId" name="employee_id"
                                 class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected>Choose an employee...</option>
+
+                                <option value="" disabled {{ empty($order->employee_id) ? 'selected' : '' }}>
+                                    Choose an employee...
+                                </option>
+
                                 @foreach ($employees as $employee)
-                                    <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                    <option value="{{ $employee->id }}" {{ isset($order) && $order->employee_id == $employee->id ? 'selected' : '' }}>
+                                        {{ $employee->name }}
+                                    </option>
                                 @endforeach
+
                             </select>
                         </div>
                     </div>
 
                     {{-- Payment Method --}}
                     <div class="mb-4">
-
                         <div class="grid grid-cols-5 gap-2">
 
                             <!-- NONE / DRAFT -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="" class="hidden peer payment_method"
-                                    checked>
+                                <input type="radio" name="payment_method" value=""
+                                    class="hidden peer payment_method"
+                                    {{ !$order || !$order->payment_method ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                                                        border-gray-300 text-gray-500 text-xs
-                                                                        peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700
-                                                                        transition">
+                                    border-gray-300 text-gray-500 text-xs
+                                    peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700 transition">
                                     None
                                 </div>
                             </label>
 
                             <!-- CASH -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="cash" class="hidden peer">
+                                <input type="radio" name="payment_method" value="cash"
+                                    class="hidden peer"
+                                    {{ isset($order) && $order->payment_method->value === 'cash' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                                                        border-gray-300 text-gray-600 text-xs
-                                                                        peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
-                                                                        transition">
-
+                                    border-gray-300 text-gray-600 text-xs
+                                    peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition">
                                     Cash
                                 </div>
                             </label>
 
                             <!-- CARD -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="card" class="hidden peer">
+                                <input type="radio" name="payment_method" value="card"
+                                    class="hidden peer"
+                                    {{ isset($order) && $order->payment_method->value === 'card' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                                                        border-gray-300 text-gray-600 text-xs
-                                                                        peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600
-                                                                        transition">
-
+                                    border-gray-300 text-gray-600 text-xs
+                                    peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition">
                                     Card
                                 </div>
                             </label>
 
                             <!-- BKASH -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="bkash" class="hidden peer">
+                                <input type="radio" name="payment_method" value="bkash"
+                                    class="hidden peer"
+                                    {{ isset($order) && $order->payment_method->value === 'bkash' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                                                        border-gray-300 text-gray-600 text-xs
-                                                                        peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600
-                                                                        transition">
+                                    border-gray-300 text-gray-600 text-xs
+                                    peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600 transition">
                                     <span class="font-semibold text-xs">bKash</span>
-
                                 </div>
                             </label>
 
                             <!-- NAGAD -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="nagad" class="hidden peer">
+                                <input type="radio" name="payment_method" value="nagad"
+                                    class="hidden peer"
+                                    {{ isset($order) && $order->payment_method->value === 'nagad' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                                                        border-gray-300 text-gray-600 text-xs
-                                                                        peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600
-                                                                        transition">
+                                    border-gray-300 text-gray-600 text-xs
+                                    peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600 transition">
                                     <span class="font-semibold text-xs">Nagad</span>
-
                                 </div>
                             </label>
 
@@ -341,16 +362,25 @@
                     </div>
 
                     {{-- Action Buttons --}}
-                    <div class="grid grid-cols-2 gap-2">
-                        <button id="holdOrderBtn" disabled
-                            class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition">
-                            <i class="fas fa-pause mr-2"></i>Hold
+                    <!-- UPDATE BUTTON -->
+                        <button id="updateOrderBtn"
+                            class="{{ isset($order) ?  '' : 'hidden' }} px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition w-full">
+                            <i class="fas fa-edit mr-2"></i>Update
                         </button>
-                        <button id="completeOrderBtn" disabled
-                            class="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition">
-                            <i class="fas fa-check mr-2"></i>Complete
-                        </button>
-                    </div>
+
+                        <div class="grid grid-cols-2 gap-2 {{ isset($order) ? 'hidden' : '' }}">
+                            <!-- HOLD -->
+                            <button id="holdOrderBtn" disabled
+                                class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition">
+                                <i class="fas fa-pause mr-2"></i>Hold
+                            </button>
+                            
+                            <!-- COMPLETE -->
+                            <button id="completeOrderBtn" disabled
+                                class="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition">
+                                <i class="fas fa-check mr-2"></i>Complete
+                            </button>
+                        </div>                          
                 </div>
             </div>
         </div>
@@ -408,6 +438,7 @@
                 var selectedProduct = null;
                 var paymentMethod = 'cash';
                 const posOrdersUrl = "{{ route('admin.pos.loadOrders') }}";
+                const orderId = "{{ $order->id ?? '' }}"; 
 
                 // =========================
                 // INIT
@@ -576,21 +607,21 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                                                                                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                                                                                    data-variant-id="${variant.id}" ${disabled}>
-                                                                                    <div class="flex items-center gap-3">
-                                                                                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                                                                                            <div class="text-left">
-                                                                                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                                                                <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="text-right">
-                                                                                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                                                                                            <p class="text-xs ${stockClass}">${stockText}</p>
-                                                                                        </div>
-                                                                                </button>                                                                                                   
-                                                                                `;
+                                                                                                                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                                                                                                    data-variant-id="${variant.id}" ${disabled}>
+                                                                                                                    <div class="flex items-center gap-3">
+                                                                                                                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                                                                                                            <div class="text-left">
+                                                                                                                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                                                                                                                <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div class="text-right">
+                                                                                                                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                                                                                                            <p class="text-xs ${stockClass}">${stockText}</p>
+                                                                                                                        </div>
+                                                                                                                </button>                                                                                                   
+                                                                                                                `;
 
                             $variantsList.append(btn);
                         });
@@ -663,17 +694,17 @@
                             } else {
                                 res.data.forEach(order => {
                                     html += `
-                                                <div class="border-b py-3 flex justify-between hover:bg-gray-50 cursor-pointer px-2 rounded">
-                                                    <div>
-                                                        <p class="font-semibold">#${order.order_number}</p>
-                                                        <p class="text-sm text-gray-500">${order.customer_name}</p>
-                                                    </div>
-                                                    <div class="text-right">
-                                                        <p class="font-semibold">${order.total}</p>
-                                                        <p class="text-xs text-gray-500">${order.status}</p>
-                                                    </div>
-                                                </div>
-                                            `;
+                                                                                <div class="border-b py-3 flex justify-between hover:bg-gray-50 cursor-pointer px-2 rounded">
+                                                                                    <div>
+                                                                                        <p class="font-semibold">#${order.order_number}</p>
+                                                                                        <p class="text-sm text-gray-500">${order.customer_name}</p>
+                                                                                    </div>
+                                                                                    <div class="text-right">
+                                                                                        <p class="font-semibold">${order.total}</p>
+                                                                                        <p class="text-xs text-gray-500">${order.status}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            `;
                                 });
                             }
 
@@ -763,122 +794,92 @@
                 // =========================
                 // COMPLETE ORDER (API CART)
                 // =========================
-                $('#completeOrderBtn').on('click', async function () {
+                async function submitOrder(url, method = 'POST') {
 
-                    const res = await fetch('/admin/pos/cart');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const orderNumber = urlParams.get('order_number');
+
+                    const fetchURL = orderNumber ? `/admin/pos/cart?order_number=${orderNumber}` : `/admin/pos/cart`;
+                                   
+                    const res = await fetch(fetchURL);  
                     const data = await res.json();
-
-                    const discount = $("#discountDisplay").text();
-                    const employee_id = $("#employeeId").val();
 
                     if (!data.success || !data.cart.items.length) {
                         alert('Cart is empty');
                         return;
-                    }
+                    }  
 
-                    $.ajax({
-                        url: '{{ route("admin.pos.store") }}',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        data: JSON.stringify({
-                            customer_name: $('#customerName').val(),
-                            customer_phone: $('#customerPhone').val(),
-                            payment_method: paymentMethod,
-                            items: data.cart.items,
-                            subtotal: data.cart.subtotal,
-                            discount: discount,
-                            total: (data.cart.total - discount),
-                            employee_id: employee_id,
-                            paid: $('#paidAmount').val(),
-                            payable: parseFloat($("#totalAmount").text()),
-                            due: parseFloat($("#totalAmount").text()) - $('#paidAmount').val(),
-                            cash_received: $("#cash_received").val(),
-                            cash_returned: $("#cash_returned").val()
-                        }),
-                        success: function (res) {
-                            if (res.success) {
-                                alert('Order completed');
-                                window.posCartManager.clearCart();
-                                $('#customerName').val('');
-                                $('#customerPhone').val('');
-                                $("#employeeId").val('');
-                                $('#paidAmount').val('');
-                                $('#discountInput').val('');
-                                $('#dueAmount').text(0.00);
-                                $("#cash_received").val('');
-                                $("#cash_returned").val("0.00");
-                                $('input[name="payment_method"][value=""]').prop('checked', true);
-
-                            }
-                        },
-                        error: function () {
-                            alert('Failed to complete order');
-                        }
-                    });
-                });
-
-                // =========================
-                // DRAFT ORDER (API CART)
-                // =========================
-                $('#holdOrderBtn').on('click', async function () {
-
-                    const res = await fetch('/admin/pos/cart');
-                    const data = await res.json();
-
-                    const discount = $("#discountDisplay").text();
+                    const discount = parseFloat($("#discountDisplay").text()) || 0;
                     const employee_id = $("#employeeId").val();
+                    const paid = parseFloat($('#paidAmount').val()) || 0;
+                    const totalAmount = parseFloat($("#totalAmount").text()) || 0;
 
-                    if (!data.success || !data.cart.items.length) {
-                        alert('Cart is empty');
-                        return;
-                    }
+                    const payload = {
+                        customer_name: $('#customerName').val(),
+                        customer_phone: $('#customerPhone').val(),
+                        payment_method: $('input[name="payment_method"]:checked').val(),
+                        cart_id : data.cart.id,
+                        items: data.cart.items,
+                        subtotal: data.cart.subtotal,
+                        discount: discount,
+                        total: (data.cart.total - discount),
+                        employee_id: employee_id,
+                        paid: paid,
+                        payable: totalAmount,
+                        due: totalAmount - paid,
+                        cash_received: $("#cash_received").val(),
+                        cash_returned: $("#cash_returned").val()
+                    };
 
                     $.ajax({
-                        url: '{{ route("admin.pos.saveDraft") }}',
-                        method: 'POST',
+                        url: url,
+                        method: method,
                         contentType: 'application/json',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        data: JSON.stringify({
-                            customer_name: $('#customerName').val(),
-                            customer_phone: $('#customerPhone').val(),
-                            payment_method: paymentMethod,
-                            items: data.cart.items,
-                            subtotal: data.cart.subtotal,
-                            discount: discount,
-                            total: (data.cart.total - discount),
-                            employee_id: employee_id,
-                            paid: $('#paidAmount').val(),
-                            payable: parseFloat($("#totalAmount").text()),
-                            due: parseFloat($("#totalAmount").text()) - $('#paidAmount').val(),
-                            cash_received: $("#cash_received").val(),
-                            cash_returned: $("#cash_returned").val()
-                        }),
+                        data: JSON.stringify(payload),
+
                         success: function (res) {
                             if (res.success) {
-                                alert('Order Draft Save successfully');
-                                window.posCartManager.clearCart();
-                                $('#customerName').val('');
-                                $('#customerPhone').val('');
-                                $("#employeeId").val('');
-                                $('#paidAmount').val('');
-                                $('#discountInput').val('');
-                                $('#dueAmount').text(0.00);
-                                $("#cash_received").val('');
-                                $("#cash_returned").val("0.00");
-                                $('input[name="payment_method"][value=""]').prop('checked', true);
+                                alert(method === 'POST' ? 'Order completed' : 'Order updated');
+                                resetPOS();
+                                window.location.href = '/admin/pos';
                             }
                         },
+
                         error: function () {
-                            alert('Failed to complete order');
+                            alert(method === 'POST'
+                                ? 'Failed to complete order'
+                                : 'Failed to update order');
                         }
                     });
+                }
+
+                $('#completeOrderBtn').on('click', function () {
+                    submitOrder('{{ route("admin.pos.store") }}', 'POST');
                 });
 
+                $('#updateOrderBtn').on('click', function () {
+                    submitOrder(`/admin/pos/update/${orderId}`, 'POST');
+                });
+
+                $('#holdOrderBtn').on('click', function () {
+                    submitOrder('/admin/pos/draft', 'POST');
+                });
+
+                function resetPOS() {
+                    window.posCartManager.clearCart();
+                    $('#customerName').val('');
+                    $('#customerPhone').val('');
+                    $("#employeeId").val('');
+                    $('#paidAmount').val('');
+                    $('#discountInput').val('');
+                    $('#dueAmount').text(0.00);
+                    $("#cash_received").val('');
+                    $("#cash_returned").val("0.00");
+                    $('input[name="payment_method"][value=""]').prop('checked', true);
+                }
 
 
                 (function () {
@@ -936,11 +937,11 @@
                                             : `${c.phone} (${c.value})`;
 
                                         html += `
-                                                                                                             <button type="button"
-                                                                                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100" data-index="${i}">
-                                                                                                                ${text}
-                                                                                                             </button>                                                                                       
-                                                                                                            `;
+                                                                                                                                             <button type="button"
+                                                                                                                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100" data-index="${i}">
+                                                                                                                                                ${text}
+                                                                                                                                             </button>                                                                                       
+                                                                                                                                            `;
                                     });
 
                                     $dropdown.html(html).removeClass('hidden');
@@ -1083,7 +1084,7 @@
                 // =========================
                 // SAFE INIT
                 // =========================
-                updateDue();
+                // updateDue();
 
                 // =========================
                 // EXTERNAL CALL (when cart/total changes)
@@ -1127,14 +1128,6 @@
                 $("#cash_received").on("input", function () {
                     updateCash();
                 });
-
-
-
-
-                // =========================
-                // INIT
-                // =========================
-                updateCash();
 
                 // =========================
                 // EXTERNAL REFRESH SUPPORT

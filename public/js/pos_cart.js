@@ -4,14 +4,21 @@ class PosCartManager {
         this.csrfToken = document
             .querySelector('meta[name="csrf-token"]')
             ?.getAttribute("content");
+        this.orderNumber = this.getOrderNumberFromURL();
 
         this.init();
     }
 
     init() {
-        this.loadCart();
+        this.loadCart(this.orderNumber);
+
         this.setupAddToCartListeners();
         this.setupCartActions();
+    }
+
+    getOrderNumberFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('order_number');
     }
 
     getHeaders() {
@@ -26,9 +33,15 @@ class PosCartManager {
     // ===============================
     // LOAD CART
     // ===============================
-    async loadCart() {
+    async loadCart(order_number = null) {
         try {
-            const response = await fetch(this.apiUrl, {
+            let url = this.apiUrl;
+
+            if (order_number) {
+                url += `?order_number=${order_number}`;
+            }
+
+            const response = await fetch(url, {
                 method: "GET",
                 headers: this.getHeaders(),
                 credentials: "same-origin",
@@ -39,6 +52,7 @@ class PosCartManager {
             if (data.success) {
                 this.updateCartUI(data.cart);
             }
+
         } catch (error) {
             console.error("Load cart error:", error);
         }
@@ -57,7 +71,8 @@ class PosCartManager {
                     product_id: productId,
                     product_variant_id: variantId,
                     quantity: quantity,
-                    is_pos: 1
+                    is_pos: 1,
+                    order_number:this.orderNumber
                 }),
             });
 
@@ -65,7 +80,7 @@ class PosCartManager {
 
             if (data.success) {
                 this.updateCartCount(data.cart.items_count);
-                this.loadCart();
+                this.loadCart(this.orderNumber);
             }
         } catch (error) {
             console.error("Add error:", error);
@@ -81,14 +96,17 @@ class PosCartManager {
                 method: "PUT",
                 headers: this.getHeaders(),
                 credentials: "same-origin",
-                body: JSON.stringify({ quantity }),
+                body: JSON.stringify({ quantity:quantity ,order_number:this.orderNumber }),
             });
 
             const data = await response.json();
 
+            console.log(data.cart);
+            
+
             if (data.success) {
                 this.updateCartCount(data.cart.items_count);
-                this.loadCart();
+                this.loadCart(this.orderNumber);
             }
         } catch (error) {
             console.error("Update error:", error);
@@ -104,13 +122,14 @@ class PosCartManager {
                 method: "DELETE",
                 headers: this.getHeaders(),
                 credentials: "same-origin",
+                body: JSON.stringify({ order_number:this.orderNumber }),
             });
 
             const data = await response.json();
 
             if (data.success) {
                 this.updateCartCount(data.cart.items_count);
-                this.loadCart();
+                this.loadCart(this.orderNumber);
             }
         } catch (error) {
             console.error("Remove error:", error);
@@ -131,7 +150,7 @@ class PosCartManager {
             const data = await response.json();
 
             if (data.success) {
-                this.loadCart();
+                this.loadCart(this.orderNumber);
             }
         } catch (error) {
             console.error("Clear error:", error);
@@ -175,7 +194,7 @@ class PosCartManager {
         // ===== CLEAR CART =====
         const clearBtn = document.getElementById("clearCartBtn");
 
-        if (cart.items && cart.items.length > 0) {
+        if (cart.items && cart.items.length > 0 && this.orderNumber == null) {
             if (clearBtn) clearBtn.classList.remove("hidden");
         } else {
             if (clearBtn) clearBtn.classList.add("hidden");

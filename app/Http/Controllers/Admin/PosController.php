@@ -10,7 +10,6 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Customer;
-use App\Models\Employee;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -21,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 
 class PosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::with(['category', 'variants.size', 'variants.color', 'images'])
             ->where('is_active', true)
@@ -31,11 +30,20 @@ class PosController extends Controller
 
         $categories = Category::where('is_active', true)->get();
 
-        $cart = $this->getCart();
+        $order = null;
+
+        if ($request->order_number) {
+            $order = Order::with(['items.product.images', 'customer'])
+                ->where('order_number', $request->order_number)
+                ->where('is_pos', 1)
+                ->first();
+        }
+
+        $cart = $this->getCart($request);
 
         $employees = User::where('role', 'staff')->get();
 
-        return view('admin.pos.index', compact('products', 'categories', 'cart', 'employees'));
+        return view('admin.pos.index', compact('products', 'categories', 'cart', 'employees', 'order'));
     }
 
     public function searchProducts(Request $request)
@@ -128,7 +136,6 @@ class PosController extends Controller
                 $customer_id = $customer->id;
             }
 
-
             // Create order
             $order = Order::create([
                 'order_number' => 'POS-' . strtoupper(uniqid()),
@@ -151,7 +158,9 @@ class PosController extends Controller
                 'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DELIVERED,
                 'payment_method' => $paymentMethodEnum->value ?? '',
-                'payment_status' => PaymentStatus::PAID,
+                'payment_status' => $request->due > 0
+                    ? PaymentStatus::PARTIAL
+                    : PaymentStatus::PAID,
                 'notes' => 'POS Order',
                 'paid_at' => now(),
             ]);
@@ -189,6 +198,10 @@ class PosController extends Controller
 
             DB::commit();
 
+            $cart = Cart::find($request->cart_id);
+            $cart->items()->delete();
+            $cart->delete();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Order completed successfully',
@@ -201,6 +214,214 @@ class PosController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to complete order: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.id' => 'nullable',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.product_name' => 'required|string',
+            'items.*.product_image' => 'nullable|string',
+            'items.*.sku' => 'nullable|string',
+            'items.*.color' => 'nullable|string',
+            'items.*.size' => 'nullable|string',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+
+            'subtotal' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0',
+            'payable' => 'required|numeric|min:0',
+            'paid' => 'required|numeric|min:0',
+            'due' => 'required|numeric|min:0',
+            'payment_method' => 'required|string',
+
+            'discount' => 'nullable',
+            'employee_id' => 'nullable',
+            'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
+            'customer_phone' => ['nullable', 'string', 'max:20', 'required_with:customer_name'],
+
+            'cash_received' => 'nullable',
+            'cash_returned' => 'nullable',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $order = Order::with('items')->findOrFail($id);
+
+            // =========================
+            // PAYMENT METHOD MAP
+            // =========================
+            $paymentMethodEnum = match (strtolower($request->payment_method ?? '')) {
+                'cash' => PaymentMethod::CASH,
+                'card' => PaymentMethod::CARD,
+                'bkash' => PaymentMethod::BKASH,
+                'nagad' => PaymentMethod::NAGAD,
+                '' => null,
+                default => null,
+            };
+
+            // =========================
+            // CUSTOMER
+            // =========================
+            $customer_id = null;
+
+            if ($request->filled('customer_name') && $request->filled('customer_phone')) {
+                $customer = Customer::firstOrCreate(
+                    ['phone' => $request->customer_phone],
+                    ['name' => $request->customer_name]
+                );
+                $customer_id = $customer->id;
+            }
+
+            // =========================
+            // UPDATE ORDER
+            // =========================
+            $order->update([
+                'customer_id' => $customer_id,
+                'employee_id' => $request->employee_id ?? null,
+                'shipping_name' => $request->customer_name ?? 'Walk-in Customer',
+
+                'subtotal' => $request->subtotal,
+                'discount_amount' => $request->discount ?? 0,
+                'total' => $request->total,
+                'payable' => $request->payable,
+                'paid' => $request->paid,
+                'due' => $request->due,
+
+                'cash_received' => $request->cash_received,
+                'cash_returned' => $request->cash_returned,
+
+                'payment_method' => $paymentMethodEnum->value ?? '',
+                'payment_status' => $request->due > 0
+                    ? PaymentStatus::PARTIAL
+                    : PaymentStatus::PAID,
+                'status' => OrderStatus::DELIVERED,
+
+                'paid_at' => now(),
+            ]);
+
+            // =========================
+            // TRACK CURRENT ITEM IDS
+            // =========================
+            $processedItemIds = [];
+
+            foreach ($request->items as $item) {
+
+                // =========================
+                // UPDATE EXISTING ITEM
+                // =========================
+                $orderItemId = data_get($item, 'id');
+
+                if ($item['source'] === 'order') {
+                    if (is_string($orderItemId) && str_starts_with($orderItemId, 'order_')) {
+                        $orderItemId = (int) str_replace('order_', '', $orderItemId);
+                    }
+                }
+
+                $orderItemId = (int) $orderItemId;
+
+                $orderItem = OrderItem::find($orderItemId);
+
+                if ($orderItem) {
+                    $orderItem->update([
+                        'product_id' => $item['product_id'],
+                        'product_name' => $item['product_name'],
+                        'product_sku' => $item['sku'] ?? null,
+                        'product_variant_id' => $item['variant_id'] ?? null,
+                        'size_name' => $item['size'] ?? null,
+                        'color_name' => $item['color'] ?? null,
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['price'],
+                        'subtotal' => $item['price'] * $item['quantity'],
+                        'total' => $item['price'] * $item['quantity'],
+                    ]);
+
+                    $processedItemIds[] = $orderItem->id;
+                }
+
+
+                // =========================
+                // ADD NEW ITEM
+                // =========================
+                else {
+                    $newItem = OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $item['product_id'],
+                        'product_name' => $item['product_name'],
+                        'product_sku' => $item['sku'] ?? null,
+                        'product_variant_id' => $item['variant_id'] ?? null,
+                        'size_name' => $item['size'] ?? null,
+                        'color_name' => $item['color'] ?? null,
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['price'],
+                        'subtotal' => $item['price'] * $item['quantity'],
+                        'total' => $item['price'] * $item['quantity'],
+                    ]);
+
+                    // Deduct stock
+                    if (!empty($item['variant_id'])) {
+                        $variant = ProductVariant::find($item['variant_id']);
+                        if ($variant) {
+                            $variant->decrement('stock_in', $item['quantity']);
+                        }
+                    } else {
+                        $product = Product::find($item['product_id']);
+                        if ($product) {
+                            $product->decrement('stock_in', $item['quantity']);
+                        }
+                    }
+
+                    $processedItemIds[] = $newItem->id;
+                }
+            }
+
+            // =========================
+            // DELETE REMOVED ITEMS
+            // =========================
+            $order->items()
+                ->whereNotIn('id', $processedItemIds)
+                ->get()
+                ->each(function ($oldItem) {
+
+                    // restore stock
+                    if ($oldItem->product_variant_id) {
+                        $variant = ProductVariant::find($oldItem->product_variant_id);
+                        if ($variant) {
+                            $variant->increment('stock_in', $oldItem->quantity);
+                        }
+                    } else {
+                        $product = Product::find($oldItem->product_id);
+                        if ($product) {
+                            $product->increment('stock_in', $oldItem->quantity);
+                        }
+                    }
+
+                    $oldItem->delete();
+                });
+
+            DB::commit();
+
+            $cart = Cart::find($request->cart_id);
+            $cart->items()->delete();
+            $cart->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order updated successfully',
+            ]);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Update failed: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -316,6 +537,10 @@ class PosController extends Controller
 
             DB::commit();
 
+            $cart = Cart::find($request->cart_id);
+            $cart->items()->delete();
+            $cart->delete();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Order completed successfully',
@@ -332,42 +557,62 @@ class PosController extends Controller
         }
     }
 
-    public function getOrCreateCart()
+    public function getOrCreateCart($orderNumber = null)
     {
-        $sessionId = session()->getId();
+        if ($orderNumber) {
+            return Cart::firstOrCreate(
+                [
+                    'order_number' => $orderNumber,
+                    'is_pos' => 1
+                ],
+                [
+                    'user_id' => null
+                ]
+            );
+        }
 
-        $cart = Cart::firstOrCreate(
-            ['session_id' => $sessionId],
-            [
+        $cart = Cart::where('is_pos', 1)
+            ->whereNull('order_number')
+            ->latest()
+            ->first();
+
+        if (!$cart) {
+            $cart = Cart::create([
+                'is_pos' => 1,
                 'user_id' => null
-            ]
-        );
-
-        $cart->update([
-            'is_pos' => 1
-        ]);
+            ]);
+        }
 
         return $cart;
     }
 
-    public function getCart()
+    public function getCart(Request $request)
     {
-        $cart = $this->getOrCreateCart();
-
+        $cart = $this->getOrCreateCart($request->order_number);
         $cart->load([
             'items.product',
             'items.variant.size',
             'items.variant.color'
         ]);
 
-        $items = $cart->items->map(function ($item) {
+
+        // dd($cart->items);
+
+        // =========================
+        // CART ITEMS
+        // =========================
+        $cartItems = $cart->items->map(function ($item) {
 
             $size = $item->variant?->size?->name;
             $color = $item->variant?->color?->name;
-            $sku = $item->product_variant_id ? $item->variant->sku : $item->product->sku;
+
+            $sku = $item->product_variant_id
+                ? $item->variant?->sku
+                : $item->product?->sku;
 
             return [
                 'id' => $item->id,
+                'source' => 'cart',
                 'product_id' => $item->product_id,
                 'sku' => $sku,
                 'product_name' => $item->product->name ?? '',
@@ -383,6 +628,62 @@ class PosController extends Controller
             ];
         });
 
+        // dd($cartItems);
+
+        // =========================
+        // ORDER ITEMS (EDIT MODE)
+        // =========================
+        $orderItems = collect();
+
+        if ($request->order_number) {
+            $order = Order::with(['items.product.images', 'customer'])
+                ->where('order_number', $request->order_number)
+                ->where('is_pos', 1)
+                ->first();
+
+            if ($order) {
+                $orderItems = $order->items->map(function ($item) {
+
+                    $size = $item->variant?->size?->name;
+                    $color = $item->variant?->color?->name;
+
+                    return [
+                        'id' => 'order_' . $item->id,
+                        'source' => 'order',
+                        'product_id' => $item->product_id,
+                        'sku' => $item->product_variant_id
+                            ? $item->variant?->sku
+                            : $item->product?->sku,
+
+                        'product_name' => $item->product->name ?? '',
+                        'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
+                        'variant_id' => $item->product_variant_id,
+                        'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
+                        'size' => $size,
+                        'color' => $color,
+                        'quantity' => (int) $item->quantity,
+                        'price' => (float) $item->unit_price,
+                        'stock' => (int) ($item->variant->stock),
+                        'total_price' => (float) $item->subtotal,
+                    ];
+                });
+            }
+        }
+
+        // =========================
+        // MERGE BOTH
+        // =========================
+        $items = collect($cartItems)
+            ->merge(collect($orderItems))
+            ->values();
+
+
+
+        // dd($items);
+
+        // =========================
+        // TOTALS
+        // =========================
         $subtotal = $items->sum('total_price');
         $discount = 0;
         $tax = 0;
@@ -392,16 +693,11 @@ class PosController extends Controller
             'success' => true,
             'cart' => [
                 'id' => $cart->id,
-
-                'items' => $items->values(),
-
-                // ✅ totals
+                'items' => $items,
                 'subtotal' => $subtotal,
                 'tax' => $tax,
                 'discount' => $discount,
                 'total' => $total,
-
-                // ✅ correct counts
                 'items_count' => $items->count(),
                 'total_items' => $items->sum('quantity'),
             ]
@@ -414,12 +710,19 @@ class PosController extends Controller
             'product_id' => 'required|exists:products,id',
             'product_variant_id' => 'nullable|exists:product_variants,id',
             'quantity' => 'required|integer|min:1',
+            'order_number' => 'nullable',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $cart = $this->getOrCreateCart();
+            $cart = $this->getOrCreateCart($request->order_number);
+
+            // if ($request->order_number) {
+            //     $cart->update([
+            //         'order_number' => $request->order_number
+            //     ]);
+            // }
 
             $product = Product::with('variants')->findOrFail($request->product_id);
 
@@ -513,46 +816,195 @@ class PosController extends Controller
     {
         $request->validate([
             'quantity' => 'required|integer|min:1',
+            'order_number' => 'nullable|string'
         ]);
 
         try {
-            $cart = $this->getOrCreateCart();
-            $cartItem = CartItem::where('cart_id', $cart->id)
-                ->where('id', $itemId)
-                ->firstOrFail();
 
-            if ($cartItem->variant) {
-                $availableStock = $cartItem->variant->currentStock;
+            // =========================
+            // ORDER MODE
+            // =========================
+            if ($request->filled('order_number') && str_starts_with($itemId, 'order_')) {
+                $realId = str_replace('order_', '', $itemId);
+
+                $order = Order::with([
+                    'items.product',
+                    'items.variant.size',
+                    'items.variant.color'
+                ])
+                    ->where('order_number', $request->order_number)
+                    ->first();
+
+                $orderItem = $order->items()->where('id', $realId)->first();
+
+                $availableStock = $orderItem->variant
+                    ? $orderItem->variant->currentStock
+                    : $orderItem->product->currentStock;
+
+                if ($request->quantity > $availableStock) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Only {$availableStock} available"
+                    ], 400);
+                }
+
+                if ($orderItem->quantity > $request->quantity) {
+                    $quantity = $orderItem->quantity - $request->quantity;
+
+                    if ($orderItem->product_variant_id) {
+                        $variant = ProductVariant::find($orderItem->product_variant_id);
+                        if ($variant) {
+                            $variant->increment('stock_in', $quantity);
+                        }
+                    } else {
+                        $product = Product::find($orderItem->product_id);
+                        if ($product) {
+                            $product->increment('stock_in', $quantity);
+                        }
+                    }
+                } else if ($orderItem->quantity < $request->quantity) {
+                    $quantity = $request->quantity - $orderItem->quantity;
+                    if ($orderItem->product_variant_id) {
+                        $variant = ProductVariant::find($orderItem->product_variant_id);
+                        if ($variant) {
+                            $variant->decrement('stock_in', $quantity);
+                        }
+                    } else {
+                        $product = Product::find($orderItem->product_id);
+                        if ($product) {
+                            $product->decrement('stock_in', $quantity);
+                        }
+                    }
+                }
+
+                $orderItem->quantity = $request->quantity;
+                $orderItem->subtotal = $request->quantity * $orderItem->unit_price;
+                $orderItem->save();
+
             } else {
-                $availableStock = $cartItem->product->currentStock;
+
+                // =========================
+                // CART MODE
+                // =========================
+                $cart = $this->getOrCreateCart($request->order_number);
+
+                $cartItem = CartItem::where('cart_id', $cart->id)
+                    ->where('id', $itemId)
+                    ->firstOrFail();
+
+                $availableStock = $cartItem->variant
+                    ? $cartItem->variant->currentStock
+                    : $cartItem->product->currentStock;
+
+                if ($request->quantity > $availableStock) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Only {$availableStock} available"
+                    ], 400);
+                }
+
+                $cartItem->quantity = $request->quantity;
+                $cartItem->save();
             }
 
-            if ($request->quantity > $availableStock) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Cannot update quantity. Only {$availableStock} items available"
-                ], 400);
+            // =========================
+            // 🔥 REBUILD FULL CART RESPONSE (INLINE)
+            // =========================
+
+            $cart = $this->getOrCreateCart($request->order_number);
+
+            $cart->load([
+                'items.product',
+                'items.variant.size',
+                'items.variant.color'
+            ]);
+
+            $cartItems = $cart->items->map(function ($item) {
+
+                $size = $item->variant?->size?->name;
+                $color = $item->variant?->color?->name;
+
+                return [
+                    'id' => $item->id,
+                    'source' => 'cart',
+                    'product_id' => $item->product_id,
+                    'sku' => $item->product_variant_id
+                        ? $item->variant?->sku
+                        : $item->product?->sku,
+                    'product_name' => $item->product->name ?? '',
+                    'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
+                    'variant_id' => $item->product_variant_id,
+                    'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
+                    'size' => $size,
+                    'color' => $color,
+                    'quantity' => (int) $item->quantity,
+                    'price' => (float) $item->unit_price,
+                    'stock' => (int) ($item->variant->stock),
+                    'total_price' => (float) $item->total_price,
+                ];
+            });
+
+            $orderItems = collect();
+
+            if ($request->filled('order_number')) {
+
+                $order = Order::with([
+                    'items.product',
+                    'items.variant.size',
+                    'items.variant.color'
+                ])
+                    ->where('order_number', $request->order_number)
+                    ->first();
+
+                if ($order) {
+                    $orderItems = $order->items->map(function ($item) {
+
+                        $size = $item->variant?->size?->name;
+                        $color = $item->variant?->color?->name;
+
+                        return [
+                            'id' => 'order_' . $item->id,
+                            'source' => 'order',
+                            'product_id' => $item->product_id,
+                            'sku' => $item->product_variant_id
+                                ? $item->variant?->sku
+                                : $item->product?->sku,
+                            'product_name' => $item->product->name ?? '',
+                            'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
+                            'variant_id' => $item->product_variant_id,
+                            'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
+                            'size' => $size,
+                            'color' => $color,
+                            'quantity' => (int) $item->quantity,
+                            'price' => (float) $item->unit_price,
+                            'stock' => (int) ($item->variant->stock),
+                            'total_price' => (float) $item->subtotal,
+                        ];
+                    });
+                }
             }
 
-            $cartItem->quantity = $request->quantity;
-            $cartItem->save();
+            $items = collect($cartItems)->merge($orderItems)->values();
 
-            // Reload cart
-            $cart->load('items');
+            $subtotal = $items->sum('total_price');
+            $discount = 0;
+            $tax = 0;
+            $total = $subtotal;
 
             return response()->json([
                 'success' => true,
-                'message' => 'Cart updated successfully',
                 'cart' => [
-                    'items_count' => $cart->items_count,
-                    'subtotal' => (float) $cart->subtotal,
-                ],
-                'item' => [
-                    'id' => $cartItem->id,
-                    'quantity' => $cartItem->quantity,
-                    'total_price' => (float) $cartItem->total_price,
+                    'id' => $cart->id,
+                    'items' => $items,
+                    'subtotal' => $subtotal,
+                    'tax' => $tax,
+                    'discount' => $discount,
+                    'total' => $total,
+                    'items_count' => $items->count(),
+                    'total_items' => $items->sum('quantity'),
                 ]
             ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -564,31 +1016,180 @@ class PosController extends Controller
     /**
      * Remove item from cart
      */
-    public function removeItem($itemId)
+    public function removeItem(Request $request, $itemId)
     {
         try {
-            $cart = $this->getOrCreateCart();
-            $cartItem = CartItem::where('cart_id', $cart->id)
-                ->where('id', $itemId)
-                ->firstOrFail();
 
-            $cartItem->delete();
+            $orderNumber = $request->order_number ?? null;
+            $order = null;
+            $cart = null;
 
-            // Reload cart
-            $cart->load('items');
+            // =========================
+            // ORDER MODE
+            // =========================
+            if ($orderNumber && str_starts_with($itemId, 'order_')) {
 
-            if ($cart->items->count() == 0) {
-                $cart->delete();
+                $realId = (int) str_replace('order_', '', $itemId);
+
+                $order = Order::with(['items.product', 'items.variant.size', 'items.variant.color'])
+                    ->where('order_number', $orderNumber)
+                    ->firstOrFail();
+
+                $orderItem = $order->items()->where('id', $realId)->firstOrFail();
+
+                $quantity = $orderItem->quantity;
+
+                if (!empty($orderItem->product_variant_id)) {
+                    $variant = ProductVariant::find($orderItem->product_variant_id);
+                    if ($variant) {
+                        $variant->increment('stock_in', $quantity);
+                    }
+                } else {
+                    $product = Product::find($orderItem->product_id);
+                    if ($product) {
+                        $product->increment('stock_in', $quantity);
+                    }
+                }
+
+                $orderItem->delete();
             }
+
+            // =========================
+            // CART MODE
+            // =========================
+            else {
+                $cart = Cart::where('is_pos', 1)
+                    ->when($orderNumber, fn($q) => $q->where('order_number', $orderNumber))
+                    ->when(!$orderNumber, fn($q) => $q->whereNull('order_number')->latest())
+                    ->first();
+
+                if (!$cart) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Cart not found'
+                    ], 404);
+                }
+
+                $cartItem = CartItem::where('cart_id', $cart->id)
+                    ->where('id', $itemId)
+                    ->firstOrFail();
+
+                $cartItem->delete();
+
+                $cart->load('items');
+            }
+
+            // =========================
+            // LOAD UPDATED DATA
+            // =========================
+
+            if (!$cart) {
+                $cart = Cart::where('is_pos', 1)
+                    ->when($orderNumber, fn($q) => $q->where('order_number', $orderNumber))
+                    ->when(!$orderNumber, fn($q) => $q->whereNull('order_number')->latest())
+                    ->first();
+            }
+
+            if ($orderNumber && !$order) {
+                $order = Order::with(['items.product', 'items.variant.size', 'items.variant.color'])
+                    ->where('order_number', $orderNumber)
+                    ->first();
+            }
+
+            // =========================
+            // FORMAT CART ITEMS
+            // =========================
+            $cartItems = collect();
+
+            if ($cart) {
+                $cart->load(['items.product', 'items.variant.size', 'items.variant.color']);
+
+                $cartItems = $cart->items->map(function ($item) {
+
+                    $size = $item->variant?->size?->name;
+                    $color = $item->variant?->color?->name;
+
+                    return [
+                        'id' => $item->id,
+                        'source' => 'cart',
+                        'product_id' => $item->product_id,
+                        'sku' => $item->product_variant_id
+                            ? $item->variant?->sku
+                            : $item->product?->sku,
+                        'product_name' => $item->product->name ?? '',
+                        'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
+                        'variant_id' => $item->product_variant_id,
+                        'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
+                        'size' => $size,
+                        'color' => $color,
+                        'quantity' => (int) $item->quantity,
+                        'price' => (float) $item->unit_price,
+                        'stock' => (int) ($item->variant->stock ?? 999),
+                        'total_price' => (float) ($item->quantity * $item->unit_price),
+                    ];
+                });
+            }
+
+            // =========================
+            // FORMAT ORDER ITEMS
+            // =========================
+            $orderItems = collect();
+
+            if ($order) {
+                $orderItems = $order->items->map(function ($item) {
+
+                    $size = $item->variant?->size?->name;
+                    $color = $item->variant?->color?->name;
+
+                    return [
+                        'id' => 'order_' . $item->id,
+                        'source' => 'order',
+                        'product_id' => $item->product_id,
+                        'sku' => $item->product_variant_id
+                            ? $item->variant?->sku
+                            : $item->product?->sku,
+                        'product_name' => $item->product->name ?? '',
+                        'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
+                        'variant_id' => $item->product_variant_id,
+                        'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
+                        'size' => $size,
+                        'color' => $color,
+                        'quantity' => (int) $item->quantity,
+                        'price' => (float) $item->unit_price,
+                        'stock' => (int) ($item->variant->stock ?? 999),
+                        'total_price' => (float) ($item->quantity * $item->unit_price),
+                    ];
+                });
+            }
+
+            // =========================
+            // FINAL RESPONSE
+            // =========================
+
+
+            if ($cartItems->count() > 0) {
+                $items = $cartItems->merge($orderItems)->values();
+            } else {
+                $items = $orderItems->values();
+            }
+
+            $subtotal = $items->sum('total_price');
 
             return response()->json([
                 'success' => true,
-                'message' => 'Item removed from cart',
+                'message' => 'Item removed successfully',
                 'cart' => [
-                    'items_count' => $cart->items_count,
-                    'subtotal' => (float) $cart->subtotal,
+                    'id' => $cart?->id,
+                    'items' => $items,
+                    'subtotal' => $subtotal,
+                    'tax' => 0,
+                    'discount' => 0,
+                    'total' => $subtotal,
+                    'items_count' => $items->count(),
+                    'total_items' => $items->sum('quantity'),
                 ]
             ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -603,7 +1204,9 @@ class PosController extends Controller
     public function clearCart()
     {
         try {
+
             $cart = $this->getOrCreateCart();
+
             $cart->items()->delete();
             $cart->delete();
 
