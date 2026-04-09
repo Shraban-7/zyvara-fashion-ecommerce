@@ -113,7 +113,6 @@ class PosController extends Controller
         try {
             DB::beginTransaction();
 
-            // Map payment method string to enum
             $paymentMethodEnum = match (strtolower($request->payment_method ?? '')) {
                 'cash' => PaymentMethod::CASH,
                 'card' => PaymentMethod::CARD,
@@ -122,8 +121,6 @@ class PosController extends Controller
                 '' => null,
                 default => null,
             };
-
-
 
             $customer_id = null;
 
@@ -137,7 +134,6 @@ class PosController extends Controller
                 $customer_id = $customer->id;
             }
 
-            // Create order
             $order = Order::create([
                 'order_number' => 'POS-' . strtoupper(uniqid()),
                 'is_pos' => 1,
@@ -166,7 +162,6 @@ class PosController extends Controller
                 'paid_at' => now(),
             ]);
 
-            // Create order items and update stock
             foreach ($request->items as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -182,7 +177,6 @@ class PosController extends Controller
                     'total' => ($item['price'] * $item['quantity']),
                 ]);
 
-                // Update stock
                 if (isset($item['variant_id']) && $item['variant_id']) {
                     $variant = ProductVariant::find($item['variant_id']);
                     if ($variant) {
@@ -254,9 +248,6 @@ class PosController extends Controller
 
             $order = Order::with('items')->findOrFail($id);
 
-            // =========================
-            // PAYMENT METHOD MAP
-            // =========================
             $paymentMethodEnum = match (strtolower($request->payment_method ?? '')) {
                 'cash' => PaymentMethod::CASH,
                 'card' => PaymentMethod::CARD,
@@ -266,9 +257,6 @@ class PosController extends Controller
                 default => null,
             };
 
-            // =========================
-            // CUSTOMER
-            // =========================
             $customer_id = null;
 
             if ($request->filled('customer_name') && $request->filled('customer_phone')) {
@@ -279,9 +267,6 @@ class PosController extends Controller
                 $customer_id = $customer->id;
             }
 
-            // =========================
-            // UPDATE ORDER
-            // =========================
             $order->update([
                 'customer_id' => $customer_id,
                 'employee_id' => $request->employee_id ?? null,
@@ -306,16 +291,9 @@ class PosController extends Controller
                 'paid_at' => now(),
             ]);
 
-            // =========================
-            // TRACK CURRENT ITEM IDS
-            // =========================
             $processedItemIds = [];
 
             foreach ($request->items as $item) {
-
-                // =========================
-                // UPDATE EXISTING ITEM
-                // =========================
                 $orderItemId = data_get($item, 'id');
 
                 if ($item['source'] === 'order') {
@@ -345,10 +323,6 @@ class PosController extends Controller
                     $processedItemIds[] = $orderItem->id;
                 }
 
-
-                // =========================
-                // ADD NEW ITEM
-                // =========================
                 else {
                     $newItem = OrderItem::create([
                         'order_id' => $order->id,
@@ -364,7 +338,6 @@ class PosController extends Controller
                         'total' => $item['price'] * $item['quantity'],
                     ]);
 
-                    // Deduct stock
                     if (!empty($item['variant_id'])) {
                         $variant = ProductVariant::find($item['variant_id']);
                         if ($variant) {
@@ -381,15 +354,10 @@ class PosController extends Controller
                 }
             }
 
-            // =========================
-            // DELETE REMOVED ITEMS
-            // =========================
             $order->items()
                 ->whereNotIn('id', $processedItemIds)
                 ->get()
                 ->each(function ($oldItem) {
-
-                    // restore stock
                     if ($oldItem->product_variant_id) {
                         $variant = ProductVariant::find($oldItem->product_variant_id);
                         if ($variant) {
@@ -611,7 +579,6 @@ class PosController extends Controller
 
             $product = Product::with('variants')->findOrFail($request->product_id);
 
-            // Check if product has variants and variant is required but not provided
             if ($product->variants->count() > 0 && !$request->product_variant_id) {
                 return response()->json([
                     'success' => false,
@@ -620,14 +587,12 @@ class PosController extends Controller
                 ], 400);
             }
 
-            // Get variant if provided
             $variant = null;
             if ($request->product_variant_id) {
                 $variant = ProductVariant::where('product_id', $product->id)
                     ->where('id', $request->product_variant_id)
                     ->firstOrFail();
 
-                // Check variant stock
                 if ($variant->currentStock < $request->quantity) {
                     return response()->json([
                         'success' => false,
@@ -635,7 +600,6 @@ class PosController extends Controller
                     ], 400);
                 }
             } else {
-                // Check product stock if no variant
                 if ($product->currentStock < $request->quantity) {
                     return response()->json([
                         'success' => false,
@@ -644,17 +608,14 @@ class PosController extends Controller
                 }
             }
 
-            // Check if item already exists in cart
             $cartItem = CartItem::where('cart_id', $cart->id)
                 ->where('product_id', $request->product_id)
                 ->where('product_variant_id', $request->product_variant_id)
                 ->first();
 
             if ($cartItem) {
-                // Update quantity if item exists
                 $newQuantity = $cartItem->quantity + $request->quantity;
 
-                // Check stock for updated quantity
                 $availableStock = $variant ? $variant->currentStock : $product->currentStock;
                 if ($newQuantity > $availableStock) {
                     return response()->json([
@@ -677,7 +638,6 @@ class PosController extends Controller
 
             DB::commit();
 
-            // Reload cart with items
             $cart->load(['items.product.images', 'items.variant.size', 'items.variant.color']);
 
             return response()->json([
@@ -705,10 +665,6 @@ class PosController extends Controller
         ]);
 
         try {
-
-            // =========================
-            // ORDER MODE
-            // =========================
             if ($request->filled('order_number') && str_starts_with($itemId, 'order_')) {
                 $realId = str_replace('order_', '', $itemId);
 
@@ -767,10 +723,6 @@ class PosController extends Controller
                 $orderItem->save();
 
             } else {
-
-                // =========================
-                // CART MODE
-                // =========================
                 $cart = $this->getOrCreateCart($request->order_number);
 
                 $cartItem = CartItem::where('cart_id', $cart->id)
@@ -805,9 +757,6 @@ class PosController extends Controller
         }
     }
 
-    /**
-     * Remove item from cart
-     */
     public function removeItem(Request $request, $itemId)
     {
         try {
@@ -873,10 +822,6 @@ class PosController extends Controller
         ]);
 
         try {
-
-            // =========================
-            // ORDER MODE
-            // =========================
             if ($request->filled('order_number') && str_starts_with($itemId, 'order_')) {
 
                 $realId = str_replace('order_', '', $itemId);
@@ -889,10 +834,6 @@ class PosController extends Controller
                 $orderItem->subtotal = $request->price * $orderItem->quantity;
                 $orderItem->save();
             }
-
-            // =========================
-            // CART MODE
-            // =========================
             else {
 
                 $cart = $this->getOrCreateCart($request->order_number);
@@ -906,9 +847,6 @@ class PosController extends Controller
                 $cartItem->save();
             }
 
-            // =========================
-            // ✅ REUSE BUILDER
-            // =========================
             return response()->json([
                 'success' => true,
                 'cart' => $this->getCartResponse($request->order_number)
@@ -922,9 +860,6 @@ class PosController extends Controller
         }
     }
 
-    /**
-     * Clear entire cart
-     */
     public function clearCart()
     {
         try {

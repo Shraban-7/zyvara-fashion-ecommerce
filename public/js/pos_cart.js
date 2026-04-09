@@ -415,9 +415,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.posCartManager = new PosCartManager();
 });
 
-// GLOBAL
-function addToCart(product, variant) {
-    if (window.posCartManager) {
-        window.posCartManager.addToCart(product.id, variant.id, 1);
-    }
-}
+// // GLOBAL
+// function addToCart(product, variant) {
+//     if (window.posCartManager) {
+//         window.posCartManager.addToCart(product.id, variant.id, 1);
+//     }
+// }

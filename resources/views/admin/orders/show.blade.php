@@ -25,10 +25,11 @@
             <i class="fas fa-download"></i>
             <span>Download Invoice</span>
         </button>
-        <!-- <button onclick="window.print()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition flex items-center gap-2">
-            <i class="fas fa-print"></i>
-            <span>Print Invoice</span>
-        </button> -->
+        <button onclick="openReturnModal()" 
+            class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition flex items-center gap-2">
+            <i class="fas fa-undo"></i>
+            <span>Sale Return</span>
+        </button>
         @if($order->status->value !== 'cancelled')
         <button onclick="openDeleteModal()" class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition flex items-center gap-2">
             <i class="fas fa-trash"></i>
@@ -327,8 +328,6 @@
 </div>
 
 
-{{-- End Invoice Template --}}
-
 {{-- Delete Confirmation Modal --}}
 <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6">
@@ -354,6 +353,116 @@
     </div>
 </div>
 
+<div id="returnModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white w-full max-w-3xl rounded-xl shadow-lg p-5">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-center border-b pb-3">
+            <h2 class="text-lg font-semibold">Sale Return</h2>
+            <button onclick="closeReturnModal()" class="text-gray-500 hover:text-red-500">
+                ✕
+            </button>
+        </div>
+
+        <!-- ITEMS -->
+        <div class="mt-4 max-h-72 overflow-y-auto space-y-2">
+
+            @foreach($order->items as $item)
+                <div class="border p-3 rounded flex gap-3 items-start">
+
+                    <!-- CHECKBOX -->
+                    <input type="checkbox"
+                           class="return-check mt-1"
+                           data-id="{{ $item->id }}"
+                           data-max="{{ $item->quantity }}"
+                           data-default-price="{{ $item->unit_price }}">
+
+                    <!-- INFO -->
+                    <div class="flex-1">
+
+                        <p class="text-sm font-semibold">
+                            {{ $item->product->name }}
+                        </p>
+
+                        <p class="text-xs text-gray-500">
+                            Qty: {{ $item->quantity }} | Price: {{ $item->unit_price }}
+                        </p>
+
+                        <!-- EDIT SECTION -->
+                        <div id="edit-{{ $item->id }}" class="hidden mt-2 flex gap-2">
+
+                            <input type="number"
+                                   class="qty-input border rounded px-2 py-1 text-xs w-20"
+                                   min="1"
+                                   max="{{ $item->quantity }}"
+                                   value="{{ $item->quantity }}">
+
+                            <input type="number"
+                                   class="price-input border rounded px-2 py-1 text-xs w-24"
+                                   value="{{ $item->unit_price }}">
+
+                        </div>
+                    </div>
+
+                </div>
+            @endforeach
+
+        </div>
+
+        <!-- REFUND SECTION -->
+        <div class="mt-4 space-y-3">
+
+            <div class="mt-4 space-y-2">
+
+                <div class="flex justify-between text-sm">
+                    <span>Calculated Refund:</span>
+                    <span class="font-bold text-green-600">৳<span id="calculatedRefund">0.00</span></span>
+                </div>
+
+                <input type="number"
+                    id="refundAmount"
+                    placeholder="Refund Amount"
+                    class="w-full border rounded px-3 py-2 text-sm">
+
+            </div>
+
+            <!-- ENUM PAYMENT METHOD -->
+            <select id="refundMethod"
+                    class="w-full border rounded px-3 py-2 text-sm">
+
+                <option value="">Select Refund Method</option>
+
+                <option value="cash">Cash</option>
+                <option value="bkash">bKash</option>
+                <option value="bank">Bank</option>
+                <option value="card">Card</option>
+
+            </select>
+
+            <textarea id="refundRemarks"
+                      placeholder="Remarks"
+                      class="w-full border rounded px-3 py-2 text-sm"></textarea>
+
+        </div>
+
+        <!-- ACTION -->
+        <div class="flex justify-end gap-2 mt-5">
+
+            <button onclick="closeReturnModal()"
+                    class="px-4 py-2 border rounded-lg">
+                Cancel
+            </button>
+
+            <button onclick="submitReturn()"
+                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                Process Return
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
 @push('scripts')
 {{-- html2pdf.js library for PDF generation --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -369,6 +478,136 @@
                 printWindow.close();
             };
         };
+    }
+
+    function openReturnModal() {
+        document.getElementById('returnModal').classList.remove('hidden');
+         setTimeout(() => {
+            calculateRefund();
+        }, 100);
+    }
+
+    function closeReturnModal() {
+        document.getElementById('returnModal').classList.add('hidden');
+    }
+
+    // checkbox toggle
+        $(document).on("change", ".return-check", function () {
+            calculateRefund();
+        });
+
+        // quantity change
+        $(document).on("input", ".qty-input", function () {
+            calculateRefund();
+        });
+
+        // price change
+        $(document).on("input", ".price-input", function () {
+            calculateRefund();
+        });
+
+    document.addEventListener("change", function (e) {
+        if (e.target.classList.contains("return-check")) {
+
+            let id = e.target.dataset.id;
+            let box = document.getElementById("edit-" + id);
+
+            if (e.target.checked) {
+                box.classList.remove("hidden");
+            } else {
+                box.classList.add("hidden");
+            }
+        }
+    });
+
+    function calculateRefund() {
+
+        let total = 0;
+
+        $(".return-check:checked").each(function () {
+
+            let id = $(this).data("id");
+            let row = $("#edit-" + id);
+
+            let qty = parseFloat(row.find(".qty-input").val()) || 0;
+            let price = parseFloat(row.find(".price-input").val()) || 0;
+
+            total += qty * price;
+        });
+
+        $("#calculatedRefund").text(total.toFixed(2));
+
+        // 🔥 auto fill refund input (optional but recommended)
+        $("#refundAmount").val(total.toFixed(2));
+    }
+
+    function submitReturn() {
+
+        let items = [];
+
+        $(".return-check:checked").each(function () {
+
+            let id = $(this).data("id");
+            let row = $("#edit-" + id);
+
+            let quantity = parseInt(row.find(".qty-input").val());
+            let unit_price = parseFloat(row.find(".price-input").val());
+
+            if (!quantity || quantity <= 0) return;
+
+            items.push({
+                id: id,
+                quantity: quantity,
+                unit_price: unit_price
+            });
+        });
+
+        if (items.length === 0) {
+            alert("Select at least one item");
+            return;
+        }
+
+        let payload = {
+            items: items,
+            refund_amount: parseFloat($("#refundAmount").val()) || 0,
+            refund_method: $("#refundMethod").val(),
+            remarks: $("#refundRemarks").val(),
+        };
+
+        let btn = $("button[onclick='submitReturn()']");
+        btn.prop("disabled", true).text("Processing...");
+
+        $.ajax({
+            url: `/admin/orders/{{ $order->id }}/return`,
+            type: "POST",
+            data: JSON.stringify(payload),
+            contentType: "application/json",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            success: function (res) {
+
+                if (res.success) {
+                    alert("Return processed successfully");
+                    location.reload();
+                } else {
+                    alert(res.message || "Failed");
+                }
+            },
+            error: function (xhr) {
+
+                let message = "Something went wrong";
+
+                if (xhr.responseJSON?.message) {
+                    message = xhr.responseJSON.message;
+                }
+
+                alert(message);
+            },
+            complete: function () {
+                btn.prop("disabled", false).text("Process Return");
+            }
+        });
     }
 
     function downloadInvoice() {

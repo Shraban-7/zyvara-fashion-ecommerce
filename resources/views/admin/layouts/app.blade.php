@@ -43,9 +43,9 @@
     <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('assets/js/admin.js') }}"></script>
-    <script src="{{ asset('js/pos_cart.js') }}"></script>
-
+    
     @stack('scripts')
 
     @include('partials.toast')

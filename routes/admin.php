@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\SaleReturnController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
@@ -35,6 +36,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/update-status', [OrderController::class, 'updateStatus'])->name('update-status');
         Route::post('/{id}/update-tracking', [OrderController::class, 'updateTracking'])->name('update-tracking');
         Route::post('/{id}/update-notes', [OrderController::class, 'updateNotes'])->name('update-notes');
+        Route::post('/{id}/return', [SaleReturnController::class, 'processReturn'])->name('processReturn');
         Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
         Route::get('/{orderNumber}/invoice', [OrderController::class, 'invoice'])->name('invoice');
 
