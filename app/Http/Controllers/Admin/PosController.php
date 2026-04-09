@@ -589,110 +589,9 @@ class PosController extends Controller
 
     public function getCart(Request $request)
     {
-        $cart = $this->getOrCreateCart($request->order_number);
-        $cart->load([
-            'items.product',
-            'items.variant.size',
-            'items.variant.color'
-        ]);
-
-        // =========================
-        // CART ITEMS
-        // =========================
-        $cartItems = $cart->items->map(function ($item) {
-
-            $size = $item->variant?->size?->name;
-            $color = $item->variant?->color?->name;
-
-            $sku = $item->product_variant_id
-                ? $item->variant?->sku
-                : $item->product?->sku;
-
-            return [
-                'id' => $item->id,
-                'source' => 'cart',
-                'product_id' => $item->product_id,
-                'sku' => $sku,
-                'product_name' => $item->product->name ?? '',
-                'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
-                'variant_id' => $item->product_variant_id,
-                'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
-                'size' => $size,
-                'color' => $color,
-                'quantity' => (int) $item->quantity,
-                'price' => (float) $item->unit_price,
-                'stock' => (int) ($item->variant->stock ?? 999),
-                'total_price' => (float) $item->total_price,
-            ];
-        });
-
-        // =========================
-        // ORDER ITEMS (EDIT MODE)
-        // =========================
-        $orderItems = collect();
-
-        if ($request->order_number) {
-            $order = Order::with(['items.product.images', 'customer'])
-                ->where('order_number', $request->order_number)
-                ->where('is_pos', 1)
-                ->first();
-
-            if ($order) {
-                $orderItems = $order->items->map(function ($item) {
-
-                    $size = $item->variant?->size?->name;
-                    $color = $item->variant?->color?->name;
-
-                    return [
-                        'id' => 'order_' . $item->id,
-                        'source' => 'order',
-                        'product_id' => $item->product_id,
-                        'sku' => $item->product_variant_id
-                            ? $item->variant?->sku
-                            : $item->product?->sku,
-
-                        'product_name' => $item->product->name ?? '',
-                        'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
-                        'variant_id' => $item->product_variant_id,
-                        'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
-                        'size' => $size,
-                        'color' => $color,
-                        'quantity' => (int) $item->quantity,
-                        'price' => (float) $item->unit_price,
-                        'stock' => (int) ($item->variant->stock),
-                        'total_price' => (float) $item->subtotal,
-                    ];
-                });
-            }
-        }
-
-        // =========================
-        // MERGE BOTH
-        // =========================
-        $items = collect($cartItems)
-            ->merge(collect($orderItems))
-            ->values();
-
-        // =========================
-        // TOTALS
-        // =========================
-        $subtotal = $items->sum('total_price');
-        $discount = 0;
-        $tax = 0;
-        $total = $subtotal + $tax - $discount;
-
         return response()->json([
             'success' => true,
-            'cart' => [
-                'id' => $cart->id,
-                'items' => $items,
-                'subtotal' => $subtotal,
-                'tax' => $tax,
-                'discount' => $discount,
-                'total' => $total,
-                'items_count' => $items->count(),
-                'total_items' => $items->sum('quantity'),
-            ]
+            'cart' => $this->getCartResponse($request->order_number)
         ]);
     }
 
@@ -899,102 +798,9 @@ class PosController extends Controller
                 $cartItem->save();
             }
 
-            // =========================
-            // 🔥 REBUILD FULL CART RESPONSE (INLINE)
-            // =========================
-
-            $cart = $this->getOrCreateCart($request->order_number);
-
-            $cart->load([
-                'items.product',
-                'items.variant.size',
-                'items.variant.color'
-            ]);
-
-            $cartItems = $cart->items->map(function ($item) {
-
-                $size = $item->variant?->size?->name;
-                $color = $item->variant?->color?->name;
-
-                return [
-                    'id' => $item->id,
-                    'source' => 'cart',
-                    'product_id' => $item->product_id,
-                    'sku' => $item->product_variant_id
-                        ? $item->variant?->sku
-                        : $item->product?->sku,
-                    'product_name' => $item->product->name ?? '',
-                    'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
-                    'variant_id' => $item->product_variant_id,
-                    'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
-                    'size' => $size,
-                    'color' => $color,
-                    'quantity' => (int) $item->quantity,
-                    'price' => (float) $item->unit_price,
-                    'stock' => (int) ($item->variant->stock),
-                    'total_price' => (float) $item->total_price,
-                ];
-            });
-
-            $orderItems = collect();
-
-            if ($request->filled('order_number')) {
-
-                $order = Order::with([
-                    'items.product',
-                    'items.variant.size',
-                    'items.variant.color'
-                ])
-                    ->where('order_number', $request->order_number)
-                    ->first();
-
-                if ($order) {
-                    $orderItems = $order->items->map(function ($item) {
-
-                        $size = $item->variant?->size?->name;
-                        $color = $item->variant?->color?->name;
-
-                        return [
-                            'id' => 'order_' . $item->id,
-                            'source' => 'order',
-                            'product_id' => $item->product_id,
-                            'sku' => $item->product_variant_id
-                                ? $item->variant?->sku
-                                : $item->product?->sku,
-                            'product_name' => $item->product->name ?? '',
-                            'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
-                            'variant_id' => $item->product_variant_id,
-                            'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
-                            'size' => $size,
-                            'color' => $color,
-                            'quantity' => (int) $item->quantity,
-                            'price' => (float) $item->unit_price,
-                            'stock' => (int) ($item->variant->stock),
-                            'total_price' => (float) $item->subtotal,
-                        ];
-                    });
-                }
-            }
-
-            $items = collect($cartItems)->merge($orderItems)->values();
-
-            $subtotal = $items->sum('total_price');
-            $discount = 0;
-            $tax = 0;
-            $total = $subtotal;
-
             return response()->json([
                 'success' => true,
-                'cart' => [
-                    'id' => $cart->id,
-                    'items' => $items,
-                    'subtotal' => $subtotal,
-                    'tax' => $tax,
-                    'discount' => $discount,
-                    'total' => $total,
-                    'items_count' => $items->count(),
-                    'total_items' => $items->sum('quantity'),
-                ]
+                'cart' => $this->getCartResponse($request->order_number)
             ]);
 
         } catch (\Exception $e) {
@@ -1013,25 +819,18 @@ class PosController extends Controller
         try {
 
             $orderNumber = $request->order_number ?? null;
-            $order = null;
-            $cart = null;
-
-            // =========================
-            // ORDER MODE
-            // =========================
+       
             if ($orderNumber && str_starts_with($itemId, 'order_')) {
 
                 $realId = (int) str_replace('order_', '', $itemId);
 
-                $order = Order::with(['items.product', 'items.variant.size', 'items.variant.color'])
-                    ->where('order_number', $orderNumber)
-                    ->firstOrFail();
+                $order = Order::where('order_number', $orderNumber)->firstOrFail();
 
                 $orderItem = $order->items()->where('id', $realId)->firstOrFail();
 
                 $quantity = $orderItem->quantity;
 
-                if (!empty($orderItem->product_variant_id)) {
+                if ($orderItem->product_variant_id) {
                     $variant = ProductVariant::find($orderItem->product_variant_id);
                     if ($variant) {
                         $variant->increment('stock_in', $quantity);
@@ -1045,141 +844,24 @@ class PosController extends Controller
 
                 $orderItem->delete();
             }
-
-            // =========================
-            // CART MODE
-            // =========================
             else {
+
                 $cart = Cart::where('is_pos', 1)
                     ->when($orderNumber, fn($q) => $q->where('order_number', $orderNumber))
                     ->when(!$orderNumber, fn($q) => $q->whereNull('order_number')->latest())
-                    ->first();
-
-                if (!$cart) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Cart not found'
-                    ], 404);
-                }
+                    ->firstOrFail();
 
                 $cartItem = CartItem::where('cart_id', $cart->id)
                     ->where('id', $itemId)
                     ->firstOrFail();
 
                 $cartItem->delete();
-
-                $cart->load('items');
             }
-
-            // =========================
-            // LOAD UPDATED DATA
-            // =========================
-
-            if (!$cart) {
-                $cart = Cart::where('is_pos', 1)
-                    ->when($orderNumber, fn($q) => $q->where('order_number', $orderNumber))
-                    ->when(!$orderNumber, fn($q) => $q->whereNull('order_number')->latest())
-                    ->first();
-            }
-
-            if ($orderNumber && !$order) {
-                $order = Order::with(['items.product', 'items.variant.size', 'items.variant.color'])
-                    ->where('order_number', $orderNumber)
-                    ->first();
-            }
-
-            // =========================
-            // FORMAT CART ITEMS
-            // =========================
-            $cartItems = collect();
-
-            if ($cart) {
-                $cart->load(['items.product', 'items.variant.size', 'items.variant.color']);
-
-                $cartItems = $cart->items->map(function ($item) {
-
-                    $size = $item->variant?->size?->name;
-                    $color = $item->variant?->color?->name;
-
-                    return [
-                        'id' => $item->id,
-                        'source' => 'cart',
-                        'product_id' => $item->product_id,
-                        'sku' => $item->product_variant_id
-                            ? $item->variant?->sku
-                            : $item->product?->sku,
-                        'product_name' => $item->product->name ?? '',
-                        'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
-                        'variant_id' => $item->product_variant_id,
-                        'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
-                        'size' => $size,
-                        'color' => $color,
-                        'quantity' => (int) $item->quantity,
-                        'price' => (float) $item->unit_price,
-                        'stock' => (int) ($item->variant->stock ?? 999),
-                        'total_price' => (float) ($item->quantity * $item->unit_price),
-                    ];
-                });
-            }
-
-            // =========================
-            // FORMAT ORDER ITEMS
-            // =========================
-            $orderItems = collect();
-
-            if ($order) {
-                $orderItems = $order->items->map(function ($item) {
-
-                    $size = $item->variant?->size?->name;
-                    $color = $item->variant?->color?->name;
-
-                    return [
-                        'id' => 'order_' . $item->id,
-                        'source' => 'order',
-                        'product_id' => $item->product_id,
-                        'sku' => $item->product_variant_id
-                            ? $item->variant?->sku
-                            : $item->product?->sku,
-                        'product_name' => $item->product->name ?? '',
-                        'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
-                        'variant_id' => $item->product_variant_id,
-                        'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
-                        'size' => $size,
-                        'color' => $color,
-                        'quantity' => (int) $item->quantity,
-                        'price' => (float) $item->unit_price,
-                        'stock' => (int) ($item->variant->stock ?? 999),
-                        'total_price' => (float) ($item->quantity * $item->unit_price),
-                    ];
-                });
-            }
-
-            // =========================
-            // FINAL RESPONSE
-            // =========================
-
-
-            if ($cartItems->count() > 0) {
-                $items = $cartItems->merge($orderItems)->values();
-            } else {
-                $items = $orderItems->values();
-            }
-
-            $subtotal = $items->sum('total_price');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Item removed successfully',
-                'cart' => [
-                    'id' => $cart?->id,
-                    'items' => $items,
-                    'subtotal' => $subtotal,
-                    'tax' => 0,
-                    'discount' => 0,
-                    'total' => $subtotal,
-                    'items_count' => $items->count(),
-                    'total_items' => $items->sum('quantity'),
-                ]
+                'cart' => $this->getCartResponse($orderNumber)
             ]);
 
         } catch (\Exception $e) {
@@ -1318,6 +1000,108 @@ class PosController extends Controller
         ];
 
         return view('admin.pos.sales', compact('orders', 'statusCounts'));
+    }
+
+    private function getCartResponse($orderNumber = null)
+    {
+        $cart = $this->getOrCreateCart($orderNumber);
+
+        $cart->load([
+            'items.product',
+            'items.variant.size',
+            'items.variant.color'
+        ]);
+
+        // =========================
+        // CART ITEMS
+        // =========================
+        $cartItems = $cart->items->map(function ($item) {
+
+            $size = $item->variant?->size?->name;
+            $color = $item->variant?->color?->name;
+
+            $sku = $item->product_variant_id
+                ? $item->variant?->sku
+                : $item->product?->sku;
+
+            return [
+                'id' => $item->id,
+                'source' => 'cart',
+                'product_id' => $item->product_id,
+                'sku' => $sku,
+                'product_name' => $item->product->name ?? '',
+                'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
+                'variant_id' => $item->product_variant_id,
+                'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
+                'size' => $size,
+                'color' => $color,
+                'quantity' => (int) $item->quantity,
+                'price' => (float) $item->unit_price,
+                'stock' => (int) ($item->variant->stock ?? 999),
+                'total_price' => (float) $item->total_price,
+            ];
+        });
+
+        // =========================
+        // ORDER ITEMS
+        // =========================
+        $orderItems = collect();
+
+        if ($orderNumber) {
+            $order = Order::with(['items.product.images', 'customer'])
+                ->where('order_number', $orderNumber)
+                ->where('is_pos', 1)
+                ->first();
+
+            if ($order) {
+                $orderItems = $order->items->map(function ($item) {
+
+                    $size = $item->variant?->size?->name;
+                    $color = $item->variant?->color?->name;
+
+                    return [
+                        'id' => 'order_' . $item->id,
+                        'source' => 'order',
+                        'product_id' => $item->product_id,
+                        'sku' => $item->product_variant_id
+                            ? $item->variant?->sku
+                            : $item->product?->sku,
+                        'product_name' => $item->product->name ?? '',
+                        'product_image' => $item->product->thumbnail ?? asset('assets/images/default.png'),
+                        'variant_id' => $item->product_variant_id,
+                        'variant_name' => trim(($size ?? '') . ' - ' . ($color ?? ''), ' -') ?: 'Standard',
+                        'size' => $size,
+                        'color' => $color,
+                        'quantity' => (int) $item->quantity,
+                        'price' => (float) $item->unit_price,
+                        'stock' => (int) ($item->variant->stock),
+                        'total_price' => (float) $item->subtotal,
+                    ];
+                });
+            }
+        }
+
+        // =========================
+        // MERGE
+        // =========================
+        $items = collect($cartItems)
+            ->merge($orderItems)
+            ->values();
+
+        $subtotal = $items->sum('total_price');
+        $discount = 0;
+        $tax = 0;
+
+        return [
+            'id' => $cart->id,
+            'items' => $items,
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'discount' => $discount,
+            'total' => $subtotal + $tax - $discount,
+            'items_count' => $items->count(),
+            'total_items' => $items->sum('quantity'),
+        ];
     }
 
     public function receipt($orderNumber)
