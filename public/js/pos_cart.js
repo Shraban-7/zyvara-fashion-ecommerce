@@ -6,6 +6,9 @@ class PosCartManager {
             ?.getAttribute("content");
         this.orderNumber = this.getOrderNumberFromURL();
 
+        // 🔥 ADD THIS (for debounce)
+        this.priceTimer = null;
+
         this.init();
     }
 
@@ -72,7 +75,7 @@ class PosCartManager {
                     product_variant_id: variantId,
                     quantity: quantity,
                     is_pos: 1,
-                    order_number:this.orderNumber
+                    order_number: this.orderNumber
                 }),
             });
 
@@ -96,13 +99,10 @@ class PosCartManager {
                 method: "PUT",
                 headers: this.getHeaders(),
                 credentials: "same-origin",
-                body: JSON.stringify({ quantity:quantity ,order_number:this.orderNumber }),
+                body: JSON.stringify({ quantity: quantity, order_number: this.orderNumber }),
             });
 
             const data = await response.json();
-
-            console.log(data.cart);
-            
 
             if (data.success) {
                 this.updateCartCount(data.cart.items_count);
@@ -110,6 +110,35 @@ class PosCartManager {
             }
         } catch (error) {
             console.error("Update error:", error);
+        }
+    }
+
+    // ===============================
+    // 🔥 ADD THIS: UPDATE PRICE
+    // ===============================
+    async updatePrice(itemId, price) {
+        try {
+            const response = await fetch(`${this.apiUrl}/update-item-price/${itemId}`, {
+                method: "POST",
+                headers: this.getHeaders(),
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    price: price,
+                    order_number: this.orderNumber
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.updateCartCount(data.cart.items_count);
+                this.loadCart(this.orderNumber);
+            } else {
+                alert(data.message || "Failed to update price");
+            }
+
+        } catch (error) {
+            console.error("Price update error:", error);
         }
     }
 
@@ -122,7 +151,7 @@ class PosCartManager {
                 method: "DELETE",
                 headers: this.getHeaders(),
                 credentials: "same-origin",
-                body: JSON.stringify({ order_number:this.orderNumber }),
+                body: JSON.stringify({ order_number: this.orderNumber }),
             });
 
             const data = await response.json();
@@ -247,9 +276,11 @@ class PosCartManager {
         });
     }
 
+
     // ===============================
     // EVENTS
     // ===============================
+
     setupAddToCartListeners() {
         document.addEventListener("click", (e) => {
             const btn = e.target.closest("[data-add-to-cart]");
@@ -261,6 +292,7 @@ class PosCartManager {
             this.addToCart(productId, variantId, 1);
         });
     }
+
 
     setupCartActions() {
         document.addEventListener("click", (e) => {
@@ -293,7 +325,7 @@ class PosCartManager {
             }
         });
 
-        // manual input change
+        // qty change
         document.addEventListener("change", (e) => {
             if (e.target.classList.contains("qty-input")) {
                 const id = e.target.dataset.id;
@@ -302,6 +334,24 @@ class PosCartManager {
                 if (qty > 0) {
                     this.updateQuantity(id, qty);
                 }
+            }
+        });
+
+        // ===============================
+        // 🔥 ADD THIS: PRICE INPUT EVENT
+        // ===============================
+        document.addEventListener("change", (e) => {
+            if (e.target.classList.contains("item-price-input")) {
+
+                const input = e.target;
+                const id = input.dataset.id;
+                const price = parseFloat(input.value);
+
+                if (!price || price <= 0) return;
+
+                input.classList.add("bg-yellow-100");
+
+                this.updatePrice(id, price);
             }
         });
     }
@@ -332,26 +382,31 @@ class PosCartManager {
                             <i class="fas fa-trash text-sm"></i>
                         </button>
                     </div>
+
                 </div>
 
-                <div class="text-right">
-                    <p class="text-sm font-bold text-gray-900">৳${(item.price * item.quantity)}</p>
-                    <p class="text-xs text-gray-500">৳${item.price} each</p>
+                <div class="text-right space-y-1">
+
+                    ${item.compare_price && item.compare_price > item.price
+                ? `<p class="text-xs text-gray-400 line-through">
+                                ৳${item.compare_price}
+                           </p>`
+                : ''
+            }
+
+                    <div class="flex items-center justify-end gap-1">
+                        <span class="text-xs text-gray-500">৳</span>
+                        <input 
+                            type="number" 
+                            value="${item.price}" 
+                            class="w-16 text-xs border rounded text-right item-price-input"
+                            data-id="${item.id}"
+                        />
+                    </div>
+
                 </div>
             </div>
         </div>`;
-    }
-
-    getEmptyCartHTML() {
-        return `<div class="text-center py-10 text-gray-500">Cart is empty</div>`;
-    }
-
-    showCartFooter() {
-        document.getElementById("cartFooter")?.classList.remove("hidden");
-    }
-
-    hideCartFooter() {
-        document.getElementById("cartFooter")?.classList.add("hidden");
     }
 }
 
@@ -360,11 +415,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.posCartManager = new PosCartManager();
 });
 
-// GLOBAL FUNCTION
+// GLOBAL
 function addToCart(product, variant) {
     if (window.posCartManager) {
         window.posCartManager.addToCart(product.id, variant.id, 1);
     }
-
-    $('#variantModal').addClass('hidden');
 }

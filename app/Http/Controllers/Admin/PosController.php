@@ -609,12 +609,6 @@ class PosController extends Controller
 
             $cart = $this->getOrCreateCart($request->order_number);
 
-            // if ($request->order_number) {
-            //     $cart->update([
-            //         'order_number' => $request->order_number
-            //     ]);
-            // }
-
             $product = Product::with('variants')->findOrFail($request->product_id);
 
             // Check if product has variants and variant is required but not provided
@@ -819,7 +813,7 @@ class PosController extends Controller
         try {
 
             $orderNumber = $request->order_number ?? null;
-       
+
             if ($orderNumber && str_starts_with($itemId, 'order_')) {
 
                 $realId = (int) str_replace('order_', '', $itemId);
@@ -843,8 +837,7 @@ class PosController extends Controller
                 }
 
                 $orderItem->delete();
-            }
-            else {
+            } else {
 
                 $cart = Cart::where('is_pos', 1)
                     ->when($orderNumber, fn($q) => $q->where('order_number', $orderNumber))
@@ -868,6 +861,63 @@ class PosController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to remove item: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateItemPrice(Request $request, $itemId)
+    {
+        $request->validate([
+            'price' => 'required|numeric|min:0',
+            'order_number' => 'nullable|string'
+        ]);
+
+        try {
+
+            // =========================
+            // ORDER MODE
+            // =========================
+            if ($request->filled('order_number') && str_starts_with($itemId, 'order_')) {
+
+                $realId = str_replace('order_', '', $itemId);
+
+                $order = Order::where('order_number', $request->order_number)->firstOrFail();
+
+                $orderItem = $order->items()->where('id', $realId)->firstOrFail();
+
+                $orderItem->unit_price = $request->price;
+                $orderItem->subtotal = $request->price * $orderItem->quantity;
+                $orderItem->save();
+            }
+
+            // =========================
+            // CART MODE
+            // =========================
+            else {
+
+                $cart = $this->getOrCreateCart($request->order_number);
+
+                $cartItem = CartItem::where('cart_id', $cart->id)
+                    ->where('id', $itemId)
+                    ->firstOrFail();
+
+                $cartItem->item_unit_price = $request->price;
+                $cartItem->item_total_price = $request->price * $cartItem->quantity;
+                $cartItem->save();
+            }
+
+            // =========================
+            // ✅ REUSE BUILDER
+            // =========================
+            return response()->json([
+                'success' => true,
+                'cart' => $this->getCartResponse($request->order_number)
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update price: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -1012,9 +1062,6 @@ class PosController extends Controller
             'items.variant.color'
         ]);
 
-        // =========================
-        // CART ITEMS
-        // =========================
         $cartItems = $cart->items->map(function ($item) {
 
             $size = $item->variant?->size?->name;
@@ -1037,14 +1084,12 @@ class PosController extends Controller
                 'color' => $color,
                 'quantity' => (int) $item->quantity,
                 'price' => (float) $item->unit_price,
-                'stock' => (int) ($item->variant->stock ?? 999),
+                'compare_price' => (float) $item->product->compare_price,
+                'stock' => (int) ($item->variant->stock ?? 0),
                 'total_price' => (float) $item->total_price,
             ];
         });
 
-        // =========================
-        // ORDER ITEMS
-        // =========================
         $orderItems = collect();
 
         if ($orderNumber) {
@@ -1074,6 +1119,7 @@ class PosController extends Controller
                         'color' => $color,
                         'quantity' => (int) $item->quantity,
                         'price' => (float) $item->unit_price,
+                        'compare_price' => (float) $item->product->compare_price ?? 1700,
                         'stock' => (int) ($item->variant->stock),
                         'total_price' => (float) $item->subtotal,
                     ];
@@ -1081,9 +1127,6 @@ class PosController extends Controller
             }
         }
 
-        // =========================
-        // MERGE
-        // =========================
         $items = collect($cartItems)
             ->merge($orderItems)
             ->values();

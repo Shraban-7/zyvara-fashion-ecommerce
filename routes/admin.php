@@ -80,6 +80,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
             Route::post('/add', [PosController::class, 'addToCart'])->name('add');
             Route::put('/update/{itemId}', [PosController::class, 'updateQuantity'])->name('update');
             Route::delete('/remove/{itemId}', [PosController::class, 'removeItem'])->name('remove');
+            Route::post('/update-item-price/{itemId}', [PosController::class, 'updateItemPrice'])->name('updateItemPrice');
             Route::delete('/clear', [PosController::class, 'clearCart'])->name('clear');
         });
     });
