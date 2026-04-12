@@ -30,39 +30,45 @@
     <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
 
         <form method="GET" action="{{ route('admin.saleReturns.index') }}" class="space-y-4">
+            {{-- SEARCH + FILTERS --}}
+            <div class="grid md:grid-cols-4 gap-4">
 
-            {{-- STATUS FILTER --}}
-            <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-4">
-                <a href="{{ route('admin.saleReturns.index', array_merge(request()->except('status'), ['status' => 'all'])) }}"
-                    class="px-4 py-2 rounded-lg text-sm font-medium transition {{ request('status', 'all') === 'all' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                    All
-                </a>
-
-                <a href="{{ route('admin.saleReturns.index', array_merge(request()->except('status'), ['status' => 'processed'])) }}"
-                    class="px-4 py-2 rounded-lg text-sm font-medium transition {{ request('status') === 'processed' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                    Processed
-                </a>
-
-                <a href="{{ route('admin.saleReturns.index', array_merge(request()->except('status'), ['status' => 'pending'])) }}"
-                    class="px-4 py-2 rounded-lg text-sm font-medium transition {{ request('status') === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                    Pending
-                </a>
-            </div>
-
-            {{-- SEARCH --}}
-            <div class="grid md:grid-cols-3 gap-4">
-
+                {{-- SEARCH (GLOBAL) --}}
                 <div class="md:col-span-2 relative">
+
                     <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Search by order #, customer, phone..."
+                        placeholder="Search customer, phone, order #..."
                         class="w-full h-11 pl-10 pr-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500">
 
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
                 </div>
 
-                <button type="submit" class="h-11 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">
-                    Apply Filters
+                {{-- FROM DATE --}}
+                <div>
+                    <input type="date" name="from_date" value="{{ request('from_date') }}"
+                        class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                {{-- TO DATE --}}
+                <div>
+                    <input type="date" name="to_date" value="{{ request('to_date') }}"
+                        class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                </div>
+
+            </div>
+
+            {{-- ACTION BUTTONS --}}
+            <div class="flex items-center gap-2">
+
+                <button type="submit" class="h-11 px-6 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">
+                    <i class="fas fa-filter mr-2"></i>Apply Filters
                 </button>
+
+                <a href="{{ route('admin.saleReturns.index') }}"
+                    class="h-11 px-6 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition flex items-center justify-center">
+                    <i class="fas fa-times mr-2"></i>Reset
+                </a>
 
             </div>
 
@@ -114,8 +120,8 @@
 
                             {{-- CUSTOMER --}}
                             <td class="px-6 py-4">
-                                <p class="font-medium text-gray-900">{{ $return->customer_name }}</p>
-                                <p class="text-sm text-gray-500">{{ $return->customer_phone }}</p>
+                                <p class="font-medium text-gray-900">{{ $return->order?->customer?->name }}</p>
+                                <p class="text-sm text-gray-500">{{ $return->order?->customer?->phone }}</p>
                             </td>
 
                             {{-- ITEMS --}}
@@ -198,7 +204,7 @@
 
 
         window.open(`/admin/returns/${id}/print`, '_blank');
-    }
+        }
 
         function exportReturns() {
             const params = new URLSearchParams(window.location.search);

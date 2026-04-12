@@ -16,8 +16,36 @@ class SaleReturnController extends Controller
 {
     public function index(Request $request)
     {
-        $returns = SaleReturn::withCount('items')->paginate(20);
-        return view('admin.sale-returns.index',compact('returns'));
+        $query = SaleReturn::query()
+            ->withCount('items')
+            ->with('order.customer');
+
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('order', function ($oq) use ($search) {
+                    $oq->where('order_number', 'like', "%{$search}%");
+                })->orWhereHas('order.customer', function ($cq) use ($search) {
+                        $cq->where('name', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%");
+                    });
+
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $returns = $query->latest()->paginate(20)->appends($request->all());
+
+        return view('admin.sale-returns.index', compact('returns'));
     }
 
     public function processReturn(Request $request, $id)
@@ -67,7 +95,7 @@ class SaleReturnController extends Controller
                     throw new \Exception("Return qty exceeds sold qty");
                 }
 
-               $returnItem = SaleReturnItem::create([
+                $returnItem = SaleReturnItem::create([
                     'sale_return_id' => $saleReturn->id,
                     'product_id' => $orderItem->product_id,
                     'product_variant_id' => $orderItem->product_variant_id,
@@ -99,7 +127,7 @@ class SaleReturnController extends Controller
                         $product->increment('stock_in', $itemData['quantity']);
                     }
                 }
-                
+
             }
 
             DB::commit();
@@ -122,6 +150,6 @@ class SaleReturnController extends Controller
 
     public function show(SaleReturn $return)
     {
-        return  view('admin.sale-returns.show',compact('return'));
+        return view('admin.sale-returns.show', compact('return'));
     }
 }
