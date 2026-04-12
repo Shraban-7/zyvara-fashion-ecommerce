@@ -8,12 +8,14 @@ use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\CashRegister;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\SaleReturn;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,7 +46,21 @@ class PosController extends Controller
 
         $employees = User::where('role', 'staff')->get();
 
-        return view('admin.pos.index', compact('products', 'categories', 'cart', 'employees', 'order'));
+        $cashRegister = CashRegister::whereNull('closed_at')
+            ->latest()
+            ->first();
+        
+        $start = Carbon::today()->setTime(8, 0);
+        $end = Carbon::tomorrow()->setTime(2, 0);
+
+        $cashRegisterData = [
+            'opening_amount' => $cashRegister->opening_amount ?? 0,
+            'sales_amount' => Order::whereBetween('created_at', [$start, $end])->sum('total'),
+            // 'expense' => Expense::whereBetween('created_at', [$start, $end])->sum('amount'),
+            'sales_returns' => SaleReturn::whereBetween('created_at', [$start, $end])->sum('refund_amount'),
+        ];
+
+        return view('admin.pos.index', compact('products', 'categories', 'cart', 'employees', 'order', 'cashRegister','cashRegisterData'));
     }
 
     public function searchProducts(Request $request)
@@ -243,7 +259,7 @@ class PosController extends Controller
 
             $order = Order::with('items')->findOrFail($id);
 
-           $paymentMethodEnum = filled($request->payment_method)
+            $paymentMethodEnum = filled($request->payment_method)
                 ? PaymentMethod::tryFrom(strtolower($request->payment_method))
                 : null;
 

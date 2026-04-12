@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CashRegisterController;
 use App\Http\Controllers\Admin\SaleReturnController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
@@ -45,6 +46,11 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('sale-returns')->as('saleReturns.')->group(function () {
         Route::get('/', [SaleReturnController::class, 'index'])->name('index');
         Route::get('/{return}', [SaleReturnController::class, 'show'])->name('show');
+    });
+
+    Route::prefix('cash-register')->as('cashRegister.')->group(function () {
+        Route::post('open/', [CashRegisterController::class, 'open'])->name('open');
+        Route::post('{register}/close/', [CashRegisterController::class, 'close'])->name('close');
     });
 
     Route::prefix('categories')->as('categories.')->group(function () {

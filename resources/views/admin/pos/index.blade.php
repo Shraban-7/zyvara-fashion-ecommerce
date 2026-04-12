@@ -7,25 +7,60 @@
         {{-- Header --}}
         <div class="bg-white border-b border-gray-200 px-4 py-3 shrink-0">
             <div class="flex items-center justify-between gap-4">
+
+                <!-- LEFT TITLE -->
                 <h1 class="text-xl font-bold text-gray-900 flex items-center gap-2">
                     <i class="fas fa-cash-register text-blue-600"></i>
                     Point of Sale
                 </h1>
 
+                <!-- RIGHT ACTIONS -->
                 <div class="flex items-center gap-3">
+
+                    <!-- 🔥 CASH REGISTER STATUS -->
+                    @if($cashRegister)
+                        <div class="flex items-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
+
+                            <div class="text-xs text-green-700 font-medium">
+                                Opening:
+                                <span class="font-bold">
+                                    {{ money($cashRegister->opening_amount) }}
+                                </span>
+                            </div>
+
+                            <button
+                                onclick="document.getElementById('closeRegisterModal').classList.remove('hidden')"
+                                class="px-3 py-1 text-xs bg-red-100 text-red-700 hover:bg-red-200 rounded-md transition">
+                                Close
+                            </button>
+
+                         
+
+                        </div>
+                    @else
+                        <div class="px-3 py-2 bg-yellow-50 border border-yellow-200 rounded-lg text-xs text-yellow-700 font-medium">
+                            Register Not Open
+                        </div>
+                    @endif
+
+                    <!-- CLEAR CART -->
                     <button id="clearCartBtn"
                         class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
                         <i class="fas fa-refresh mr-2"></i>Clear Cart
                     </button>
+
+                    <!-- DRAFT -->
                     <button id="draftOrdersBtn"
                         class="px-4 py-2 text-sm font-medium text-yellow-700 bg-yellow-100 hover:bg-yellow-200 rounded-lg transition">
                         <i class="fas fa-file-alt mr-2"></i>Draft
                     </button>
 
+                    <!-- TODAY SALES -->
                     <button id="salesOrdersBtn"
                         class="px-4 py-2 text-sm font-medium text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition">
                         <i class="fas fa-history mr-2"></i>Today Sales
                     </button>
+
                 </div>
             </div>
         </div>
@@ -439,8 +474,78 @@
         </div>
     </div>
 
+    @include('admin.pos.partials.cash-register')
+
     @push('scripts')
         <script src="{{ asset('js/pos_cart.js') }}"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const register = @json($cashRegister ?? null);
+
+                const openModal  = document.getElementById('openRegisterModal');
+                const closeModal = document.getElementById('closeRegisterModal');
+
+                const openingInput = document.querySelector('[name="opening_amount"]');
+                const closingInput = document.querySelector('[name="closing_amount"]');
+
+                function showOpenModal() {
+                    if (!openModal) return;
+                    openModal.classList.remove('hidden');
+                    setTimeout(() => openingInput?.focus(), 200);
+                }
+
+                function showCloseModal() {
+                    if (!closeModal) return;
+                    closeModal.classList.remove('hidden');
+                    setTimeout(() => closingInput?.focus(), 200);
+                }
+
+                function hideCloseModal() {
+                    closeModal?.classList.add('hidden');
+                }
+
+                function hideOpenModal() {
+                    openModal?.classList.add('hidden');
+                }
+
+                // =========================
+                // INITIAL STATE CONTROL
+                // =========================
+                if (!register) {
+                    showOpenModal();
+
+                    history.pushState({ modal: 'open' }, '');
+
+                    window.onpopstate = function () {
+                        showOpenModal();
+                        history.pushState({ modal: 'open' }, '');
+                    };
+                } 
+
+                // =========================
+                // CLOSE BUTTON EVENTS
+                // =========================
+                document.getElementById('closeCloseBtn')?.addEventListener('click', function () {
+                    hideCloseModal();
+                });
+
+                document.getElementById('cancelCloseBtn')?.addEventListener('click', function () {
+                    hideCloseModal();
+                });
+
+                // =========================
+                // PREVENT REOPEN BUG ON SUBMIT
+                // =========================
+                document.querySelectorAll('form[action*="cashRegister.close"]').forEach(form => {
+                    form.addEventListener('submit', function () {
+                        hideCloseModal();
+                        history.replaceState({}, document.title);
+                    });
+                });
+
+            });
+        </script>
         <script>
             $(document).ready(function () {
 
