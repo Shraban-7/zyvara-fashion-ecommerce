@@ -705,14 +705,35 @@ function submitReturn() {
         },
         success: function (res) {
             if (res.success) {
-                alert("Return processed successfully");
-                location.reload();
+
+                window.showSuccess(res.message || "Return processed successfully");
+
+                setTimeout(() => {
+                    location.reload();
+                }, 800);
+
             } else {
-                alert(res.message || "Failed");
+                window.showError(res.message || "Failed");
             }
         },
+
         error: function (xhr) {
-            alert(xhr.responseJSON?.message || "Something went wrong");
+
+            let message = "Something went wrong";
+
+            if (xhr.responseJSON) {
+                if (xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+
+                if (xhr.responseJSON.errors) {
+                    message = Object.values(xhr.responseJSON.errors)
+                        .flat()
+                        .join("\n");
+                }
+            }
+
+            window.showError(message);
         },
         complete: function () {
             isProcessingReturn = false;

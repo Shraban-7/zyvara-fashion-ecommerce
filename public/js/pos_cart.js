@@ -84,9 +84,10 @@ class PosCartManager {
             if (data.success) {
                 this.updateCartCount(data.cart.items_count);
                 this.loadCart(this.orderNumber);
+                window.showSuccess("Add to cart successfully")
             }
         } catch (error) {
-            console.error("Add error:", error);
+            window.showError("Add error:", error);
         }
     }
 
@@ -107,9 +108,10 @@ class PosCartManager {
             if (data.success) {
                 this.updateCartCount(data.cart.items_count);
                 this.loadCart(this.orderNumber);
+                window.showSuccess("Cart quantity updated successfully")
             }
         } catch (error) {
-            console.error("Update error:", error);
+            window.showError("Update error:", error);
         }
     }
 
@@ -138,7 +140,7 @@ class PosCartManager {
             }
 
         } catch (error) {
-            console.error("Price update error:", error);
+            window.showError("Price update error:", error);
         }
     }
 
@@ -159,9 +161,10 @@ class PosCartManager {
             if (data.success) {
                 this.updateCartCount(data.cart.items_count);
                 this.loadCart(this.orderNumber);
+                window.showSuccess("Cart item removed successfully")
             }
         } catch (error) {
-            console.error("Remove error:", error);
+            window.showError("Remove error:", error);
         }
     }
 
@@ -180,9 +183,10 @@ class PosCartManager {
 
             if (data.success) {
                 this.loadCart(this.orderNumber);
+                window.showSuccess("Cart cleared successfully")
             }
         } catch (error) {
-            console.error("Clear error:", error);
+            window.showError("Clear error:", error);
         }
     }
 

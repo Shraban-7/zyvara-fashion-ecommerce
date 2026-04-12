@@ -862,24 +862,45 @@
 
                         success: function (res) {
                             if (res.success) {
-                                // alert(method === 'POST' ? 'Order completed' : 'Order updated');
+
+                                window.showSuccess(res.message);
+
                                 let receiptUrl = "{{ route('admin.pos.receipt', ':order_number') }}"
-                                        .replace(':order_number', res.order_number);
+                                    .replace(':order_number', res.order_number);
+
                                 resetPOS();
-                                 if (shouldPrint) {
-                                    printReceipt(receiptUrl, function () { window.location.href = "{{ route('admin.pos.index') }}"; });
+
+                                if (shouldPrint) {
+                                    setTimeout(() => {
+                                        printReceipt(receiptUrl, function () {
+                                            window.location.href = "{{ route('admin.pos.index') }}";
+                                        });
+                                    }, 1500);
 
                                 } else {
-                                    window.location.href =
-                                        "{{ route('admin.pos.index') }}";
+                                    window.location.href = "{{ route('admin.pos.index') }}";
                                 }
                             }
                         },
 
-                        error: function () {
-                            alert(method === 'POST'
-                                ? 'Failed to complete order'
-                                : 'Failed to update order');
+                        error: function (xhr) {
+                            let message = 'Something went wrong';
+
+                            if (xhr.responseJSON) {
+                                if (xhr.responseJSON.message) {
+                                    message = xhr.responseJSON.message;
+                                }
+
+                                if (xhr.responseJSON.errors) {
+                                    let errors = Object.values(xhr.responseJSON.errors)
+                                        .flat()
+                                        .join('\n');
+
+                                    message = errors;
+                                }
+                            }
+
+                            window.showError(message);
                         }
                     });
                 }
@@ -965,11 +986,11 @@
                                             : `${c.phone} (${c.value})`;
 
                                         html += `
-                                                                                                                                             <button type="button"
-                                                                                                                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100" data-index="${i}">
-                                                                                                                                                ${text}
-                                                                                                                                             </button>                                                                                       
-                                                                                                                                            `;
+                                            <button type="button"
+                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100" data-index="${i}">
+                                                ${text}
+                                            </button>                                                                                       
+                                            `;
                                     });
 
                                     $dropdown.html(html).removeClass('hidden');
