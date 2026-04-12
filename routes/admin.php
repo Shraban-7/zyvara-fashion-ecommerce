@@ -42,6 +42,11 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     });
 
+    Route::prefix('sale-returns')->as('saleReturns.')->group(function () {
+        Route::get('/', [SaleReturnController::class, 'index'])->name('index');
+        Route::get('/{return}', [SaleReturnController::class, 'show'])->name('show');
+    });
+
     Route::prefix('categories')->as('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
         Route::post('/store', [CategoryController::class, 'store'])->name('store');

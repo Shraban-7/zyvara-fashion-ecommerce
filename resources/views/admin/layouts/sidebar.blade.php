@@ -63,6 +63,22 @@ $user = auth()->user();
                         </span>
                     @endif
                 </a>
+
+
+                {{-- SALES RETURN MENU --}}
+                <a href="{{ route('admin.saleReturns.index') }}"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition
+                {{ request()->routeIs('admin.saleReturns.*') ? 'active' : '' }}">
+
+                    <i class="fas fa-undo text-lg w-5"></i>
+                    <span>Sales Returns</span>
+
+                    @if(($returnCount ?? 0) > 0)
+                        <span class="ml-auto bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">
+                            {{ $returnCount }}
+                        </span>
+                    @endif
+                </a>
             </div>
 
             <div class="pt-4">

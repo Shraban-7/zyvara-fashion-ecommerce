@@ -10,4 +10,20 @@ class SaleReturn extends Model
     use HasFactory;
     
     protected $guarded = ['id'];
+
+    public function items()
+    {
+        return $this->hasMany(SaleReturnItem::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class,'sale_id');
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(User::class,'employee_id');
+    }
+
 }

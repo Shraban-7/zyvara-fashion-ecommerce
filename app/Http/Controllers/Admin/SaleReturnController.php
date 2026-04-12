@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\DB;
 
 class SaleReturnController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-
+        $returns = SaleReturn::withCount('items')->paginate(20);
+        return view('admin.sale-returns.index',compact('returns'));
     }
 
     public function processReturn(Request $request, $id)
@@ -117,5 +118,10 @@ class SaleReturnController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function show(SaleReturn $return)
+    {
+        return  view('admin.sale-returns.show',compact('return'));
     }
 }
