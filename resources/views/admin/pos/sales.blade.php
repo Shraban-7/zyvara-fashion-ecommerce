@@ -209,11 +209,6 @@
                                         <i class="fas fa-edit"></i>
                                     </a>
 
-                                    <button onclick="printOrder({{ $order->id }})"
-                                        class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-lg">
-                                        <i class="fas fa-print"></i>
-                                    </button>
-
                                 </div>
                             </td>
 
