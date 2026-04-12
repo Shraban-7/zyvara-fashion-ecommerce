@@ -712,19 +712,37 @@
                             if (res.data.length === 0) {
                                 html = '<p class="text-center text-gray-500">No orders found</p>';
                             } else {
+                                let orderUrlTemplate = "{{ route('admin.orders.show', ':id') }}";
+                                let posUrlTemplate = "{{ route('admin.pos.index') }}";
+
                                 res.data.forEach(order => {
+                                    let url = '';
+
+                                    if (order.status === 'draft') {
+                                        url = `${posUrlTemplate}?order_number=${order.order_number}`;
+                                    } else {
+                                        url = orderUrlTemplate.replace(':id', order.id);
+                                    }
+
                                     html += `
-                                                                                <div class="border-b py-3 flex justify-between hover:bg-gray-50 cursor-pointer px-2 rounded">
-                                                                                    <div>
-                                                                                        <p class="font-semibold">#${order.order_number}</p>
-                                                                                        <p class="text-sm text-gray-500">${order.customer_name}</p>
-                                                                                    </div>
-                                                                                    <div class="text-right">
-                                                                                        <p class="font-semibold">${order.total}</p>
-                                                                                        <p class="text-xs text-gray-500">${order.status}</p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            `;
+                                        <div class="border-b py-3 flex justify-between hover:bg-gray-50 px-2 rounded">
+                                            <div>
+                                                <p class="font-semibold">
+                                                    <a href="${url}" 
+                                                    class="text-blue-600 hover:underline">
+                                                        #${order.order_number}
+                                                    </a>
+                                                </p>
+                                                <p class="text-sm text-gray-500">${order.customer_name}</p>
+                                            </div>
+
+                                            <div class="text-right">
+                                                <p class="font-semibold">${order.total}</p>
+                                                <p class="text-xs text-gray-500">${order.status}</p>
+                                            </div>
+
+                                        </div>
+                                    `;
                                 });
                             }
 

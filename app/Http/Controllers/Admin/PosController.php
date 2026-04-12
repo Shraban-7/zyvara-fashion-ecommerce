@@ -886,6 +886,7 @@ class PosController extends Controller
 
         $orders = $query->get()->map(function ($order) {
             return [
+                'id' => $order->id,
                 'order_number' => $order->order_number,
                 'customer_name' => $order->shipping_name
                     ?? $order->user?->name
