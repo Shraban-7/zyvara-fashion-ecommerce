@@ -66,7 +66,7 @@ class SaleReturnController extends Controller
                     throw new \Exception("Return qty exceeds sold qty");
                 }
 
-                SaleReturnItem::create([
+               $returnItem = SaleReturnItem::create([
                     'sale_return_id' => $saleReturn->id,
                     'product_id' => $orderItem->product_id,
                     'product_variant_id' => $orderItem->product_variant_id,
@@ -77,6 +77,10 @@ class SaleReturnController extends Controller
                     'unit_price' => $itemData['unit_price'],
                     'is_exchanged' => false,
                 ]);
+
+                $orderItem->return_item_id = $returnItem->id;
+
+                $orderItem->save();
 
                 if ($orderItem->product_variant_id) {
 

@@ -293,68 +293,78 @@
                     <div class="mb-4">
                         <div class="grid grid-cols-5 gap-2">
 
-                            <!-- NONE / DRAFT -->
+                            <!-- NONE / EMPTY -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value=""
+                                <input type="radio"
+                                    name="payment_method"
+                                    value="none"
                                     class="hidden peer payment_method"
-                                    {{ !$order || !$order->payment_method ? 'checked' : '' }}>
+                                    {{ !$order || (isset($order) && $order->payment_method->value==='none') ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                    border-gray-300 text-gray-500 text-xs
-                                    peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700 transition">
+                                            border-gray-300 text-gray-500 text-xs
+                                            peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700 transition">
                                     None
                                 </div>
                             </label>
 
                             <!-- CASH -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="cash"
-                                    class="hidden peer"
-                                    {{ isset($order) && $order->payment_method == 'cash' ? 'checked' : '' }}>
+                                <input type="radio"
+                                    name="payment_method"
+                                    value="cash"
+                                    class="hidden peer payment_method"
+                                    {{ isset($order) && $order->payment_method->value === 'cash' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                    border-gray-300 text-gray-600 text-xs
-                                    peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition">
+                                            border-gray-300 text-gray-600 text-xs
+                                            peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition">
                                     Cash
                                 </div>
                             </label>
 
                             <!-- CARD -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="card"
-                                    class="hidden peer"
-                                    {{ isset($order) && $order->payment_method == 'card' ? 'checked' : '' }}>
+                                <input type="radio"
+                                    name="payment_method"
+                                    value="card"
+                                    class="hidden peer payment_method"
+                                    {{ isset($order) && $order->payment_method->value === 'card' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                    border-gray-300 text-gray-600 text-xs
-                                    peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition">
+                                            border-gray-300 text-gray-600 text-xs
+                                            peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition">
                                     Card
                                 </div>
                             </label>
 
                             <!-- BKASH -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="bkash"
-                                    class="hidden peer"
-                                    {{ isset($order) && $order->payment_method == 'bkash' ? 'checked' : '' }}>
+                                <input type="radio"
+                                    name="payment_method"
+                                    value="bkash"
+                                    class="hidden peer payment_method"
+                                    {{ isset($order) && $order->payment_method->value === 'bkash' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                    border-gray-300 text-gray-600 text-xs
-                                    peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600 transition">
+                                            border-gray-300 text-gray-600 text-xs
+                                            peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600 transition">
                                     <span class="font-semibold text-xs">bKash</span>
                                 </div>
                             </label>
 
                             <!-- NAGAD -->
                             <label class="cursor-pointer">
-                                <input type="radio" name="payment_method" value="nagad"
-                                    class="hidden peer"
-                                    {{ isset($order) && $order->payment_method == 'nagad' ? 'checked' : '' }}>
+                                <input type="radio"
+                                    name="payment_method"
+                                    value="nagad"
+                                    class="hidden peer payment_method"
+                                    {{ isset($order) && $order->payment_method->value === 'nagad' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                    border-gray-300 text-gray-600 text-xs
-                                    peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600 transition">
-                                    <span class="font-semibold text-xs">Nagad</span>
+                                            border-gray-300 text-gray-600 text-xs
+                                            peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600 transition">
+                                    Nagad
                                 </div>
                             </label>
 

@@ -101,7 +101,7 @@ class PosController extends Controller
             'payable' => 'required|numeric|min:0',
             'paid' => 'required|numeric|min:0',
             'due' => 'required|numeric|min:0',
-            'payment_method' => 'nullable|in:cash,card,bkash,nagad',
+            'payment_method' => 'nullable|string',
             'discount' => 'nullable',
             'employee_id' => 'nullable',
             'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
@@ -113,8 +113,8 @@ class PosController extends Controller
         try {
             DB::beginTransaction();
 
-            $paymentMethodEnum = $request->payment_method
-                ? PaymentMethod::from($request->payment_method)
+            $paymentMethodEnum = filled($request->payment_method)
+                ? PaymentMethod::tryFrom(strtolower($request->payment_method))
                 : null;
 
             $customer_id = null;
@@ -227,7 +227,7 @@ class PosController extends Controller
             'payable' => 'required|numeric|min:0',
             'paid' => 'required|numeric|min:0',
             'due' => 'required|numeric|min:0',
-            'payment_method' => 'nullable|in:cash,card,bkash,nagad',
+            'payment_method' => 'nullable|string',
 
             'discount' => 'nullable',
             'employee_id' => 'nullable',
@@ -243,9 +243,9 @@ class PosController extends Controller
 
             $order = Order::with('items')->findOrFail($id);
 
-           $paymentMethodEnum = $request->payment_method
-                ? PaymentMethod::from($request->payment_method)
-                : null;;
+           $paymentMethodEnum = filled($request->payment_method)
+                ? PaymentMethod::tryFrom(strtolower($request->payment_method))
+                : null;
 
             $customer_id = null;
 
@@ -401,7 +401,7 @@ class PosController extends Controller
             'payable' => 'required|numeric|min:0',
             'paid' => 'nullable|numeric|min:0',
             'due' => 'nullable|numeric|min:0',
-            'payment_method' => 'nullable|in:cash,card,bkash,nagad',
+            'payment_method' => 'nullable|string',
             'discount' => 'nullable',
             'employee_id' => 'nullable',
             'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
@@ -413,8 +413,8 @@ class PosController extends Controller
         try {
             DB::beginTransaction();
 
-            $paymentMethodEnum = $request->payment_method
-                ? PaymentMethod::from($request->payment_method)
+            $paymentMethodEnum = filled($request->payment_method)
+                ? PaymentMethod::tryFrom(strtolower($request->payment_method))
                 : null;
 
             $customer_id = null;

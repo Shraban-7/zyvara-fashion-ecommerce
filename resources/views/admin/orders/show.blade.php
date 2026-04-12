@@ -82,12 +82,27 @@
 
             <div class="space-y-4">
                 @foreach($order->items as $item)
-                <div class="flex gap-4 p-4 bg-gray-50 rounded-xl">
+                <div class="flex gap-4 p-4 bg-gray-50 rounded-xl relative">
+
+                    <!-- RETURNED BADGE -->
+                    @if(!empty($item->return_item_id))
+                        <span class="absolute top-2 right-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-semibold">
+                            Returned
+                        </span>
+                    @endif
+
                     <div class="w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-white">
-                        <img src="{{ $item->product_image }}" alt="{{ $item->product_name }}" class="w-full h-full object-cover">
+                        <img src="{{ $item->product_image }}" 
+                            alt="{{ $item->product_name }}" 
+                            class="w-full h-full object-cover">
                     </div>
+
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-semibold text-gray-900 mb-1">{{ $item->product_name }}</h4>
+
+                        <h4 class="font-semibold text-gray-900 mb-1">
+                            {{ $item->product_name }}
+                        </h4>
+
                         @if($item->size_name || $item->color_name)
                         <p class="text-sm text-gray-500 mb-2">
                             @if($item->size_name)Size: {{ $item->size_name }}@endif
@@ -95,10 +110,17 @@
                             @if($item->color_name)Color: {{ $item->color_name }}@endif
                         </p>
                         @endif
+
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Qty: {{ $item->quantity }} × {{ money($item->unit_price) }}</span>
-                            <span class="text-base font-bold text-gray-900">{{ money($item->total) }}</span>
+                            <span class="text-sm text-gray-600">
+                                Qty: {{ $item->quantity }} × {{ money($item->unit_price) }}
+                            </span>
+
+                            <span class="text-base font-bold text-gray-900">
+                                {{ money($item->total) }}
+                            </span>
                         </div>
+
                     </div>
                 </div>
                 @endforeach
@@ -453,11 +475,47 @@
                 Cancel
             </button>
 
-            <button onclick="submitReturn()"
+            <button onclick="openConfirmReturnModal()"
                     class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
                 Process Return
             </button>
 
+        </div>
+
+    </div>
+</div>
+
+<div id="confirmReturnModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-5">
+
+        <h3 class="text-lg font-semibold mb-3">Confirm Return</h3>
+
+        <!-- DETAILS -->
+        <div id="confirmDetails" class="text-sm text-gray-700 space-y-2 max-h-60 overflow-y-auto">
+            <!-- dynamic content -->
+        </div>
+
+        <div class="border-t mt-3 pt-3 space-y-1 text-sm">
+            <div class="flex justify-between">
+                <span>Total Refund:</span>
+                <span class="font-bold text-green-600">৳<span id="confirmRefund">0.00</span></span>
+            </div>
+
+            <div class="flex justify-between">
+                <span>Method:</span>
+                <span id="confirmMethod" class="font-medium"></span>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-4">
+            <button onclick="closeConfirmReturnModal()" class="px-4 py-2 border rounded-lg">
+                Cancel
+            </button>
+
+            <button onclick="confirmReturnAction()"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                Yes, Proceed
+            </button>
         </div>
 
     </div>
@@ -468,215 +526,217 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-    function printReceipt(url) {
-        let printWindow = window.open(url, '_blank', 'width=800,height=600');
 
-        printWindow.onload = function() {
-            printWindow.focus();
-            printWindow.print();
-            printWindow.onafterprint = function() {
-                printWindow.close();
-            };
+/* =========================
+   PRINT RECEIPT
+========================= */
+function printReceipt(url) {
+    let printWindow = window.open(url, '_blank', 'width=800,height=600');
+
+    printWindow.onload = function () {
+        printWindow.focus();
+        printWindow.print();
+
+        printWindow.onafterprint = function () {
+            printWindow.close();
         };
+    };
+}
+
+/* =========================
+   RETURN MODAL
+========================= */
+function openReturnModal() {
+    document.getElementById('returnModal').classList.remove('hidden');
+
+    setTimeout(() => {
+        calculateRefund();
+    }, 100);
+}
+
+function closeReturnModal() {
+    document.getElementById('returnModal').classList.add('hidden');
+}
+
+/* =========================
+   CALCULATE REFUND
+========================= */
+$(document).on("change input", ".return-check, .qty-input, .price-input", function () {
+    calculateRefund();
+});
+
+function calculateRefund() {
+
+    let total = 0;
+
+    $(".return-check:checked").each(function () {
+
+        let id = $(this).data("id");
+        let row = $("#edit-" + id);
+
+        let qty = parseFloat(row.find(".qty-input").val()) || 0;
+        let price = parseFloat(row.find(".price-input").val()) || 0;
+
+        total += qty * price;
+    });
+
+    $("#calculatedRefund").text(total.toFixed(2));
+    $("#refundAmount").val(total.toFixed(2));
+}
+
+/* =========================
+   CONFIRM MODAL (FIXED)
+========================= */
+
+function openConfirmReturnModal() {
+
+    // 1. Close return modal FIRST
+    $("#returnModal").addClass("hidden");
+
+    // 2. Build confirmation data
+    let itemsHTML = '';
+    let total = 0;
+
+    $(".return-check:checked").each(function () {
+
+        let id = $(this).data("id");
+        let row = $("#edit-" + id);
+
+        let name = row.closest('.flex').find('p').first().text();
+
+        let qty = parseFloat(row.find(".qty-input").val()) || 0;
+        let price = parseFloat(row.find(".price-input").val()) || 0;
+
+        let lineTotal = qty * price;
+        total += lineTotal;
+
+        itemsHTML += `
+            <div class="flex justify-between border-b pb-1">
+                <span class="truncate">${name} (x${qty})</span>
+                <span>৳${lineTotal.toFixed(2)}</span>
+            </div>
+        `;
+    });
+
+    if (!itemsHTML) {
+        alert("Select at least one item");
+        return;
     }
 
-    function openReturnModal() {
-        document.getElementById('returnModal').classList.remove('hidden');
-         setTimeout(() => {
-            calculateRefund();
-        }, 100);
+    let refundInput = parseFloat($("#refundAmount").val()) || 0;
+
+    if (refundInput <= 0) {
+        alert("Invalid refund amount");
+        return;
     }
 
-    function closeReturnModal() {
-        document.getElementById('returnModal').classList.add('hidden');
+    let method = $("#refundMethod").val() || 'N/A';
+
+    // 3. Inject data into confirm modal
+    $("#confirmDetails").html(itemsHTML);
+    $("#confirmRefund").text(total.toFixed(2));
+    $("#confirmMethod").text(method.toUpperCase());
+
+    // 4. Small delay ensures smooth UI transition
+    setTimeout(() => {
+        $("#confirmReturnModal").removeClass("hidden");
+    }, 150);
+}
+
+function closeConfirmReturnModal() {
+    $("#confirmReturnModal").addClass("hidden");
+}
+
+let isProcessingReturn = false;
+
+function confirmReturnAction() {
+    if (isProcessingReturn) return;
+
+    isProcessingReturn = true;
+
+    closeConfirmReturnModal();
+    submitReturn();
+}
+
+/* =========================
+   SUBMIT RETURN
+========================= */
+function submitReturn() {
+
+    let items = [];
+
+    $(".return-check:checked").each(function () {
+
+        let id = $(this).data("id");
+        let row = $("#edit-" + id);
+
+        let quantity = parseInt(row.find(".qty-input").val());
+        let unit_price = parseFloat(row.find(".price-input").val());
+
+        if (!quantity || quantity <= 0) return;
+
+        items.push({
+            id: id,
+            quantity: quantity,
+            unit_price: unit_price
+        });
+    });
+
+    if (items.length === 0) {
+        alert("Select at least one item");
+        isProcessingReturn = false;
+        return;
     }
 
-    // checkbox toggle
-        $(document).on("change", ".return-check", function () {
-            calculateRefund();
-        });
+    let payload = {
+        items: items,
+        refund_amount: parseFloat($("#refundAmount").val()) || 0,
+        refund_method: $("#refundMethod").val(),
+        remarks: $("#refundRemarks").val(),
+    };
 
-        // quantity change
-        $(document).on("input", ".qty-input", function () {
-            calculateRefund();
-        });
-
-        // price change
-        $(document).on("input", ".price-input", function () {
-            calculateRefund();
-        });
-
-    document.addEventListener("change", function (e) {
-        if (e.target.classList.contains("return-check")) {
-
-            let id = e.target.dataset.id;
-            let box = document.getElementById("edit-" + id);
-
-            if (e.target.checked) {
-                box.classList.remove("hidden");
+    $.ajax({
+        url: `/admin/orders/{{ $order->id }}/return`,
+        type: "POST",
+        data: JSON.stringify(payload),
+        contentType: "application/json",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        success: function (res) {
+            if (res.success) {
+                alert("Return processed successfully");
+                location.reload();
             } else {
-                box.classList.add("hidden");
+                alert(res.message || "Failed");
             }
+        },
+        error: function (xhr) {
+            alert(xhr.responseJSON?.message || "Something went wrong");
+        },
+        complete: function () {
+            isProcessingReturn = false;
         }
     });
+}
 
-    function calculateRefund() {
+/* =========================
+   DELETE MODAL
+========================= */
+function openDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
 
-        let total = 0;
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
 
-        $(".return-check:checked").each(function () {
-
-            let id = $(this).data("id");
-            let row = $("#edit-" + id);
-
-            let qty = parseFloat(row.find(".qty-input").val()) || 0;
-            let price = parseFloat(row.find(".price-input").val()) || 0;
-
-            total += qty * price;
-        });
-
-        $("#calculatedRefund").text(total.toFixed(2));
-
-        // 🔥 auto fill refund input (optional but recommended)
-        $("#refundAmount").val(total.toFixed(2));
+document.getElementById('deleteModal')?.addEventListener('click', function (e) {
+    if (e.target === this) {
+        closeDeleteModal();
     }
+});
 
-    function submitReturn() {
-
-        let items = [];
-
-        $(".return-check:checked").each(function () {
-
-            let id = $(this).data("id");
-            let row = $("#edit-" + id);
-
-            let quantity = parseInt(row.find(".qty-input").val());
-            let unit_price = parseFloat(row.find(".price-input").val());
-
-            if (!quantity || quantity <= 0) return;
-
-            items.push({
-                id: id,
-                quantity: quantity,
-                unit_price: unit_price
-            });
-        });
-
-        if (items.length === 0) {
-            alert("Select at least one item");
-            return;
-        }
-
-        let payload = {
-            items: items,
-            refund_amount: parseFloat($("#refundAmount").val()) || 0,
-            refund_method: $("#refundMethod").val(),
-            remarks: $("#refundRemarks").val(),
-        };
-
-        let btn = $("button[onclick='submitReturn()']");
-        btn.prop("disabled", true).text("Processing...");
-
-        $.ajax({
-            url: `/admin/orders/{{ $order->id }}/return`,
-            type: "POST",
-            data: JSON.stringify(payload),
-            contentType: "application/json",
-            headers: {
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            success: function (res) {
-
-                if (res.success) {
-                    alert("Return processed successfully");
-                    location.reload();
-                } else {
-                    alert(res.message || "Failed");
-                }
-            },
-            error: function (xhr) {
-
-                let message = "Something went wrong";
-
-                if (xhr.responseJSON?.message) {
-                    message = xhr.responseJSON.message;
-                }
-
-                alert(message);
-            },
-            complete: function () {
-                btn.prop("disabled", false).text("Process Return");
-            }
-        });
-    }
-
-    function downloadInvoice() {
-        const invoiceElement = document.getElementById('invoiceTemplate');
-        const invoiceNumber = '{{ $order->order_number }}';
-
-        // Show loading state
-        const button = event.target.closest('button');
-        const originalText = button.innerHTML;
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
-
-        // Clone the element to avoid modifying the original
-        const clonedElement = invoiceElement.cloneNode(true);
-        clonedElement.classList.remove('hidden');
-
-        // Configure pdf options
-        const opt = {
-            margin: 0,
-            filename: `Invoice-${invoiceNumber}.pdf`,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2,
-                useCORS: true,
-                letterRendering: true,
-                scrollY: 0,
-                scrollX: 0
-            },
-            jsPDF: {
-                unit: 'mm',
-                format: 'a4',
-                orientation: 'portrait',
-                compress: true
-            },
-            pagebreak: {
-                mode: ['avoid-all', 'css', 'legacy']
-            }
-        };
-
-        // Generate and download PDF
-        html2pdf().set(opt).from(clonedElement).save().then(() => {
-            // Restore button state
-            button.disabled = false;
-            button.innerHTML = originalText;
-        }).catch((error) => {
-            console.error('PDF generation error:', error);
-            button.disabled = false;
-            button.innerHTML = originalText;
-            alert('Failed to generate PDF. Please try again.');
-        });
-    }
-
-    function openDeleteModal() {
-        document.getElementById('deleteModal').classList.remove('hidden');
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.add('hidden');
-    }
-
-    // Close modal on outside click
-    document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeDeleteModal();
-        }
-    });
 </script>
 @endpush
 @endsection
