@@ -101,7 +101,7 @@ class PosController extends Controller
             'payable' => 'required|numeric|min:0',
             'paid' => 'required|numeric|min:0',
             'due' => 'required|numeric|min:0',
-            'payment_method' => 'required|string',
+            'payment_method' => 'nullable|in:cash,card,bkash,nagad',
             'discount' => 'nullable',
             'employee_id' => 'nullable',
             'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
@@ -113,14 +113,9 @@ class PosController extends Controller
         try {
             DB::beginTransaction();
 
-            $paymentMethodEnum = match (strtolower($request->payment_method ?? '')) {
-                'cash' => PaymentMethod::CASH,
-                'card' => PaymentMethod::CARD,
-                'bkash' => PaymentMethod::BKASH,
-                'nagad' => PaymentMethod::NAGAD,
-                '' => null,
-                default => null,
-            };
+            $paymentMethodEnum = $request->payment_method
+                ? PaymentMethod::from($request->payment_method)
+                : null;
 
             $customer_id = null;
 
@@ -232,7 +227,7 @@ class PosController extends Controller
             'payable' => 'required|numeric|min:0',
             'paid' => 'required|numeric|min:0',
             'due' => 'required|numeric|min:0',
-            'payment_method' => 'required|string',
+            'payment_method' => 'nullable|in:cash,card,bkash,nagad',
 
             'discount' => 'nullable',
             'employee_id' => 'nullable',
@@ -248,14 +243,9 @@ class PosController extends Controller
 
             $order = Order::with('items')->findOrFail($id);
 
-            $paymentMethodEnum = match (strtolower($request->payment_method ?? '')) {
-                'cash' => PaymentMethod::CASH,
-                'card' => PaymentMethod::CARD,
-                'bkash' => PaymentMethod::BKASH,
-                'nagad' => PaymentMethod::NAGAD,
-                '' => null,
-                default => null,
-            };
+           $paymentMethodEnum = $request->payment_method
+                ? PaymentMethod::from($request->payment_method)
+                : null;;
 
             $customer_id = null;
 
@@ -321,9 +311,7 @@ class PosController extends Controller
                     ]);
 
                     $processedItemIds[] = $orderItem->id;
-                }
-
-                else {
+                } else {
                     $newItem = OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $item['product_id'],
@@ -382,6 +370,7 @@ class PosController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Order updated successfully',
+                'order_number' => $order->order_number,
             ]);
 
         } catch (\Exception $e) {
@@ -412,7 +401,7 @@ class PosController extends Controller
             'payable' => 'required|numeric|min:0',
             'paid' => 'nullable|numeric|min:0',
             'due' => 'nullable|numeric|min:0',
-            'payment_method' => 'required|string',
+            'payment_method' => 'nullable|in:cash,card,bkash,nagad',
             'discount' => 'nullable',
             'employee_id' => 'nullable',
             'customer_name' => ['nullable', 'string', 'max:255', 'required_with:customer_phone'],
@@ -424,14 +413,9 @@ class PosController extends Controller
         try {
             DB::beginTransaction();
 
-            $paymentMethodEnum = match (strtolower($request->payment_method ?? '')) {
-                'cash' => PaymentMethod::CASH,
-                'card' => PaymentMethod::CARD,
-                'bkash' => PaymentMethod::BKASH,
-                'nagad' => PaymentMethod::NAGAD,
-                '' => null,
-                default => null,
-            };
+            $paymentMethodEnum = $request->payment_method
+                ? PaymentMethod::from($request->payment_method)
+                : null;
 
             $customer_id = null;
 
@@ -833,8 +817,7 @@ class PosController extends Controller
                 $orderItem->unit_price = $request->price;
                 $orderItem->subtotal = $request->price * $orderItem->quantity;
                 $orderItem->save();
-            }
-            else {
+            } else {
 
                 $cart = $this->getOrCreateCart($request->order_number);
 

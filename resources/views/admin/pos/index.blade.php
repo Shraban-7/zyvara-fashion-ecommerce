@@ -310,7 +310,7 @@
                             <label class="cursor-pointer">
                                 <input type="radio" name="payment_method" value="cash"
                                     class="hidden peer"
-                                    {{ isset($order) && $order->payment_method->value === 'cash' ? 'checked' : '' }}>
+                                    {{ isset($order) && $order->payment_method == 'cash' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
                                     border-gray-300 text-gray-600 text-xs
@@ -323,7 +323,7 @@
                             <label class="cursor-pointer">
                                 <input type="radio" name="payment_method" value="card"
                                     class="hidden peer"
-                                    {{ isset($order) && $order->payment_method->value === 'card' ? 'checked' : '' }}>
+                                    {{ isset($order) && $order->payment_method == 'card' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
                                     border-gray-300 text-gray-600 text-xs
@@ -336,7 +336,7 @@
                             <label class="cursor-pointer">
                                 <input type="radio" name="payment_method" value="bkash"
                                     class="hidden peer"
-                                    {{ isset($order) && $order->payment_method->value === 'bkash' ? 'checked' : '' }}>
+                                    {{ isset($order) && $order->payment_method == 'bkash' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
                                     border-gray-300 text-gray-600 text-xs
@@ -349,7 +349,7 @@
                             <label class="cursor-pointer">
                                 <input type="radio" name="payment_method" value="nagad"
                                     class="hidden peer"
-                                    {{ isset($order) && $order->payment_method->value === 'nagad' ? 'checked' : '' }}>
+                                    {{ isset($order) && $order->payment_method == 'nagad' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
                                     border-gray-300 text-gray-600 text-xs
@@ -606,21 +606,21 @@
                             var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
 
                             var btn = `
-                                                                                                                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
-                                                                                                                    data-variant-id="${variant.id}" ${disabled}>
-                                                                                                                    <div class="flex items-center gap-3">
-                                                                                                                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
-                                                                                                                            <div class="text-left">
-                                                                                                                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                                                                                                <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                        <div class="text-right">
-                                                                                                                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
-                                                                                                                            <p class="text-xs ${stockClass}">${stockText}</p>
-                                                                                                                        </div>
-                                                                                                                </button>                                                                                                   
-                                                                                                                `;
+                                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                    data-variant-id="${variant.id}" ${disabled}>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                            <div class="text-left">
+                                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
+                                                <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                            <p class="text-xs ${stockClass}">${stockText}</p>
+                                        </div>
+                                </button>                                                                                                   
+                                `;
 
                             $variantsList.append(btn);
                         });
@@ -645,12 +645,23 @@
                 // =========================
                 // CLOSE MODAL
                 // =========================
-                $('#variantModal, #closeModalBtn').on('click', function (e) {
+
+                $('#variantModal').on('click', function (e) {
                     if (e.target === this) {
-                        $('#variantModal').addClass('hidden');
-                        selectedProduct = null;
+                        closeVariantModal();
                     }
                 });
+
+               $('#closeModalBtn').on('click', function () {
+                    closeVariantModal();
+                });
+
+                function closeVariantModal() {
+                    $('#variantModal').addClass('hidden');
+                    selectedProduct = null;
+                }
+
+                
 
                 // =========================
                 // Load Orders
@@ -784,7 +795,7 @@
 
                 $('#discountInput, #discountType').on('input change', function () {
                     if (window.posCartManager) {
-                        window.posCartManager.loadCart();
+                        window.posCartManager.loadCart(window.posCartManager.orderNumber);
                     }
                 });
 
@@ -793,7 +804,7 @@
                 // =========================
                 // COMPLETE ORDER (API CART)
                 // =========================
-                async function submitOrder(url, method = 'POST') {
+                async function submitOrder(url, method = 'POST',shouldPrint = true) {
 
                     const urlParams = new URLSearchParams(window.location.search);
                     const orderNumber = urlParams.get('order_number');
@@ -841,9 +852,17 @@
 
                         success: function (res) {
                             if (res.success) {
-                                alert(method === 'POST' ? 'Order completed' : 'Order updated');
+                                // alert(method === 'POST' ? 'Order completed' : 'Order updated');
+                                let receiptUrl = "{{ route('admin.pos.receipt', ':order_number') }}"
+                                        .replace(':order_number', res.order_number);
                                 resetPOS();
-                                window.location.href = '/admin/pos';
+                                 if (shouldPrint) {
+                                    printReceipt(receiptUrl, function () { window.location.href = "{{ route('admin.pos.index') }}"; });
+
+                                } else {
+                                    window.location.href =
+                                        "{{ route('admin.pos.index') }}";
+                                }
                             }
                         },
 
@@ -856,15 +875,15 @@
                 }
 
                 $('#completeOrderBtn').on('click', function () {
-                    submitOrder('{{ route("admin.pos.store") }}', 'POST');
+                    submitOrder('{{ route("admin.pos.store") }}', 'POST',true);
                 });
 
                 $('#updateOrderBtn').on('click', function () {
-                    submitOrder(`/admin/pos/update/${orderId}`, 'POST');
+                    submitOrder(`/admin/pos/update/${orderId}`, 'POST',true);
                 });
 
                 $('#holdOrderBtn').on('click', function () {
-                    submitOrder('/admin/pos/draft', 'POST');
+                    submitOrder('/admin/pos/draft', 'POST',false);
                 });
 
                 function resetPOS() {
@@ -1134,6 +1153,48 @@
                 window.refreshCashUI = function () {
                     updateCash();
                 };
+
+
+                function printReceipt(url, callback) {
+                    let printWindow = window.open(url, '_blank', 'width=800,height=600');
+
+                    if (!printWindow) {
+                        alert('Popup blocked! Please allow popups.');
+                        return;
+                    }
+
+                    let isHandled = false;
+
+                    printWindow.onload = function () {
+                        printWindow.focus();
+
+                        // trigger print
+                        printWindow.print();
+                    };
+
+                    // Detect window close (works for cancel + print)
+                    let checkClose = setInterval(function () {
+                        if (printWindow.closed) {
+                            clearInterval(checkClose);
+
+                            if (!isHandled) {
+                                isHandled = true;
+                                if (callback) callback();
+                            }
+                        }
+                    }, 500);
+
+                    // Fallback: afterprint (not reliable alone, but useful)
+                    printWindow.onafterprint = function () {
+                        if (!isHandled) {
+                            isHandled = true;
+
+                            printWindow.close();
+
+                            if (callback) callback();
+                        }
+                    };
+                }
 
                 // =========================
                 // INIT CALL

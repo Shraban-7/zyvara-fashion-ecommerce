@@ -63,7 +63,7 @@ class Order extends Model
         'delivered_at' => 'datetime',
         'cancelled_at' => 'datetime',
         'status' => OrderStatus::class,
-        'payment_method' => PaymentMethod::class,
+        // 'payment_method' => PaymentMethod::class,
         'payment_status' => PaymentStatus::class,
         'delivery_zone' => DeliveryZone::class,
     ];
