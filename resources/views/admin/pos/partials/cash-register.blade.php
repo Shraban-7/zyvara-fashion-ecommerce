@@ -89,6 +89,10 @@
                     </div>
 
                     <div class="flex justify-between text-red-500">
+                        <span>Expenses</span>
+                        <strong>- {{ money($cashRegisterData['expense']) }}</strong>
+                    </div>
+                    <div class="flex justify-between text-red-500">
                         <span>Sales Returns</span>
                         <strong>- {{ money($cashRegisterData['sales_returns']) }}</strong>
                     </div>
@@ -101,6 +105,7 @@
                             {{ money(
                                 $cashRegisterData['opening_amount']
                                 + $cashRegisterData['sales_amount']
+                                - $cashRegisterData['expense']
                                 - $cashRegisterData['sales_returns']
                             ) }}
                         </span>

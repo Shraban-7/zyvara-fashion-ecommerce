@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CashRegister;
+use App\Models\Expense;
 use App\Models\Order;
 use App\Models\SaleReturn;
 use Carbon\Carbon;
@@ -42,7 +43,7 @@ class CashRegisterController extends Controller
         $end = Carbon::tomorrow()->setTime(2, 0);
 
         $salesTotal = Order::whereNull('user_id')->whereBetween('created_at', [$start, $end])->sum('paid');
-        // $expense = SellerExpense::where('seller_id', $seller->id)->whereBetween('created_at', [$start, $end])->sum('amount');
+        $expense = Expense::whereBetween('created_at', [$start, $end])->sum('amount');
         $salesReturns = SaleReturn::whereBetween('created_at', [$start, $end])->sum('refund_amount');
         $expectedCash = $register->opening_amount + $salesTotal - $salesReturns;
 
@@ -52,7 +53,8 @@ class CashRegisterController extends Controller
 
         $register->update([
             'sales' => $salesTotal,
-            'sales_return' => $salesReturns,
+            'sale_returns' => $salesReturns,
+            'expenses' => $expense,
             'difference' => $difference,
             'closed_at' => $closed_at,
             'closing_amount' => $closing_amount,

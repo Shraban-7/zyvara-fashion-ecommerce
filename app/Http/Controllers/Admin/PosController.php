@@ -11,6 +11,7 @@ use App\Models\CartItem;
 use App\Models\CashRegister;
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Expense;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -56,7 +57,7 @@ class PosController extends Controller
         $cashRegisterData = [
             'opening_amount' => $cashRegister->opening_amount ?? 0,
             'sales_amount' => Order::whereBetween('created_at', [$start, $end])->sum('total'),
-            // 'expense' => Expense::whereBetween('created_at', [$start, $end])->sum('amount'),
+            'expense' => Expense::whereBetween('created_at', [$start, $end])->sum('amount'),
             'sales_returns' => SaleReturn::whereBetween('created_at', [$start, $end])->sum('refund_amount'),
         ];
 

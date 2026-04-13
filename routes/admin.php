@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CashRegisterController;
+use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\Admin\SaleReturnController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
@@ -46,6 +47,13 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('sale-returns')->as('saleReturns.')->group(function () {
         Route::get('/', [SaleReturnController::class, 'index'])->name('index');
         Route::get('/{return}', [SaleReturnController::class, 'show'])->name('show');
+    });
+
+    Route::prefix('expenses')->as('expenses.')->group(function () {
+        Route::get('/', [ExpenseController::class, 'index'])->name('index');
+        Route::post('/store', [ExpenseController::class, 'store'])->name('store');
+        Route::put('{expense}/', [ExpenseController::class, 'update'])->name('update');
+        Route::delete('{expense}/', [ExpenseController::class, 'destroy'])->name('delete');
     });
 
     Route::prefix('cash-register')->as('cashRegister.')->group(function () {
