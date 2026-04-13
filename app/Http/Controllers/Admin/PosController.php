@@ -49,7 +49,7 @@ class PosController extends Controller
         $cashRegister = CashRegister::whereNull('closed_at')
             ->latest()
             ->first();
-        
+
         $start = Carbon::today()->setTime(8, 0);
         $end = Carbon::tomorrow()->setTime(2, 0);
 
@@ -60,7 +60,7 @@ class PosController extends Controller
             'sales_returns' => SaleReturn::whereBetween('created_at', [$start, $end])->sum('refund_amount'),
         ];
 
-        return view('admin.pos.index', compact('products', 'categories', 'cart', 'employees', 'order', 'cashRegister','cashRegisterData'));
+        return view('admin.pos.index', compact('products', 'categories', 'cart', 'employees', 'order', 'cashRegister', 'cashRegisterData'));
     }
 
     public function searchProducts(Request $request)
@@ -145,6 +145,17 @@ class PosController extends Controller
                 $customer_id = $customer->id;
             }
 
+            $due = (float) $request->due;
+            $payable = (float) $request->payable;
+
+            if ($due <= 0) {
+                $payment_status = PaymentStatus::PAID;
+            } elseif ($due >= $payable) {
+                $payment_status = PaymentStatus::UNPAID;
+            } else {
+                $payment_status = PaymentStatus::PARTIAL;
+            }
+
             $order = Order::create([
                 'order_number' => 'POS-' . strtoupper(uniqid()),
                 'is_pos' => 1,
@@ -166,9 +177,7 @@ class PosController extends Controller
                 'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DELIVERED,
                 'payment_method' => $paymentMethodEnum->value ?? '',
-                'payment_status' => $request->due > 0
-                    ? PaymentStatus::PARTIAL
-                    : PaymentStatus::PAID,
+                'payment_status' =>  $payment_status,
                 'notes' => 'POS Order',
                 'paid_at' => now(),
             ]);
@@ -273,6 +282,17 @@ class PosController extends Controller
                 $customer_id = $customer->id;
             }
 
+            $due = (float) $request->due;
+            $payable = (float) $request->payable;
+
+            if ($due <= 0) {
+                $payment_status = PaymentStatus::PAID;
+            } elseif ($due >= $payable) {
+                $payment_status = PaymentStatus::UNPAID;
+            } else {
+                $payment_status = PaymentStatus::PARTIAL;
+            }
+
             $order->update([
                 'customer_id' => $customer_id,
                 'employee_id' => $request->employee_id ?? null,
@@ -289,9 +309,7 @@ class PosController extends Controller
                 'cash_returned' => $request->cash_returned,
 
                 'payment_method' => $paymentMethodEnum->value ?? '',
-                'payment_status' => $request->due > 0
-                    ? PaymentStatus::PARTIAL
-                    : PaymentStatus::PAID,
+                'payment_status' => $payment_status,
                 'status' => OrderStatus::DELIVERED,
 
                 'paid_at' => now(),
@@ -445,6 +463,17 @@ class PosController extends Controller
                 $customer_id = $customer->id;
             }
 
+            $due = (float) $request->due;
+            $payable = (float) $request->payable;
+
+            if ($due <= 0) {
+                $payment_status = PaymentStatus::PAID;
+            } elseif ($due >= $payable) {
+                $payment_status = PaymentStatus::UNPAID;
+            } else {
+                $payment_status = PaymentStatus::PARTIAL;
+            }
+
 
             // Create order
             $order = Order::create([
@@ -468,7 +497,7 @@ class PosController extends Controller
                 'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DRAFT,
                 'payment_method' => $paymentMethodEnum->value ?? '',
-                'payment_status' => PaymentStatus::PAID,
+                'payment_status' => $payment_status,
                 'notes' => 'POS Order',
                 'paid_at' => now(),
             ]);

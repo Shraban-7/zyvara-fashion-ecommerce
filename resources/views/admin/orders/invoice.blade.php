@@ -2,275 +2,266 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Invoice') - {{ $siteName }}</title>
-
-    @if($settings['site_favicon'])
-    <link rel="icon" href="{{ storage_url($settings['site_favicon']) }}" type="image/x-icon">
-    @endif
-
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invoice {{ $order->invoice_id }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
 </head>
-<body>
-    
-    <div id="invoiceTemplate" >
-        <div class="invoice-container"
-            style="width: 210mm; padding: 12mm 15mm; background: white; font-family: 'Arial', 'Helvetica', sans-serif; color: #000;">
-            {{-- Invoice Header --}}
-            <div
-                style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #000;">
-                <div style="flex: 1;">
-                    <h1 style="font-size: 28px; font-weight: 700; color: #000; margin: 0 0 3px 0; letter-spacing: -0.5px;">
+
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto bg-white min-h-screen relative p-10">
+
+        {{-- Header --}}
+        <header class="mb-6">
+            <div class="flex justify-between items-start pb-4 border-b-4 border-gray-200">
+
+                {{-- Left: Logo & Seller Info --}}
+                <div class="flex-1">
+                    <h1
+                        style="font-size: 28px; font-weight: 700; color: #000; margin: 0 0 3px 0; letter-spacing: -0.5px;">
                         SPINNER FASHION</h1>
-                    <div style="width: 50px; height: 2px; background: #000; margin-bottom: 8px;"></div>
-                    <p style="font-size: 9px; color: #444; margin: 0; line-height: 1.6;">
+                    <div class="w-12 h-0.5 bg-black mb-2"></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">
                         123 Fashion Street, Dhaka 1215, Bangladesh<br>
                         Phone: +880 1711-123456 | Email: info@spinnerfashion.com<br>
                         Web: www.spinnerfashion.com
                     </p>
+
                 </div>
-                <div style="text-align: right;">
-                    <h2 style="font-size: 30px; font-weight: 700; color: #000; margin: 0 0 5px 0; letter-spacing: 2px;">
-                        INVOICE</h2>
-                    <table style="margin-left: auto; border-collapse: collapse; margin-top: 10px;">
+
+                {{-- Right: Invoice Info --}}
+                <div class="text-right">
+                    <h2 class="text-3xl font-bold tracking-widest text-gray-700 mb-3">INVOICE</h2>
+
+                    <table class="ml-auto border border-gray-400 text-xs mt-2">
                         <tr>
-                            <td
-                                style="padding: 3px 10px 3px 0; font-size: 9px; color: #666; text-align: right; font-weight: 600;">
-                                Invoice No:</td>
-                            <td style="padding: 3px 0; font-size: 9px; color: #000; font-weight: 700;">
-                                {{ $order->order_number }}</td>
-                        </tr>
-                        <tr>
-                            <td
-                                style="padding: 3px 10px 3px 0; font-size: 9px; color: #666; text-align: right; font-weight: 600;">
-                                Invoice Date:</td>
-                            <td style="padding: 3px 0; font-size: 9px; color: #000; font-weight: 700;">
-                                {{ $order->created_at->format('d M, Y') }}</td>
-                        </tr>
-                        <tr>
-                            <td
-                                style="padding: 3px 10px 3px 0; font-size: 9px; color: #666; text-align: right; font-weight: 600;">
-                                Order Status:</td>
-                            <td style="padding: 3px 0; font-size: 9px; color: #000; font-weight: 700;">
-                                {{ strtoupper($order->status->label()) }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-    
-            {{-- Bill To & Payment Info --}}
-            <div style="display: flex; gap: 30px; margin-bottom: 20px;">
-                <div style="flex: 1; border-left: 3px solid #000; padding-left: 10px;">
-                    <h3
-                        style="font-size: 9px; font-weight: 700; color: #000; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">
-                        BILL TO</h3>
-                    <p style="font-size: 10px; color: #000; margin: 0; line-height: 1.7;">
-                        <strong
-                            style="font-size: 12px; display: block; margin-bottom: 5px; color: #000;">{{ $order->shipping_name }}</strong>
-                        {{ $order->shipping_address }}<br>
-                        {{ $order->shipping_city }}, {{ $order->shipping_district }}@if($order->shipping_postal_code) -
-                        {{ $order->shipping_postal_code }}@endif<br>
-                        <strong>Phone:</strong>
-                        {{ $order->shipping_phone }}@if($order->shipping_email)<br><strong>Email:</strong>
-                        {{ $order->shipping_email }}@endif
-                    </p>
-                </div>
-                <div style="flex: 1; border-left: 3px solid #000; padding-left: 10px;">
-                    <h3
-                        style="font-size: 9px; font-weight: 700; color: #000; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">
-                        PAYMENT DETAILS</h3>
-                    <table style="width: 100%; font-size: 10px; line-height: 1.7;">
-                        <tr>
-                            <td style="color: #666; padding: 1px 0; width: 45%;">Payment Method:</td>
-                            <td style="color: #000; padding: 1px 0; font-weight: 600;">{{ $order->payment_method->label() }}
+                            <td class="border px-2 py-1 text-gray-500 font-semibold text-right">Date:</td>
+                            <td class="border px-2 py-1 text-black font-bold">
+                                {{ $order->created_at->format('d M, Y') }}
                             </td>
                         </tr>
                         <tr>
-                            <td style="color: #666; padding: 1px 0;">Payment Status:</td>
-                            <td style="color: #000; padding: 1px 0; font-weight: 600;">
-                                {{ strtoupper($order->payment_status->label()) }}</td>
+                            <td class="border px-2 py-1 text-gray-500 font-semibold text-right">Order No:</td>
+                            <td class="border px-2 py-1 text-black font-bold">
+                                {{ $order->order_number }}
+                            </td>
                         </tr>
-                        @if($order->transaction_id)
-                            <tr>
-                                <td style="color: #666; padding: 1px 0; vertical-align: top;">Transaction ID:</td>
-                                <td
-                                    style="color: #000; padding: 1px 0; font-family: 'Courier New', monospace; font-size: 8px; word-break: break-all; font-weight: 600;">
-                                    {{ $order->transaction_id }}</td>
-                            </tr>
-                        @endif
-                        @if($order->paid_at)
-                            <tr>
-                                <td style="color: #666; padding: 1px 0;">Paid Date:</td>
-                                <td style="color: #000; padding: 1px 0; font-weight: 600;">
-                                    {{ $order->paid_at->format('d M, Y') }}</td>
-                            </tr>
-                        @endif
                     </table>
                 </div>
+
             </div>
-    
-            {{-- Order Items Table --}}
-            {{-- Order Items Table --}}
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
-                <thead>
-                    <tr style="background: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-                        <th
-                            style="padding: 10px 8px; text-align: left; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; border-right: 1px solid #333; width: 5%;">
-                            SL</th>
-                        <th
-                            style="padding: 10px 8px; text-align: left; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; border-right: 1px solid #333;">
-                            Product Description</th>
-                        <th
-                            style="padding: 10px 8px; text-align: center; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; border-right: 1px solid #333; width: 8%;">
-                            Qty</th>
-                        <th
-                            style="padding: 10px 8px; text-align: right; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; border-right: 1px solid #333; width: 15%;">
-                            Unit Price</th>
-                        <th
-                            style="padding: 10px 8px; text-align: right; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; width: 15%;">
-                            Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($order->items as $index => $item)
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td
-                                style="padding: 10px 8px; font-size: 9px; color: #666; border-right: 1px solid #e5e7eb; text-align: center;">
-                                {{ $index + 1 }}</td>
-                            <td style="padding: 10px 8px; border-right: 1px solid #e5e7eb;">
-                                <div style="font-size: 10px; font-weight: 600; color: #000; margin-bottom: 3px;">
-                                    {{ $item->product_name }}</div>
-                                @if($item->size_name || $item->color_name)
-                                    <div style="font-size: 8px; color: #666;">
-                                        @if($item->size_name)<span
-                                            style="background: #f3f4f6; padding: 2px 5px; border-radius: 2px; margin-right: 3px;">Size:
-                                        {{ $item->size_name }}</span>@endif
-                                        @if($item->color_name)<span
-                                            style="background: #f3f4f6; padding: 2px 5px; border-radius: 2px;">Color:
-                                        {{ $item->color_name }}</span>@endif
+        </header>
+
+        <main>
+
+            {{-- Invoiced To --}}
+            <div class="flex gap-8 mb-5">
+                <div class="flex-1 border-l-4 border-gray-400 pl-3">
+                    <h3 class="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Invoiced To</h3>
+                    <address class="not-italic text-sm text-gray-800 leading-relaxed">
+                        <strong class="text-base block mb-1">
+                            {{ $order->customer->name ?? $order->shipping_name ?? '' }}
+                        </strong>
+                        {{ $order->customer->phone ?? $order->shipping_phone ?? '' }}<br>
+                        {{ $order->shipping_address ?? '' }}
+                    </address>
+                </div>
+            </div>
+
+            {{-- Items Table --}}
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full border border-gray-300 border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700">
+                            <th class="p-2 text-left text-xs font-semibold uppercase border-r border-gray-300">
+                                Item
+                            </th>
+                            <th class="p-2 text-center text-xs font-semibold uppercase border-r border-gray-300 w-32">
+                                Rate
+                            </th>
+                            <th class="p-2 text-center text-xs font-semibold uppercase border-r border-gray-300 w-16">
+                                QTY
+                            </th>
+                            <th class="p-2 text-right text-xs font-semibold uppercase w-28">
+                                Amount
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach($order->items as $item)
+                            <tr class="border-b border-gray-200">
+                                <td class="p-2 border-r border-gray-200">
+                                    <div class="text-sm font-semibold text-gray-800">
+                                        {{ $item->product_name }}
                                     </div>
-                                @endif
+
+                                    @if ($item->size_name || $item->color_name)
+                                        <div class="text-gray-500 text-[11px] mt-1">
+                                            @if ($item->size_name)
+                                                <span class="mr-2">Size: {{ $item->size_name }}</span>
+                                            @endif
+                                            @if ($item->color_name)
+                                                <span>Color: {{ $item->color_name }}</span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </td>
+
+                                <td class="p-2 text-center border-r border-gray-200">
+                                    @if($item->product->compare_price)
+                                        <span class="line-through text-gray-400 text-xs block">
+                                            {{ money($item->product->compare_price) }}
+                                        </span>
+                                    @endif
+                                    <span class="text-sm font-semibold text-gray-800">
+                                        {{ money($item->unit_price) }}
+                                    </span>
+                                </td>
+
+                                <td class="p-2 text-center text-sm font-semibold text-gray-800 border-r border-gray-200">
+                                    {{ $item->quantity }}
+                                </td>
+
+                                <td class="p-2 text-right">
+                                    @if($item->product->compare_price)
+                                        <span class="line-through text-gray-400 text-xs block">
+                                            {{ money($item->product->compare_price * $item->quantity) }}
+                                        </span>
+                                    @elseif($item->subtotal!=$item->total)
+                                        <span class="line-through text-gray-400 text-xs block">
+                                            {{ money($item->subtotal) }}
+                                        </span>
+                                    @endif
+
+                                    <span class="text-sm font-bold text-gray-400">
+                                        {{ money($item->total) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Summary + Totals --}}
+            <div class="flex gap-6 mb-5">
+
+                {{-- Summary --}}
+                <div class="flex-1 text-sm text-gray-700">
+                    <p class="mb-1"><strong>Total Qty:</strong> {{ $order->items->sum('quantity') }}</p>
+                    <p class="mb-1"><strong>In Words:</strong> {{ convert_number_to_words_bdt($order->total) }} Taka
+                        only.</p>
+                    <p><strong>Payment Term:</strong> {{ strtoupper($order->payment_status->label()) }}</p>
+                </div>
+
+                {{-- Totals --}}
+                <div class="w-72">
+                    <table class="w-full border border-gray-300 border-collapse text-sm">
+
+                        <tr class="border-b border-gray-200">
+                            <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                                Subtotal
                             </td>
-                            <td
-                                style="padding: 10px 8px; text-align: center; font-size: 10px; color: #000; font-weight: 600; border-right: 1px solid #e5e7eb;">
-                                {{ $item->quantity }}</td>
-                            <td
-                                style="padding: 10px 8px; text-align: right; font-size: 10px; color: #000; border-right: 1px solid #e5e7eb;">
-                                {{ money($item->unit_price) }}</td>
-                            <td style="padding: 10px 8px; text-align: right; font-size: 10px; color: #000; font-weight: 700;">
-                                {{ money($item->total) }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-    
-            {{-- Totals Section --}}
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
-                <div style="width: 300px;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td
-                                style="padding: 8px 12px; font-size: 10px; color: #000; background: #f9fafb; font-weight: 600;">
-                                Subtotal</td>
-                            <td
-                                style="padding: 8px 12px; text-align: right; font-size: 10px; color: #000; font-weight: 600; background: #fff;">
-                                {{ money($order->subtotal) }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td
-                                style="padding: 8px 12px; font-size: 10px; color: #000; background: #f9fafb; font-weight: 600;">
-                                Shipping Charge<br><span
-                                    style="font-size: 8px; color: #666; font-weight: 400;">{{ $order->delivery_zone ? '( '.$order->delivery_zone->label().' )' : '' }}</span>
+                            <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                                {{ money($order->subtotal) }}
                             </td>
-                            <td
-                                style="padding: 8px 12px; text-align: right; font-size: 10px; color: #000; font-weight: 600; background: #fff;">
-                                {{ money($order->shipping_cost) }}</td>
                         </tr>
-                        @if($order->discount_amount > 0)
-                            <tr style="border-bottom: 1px solid #e5e7eb;">
-                                <td
-                                    style="padding: 8px 12px; font-size: 10px; color: #059669; background: #f9fafb; font-weight: 600;">
-                                    Discount @if($order->coupon)<br><span
-                                    style="font-size: 8px; font-weight: 400;">({{ $order->coupon->code }})</span>@endif</td>
-                                <td
-                                    style="padding: 8px 12px; text-align: right; font-size: 10px; color: #059669; font-weight: 600; background: #fff;">
-                                    -{{ money($order->discount_amount) }}</td>
+
+                        <tr class="border-b border-gray-200">
+                            <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                                Shipping Fee
+                            </td>
+                            <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                                {{ money($order->shipping_cost) }}
+                            </td>
+                        </tr>
+
+                        @if($order->discount_amount)
+                            <tr class="border-b border-gray-200">
+                                <td class="py-2 px-3 bg-gray-50 text-gray-800 font-semibold text-xs uppercase">
+                                    Discount
+                                </td>
+                                <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                                    {{ money($order->discount_amount) }}
+                                </td>
                             </tr>
                         @endif
-                        <tr style="background: #000;">
-                            <td
-                                style="padding: 12px; font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.5px;">
-                                Grand Total</td>
-                            <td style="padding: 12px; text-align: right; font-size: 14px; font-weight: 700; color: #fff;">
-                                {{ money($order->total) }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-    
-            {{-- Shipping & Tracking Information --}}
-            @if($order->tracking_number)
-                <div style="margin-bottom: 15px; border-left: 3px solid #000; padding: 10px 0 10px 10px;">
-                    <h3
-                        style="font-size: 9px; font-weight: 700; color: #000; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">
-                        SHIPPING & TRACKING</h3>
-                    <table style="width: 100%; font-size: 10px; line-height: 1.7;">
-                        <tr>
-                            <td style="padding: 1px 0; color: #666; width: 20%; font-weight: 600;">Courier Service:</td>
-                            <td style="padding: 1px 0; color: #000; font-weight: 700;">{{ $order->courier }}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 1px 0; color: #666; vertical-align: top; font-weight: 600;">Tracking Number:
+
+                        <tr class="border-b border-gray-200">
+                            <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                                Total
                             </td>
-                            <td
-                                style="padding: 1px 0; color: #000; font-family: 'Courier New', monospace; font-size: 9px; font-weight: 700;">
-                                {{ $order->tracking_number }}</td>
+                            <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                                {{ money($order->payable) }}
+                            </td>
                         </tr>
+
+                        @if($order->due > 0)
+                            <tr class="border-b border-gray-200">
+                                <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                                    Paid
+                                </td>
+                                <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                                    {{ money($order->paid) }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="py-2 px-3 bg-gray-50 text-red-600 font-bold text-xs uppercase">
+                                    Due
+                                </td>
+                                <td class="py-2 px-3 text-right font-bold text-red-600">
+                                    {{ money($order->due) }}
+                                </td>
+                            </tr>
+                        @else
+                            <tr>
+                                <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                                    Paid
+                                </td>
+                                <td class="py-2 px-3 text-right font-bold text-gray-800">
+                                    {{ money($order->paid) }}
+                                </td>
+                            </tr>
+                        @endif
+
                     </table>
                 </div>
-            @endif
-    
-            {{-- Customer Notes --}}
-            @if($order->notes)
-                <div
-                    style="margin-bottom: 15px; border-left: 3px solid #f59e0b; padding: 10px 0 10px 10px; background: #fffbeb; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-                    <h3
-                        style="font-size: 9px; font-weight: 700; color: #000; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">
-                        CUSTOMER NOTES</h3>
-                    <p style="margin: 0; font-size: 10px; color: #000; line-height: 1.6;">{{ $order->notes }}</p>
-                </div>
-            @endif
-    
-            {{-- Terms & Footer --}}
-            <div style="border-top: 2px solid #e5e7eb; padding-top: 12px; margin-top: 15px;">
-                <h3
-                    style="font-size: 9px; font-weight: 700; color: #000; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">
-                    TERMS & CONDITIONS</h3>
-                <p style="margin: 0 0 12px 0; font-size: 8px; color: #666; line-height: 1.6;">
-                    • Payment is due within 15 days from the invoice date. Please include the invoice number with your
-                    payment.<br>
-                    • All sales are final. Returns or exchanges are only accepted for defective products within 7 days of
-                    delivery.<br>
-                    • For any queries regarding this invoice, please contact us at +880 1711-123456 or
-                    info@spinnerfashion.com
-                </p>
-                <div style="text-align: center; border-top: 1px solid #e5e7eb; padding-top: 12px;">
-                    <p style="margin: 0 0 4px 0; font-size: 10px; color: #000; font-weight: 700;">Thank you for shopping
-                        with Spinner Fashion!</p>
-                    <p style="margin: 0; font-size: 8px; color: #666;">
-                        For support & inquiries: +880 1711-123456 | info@spinnerfashion.com | www.spinnerfashion.com
-                    </p>
-                </div>
+
             </div>
-        </div>
+
+        </main>
     </div>
+
+    {{--
+    <script>
+        window.print();
+        window.onafterprint = function () {
+            window.close();
+        };
+    </script> --}}
 </body>
+
 </html>
