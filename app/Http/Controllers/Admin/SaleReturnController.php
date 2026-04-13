@@ -70,7 +70,7 @@ class SaleReturnController extends Controller
 
             $saleReturn = SaleReturn::create([
                 'sale_id' => $order->id,
-                'returned_id' => 'SR-' . strtoupper(uniqid()),
+                'returned_id' => Order::generateOrderNumber('SR'),
                 'customer_id' => $order->customer_id,
                 'order_number' => $order->order_number,
                 'refund_amount' => $request->refund_amount ?? 0,

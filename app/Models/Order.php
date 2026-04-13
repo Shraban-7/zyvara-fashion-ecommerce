@@ -135,18 +135,27 @@ class Order extends Model
     }
 
     // Helpers
-    public static function generateOrderNumber(): string
+    public static function generateOrderNumber($prefix = 'SF'): string
     {
-        $prefix = 'SF';
-        
         $date = now()->format('ymd');
-        
-        $lastOrder = Order::withTrashed()
-            ->whereDate('created_at', today())
-            ->latest()
-            ->first();
 
-        $sequence = $lastOrder ? ((int) substr($lastOrder->order_number, -2)) + 1 : 1;
+        $orderNumber = 0;
+
+        if ($prefix === 'SR') {
+            $lastReturn = SaleReturn::whereDate('created_at', today())
+                ->latest()
+                ->first();
+
+            $orderNumber = $lastReturn ? ((int) substr($lastReturn->returned_id, -2)) + 1 : 1;
+        } else {
+            $lastOrder = Order::withTrashed()
+                ->whereDate('created_at', today())
+                ->latest()
+                ->first();
+            $orderNumber = $lastOrder ? ((int) substr($lastOrder->order_number, -2)) + 1 : 1;
+        }
+        
+        $sequence = $orderNumber;
 
         return $prefix . $date . str_pad($sequence, 2, '0', STR_PAD_LEFT);
     }

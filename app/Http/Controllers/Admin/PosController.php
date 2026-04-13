@@ -157,7 +157,7 @@ class PosController extends Controller
             }
 
             $order = Order::create([
-                'order_number' => 'POS-' . strtoupper(uniqid()),
+                'order_number' => Order::generateOrderNumber('PS'),
                 'is_pos' => 1,
                 'user_id' => null,
                 'customer_id' => $customer_id,
@@ -406,7 +406,6 @@ class PosController extends Controller
                 'message' => 'Order updated successfully',
                 'order_number' => $order->order_number,
             ]);
-
         } catch (\Exception $e) {
 
             DB::rollBack();
@@ -477,7 +476,7 @@ class PosController extends Controller
 
             // Create order
             $order = Order::create([
-                'order_number' => 'POS-' . strtoupper(uniqid()),
+                'order_number' => Order::generateOrderNumber('PS'),
                 'is_pos' => 1,
                 'user_id' => null,
                 'customer_id' => $customer_id,
@@ -750,7 +749,6 @@ class PosController extends Controller
                 $orderItem->quantity = $request->quantity;
                 $orderItem->subtotal = $request->quantity * $orderItem->unit_price;
                 $orderItem->save();
-
             } else {
                 $cart = $this->getOrCreateCart($request->order_number);
 
@@ -777,7 +775,6 @@ class PosController extends Controller
                 'success' => true,
                 'cart' => $this->getCartResponse($request->order_number)
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -834,7 +831,6 @@ class PosController extends Controller
                 'message' => 'Item removed successfully',
                 'cart' => $this->getCartResponse($orderNumber)
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -879,7 +875,6 @@ class PosController extends Controller
                 'success' => true,
                 'cart' => $this->getCartResponse($request->order_number)
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
