@@ -394,7 +394,7 @@
 
                     <!-- CHECKBOX -->
                     <input type="checkbox"
-                           class="return-check mt-1"
+                           class="return-check mt-1 {{ $item->return_item_id ? 'hidden' : '' }}"
                            data-id="{{ $item->id }}"
                            data-max="{{ $item->quantity }}"
                            data-default-price="{{ $item->unit_price }}">
