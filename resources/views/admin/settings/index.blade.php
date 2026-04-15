@@ -104,13 +104,13 @@
                             <div>
                                 <x-input name="business_day_start" type="time"
                                     value="{{ old('business_day_start', $all_settings['general']['business_day_start']['value'] ?? '') }}"
-                                    label="Business day end" />
+                                    label="Business day start" />
                             </div>
 
                             <div>
                                 <x-input name="business_day_end" type="time"
                                     value="{{ old('business_day_end', $all_settings['general']['business_day_end']['value'] ?? '') }}"
-                                    label="Business day start" />
+                                    label="Business day end" />
                             </div>
                         </div>
 
