@@ -77,6 +77,18 @@
                         </div>
                     </div>
 
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <x-input name="business_day_start" type="time" value="{{ old('business_day_start', $all_settings['general']['business_day_start']['value'] ?? '') }}"
+                                label="Business day end" />
+                        </div>
+
+                        <div>
+                            <x-input name="business_day_end" type="time" value="{{ old('business_day_end', $all_settings['general']['business_day_end']['value'] ?? '') }}"
+                                label="Business day start" />
+                        </div>
+                    </div>
+
                     <div>
                         <x-file-input name="site_logo" label="Site Logo" accept="image/*" />
                         <p class="text-xs text-gray-500 mt-1">Upload your logo image</p>
@@ -437,7 +449,7 @@
             <a href="{{ route('admin.dashboard') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition">
                 Cancel
             </a>
-            <button type="submit" class="px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transition">
+            <button type="submit" class="px-6 py-2.5 text-sm font-semibold text-white bg-linear-to-r from-blue-500 to-blue-600 rounded-xl hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transition">
                 <i class="fas fa-save mr-2"></i>Save Settings
             </button>
         </div>

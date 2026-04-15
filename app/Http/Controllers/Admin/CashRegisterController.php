@@ -39,8 +39,7 @@ class CashRegisterController extends Controller
             'closing_amount' => 'nullable|numeric|min:0',
         ]);
 
-        $start = Carbon::today()->setTime(8, 0);
-        $end = Carbon::tomorrow()->setTime(2, 0);
+        [$start, $end] = businessDayRange();
 
         $salesTotal = Order::whereNull('user_id')->whereBetween('created_at', [$start, $end])->sum('paid');
         $expense = Expense::whereBetween('created_at', [$start, $end])->sum('amount');

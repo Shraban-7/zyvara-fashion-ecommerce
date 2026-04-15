@@ -20,6 +20,8 @@ class SettingSeeder extends Seeder
             ['key' => 'site_favicon', 'value' => null, 'type' => 'file', 'group' => 'general'],
             ['key' => 'currency', 'value' => 'BDT', 'type' => 'text', 'group' => 'general'],
             ['key' => 'currency_symbol', 'value' => '৳', 'type' => 'text', 'group' => 'general'],
+            ['key' => 'business_day_start', 'value' => '10:00', 'type' => 'time', 'group' => 'general'],
+            ['key' => 'business_day_end', 'value' => '00:00', 'type' => 'time', 'group' => 'general'],
 
             // Contact Settings
             ['key' => 'contact_email', 'value' => 'info@spinnerfashion.com.bd', 'type' => 'text', 'group' => 'contact'],

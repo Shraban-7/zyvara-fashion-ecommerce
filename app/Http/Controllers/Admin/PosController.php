@@ -47,21 +47,34 @@ class PosController extends Controller
 
         $employees = User::where('role', 'staff')->get();
 
-        $cashRegister = CashRegister::whereNull('closed_at')
-            ->latest()
-            ->first();
+        
 
-        $start = Carbon::today()->setTime(8, 0);
-        $end = Carbon::tomorrow()->setTime(2, 0);
+        [$start, $end] = businessDayRange();
+        $orders = Order::where('is_pos',1)
+            ->whereBetween('created_at', [$start, $end])
+            ->get();
 
-        $cashRegisterData = [
-            'opening_amount' => $cashRegister->opening_amount ?? 0,
-            'sales_amount' => Order::whereBetween('created_at', [$start, $end])->sum('total'),
-            'expense' => Expense::whereBetween('created_at', [$start, $end])->sum('amount'),
-            'sales_returns' => SaleReturn::whereBetween('created_at', [$start, $end])->sum('refund_amount'),
-        ];
+        $cashRegisterData = $this->getCashRegisterData($start, $end, $orders->sum('paid'));
+        $cashRegister = $cashRegisterData['cashRegister'];
 
         return view('admin.pos.index', compact('products', 'categories', 'cart', 'employees', 'order', 'cashRegister', 'cashRegisterData'));
+    }
+
+    private function getCashRegisterData($start, $end, $ordersTotal)
+    {
+        $cashRegister = CashRegister::whereBetween('opened_at', [$start, $end])
+            ->first();
+
+        $expense = Expense::whereBetween('created_at', [$start, $end])->sum('amount');
+        $salesReturns = SaleReturn::whereBetween('created_at', [$start, $end])->sum('refund_amount');
+
+        return [
+            'cashRegister' => $cashRegister,
+            'opening_amount' => $cashRegister ? $cashRegister->opening_amount : 0,
+            'sales_amount' => $ordersTotal,
+            'expense' => $expense,
+            'sales_returns' => $salesReturns,
+        ];
     }
 
     public function searchProducts(Request $request)

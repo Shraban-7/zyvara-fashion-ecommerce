@@ -1,19 +1,22 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
 
 if (!function_exists('apiResponse')) {
-    function apiResponse(object|array $data, string|null $message = null, int $statusCode = 200,)
+    function apiResponse(object|array $data, string|null $message = null, int $statusCode = 200, )
     {
         $response['status'] = true;
 
-        if (isset($message)) $response['message'] = $message;
-        if (!empty($data)) $response['data'] = $data;
+        if (isset($message))
+            $response['message'] = $message;
+        if (!empty($data))
+            $response['data'] = $data;
 
         return response()->json($response, $statusCode);
     }
@@ -24,7 +27,8 @@ if (!function_exists('successResponse')) {
     {
         $response['status'] = true;
 
-        if (isset($message)) $response['message'] = $message;
+        if (isset($message))
+            $response['message'] = $message;
 
         return response()->json($response, $statusCode);
     }
@@ -44,8 +48,10 @@ if (!function_exists('apiResourceResponse')) {
     function apiResourceResponse(object $collection, string|null $message = null, array $extraData = [], int $statusCode = 200)
     {
         $response['status'] = true;
-        if (isset($message)) $response['message'] = $message;
-        if (!empty($extraData)) $response['extraData'] = $extraData;
+        if (isset($message))
+            $response['message'] = $message;
+        if (!empty($extraData))
+            $response['extraData'] = $extraData;
 
         if (!empty($collection)) {
             $collection = $collection->additional($response)->response()->getData();
@@ -86,7 +92,7 @@ if (!function_exists('upload_file')) {
             Storage::disk($disk)->makeDirectory($directory);
         }
 
-        $fileName =  time() . rand(1, 9999) . '.' . $file->extension();
+        $fileName = time() . rand(1, 9999) . '.' . $file->extension();
         $path = $directory . '/' . $fileName;
 
         Storage::disk($disk)->put($path, File::get($file));
@@ -128,7 +134,7 @@ if (!function_exists('currency')) {
     }
 }
 if (!function_exists('money')) {
-    function money($amount,$showCurrency = true, $currencyType = 'symbol')
+    function money($amount, $showCurrency = true, $currencyType = 'symbol')
     {
         $money = number_format($amount, 2);
         $decimal = explode('.', $money);
@@ -136,7 +142,7 @@ if (!function_exists('money')) {
             $money = str_replace('.00', '', $money);
         }
 
-        if(!$showCurrency) {
+        if (!$showCurrency) {
             return $money;
         }
 
@@ -224,22 +230,22 @@ if (!function_exists('isMobile')) {
     }
 }
 
-if (! function_exists('convert_number_to_words_bdt')) {
+if (!function_exists('convert_number_to_words_bdt')) {
     function convert_number_to_words_bdt($number)
     {
         $number = (int) $number;
 
         $words = [
-            0  => '',
-            1  => 'One',
-            2  => 'Two',
-            3  => 'Three',
-            4  => 'Four',
-            5  => 'Five',
-            6  => 'Six',
-            7  => 'Seven',
-            8  => 'Eight',
-            9  => 'Nine',
+            0 => '',
+            1 => 'One',
+            2 => 'Two',
+            3 => 'Three',
+            4 => 'Four',
+            5 => 'Five',
+            6 => 'Six',
+            7 => 'Seven',
+            8 => 'Eight',
+            9 => 'Nine',
             10 => 'Ten',
             11 => 'Eleven',
             12 => 'Twelve',
@@ -275,11 +281,11 @@ if (! function_exists('convert_number_to_words_bdt')) {
 
         $numStr = str_pad($number, 9, '0', STR_PAD_LEFT);
 
-        $crore    = (int) substr($numStr, 0, 2);
-        $lakh     = (int) substr($numStr, 2, 2);
+        $crore = (int) substr($numStr, 0, 2);
+        $lakh = (int) substr($numStr, 2, 2);
         $thousand = (int) substr($numStr, 4, 2);
-        $hundred  = (int) substr($numStr, 6, 1);
-        $rest     = (int) substr($numStr, 7, 2);
+        $hundred = (int) substr($numStr, 6, 1);
+        $rest = (int) substr($numStr, 7, 2);
 
         if ($crore) {
             $result .= number_to_words_bdt($crore, $words) . ' Crore ';
@@ -305,10 +311,43 @@ if (! function_exists('convert_number_to_words_bdt')) {
         if ($num < 21) {
             return $words[$num];
         } else {
-            $tens  = ((int) ($num / 10)) * 10;
+            $tens = ((int) ($num / 10)) * 10;
             $units = $num % 10;
             return $words[$tens] . ($units ? ' ' . $words[$units] : '');
         }
+    }
+}
+
+if (!function_exists('setting')) {
+    function setting($key, $default = null)
+    {
+        return \App\Models\Setting::where('key', $key)->value('value') ?? $default;
+    }
+}
+
+
+if (!function_exists('businessDayRange')) {
+
+    function businessDayRange()
+    {
+        $now = Carbon::now();
+
+        $startTime = setting('business_day_start'); 
+        $endTime = setting('business_day_end');   
+
+        $start = Carbon::today()->setTimeFromTimeString($startTime);
+        $end = Carbon::today()->setTimeFromTimeString($endTime);
+
+        if ($end->lessThan($start)) {
+            $end->addDay();
+        }
+
+        if ($now->lessThan($start)) {
+            $start->subDay();
+            $end->subDay();
+        }
+
+        return [$start, $end];
     }
 }
 

@@ -19,24 +19,33 @@
 
                     <!-- 🔥 CASH REGISTER STATUS -->
                     @if($cashRegister)
-                        <div class="flex items-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
+                        @php
+                            $data = $cashRegisterData ?? [];
 
-                            <div class="text-xs text-green-700 font-medium">
-                                Opening:
-                                <span class="font-bold">
-                                    {{ money($cashRegister->opening_amount) }}
-                                </span>
-                            </div>
+                            $opening = $data['opening_amount'] ?? $cashRegister->opening_amount ?? 0;
+                            $sales   = $data['sales_amount'] ?? 0;
+                            $expense = $data['expense'] ?? 0;
+                            $returns = $data['sales_returns'] ?? 0;
 
-                            <button
-                                onclick="document.getElementById('closeRegisterModal').classList.remove('hidden')"
-                                class="px-3 py-1 text-xs bg-red-100 text-red-700 hover:bg-red-200 rounded-md transition">
-                                Close
-                            </button>
+                            $closing = $opening + $sales - $expense - $returns;
 
-                         
+                            $isClosed = $cashRegister->closed_at;
+                        @endphp
 
-                        </div>
+                        <button
+                            onclick="document.getElementById('closeRegisterModal').classList.remove('hidden')"
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition
+                                {{ $isClosed 
+                                    ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border border-yellow-300' 
+                                    : 'bg-red-100 text-red-800 hover:bg-red-200 border border-red-300' }}">
+
+                            @if($isClosed)
+                                Reopen ({{ money($cashRegister->closing_amount) }})
+                            @else
+                                Close ({{ money($closing) }})
+                            @endif
+
+                        </button>
                     @else
                         <div class="px-3 py-2 bg-yellow-50 border border-yellow-200 rounded-lg text-xs text-yellow-700 font-medium">
                             Register Not Open
