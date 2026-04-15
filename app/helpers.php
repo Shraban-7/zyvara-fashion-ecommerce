@@ -332,8 +332,8 @@ if (!function_exists('businessDayRange')) {
     {
         $now = Carbon::now();
 
-        $startTime = setting('business_day_start'); 
-        $endTime = setting('business_day_end');   
+        $startTime = setting('business_day_start','00:00'); 
+        $endTime = setting('business_day_end','23:59');   
 
         $start = Carbon::today()->setTimeFromTimeString($startTime);
         $end = Carbon::today()->setTimeFromTimeString($endTime);
