@@ -31,9 +31,9 @@ return new class extends Migration
 
     private function updateBrands()
     {
-        $products = \App\Models\Product::whereNotNull('brand')->select('id', 'brand')->get();
+        $products = \App\Models\Product::whereNotNull('brand_name')->select('id', 'brand_name')->get();
         foreach ($products as $product) {
-            $brandName = $product->brand;
+            $brandName = $product->brand_name;
             $brand = \App\Models\Brand::firstOrCreate(['name' => $brandName], ['slug' => str_slug($brandName)]);
             $product->update(['brand_id' => $brand->id]);
         }
