@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen py-6 md:py-12">
+<div class="bg-gray-50 min-h-screen py-6 md:py-6">
     <div class="container mx-auto px-4 max-w-7xl">
         <!-- Dashboard Header -->
-        <div class="mb-6 md:mb-8">
+        <!-- <div class="mb-6 md:mb-8">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-800">My Account</h1>
             <p class="text-gray-600 mt-1">Welcome back, {{auth()->user()->name }}!</p>
-        </div>
+        </div> -->
 
         <div class="flex flex-col lg:flex-row gap-6">
             <!-- Sidebar Navigation -->
