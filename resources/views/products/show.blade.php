@@ -34,7 +34,9 @@
                 <div class="space-y-4">
                     {{-- Main Image --}}
                     <div class="relative bg-white rounded-2xl overflow-hidden border border-gray-100">
-                        <img id="mainProductImage" src="{{ $product->thumbnail }}" alt="{{ $product->name }}" class="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover">
+                        <div class="flex justify-center w-full h-[400px] sm:h-[500px] lg:h-[600px]">
+                            <img id="mainProductImage" src="{{ $product->thumbnail }}" alt="{{ $product->name }}" class=" object-fit-contain max-w-full max-h-full">
+                        </div>                        
 
                         {{-- Badges --}}
                         <div class="absolute top-4 left-4 flex flex-col gap-2">
