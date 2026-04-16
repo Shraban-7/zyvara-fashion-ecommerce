@@ -6,6 +6,10 @@
 
 @include('home.categories')
 
+@include('home.our-brands')
+
+{{-- @include('home.brands') --}}
+
 @include('home.new-arrivals')
 
 @include('home.best-selling')

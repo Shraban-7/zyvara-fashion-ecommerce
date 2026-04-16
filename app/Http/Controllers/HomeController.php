@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -77,6 +78,11 @@ class HomeController extends Controller
 
         $banners = Banner::get();
 
+        $ourBrands = Brand::where('is_active', true)
+            ->where('own_brand', true)
+            ->limit(5)
+            ->get();
+
         return view('home', compact(
             'newArrivals',
             'bestSelling',
@@ -84,6 +90,7 @@ class HomeController extends Controller
             'womensProducts',
             'featuredCategories',
             'banners',
+            'ourBrands'
         ));
     }
 }

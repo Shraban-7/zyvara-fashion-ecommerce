@@ -14,7 +14,7 @@
                     <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28">
                         <div class="absolute inset-0 rounded-full overflow-hidden group-hover:scale-110 transition-all ring-2 ring-white shadow-md group-hover:shadow-xl group-hover:ring-brand-blue/50">
                             <img
-                                src="{{ $category->image ? storage_url($category->image) : asset('assets/images/default.png') }}"
+                                src="{{ set_image($category->image) }}"
                                 alt="{{ $category->name }}"
                                 class="w-full h-full object-cover">
                         </div>
@@ -29,11 +29,11 @@
         </div>
 
         {{-- View All Categories Button --}}
-        <div class="text-center mt-14">
+        <!-- <div class="text-center mt-14">
             <a href="{{ route('products.index') }}" class="inline-flex items-center gap-3 px-8 py-3 bg-white border-2 border-brand-blue text-brand-blue font-bold rounded-full hover:bg-brand-blue hover:text-white transition-all duration-300 shadow-sm hover:shadow-lg">
                 <span>Explore All Collections</span>
                 <i class="fas fa-chevron-right text-xs"></i>
             </a>
-        </div>
+        </div> -->
     </div>
 </section>

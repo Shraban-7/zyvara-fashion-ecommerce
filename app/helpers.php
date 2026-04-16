@@ -351,3 +351,14 @@ if (!function_exists('businessDayRange')) {
     }
 }
 
+if (!function_exists('set_image')) {
+    function set_image($image = null)
+    {
+        if ($image) {
+            return storage_url($image);
+        }
+
+        return asset('assets/images/default.png');
+    }
+}
+
