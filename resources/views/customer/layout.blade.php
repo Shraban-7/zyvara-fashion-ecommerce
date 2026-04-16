@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen py-6 md:py-12">
+<div class="bg-gray-50 min-h-screen py-6 md:py-6">
     <div class="container mx-auto px-4 max-w-7xl">
         <!-- Dashboard Header -->
         <!-- <div class="mb-6 md:mb-8">
