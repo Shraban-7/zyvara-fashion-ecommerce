@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CashRegisterController;
 use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\Admin\SaleReturnController;
@@ -66,6 +67,13 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/store', [CategoryController::class, 'store'])->name('store');
         Route::put('/{category}/update', [CategoryController::class, 'update'])->name('update');
         Route::delete('/{category}', [CategoryController::class, 'delete'])->name('delete');
+    });
+
+    Route::prefix('brands')->as('brands.')->group(function () {
+        Route::get('/', [BrandController::class, 'index'])->name('index');
+        Route::post('/store', [BrandController::class, 'store'])->name('store');
+        Route::put('/{brand}/update', [BrandController::class, 'update'])->name('update');
+        Route::delete('/{brand}', [BrandController::class, 'delete'])->name('delete');
     });
 
     Route::prefix('reviews')->as('reviews.')->group(function () {

@@ -92,6 +92,11 @@ $user = auth()->user();
                     <i class="fas fa-tags text-lg w-5"></i>
                     <span>Categories</span>
                 </a>
+                <a href="{{ route('admin.brands.index') }}"
+                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
+                    <i class="fas fa-copyright text-lg w-5"></i>
+                    <span>Brands</span>
+                </a>
                 <a href="{{ route('admin.reviews.index') }}"
                     class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                     <i class="fas fa-star text-lg w-5"></i>

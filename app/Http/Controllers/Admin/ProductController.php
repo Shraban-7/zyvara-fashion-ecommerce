@@ -6,6 +6,7 @@ use App\Enums\FitType;
 use App\Enums\Occasion;
 use App\Enums\Pattern;
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
@@ -22,7 +23,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'images']);
+        $query = Product::with(['category', 'images','brand']);
 
         // Search by name or SKU
         if ($request->filled('search')) {
@@ -95,8 +96,9 @@ class ProductController extends Controller
         $products = $query->paginate(15)->appends($request->query());
 
         $categories = Category::active()->orderBy('name')->get();
+        $brands = Brand::active()->orderBy('name')->get();
 
-        return view('admin.products.index', compact('products', 'categories'));
+        return view('admin.products.index', compact('products', 'categories','brands'));
     }
 
     private function getCategories()
@@ -121,9 +123,11 @@ class ProductController extends Controller
         return $data;
     }
 
+
     public function create()
     {
         $categories = $this->getCategories();
+        $brands = Brand::active()->orderBy('name')->get();
         $sizes = Size::orderBy('sort_order')->get();
         $colors = Color::orderBy('name')->get();
         $fitTypes = FitType::cases();
@@ -132,6 +136,7 @@ class ProductController extends Controller
 
         return view('admin.products.create', compact(
             'categories',
+            'brands',
             'sizes',
             'colors',
             'fitTypes',
@@ -152,7 +157,7 @@ class ProductController extends Controller
             'cost_price' => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:categories,id',
-            'brand' => 'nullable|string|max:255',
+            'brand_id' => 'nullable|exists:brands,id',
             'material' => 'nullable|string|max:255',
             'fit_type' => 'nullable|string|in:' . implode(',', FitType::values()),
             'pattern' => 'nullable|string|in:' . implode(',', Pattern::values()),
@@ -255,6 +260,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = $this->getCategories();
+        $brands = Brand::active()->orderBy('name')->get();
         $sizes = Size::orderBy('sort_order')->get();
         $colors = Color::orderBy('name')->get();
         $fitTypes = FitType::cases();
@@ -265,6 +271,7 @@ class ProductController extends Controller
 
         return view('admin.products.edit', compact(
             'product',
+            'brands',
             'categories',
             'sizes',
             'colors',
@@ -286,7 +293,7 @@ class ProductController extends Controller
             'cost_price' => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:categories,id',
-            'brand' => 'nullable|string|max:255',
+            'brand_id' => 'nullable|exists:brands,id',
             'material' => 'nullable|string|max:255',
             'fit_type' => 'nullable|string|in:' . implode(',', FitType::values()),
             'pattern' => 'nullable|string|in:' . implode(',', Pattern::values()),
