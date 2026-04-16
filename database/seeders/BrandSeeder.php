@@ -16,7 +16,7 @@ class BrandSeeder extends Seeder
         $brands = [
             'Merinor',
             'Lianoa',
-            'Fluxio',
+            'Pluxio',
             'Babee',
             'Sneaktra'
         ];
