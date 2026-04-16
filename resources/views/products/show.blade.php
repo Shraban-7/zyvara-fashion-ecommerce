@@ -20,6 +20,10 @@
     </div>
 </div>
 
+<?php
+    $brandName = $product->brand ? $product->brand->name : null;
+?>
+
 <div>
     <div class="max-w-7xl mx-auto p-4">
         {{-- Product Main Section --}}
@@ -73,7 +77,7 @@
                 {{-- Product Info --}}
                 <div class="space-y-4 min-w-0 overflow-hidden">
                     <div>
-                        <p class="text-xs text-brand-blue font-medium mb-1.5">{{ $product->brand ?? '' }} @if($product->category)• {{ $product->category->name }}@endif</p>
+                        <p class="text-xs text-brand-blue font-medium mb-1.5">{{ $brandName ?? '' }} @if($product->category)• {{ $product->category->name }}@endif</p>
                         <h1 class="text-xl md:text-2xl font-bold text-brand-black mb-2">{{ $product->name }}</h1>
 
                         <div class="flex flex-wrap items-center gap-2 sm:gap-4">
@@ -309,10 +313,10 @@
                         <div class="bg-gray-50 rounded-2xl overflow-hidden">
                             <table class="w-full">
                                 <tbody>
-                                    @if($product->brand)
+                                    @if($brandName)
                                     <tr class="border-b border-gray-200">
                                         <td class="py-4 px-5 text-sm font-medium text-gray-600 bg-gray-100 w-1/3">Brand</td>
-                                        <td class="py-4 px-5 text-sm text-gray-900">{{ $product->brand }}</td>
+                                        <td class="py-4 px-5 text-sm text-gray-900">{{ $brandName }}</td>
                                     </tr>
                                     @endif
                                     @if($product->sku)

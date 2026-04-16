@@ -107,7 +107,7 @@ class ProductSeeder extends Seeder
             'compare_price' => $isOnSale ? $pricing['compare_price'] : null,
             'cost_price' => $pricing['cost_price'],
             'category_id' => $category->id,
-            'brand' => $brand,
+            'brand_name' => $brand,
             'material' => $material,
             'fit_type' => $this->getFitType($categoryName, $parentName),
             'pattern' => $this->getPattern(),

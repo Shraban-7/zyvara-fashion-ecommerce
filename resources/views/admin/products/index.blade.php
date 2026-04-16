@@ -129,7 +129,7 @@
                             <div class="min-w-0">
                                 <p class="text-sm font-medium text-gray-900">{{ $product->name }}</p>
                                 @if($product->brand)
-                                <p class="text-xs text-gray-500">{{ $product->brand }}</p>
+                                <p class="text-xs text-gray-500">{{ $product->brand->name }}</p>
                                 @endif
                             </div>
                         </div>

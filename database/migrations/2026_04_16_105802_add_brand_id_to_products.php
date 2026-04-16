@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->unsignedBigInteger('brand_id')->nullable()->after('subcategory_id');
+            $table->renameColumn('brand', 'brand_name');
         });
 
         $this->updateBrands();
