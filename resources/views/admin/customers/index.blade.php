@@ -1,135 +1,246 @@
 @extends('admin.layouts.app')
+
 @section('title', 'Customers')
 
 @section('content')
 
-<div>
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Customers</h1>
-        <p class="text-sm text-gray-600">Manage your registered customer base</p>
+    {{-- Header --}}
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Customers</h1>
+        </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
-                    <tr>
-                        <th class="px-6 py-4">Customer</th>
-                        <th class="px-6 py-4">Contact</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse($customers as $customer)
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="h-10 w-10 flex-shrink-0">
-                                    <img class="h-10 w-10 rounded-full object-cover border border-gray-200"
-                                        src="{{ $customer->image ? asset('storage/'.$customer->image) : 'https://ui-avatars.com/api/?name='.urlencode($customer->name) }}"
-                                        alt="{{ $customer->name }}">
-                                </div>
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900">{{ $customer->name }}</div>
-                                    <div class="text-xs text-gray-400">ID: #{{ $customer->id }}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-gray-900 font-medium">{{ $customer->phone }}</div>
-                            <div class="text-xs text-gray-500">{{ $customer->email ?? 'No email' }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium {{ $customer->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                {{ $customer->is_active ? 'Active' : 'Inactive' }}
-                            </span>
-                        </td>
-                        
-                        <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <div class="flex justify-end items-center gap-1">
-                                <button onclick="toggleModal('editCustomer{{ $customer->id }}')"
-                                    class="w-8 h-8 flex items-center justify-center text-indigo-600 hover:bg-indigo-50 rounded-md transition-all"
-                                    title="Edit">
-                                    <i class="fa-solid fa-pen-to-square text-base"></i>
-                                </button>
+    {{-- Tabs --}}
+    <div class="mb-4 border-b border-gray-200">
+        <div class="flex gap-6">
+            <button onclick="switchTab('pos')" id="tab-pos"
+                class="tab-btn pb-2 text-sm font-semibold border-b-2 text-indigo-600 border-indigo-600">
+                POS Customers
+            </button>
 
-                                <form action="" method="POST" onsubmit="return confirm('Are you sure?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="w-8 h-8 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-md transition-all"
-                                        title="Delete">
-                                        <i class="fa-solid fa-trash-can text-base"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="px-6 py-12 text-center text-gray-400">No customers found.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <button onclick="switchTab('web')" id="tab-web"
+                class="tab-btn pb-2 text-sm font-semibold border-b-2 text-gray-500 border-transparent hover:text-gray-700">
+                Website Customers
+            </button>
         </div>
-
-        @if($customers->hasPages())
-        <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
-            {{ $customers->links() }}
-        </div>
-        @endif
     </div>
-</div>
 
-@foreach($customers as $customer)
-<div id="editCustomer{{ $customer->id }}" class="fixed inset-0 z-[60] flex items-center justify-center modal-overlay hidden-modal">
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleModal('editCustomer{{ $customer->id }}')"></div>
+    {{-- ================= POS CUSTOMERS ================= --}}
+    <div id="posTable">
 
-    <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden modal-container">
-        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-            <h3 class="text-lg font-bold text-gray-800">Edit Customer Profile</h3>
-            <button onclick="toggleModal('editCustomer{{ $customer->id }}')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-        </div>
+        {{-- Filter --}}
+        <form method="GET" class="bg-white border rounded-xl p-4 mb-4">
 
-        <form action="{{ route('admin.customers.update', $customer->id) }}" method="POST" class="p-6">
-            @csrf
-            @method('PUT')
+            <input type="hidden" name="tab" value="pos">
 
-            <div class="space-y-5">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1 text-left">Full Name</label>
-                    <input type="text" name="name" value="{{ $customer->name }}" required
-                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition p-2.5 border">
+            <div class="flex flex-col md:flex-row gap-3">
+
+                {{-- SEARCH --}}
+                <div class="flex-1">
+                    <input type="text" name="pos_search" value="{{ request('pos_search') }}"
+                        placeholder="Search POS by name or phone..."
+                        class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1 text-left">Phone Number</label>
-                    <input type="text" name="phone" value="{{ $customer->phone }}" required
-                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition p-2.5 border">
+                {{-- BUTTON GROUP --}}
+                <div class="flex gap-2 md:items-end">
+
+                    <button type="submit"
+                        class="h-11 px-5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium flex items-center justify-center">
+                        <i class="fas fa-filter mr-2"></i>
+                        Apply Filters
+                    </button>
+
+                    <a href="{{ route('admin.customers.index') }}"
+                        class="h-11 px-4 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition flex items-center justify-center">
+                        <i class="fas fa-times"></i>
+                    </a>
+
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1 text-left">New Password</label>
-                    <input type="password" name="password" placeholder="Leave empty to keep current"
-                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition p-2.5 border">
-                </div>
             </div>
 
-            <div class="mt-8 flex items-center justify-end space-x-3">
-                <button type="button" onclick="toggleModal('editCustomer{{ $customer->id }}')"
-                    class="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 transition">
-                    Cancel
-                </button>
-                <button type="submit"
-                    class="px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 shadow-md transition-all">
-                    Update Customer
-                </button>
-            </div>
         </form>
+
+        {{-- Table --}}
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600">Customer</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600">Contact</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600">Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y">
+                        @forelse($posUsers as $customer)
+                            <tr class="hover:bg-gray-50">
+
+                                <td class="px-6 py-4 flex items-center gap-3">
+                                    <img class="w-10 h-10 rounded-full border"
+                                        src="{{ $customer->image ? asset('storage/' . $customer->image) : 'https://ui-avatars.com/api/?name=' . urlencode($customer->name) }}">
+                                    <div>
+                                        <div class="font-medium text-gray-900">{{ $customer->name }}</div>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <div>{{ $customer->phone }}</div>
+                                    <div class="text-xs text-gray-400">{{ $customer->email ?? 'No email' }}</div>
+                                </td>
+
+                                {{-- POS always active --}}
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">
+                                        Active
+                                    </span>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center py-8 text-gray-400">
+                                    No POS customers found
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-4">
+                {{ $posUsers->appends(request()->query())->links() }}
+            </div>
+        </div>
+
     </div>
-</div>
-@endforeach
+
+    {{-- ================= WEBSITE CUSTOMERS ================= --}}
+    <div id="webTable" class="hidden">
+
+        {{-- Filter --}}
+        <form method="GET" class="bg-white border rounded-xl p-4 mb-4 flex gap-3">
+
+            <input type="hidden" name="tab" value="web">
+
+            <input type="text" name="web_search" value="{{ request('web_search') }}" placeholder="Search website users..."
+                class="w-full h-10 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+
+            <button class="px-4 bg-indigo-600 text-white rounded-lg">Search</button>
+
+            <a href="{{ route('admin.customers.index') }}" class="px-4 border rounded-lg flex items-center">Reset</a>
+        </form>
+
+        {{-- Table --}}
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600">Customer</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600">Contact</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600">Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y">
+                        @forelse($webUsers as $customer)
+                            <tr class="hover:bg-gray-50">
+
+                                <td class="px-6 py-4 flex items-center gap-3">
+                                    <img class="w-10 h-10 rounded-full border"
+                                        src="{{ $customer->image ? asset('storage/' . $customer->image) : 'https://ui-avatars.com/api/?name=' . urlencode($customer->name) }}">
+                                    <div>
+                                        <div class="font-medium text-gray-900">{{ $customer->name }}</div>
+                                        <div class="text-xs text-gray-400">#{{ $customer->id }}</div>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <div>{{ $customer->phone }}</div>
+                                    <div class="text-xs text-gray-400">{{ $customer->email ?? 'No email' }}</div>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2 py-1 text-xs rounded-full
+                                        {{ $customer->is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                        {{ $customer->is_active ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center py-8 text-gray-400">
+                                    No website customers found
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-4">
+                {{ $webUsers->appends(request()->query())->links() }}
+            </div>
+        </div>
+
+    </div>
 
 @endsection
+
+@push('scripts')
+    <script>
+
+        function switchTab(type) {
+
+            const pos = document.getElementById('posTable');
+            const web = document.getElementById('webTable');
+
+            const tabPos = document.getElementById('tab-pos');
+            const tabWeb = document.getElementById('tab-web');
+
+            // reset all tabs
+            document.querySelectorAll('.tab-btn').forEach(tab => {
+                tab.classList.remove('text-indigo-600', 'border-indigo-600');
+                tab.classList.add('text-gray-500', 'border-transparent');
+            });
+
+            if (type === 'pos') {
+
+                pos.classList.remove('hidden');
+                web.classList.add('hidden');
+
+                tabPos.classList.add('text-indigo-600', 'border-indigo-600');
+                tabPos.classList.remove('text-gray-500', 'border-transparent');
+
+            } else {
+
+                web.classList.remove('hidden');
+                pos.classList.add('hidden');
+
+                tabWeb.classList.add('text-indigo-600', 'border-indigo-600');
+                tabWeb.classList.remove('text-gray-500', 'border-transparent');
+            }
+
+            // persist tab in URL
+            const url = new URL(window.location);
+            url.searchParams.set('tab', type);
+            window.history.replaceState({}, '', url);
+        }
+
+
+        // load correct tab on refresh
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const tab = new URLSearchParams(window.location.search).get('tab') || 'pos';
+            switchTab(tab);
+
+        });
+
+    </script>
+@endpush
