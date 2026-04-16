@@ -13,7 +13,7 @@
         </div>
         <div class="grid grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
             @foreach ($ourBrands as $brand)
-            <a href="#" class="group block">
+            <a href="{{ route('products.index') }}?brands={{ $brand->slug }}" class="group block">
                 <div
                     class="relative bg-white rounded-xl overflow-hidden transition-all duration-500 hover:scale-105">
                     {{-- Card Shadow & Border --}}

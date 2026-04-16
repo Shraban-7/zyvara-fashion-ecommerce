@@ -78,6 +78,44 @@
                     </div>
                 </div>
 
+                {{-- Brand Filter --}}
+                <div class="border-b border-gray-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('brandFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                        Brand
+                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="brandFilterIcon"></i>
+                    </button>
+
+                    <div id="brandFilter" class="space-y-2 max-h-64 overflow-y-auto">
+
+                        @php
+                            $selectedBrands = request('brands', []);
+                            if (!is_array($selectedBrands)) {
+                                $selectedBrands = explode(',', $selectedBrands);
+                            }
+                        @endphp
+
+                        @foreach($brands as $brand)
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox"
+                                name="brands[]"
+                                value="{{ $brand->slug }}"
+                                {{ in_array($brand->slug, $selectedBrands) ? 'checked' : '' }}
+                                onchange="applyFilters()"
+                                class="w-4 h-4 rounded border-gray-300 text-brand-blue">
+
+                            <span class="text-sm text-gray-600 group-hover:text-gray-900">
+                                {{ $brand->name }}
+                            </span>
+
+                            <span class="ml-auto text-xs text-gray-400">
+                                ({{ $brandCounts[$brand->id] ?? 0 }})
+                            </span>
+                        </label>
+                        @endforeach
+
+                    </div>
+                </div>
+
                 {{-- Price Range Filter --}}
                 <div class="border-b border-gray-100 pb-5 mb-5">
                     <button onclick="toggleFilterSection('priceFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
@@ -266,10 +304,14 @@
 
             {{-- Active Filters --}}
             @php
-            $hasFilters = request()->hasAny(['categories', 'sizes', 'colors', 'min_price', 'max_price', 'min_rating']);
+            $hasFilters = request()->hasAny(['categories','brands', 'sizes', 'colors', 'min_price', 'max_price', 'min_rating']);
             $selectedCategories = request('categories', []);
             if (!is_array($selectedCategories)) {
             $selectedCategories = explode(',', $selectedCategories);
+            }
+            $selectedBrands = request('brands', []);
+            if (!is_array($selectedBrands)) {
+            $selectedBrands = explode(',', $selectedBrands);
             }
             $selectedSizes = request('sizes', []);
             if (!is_array($selectedSizes)) {
@@ -299,6 +341,23 @@
                 </span>
                 @endif
                 @endforeach
+
+                {{-- Brand Filters --}}
+                @foreach($selectedBrands as $brandSlug)
+                @php
+                $brand = $brands->firstWhere('slug', $brandSlug);
+                @endphp
+                @if($brand)
+                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                    {{ $brand->name }}
+                    <button onclick="removeFilter('categories', '{{ $brandSlug }}')" class="hover:text-blue-700">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </span>
+                @endif
+                @endforeach
+
+
 
                 {{-- Size Filters --}}
                 @foreach($selectedSizes as $sizeId)
@@ -418,6 +477,13 @@
             searchParams.set('categories', categories.join(','));
         }
 
+        // Brands
+        const brands = Array.from(document.querySelectorAll('input[name="brands[]"]:checked'))
+            .map(cb => cb.value);
+        if (brands.length > 0) {
+            searchParams.set('brands', brands.join(','));
+        }
+
         // Sizes
         const sizes = Array.from(document.querySelectorAll('input[name="sizes[]"]:checked'))
             .map(cb => cb.value);
@@ -451,7 +517,7 @@
         const url = new URL(window.location.href);
         const searchParams = new URLSearchParams(url.searchParams);
 
-        if (filterType === 'categories' || filterType === 'sizes' || filterType === 'colors') {
+        if (filterType === 'categories' || filterType === 'brands' || filterType === 'sizes' || filterType === 'colors') {
             // Get current values
             const currentValues = searchParams.get(filterType);
             if (currentValues) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
@@ -12,7 +13,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with('category')->where('is_active', true);
+        $query = Product::with('category', 'brand')->where('is_active', true);
 
         if ($request->has('categories') && !empty($request->categories)) {
             $categorySlugs = is_array($request->categories) ? $request->categories : explode(',', $request->categories);
@@ -33,6 +34,22 @@ class ProductController extends Controller
                 }
 
                 $query->whereIn('category_id', $categoryIds);
+            }
+        }
+
+        // Brand filter
+        if ($request->has('brands') && !empty($request->brands)) {
+
+            $brandSlugs = is_array($request->brands)
+                ? $request->brands
+                : explode(',', $request->brands);
+
+            $brandIds = Brand::whereIn('slug', $brandSlugs)
+                ->pluck('id')
+                ->toArray();
+
+            if (!empty($brandIds)) {
+                $query->whereIn('brand_id', $brandIds);
             }
         }
 
@@ -145,12 +162,9 @@ class ProductController extends Controller
         $colors = Color::orderBy('name')->get();
 
         // Get available brands from products
-        $brands = Product::where('is_active', true)
-            ->distinct()
-            ->pluck('brand')
-            ->filter()
-            ->sort()
-            ->values();
+        $brands = Brand::active()
+            ->orderBy('name')
+            ->get();
 
         // Get counts for filters
         $categoryCounts = [];
@@ -166,13 +180,21 @@ class ProductController extends Controller
             }
         }
 
+        $brandCounts = [];
+        foreach ($brands as $brand) {
+            $brandCounts[$brand->id] = Product::where('brand_id', $brand->id)
+                ->where('is_active', true)
+                ->count();
+        }
+
         return view('products.index', compact(
             'products',
             'categories',
             'sizes',
             'colors',
             'brands',
-            'categoryCounts'
+            'categoryCounts',
+            'brandCounts'
         ));
     }
 

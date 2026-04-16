@@ -8,7 +8,7 @@
 
         <div class="grid grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
             @foreach($allMenuCategories as $category)
-            <a href="{{ route('products.index') }}?category={{ $category->slug }}" class="group">
+            <a href="{{ route('products.index') }}?categories={{ $category->slug }}" class="group">
                 <div class="flex flex-col items-center text-center gap-4">
                     {{-- Image Container - Increased sizing slightly --}}
                     <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28">
