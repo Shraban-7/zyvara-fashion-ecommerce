@@ -80,7 +80,8 @@ class ProductController extends Controller
         // Brand filter
         if ($request->has('brands') && !empty($request->brands)) {
             $brands = is_array($request->brands) ? $request->brands : explode(',', $request->brands);
-            $query->whereIn('brand', $brands);
+            $brandIds = Brand::whereIn('slug', $brands)->pluck('id')->toArray();
+            $query->whereIn('brand_id', $brandIds);
         }
 
         // Rating filter
@@ -112,7 +113,7 @@ class ProductController extends Controller
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', '%' . $searchTerm . '%')
                     ->orWhere('description', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('brand', 'like', '%' . $searchTerm . '%')
+                    //->orWhere('brand', 'like', '%' . $searchTerm . '%')
                     ->orWhere('tags', 'like', '%' . $searchTerm . '%');
             });
         }
@@ -164,6 +165,7 @@ class ProductController extends Controller
         // Get available brands from products
         $brands = Brand::active()
             ->orderBy('name')
+            ->withCount('products')
             ->get();
 
         // Get counts for filters
@@ -182,9 +184,7 @@ class ProductController extends Controller
 
         $brandCounts = [];
         foreach ($brands as $brand) {
-            $brandCounts[$brand->id] = Product::where('brand_id', $brand->id)
-                ->where('is_active', true)
-                ->count();
+            $brandCounts[$brand->id] = $brand->products_count;
         }
 
         return view('products.index', compact(

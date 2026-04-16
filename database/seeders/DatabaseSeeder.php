@@ -21,12 +21,13 @@ class DatabaseSeeder extends Seeder
 
             CouponSeeder::class,
             BannerSeeder::class,
+            BrandSeeder::class,
         ]);
 
         if (app()->environment('local')) {
             $this->call([
                 ProductSeeder::class,
-                Employee::class,
+                EmployeeSeeder::class,
             ]);
         }
     }

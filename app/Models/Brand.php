@@ -20,4 +20,9 @@ class Brand extends Model
     {
         return $query->where('own_brand', true);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
