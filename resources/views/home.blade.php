@@ -14,6 +14,10 @@
 
 @include('home.best-selling')
 
+@include('home.on-sale')
+
+@include('home.featured')
+
 @include('home.festive-banner')
 
 @include('home.mens-collection')

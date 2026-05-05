@@ -23,24 +23,24 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'images','brand']);
+        $query = Product::with(['category', 'images', 'brand']);
 
-        // Search by name or SKU
         if ($request->filled('search')) {
             $search = $request->search;
+
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('sku', 'like', "%{$search}%")
-                    ->orWhere('brand', 'like', "%{$search}%");
+                    ->orWhereHas('brand', function ($b) use ($search) {
+                        $b->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
-        // Filter by category
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
 
-        // Filter by status
         if ($request->filled('status')) {
             switch ($request->status) {
                 case 'active':
@@ -62,7 +62,6 @@ class ProductController extends Controller
             }
         }
 
-        // Filter by price range
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
@@ -70,7 +69,6 @@ class ProductController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        // Sort
         $sortBy = $request->get('sort', 'latest');
         switch ($sortBy) {
             case 'name_asc':
@@ -98,7 +96,7 @@ class ProductController extends Controller
         $categories = Category::active()->orderBy('name')->get();
         $brands = Brand::active()->orderBy('name')->get();
 
-        return view('admin.products.index', compact('products', 'categories','brands'));
+        return view('admin.products.index', compact('products', 'categories', 'brands'));
     }
 
     private function getCategories()
@@ -381,8 +379,15 @@ class ProductController extends Controller
             if ($request->hasFile('images')) {
                 // Check if total images (existing - deleted + new) <= 5
                 $currentImageCount = $product->images()->count();
-                $deletedCount = $request->has('delete_images') ? count($request->delete_images) : 0;
-                $newCount = count($request->file('images'));
+
+                $deleteImageIds = $request->filled('delete_images')
+                    ? json_decode($request->delete_images, true)
+                    : [];
+
+                $deletedCount = is_array($deleteImageIds) ? count($deleteImageIds) : 0;
+
+                $newImages = $request->file('images') ?? [];
+                $newCount = is_array($newImages) ? count($newImages) : 0;
 
                 if (($currentImageCount - $deletedCount + $newCount) <= 5) {
                     foreach ($request->file('images') as $image) {
@@ -392,47 +397,50 @@ class ProductController extends Controller
                         ]);
                     }
                 } else {
-                    // Optionally handle error, throw exception, or skip excess images
                 }
             }
 
-            if ($request->has('delete_variants')) {
-                $product->variants()->whereIn('id', $request->delete_variants)->delete();
-            }
+            $variants = $request->variants ?? [];
+            $variantIds = [];
 
-            if ($request->has('variants')) {
+            foreach ($variants as $variantData) {
 
-                $variantIds = [];
+                if (empty($variantData['size_id']) && empty($variantData['color_id'])) {
+                    continue;
+                }
 
-                foreach ($request->variants as $variantData) {
-                    if (empty($variantData['size_id']) && empty($variantData['color_id'])) {
-                        continue;
+                $variantData['product_id'] = $product->id;
+                $variantData['stock_in'] = $variantData['stock_in'] ?? 0;
+                $variantData['price'] = $variantData['price'] ?? $product->price;
+                $variantData['sku'] = $variantData['sku'] ?? ProductVariant::generate_sku();
+
+                if (!empty($variantData['id'])) {
+
+                    $variant = $product->variants()->find($variantData['id']);
+
+                    if ($variant) {
+                        $variantData['stock_in'] = $variantData['stock_in'] == 0
+                            ? $variant->stock_in
+                            : $variantData['stock_in'];
+
+                        $variant->update($variantData);
+                        $variantIds[] = $variant->id;
                     }
 
-                    if (!empty($variantData['id'])) {
-                        $variantIds[] = $variantData['id'];
-                    }
-
-                    $variantData['product_id'] = $product->id;
-                    $variantData['stock_in'] = $variantData['stock_in'] ?? 0;
-                    $variantData['price'] = $variantData['price'] ?? $product->price;
-                    $variantData['sku'] = $variantData['sku'] ?? ProductVariant::generate_sku();
-
-                    if (!empty($variantData['id'])) {
-                        $variant = $product->variants()->find($variantData['id']);
-                        if ($variant) {
-                            $variantData['stock_in'] = $variantData['stock_in'] == 0 ? $variant->stock_in : $variantData['stock_in'];
-                            $variant->update($variantData);
-                        }
-                    } else {
-                        $product->variants()->create($variantData);
-                    }
-
-                    if (count($variantIds) > 0) {
-                        $product->variants()->whereNotIn('id', $variantIds)->delete();
-                    }
+                } else {
+                    $newVariant = $product->variants()->create($variantData);
+                    $variantIds[] = $newVariant->id;
                 }
             }
+
+            if (!empty($variantIds)) {
+                $product->variants()
+                    ->whereNotIn('id', $variantIds)
+                    ->delete();
+            } else {
+                $product->variants()->delete();
+            }
+
 
             DB::commit();
 

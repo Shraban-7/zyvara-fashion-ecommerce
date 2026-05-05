@@ -37,6 +37,20 @@ class HomeController extends Controller
             ->take($productLimit)
             ->get();
 
+        $featuredProducts = Product::where('is_active', true)
+            ->where('is_featured', true)
+            ->with('category')
+            ->orderBy('review_count', 'desc')
+            ->take($productLimit)
+            ->get();
+
+        $onSaleProducts = Product::where('is_active', true)
+            ->where('is_on_sale', true)
+            ->with('category')
+            ->orderBy('review_count', 'desc')
+            ->take($productLimit)
+            ->get();
+
         // Fetch men's products
         $menCategoryIds = Category::where('slug', 'like', '%men%')->pluck('id')->toArray();
 
@@ -90,7 +104,9 @@ class HomeController extends Controller
             'womensProducts',
             'featuredCategories',
             'banners',
-            'ourBrands'
+            'ourBrands',
+            'featuredProducts',
+            'onSaleProducts'
         ));
     }
 }

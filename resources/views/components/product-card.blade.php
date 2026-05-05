@@ -27,6 +27,7 @@ $discountPercent = 0;
 if ($product->compare_price && $product->compare_price > $product->price) {
     $discountPercent = round((($product->compare_price - $product->price) / $product->compare_price) * 100);
 }
+
 ?>
 
 <div class="product-card group bg-white rounded-lg overflow-hidden border border-gray-200 

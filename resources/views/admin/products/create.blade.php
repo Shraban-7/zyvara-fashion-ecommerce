@@ -58,10 +58,21 @@
             {{-- Product Details --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-6">Product Details</h2>
-
                 <div class="grid md:grid-cols-2 gap-5">
                     <div>
-                        <x-input name="brand" label="Brand" placeholder="e.g., Nike, Adidas" />
+                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                        <select name="brand_id" id="brand_id" 
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('category_id') border-red-500 @enderror">
+                            <option value="">Select Brand</option>
+                            @foreach($brands as $brand)
+                            <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
+                                {{ $brand->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                        @error('brand_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <x-input name="material" label="Material" placeholder="e.g., 100% Cotton" />
@@ -185,22 +196,6 @@
                        
                     </select>
                     @error('subcategory_id')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-5">
-                    <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
-                    <select name="brand_id" id="brand_id" 
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('category_id') border-red-500 @enderror">
-                        <option value="">Select Brand</option>
-                        @foreach($brands as $brand)
-                        <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
-                            {{ $brand->name }}
-                        </option>
-                        @endforeach
-                    </select>
-                    @error('brand_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
