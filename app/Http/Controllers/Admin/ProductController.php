@@ -609,24 +609,24 @@ class ProductController extends Controller
             ]);
 
             if (empty($validated['product_id']) && empty($validated['variant_id'])) {
-                throw new \Exception('Either product or variant must be specified');
+                throw new \Exception('Product or variant is required');
             }
 
             DB::beginTransaction();
 
-            $stockBefore = 0;
-            $stockAfter = 0;
+            if (!empty($validated['variant_id'])) {
+                $variant = ProductVariant::lockForUpdate()
+                    ->findOrFail($validated['variant_id']);
 
-            if (isset($validated['variant_id'])) {
-                $variant = ProductVariant::findOrFail($validated['variant_id']);
                 $stockBefore = $variant->currentStock;
 
                 if ($stockBefore < $validated['quantity']) {
-                    throw new \Exception('Cannot remove more stock than available');
+                    throw new \Exception('Insufficient stock for this variant');
                 }
 
+                $variant->increment('stock_out', $validated['quantity']);
+
                 $stockAfter = $stockBefore - $validated['quantity'];
-                $variant->decrement('stock_in', $validated['quantity']);
 
                 StockLog::create([
                     'product_id' => $variant->product_id,
@@ -638,16 +638,21 @@ class ProductController extends Controller
                     'stock_after' => $stockAfter,
                     'note' => $validated['note'] ?? null,
                 ]);
+
             } else {
-                $product = Product::findOrFail($validated['product_id']);
+
+                $product = Product::lockForUpdate()
+                    ->findOrFail($validated['product_id']);
+
                 $stockBefore = $product->currentStock;
 
                 if ($stockBefore < $validated['quantity']) {
-                    throw new \Exception('Cannot remove more stock than available');
+                    throw new \Exception('Insufficient stock for this product');
                 }
 
+                $product->increment('stock_out', $validated['quantity']);
+
                 $stockAfter = $stockBefore - $validated['quantity'];
-                $product->decrement('stock_in', $validated['quantity']);
 
                 StockLog::create([
                     'product_id' => $product->id,
@@ -671,22 +676,20 @@ class ProductController extends Controller
                 ]);
             }
 
-            return redirect()
-                ->back()
-                ->with('success', 'Stock removed successfully!');
+            return back()->with('success', 'Stock removed successfully!');
+
         } catch (\Exception $e) {
+
             DB::rollBack();
 
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to remove stock: ' . $e->getTraceAsString()
+                    'message' => $e->getMessage(), 
                 ], 422);
             }
 
-            return redirect()
-                ->back()
-                ->with('error', 'Failed to remove stock: ' . $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 }
