@@ -183,9 +183,9 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center justify-end gap-2">
-                            <a href="#" class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="View">
+                            {{-- <a href="#" class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="View">
                                 <i class="fas fa-eye"></i>
-                            </a>
+                            </a> --}}
                             <a href="{{ route('admin.products.manage-stock', $product) }}" class="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition" title="Manage Stock">
                                 <i class="fas fa-boxes"></i>
                             </a>
