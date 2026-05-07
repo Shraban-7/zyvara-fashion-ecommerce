@@ -61,19 +61,78 @@
                 <div class="grid md:grid-cols-3 gap-5">
                     {{-- Regular Price --}}
                     <div>
-                        <x-input name="price" type="number" label="Regular Price (৳)" required placeholder="0.00" value="{{ old('price', $product->price) }}" step="0.01" />
+                        <x-input
+                            name="price"
+                            type="number"
+                            label="Price (৳)"
+                            required
+                            placeholder="0.00"
+                            value="{{ old('price', $product->price) }}"
+                            step="0.01"
+                        />
                     </div>
 
                     {{-- Compare Price --}}
                     <div>
-                        <x-input name="compare_price" type="number" label="Compare Price (৳)" placeholder="0.00" value="{{ old('compare_price', $product->compare_price) }}" step="0.01" />
-                        <p class="mt-1 text-xs text-gray-500">Original price before discount</p>
+                        <x-input
+                            name="compare_price"
+                            type="number"
+                            label="Compare Price (৳)"
+                            placeholder="0.00"
+                            value="{{ old('compare_price', $product->compare_price) }}"
+                            step="0.01"
+                        />
+                        <p class="mt-1 text-xs text-gray-500">
+                            Original price before discount
+                        </p>
                     </div>
 
                     {{-- Cost Price --}}
                     <div>
-                        <x-input name="cost_price" type="number" label="Cost Price (৳)" placeholder="0.00" value="{{ old('cost_price', $product->cost_price) }}" step="0.01" />
-                        <p class="mt-1 text-xs text-gray-500">For profit calculation</p>
+                        <x-input
+                            name="cost_price"
+                            type="number"
+                            label="Buying Price (৳)"
+                            placeholder="0.00"
+                            value="{{ old('cost_price', $product->cost_price) }}"
+                            step="0.01"
+                        />
+                        <p class="mt-1 text-xs text-gray-500">
+                            For profit calculation
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Price Preview --}}
+                <div class="mt-6 border-t border-gray-100 pt-6">
+                    <div class="flex items-center justify-between flex-wrap gap-4">
+
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 mb-2">
+                                Product Pricing Preview
+                            </p>
+
+                            <div class="flex items-center gap-3 flex-wrap">
+
+                                {{-- Current Price --}}
+                                <span
+                                    id="preview-price"
+                                    class="text-xl font-bold text-gray-900"
+                                >
+                                    {{ money(old('price', $product->price ?? 0)) }}
+                                </span>
+
+                                {{-- Compare Price --}}
+                                <span
+                                    id="preview-compare-price"
+                                    class="text-md text-gray-400 line-through {{ old('compare_price', $product->compare_price) ? '' : 'hidden' }}"
+                                >
+                                    {{ money(old('compare_price', $product->compare_price ?? 0)) }}
+                                </span>
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -758,6 +817,50 @@
                 btnSpinner.classList.add('hidden');
             });
     });
+
+    //price
+
+        const priceInput = document.querySelector('[name="price"]');
+        const comparePriceInput = document.querySelector('[name="compare_price"]');
+
+        const previewPrice = document.getElementById('preview-price');
+        const previewComparePrice = document.getElementById('preview-compare-price');
+        const previewSaleBadge = document.getElementById('preview-sale-badge');
+        const previewDiscount = document.getElementById('preview-discount');
+
+        function updatePricePreview() {
+
+            const price = parseFloat(priceInput.value || 0);
+            const comparePrice = parseFloat(comparePriceInput.value || 0);
+
+            previewPrice.textContent = `৳${price.toFixed(2)}`;
+
+            if (comparePrice > 0 && comparePrice > price) {
+
+                previewComparePrice.textContent = `৳${comparePrice.toFixed(2)}`;
+
+                previewComparePrice.classList.remove('hidden');
+                previewSaleBadge.classList.remove('hidden');
+                previewDiscount.classList.remove('hidden');
+
+                const discount = Math.round(
+                    ((comparePrice - price) / comparePrice) * 100
+                );
+
+                previewDiscount.textContent = `Save ${discount}%`;
+
+            } else {
+
+                previewComparePrice.classList.add('hidden');
+                previewSaleBadge.classList.add('hidden');
+                previewDiscount.classList.add('hidden');
+            }
+        }
+
+        priceInput.addEventListener('input', updatePricePreview);
+        comparePriceInput.addEventListener('input', updatePricePreview);
+
+        updatePricePreview();
 </script>
 @endpush
 

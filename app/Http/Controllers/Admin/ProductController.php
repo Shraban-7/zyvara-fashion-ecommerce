@@ -401,7 +401,10 @@ class ProductController extends Controller
             }
 
             $variants = $request->variants ?? [];
+
             $variantIds = [];
+            $combinations = [];
+            $skus = [];
 
             foreach ($variants as $variantData) {
 
@@ -409,28 +412,74 @@ class ProductController extends Controller
                     continue;
                 }
 
+                $sizeId = $variantData['size_id'] ?? null;
+                $colorId = $variantData['color_id'] ?? null;
+
+                $combinationKey = $sizeId . '-' . $colorId;
+
+                if (in_array($combinationKey, $combinations)) {
+                    throw new \Exception('Duplicate variant found.');
+                }
+
+                $combinations[] = $combinationKey;
+
+                $variantSku = $variantData['sku'] ?? ProductVariant::generate_sku();
+
+                if (in_array($variantSku, $skus)) {
+                    throw new \Exception('Duplicate variant SKU found: ' . $variantSku);
+                }
+
+                $skus[] = $variantSku;
+
+                $skuExists = ProductVariant::query()
+                    ->where('sku', $variantSku)
+                    ->when(
+                        !empty($variantData['id']),
+                        fn($q) => $q->where('id', '!=', $variantData['id'])
+                    )
+                    ->exists();
+
+                if ($skuExists) {
+                    throw new \Exception('Variant SKU already exists: ' . $variantSku);
+                }
+
                 $variantData['product_id'] = $product->id;
                 $variantData['stock_in'] = $variantData['stock_in'] ?? 0;
                 $variantData['price'] = $variantData['price'] ?? $product->price;
-                $variantData['sku'] = $variantData['sku'] ?? ProductVariant::generate_sku();
+                $variantData['sku'] = $variantSku;
 
                 if (!empty($variantData['id'])) {
 
                     $variant = $product->variants()->find($variantData['id']);
 
                     if ($variant) {
+
                         $variantData['stock_in'] = $variantData['stock_in'] == 0
                             ? $variant->stock_in
                             : $variantData['stock_in'];
 
                         $variant->update($variantData);
+
                         $variantIds[] = $variant->id;
                     }
 
                 } else {
+
                     $newVariant = $product->variants()->create($variantData);
+
                     $variantIds[] = $newVariant->id;
                 }
+            }
+
+            if (!empty($variantIds)) {
+
+                $product->variants()
+                    ->whereNotIn('id', $variantIds)
+                    ->delete();
+
+            } else {
+
+                $product->variants()->delete();
             }
 
             if (!empty($variantIds)) {
@@ -440,7 +489,6 @@ class ProductController extends Controller
             } else {
                 $product->variants()->delete();
             }
-
 
             DB::commit();
 
@@ -685,7 +733,7 @@ class ProductController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => $e->getMessage(), 
+                    'message' => $e->getMessage(),
                 ], 422);
             }
 
