@@ -825,6 +825,11 @@ class PosController extends Controller
                     }
                 }
 
+                $order->subtotal -=$orderItem->subtotal;
+                $order->total -=$orderItem->total;
+                $order->payable -=$orderItem->total;
+                $order->save();
+
                 $orderItem->delete();
             } else {
 
@@ -953,7 +958,6 @@ class PosController extends Controller
 
         return response()->json(['data' => $orders]);
     }
-
 
     public function posSales(Request $request)
     {

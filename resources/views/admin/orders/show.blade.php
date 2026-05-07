@@ -369,6 +369,7 @@
             <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="flex-1">
                 @csrf
                 @method('DELETE')
+                <input type="hidden" name="source" value="{{ $source }}">
                 <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition font-medium">
                     Delete
                 </button>

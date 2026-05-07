@@ -35,25 +35,25 @@
 
                 <a href="{{ route('admin.pos.sales', array_merge(request()->except('status'), ['status' => 'all'])) }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition
-                   {{ request('status', 'all') === 'all' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                       {{ request('status', 'all') === 'all' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     All ({{ $statusCounts['all'] ?? 0 }})
                 </a>
 
                 <a href="{{ route('admin.pos.sales', array_merge(request()->except('status'), ['status' => 'draft'])) }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition
-                   {{ request('status') === 'draft' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                       {{ request('status') === 'draft' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     Draft ({{ $statusCounts['draft'] ?? 0 }})
                 </a>
 
                 <a href="{{ route('admin.pos.sales', array_merge(request()->except('status'), ['status' => 'delivered'])) }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition
-                   {{ request('status') === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                       {{ request('status') === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     Delivered ({{ $statusCounts['delivered'] ?? 0 }})
                 </a>
 
                 <a href="{{ route('admin.pos.sales', array_merge(request()->except('status'), ['status' => 'cancelled'])) }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition
-                   {{ request('status') === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                       {{ request('status') === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     Cancelled ({{ $statusCounts['cancelled'] ?? 0 }})
                 </a>
 
@@ -137,83 +137,80 @@
                 <tbody class="divide-y divide-gray-200">
 
                     @forelse($orders as $order)
-
                         <tr class="hover:bg-gray-50 transition">
 
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-cash-register text-blue-600"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-semibold text-blue-600">#{{ $order->order_number ?? $order->id }}</p>
-                                        <p class="text-xs text-gray-500">ID: {{ $order->id }}</p>
-                                    </div>
-                                </div>
-                            </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                                    <i class="fas fa-cash-register text-blue-600"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="font-semibold text-blue-600">#{{ $order->order_number ?? $order->id }}</p>
+                                                    <p class="text-xs text-gray-500">ID: {{ $order->id }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
 
-                            <td class="px-6 py-4">
-                                <p class="font-medium text-gray-900">
-                                    {{ $order->shipping_name ?? 'Walk-in Customer' }}
-                                </p>
-                                <p class="text-sm text-gray-500">
-                                    {{ $order->shipping_phone ?? '-' }}
-                                </p>
-                            </td>
+                                        <td class="px-6 py-4">
+                                            <p class="font-medium text-gray-900">
+                                                {{ $order->shipping_name ?? 'Walk-in Customer' }}
+                                            </p>
+                                            <p class="text-sm text-gray-500">
+                                                {{ $order->shipping_phone ?? '-' }}
+                                            </p>
+                                        </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-medium text-gray-900">
-                                    {{ $order->items->count() }} item(s)
-                                </span>
-                            </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="text-sm font-medium text-gray-900">
+                                                {{ $order->items->count() }} item(s)
+                                            </span>
+                                        </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-base font-bold text-gray-900">
-                                    {{ money($order->total) }}
-                                </span>
-                            </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="text-base font-bold text-gray-900">
+                                                {{ money($order->total) }}
+                                            </span>
+                                        </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @php
-                                    $statusColors = [
-                                        'draft' => 'bg-yellow-100 text-yellow-700',
-                                        'delivered' => 'bg-green-100 text-green-700',
-                                        'cancelled' => 'bg-red-100 text-red-700',
-                                    ];
-                                @endphp
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            @php
+                                                $statusColors = [
+                                                    'draft' => 'bg-yellow-100 text-yellow-700',
+                                                    'delivered' => 'bg-green-100 text-green-700',
+                                                    'cancelled' => 'bg-red-100 text-red-700',
+                                                ];
+                                            @endphp
 
-                                <span class="px-3 py-1 rounded-full text-xs font-semibold
-                                    {{ $statusColors[$order->status->value] ?? 'bg-gray-100 text-gray-700' }}">
-                                    {{ $order->status->label() }}
-                                </span>
-                            </td>
+                                            <span class="px-3 py-1 rounded-full text-xs font-semibold
+                                                        {{ $statusColors[$order->status->value] ?? 'bg-gray-100 text-gray-700' }}">
+                                                {{ $order->status->label() }}
+                                            </span>
+                                        </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <p class="text-sm font-medium text-gray-900">
-                                    {{ $order->created_at->format('M d, Y') }}
-                                </p>
-                                <p class="text-xs text-gray-500">
-                                    {{ $order->created_at->format('h:i A') }}
-                                </p>
-                            </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <p class="text-sm font-medium text-gray-900">
+                                                {{ $order->created_at->format('M d, Y') }}
+                                            </p>
+                                            <p class="text-xs text-gray-500">
+                                                {{ $order->created_at->format('h:i A') }}
+                                            </p>
+                                        </td>
 
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-2">
+                                        <td class="px-6 py-4 text-right">
+                                            <div class="flex justify-end gap-2">
+                                                <a href="{{ route('admin.orders.show', ['id' => $order->id,'source' => 'sales']) }}" class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                </a>
+                                                <a href="{{ route('admin.pos.index', ['order_number' => $order->order_number]) }}"
+                                                    class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
 
-                                    <a href="{{ route('admin.orders.show', $order->id) }}"
-                                        class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('admin.pos.index', ['order_number' =>$order->order_number]) }}"
-                                        class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-
-                                </div>
-                            </td>
+                                            </div>
+                                        </td>
 
                         </tr>
-
                     @empty
                         <tr>
                             <td colspan="7" class="px-6 py-12 text-center text-gray-500">

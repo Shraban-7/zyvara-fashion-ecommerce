@@ -17,7 +17,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $query = Order::with(['user', 'items'])
-            ->where('is_pos',0)
+            ->where('is_pos', 0)
             ->orderByDesc('created_at');
 
         // Filter by status
@@ -57,12 +57,12 @@ class OrderController extends Controller
 
         // Get counts for filters
         $statusCounts = [
-            'all' => Order::where('is_pos',0)->count(),
-            'pending' => Order::where('is_pos',0)->where('status', OrderStatus::PENDING)->count(),
-            'confirmed' => Order::where('is_pos',0)->where('status', OrderStatus::CONFIRMED)->count(),
-            'shipped' => Order::where('is_pos',0)->where('status', OrderStatus::SHIPPED)->count(),
-            'delivered' => Order::where('is_pos',0)->where('status', OrderStatus::DELIVERED)->count(),
-            'cancelled' => Order::where('is_pos',0)->where('status', OrderStatus::CANCELLED)->count(),
+            'all' => Order::where('is_pos', 0)->count(),
+            'pending' => Order::where('is_pos', 0)->where('status', OrderStatus::PENDING)->count(),
+            'confirmed' => Order::where('is_pos', 0)->where('status', OrderStatus::CONFIRMED)->count(),
+            'shipped' => Order::where('is_pos', 0)->where('status', OrderStatus::SHIPPED)->count(),
+            'delivered' => Order::where('is_pos', 0)->where('status', OrderStatus::DELIVERED)->count(),
+            'cancelled' => Order::where('is_pos', 0)->where('status', OrderStatus::CANCELLED)->count(),
         ];
 
         return view('admin.orders.index', compact('orders', 'statusCounts'));
@@ -71,7 +71,7 @@ class OrderController extends Controller
     /**
      * Display the specified order.
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $order = Order::with([
             'user',
@@ -80,7 +80,9 @@ class OrderController extends Controller
             'statusHistories'
         ])->findOrFail($id);
 
-        return view('admin.orders.show', compact('order'));
+        $source = $request->source;
+
+        return view('admin.orders.show', compact('order', 'source'));
     }
 
     /**
@@ -171,14 +173,20 @@ class OrderController extends Controller
     /**
      * Delete an order.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $order = Order::findOrFail($id);
 
-        // Soft delete the order
+        $order->items()->delete();
+
         $order->delete();
 
         toast_success('Order deleted successfully!');
+
+        if ($request->source === 'sales') {
+            return redirect()->route('admin.pos.sales');
+        }
+        
         return redirect()->route('admin.orders.index');
     }
 
