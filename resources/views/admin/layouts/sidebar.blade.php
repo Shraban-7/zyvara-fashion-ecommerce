@@ -3,164 +3,191 @@ $pendingOrdersCount = \App\Models\Order::where('status', \App\Enums\OrderStatus:
 $user = auth()->user();
 ?>
 
-<aside id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0 -translate-x-full flex flex-col">
-    <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
+<aside id="sidebar" class="sidebar fixed inset-y-0 left-0 z-50 flex flex-col lg:translate-x-0 lg:static lg:inset-0 -translate-x-full">
+
+    {{-- Logo --}}
+    <div class="sidebar-header flex items-center h-16 px-4 shrink-0">
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 min-w-0 overflow-hidden">
             @if($settings['site_logo'])
-                <img src="{{ storage_url($settings['site_logo']) }}" alt="logo">
+            <img src="{{ storage_url($settings['site_logo']) }}" alt="logo" class="h-8 w-auto shrink-0">
             @else
-                <div
-                    class="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-bolt text-white text-lg"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg font-bold text-gray-900">{{ $siteName }}</h1>
-                    <p class="text-xs text-gray-500">Admin Panel</p>
-                </div>
+            <div class="sidebar-logo-icon shrink-0 w-9 h-9 rounded-xl flex items-center justify-center">
+                <i class="fas fa-bolt text-white text-sm"></i>
+            </div>
+            <div class="sidebar-text overflow-hidden">
+                <h1 class="text-sm font-bold text-gray-900 truncate leading-tight">{{ $siteName }}</h1>
+                <p class="text-[10px] text-indigo-400 font-semibold uppercase tracking-widest">Admin</p>
+            </div>
             @endif
         </a>
     </div>
 
-    <nav class="flex-1 overflow-y-auto py-6 px-4">
-        <div class="space-y-1">
-            <a href="{{ route('admin.dashboard') }}"
-                class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <i class="fas fa-home text-lg w-5"></i>
-                <span>Dashboard</span>
-            </a>
+    {{-- Navigation --}}
+    <nav id="sidebarNav" class="sidebar-nav flex-1 overflow-y-auto overflow-x-hidden py-3 px-3 space-y-0.5">
 
-            <div class="pt-4">
-                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Sales</p>
-                <a href="{{ route('admin.orders.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                    <i class="fas fa-shopping-bag text-lg w-5"></i>
-                    <span>Orders</span>
-                    @if($pendingOrdersCount)
-                        <span
-                            class="ml-auto bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">{{ $pendingOrdersCount }}</span>
-                    @endif
+        {{-- Dashboard --}}
+        <a href="{{ route('admin.dashboard') }}"
+            class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
+            data-tooltip="Dashboard">
+            <span class="sidebar-icon"><i class="fas fa-home"></i></span>
+            <span class="sidebar-label">Dashboard</span>
+        </a>
+
+        {{-- ── SALES ────────────────────────────── --}}
+        <div class="sidebar-section-label">Sales</div>
+
+        <a href="{{ route('admin.orders.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}"
+            data-tooltip="Orders">
+            <span class="sidebar-icon"><i class="fas fa-shopping-bag"></i></span>
+            <span class="sidebar-label">Orders</span>
+            @if($pendingOrdersCount)
+            <span class="sidebar-badge sidebar-label">{{ $pendingOrdersCount }}</span>
+            @endif
+        </a>
+
+        {{-- POS submenu --}}
+        <div class="sidebar-group {{ request()->routeIs('admin.pos.*') ? 'open' : '' }}">
+            <button type="button"
+                class="sidebar-group-btn {{ request()->routeIs('admin.pos.*') ? 'active' : '' }}"
+                onclick="toggleSidebarGroup(this)"
+                data-tooltip="Point of Sale">
+                <span class="sidebar-icon"><i class="fas fa-cash-register"></i></span>
+                <span class="sidebar-label">Point of Sale</span>
+                <span class="sidebar-chevron sidebar-label"><i class="fas fa-chevron-right"></i></span>
+            </button>
+            <div class="sidebar-submenu">
+                <a href="{{ route('admin.pos.index') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.pos.index') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>POS Terminal
                 </a>
-
-                {{-- POS --}}
-                <a href="{{ route('admin.pos.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition
-                    {{ request()->routeIs('admin.pos.index') ? 'active' : '' }}">
-
-                    <i class="fas fa-shopping-bag text-lg w-5"></i>
-                    <span>POS</span>
-                </a>
-
-                {{-- POS Sales --}}
-                <a href="{{ route('admin.pos.sales') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition
-                    {{ request()->routeIs('admin.pos.sales') ? 'active' : '' }}">
-
-                    <i class="fas fa-cash-register text-lg w-5"></i>
-                    <span>POS Sales</span>
-
-                    @if(($posSalesCount ?? 0) > 0)
-                        <span class="ml-auto bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">
-                            {{ $posSalesCount }}
-                        </span>
-                    @endif
-                </a>
-
-
-                {{-- SALES RETURN MENU --}}
-                <a href="{{ route('admin.saleReturns.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition
-                {{ request()->routeIs('admin.saleReturns.*') ? 'active' : '' }}">
-
-                    <i class="fas fa-undo text-lg w-5"></i>
-                    <span>Sales Returns</span>
-
-                    @if(($returnCount ?? 0) > 0)
-                        <span class="ml-auto bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">
-                            {{ $returnCount }}
-                        </span>
-                    @endif
+                <a href="{{ route('admin.pos.sales') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.pos.sales') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>POS Sales
                 </a>
             </div>
+        </div>
 
-            <div class="pt-4">
-                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Catalog</p>
+        <a href="{{ route('admin.saleReturns.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.saleReturns.*') ? 'active' : '' }}"
+            data-tooltip="Returns">
+            <span class="sidebar-icon"><i class="fas fa-undo-alt"></i></span>
+            <span class="sidebar-label">Returns</span>
+        </a>
+
+        {{-- ── CATALOG ────────────────────────────── --}}
+        <div class="sidebar-section-label">Catalog</div>
+
+        {{-- Products submenu --}}
+        <div class="sidebar-group {{ request()->routeIs('admin.products.*') || request()->routeIs('admin.categories.*') || request()->routeIs('admin.brands.*') ? 'open' : '' }}">
+            <button type="button"
+                class="sidebar-group-btn {{ request()->routeIs('admin.products.*') || request()->routeIs('admin.categories.*') || request()->routeIs('admin.brands.*') ? 'active' : '' }}"
+                onclick="toggleSidebarGroup(this)"
+                data-tooltip="Products">
+                <span class="sidebar-icon"><i class="fas fa-store"></i></span>
+                <span class="sidebar-label">Products</span>
+                <span class="sidebar-chevron sidebar-label"><i class="fas fa-chevron-right"></i></span>
+            </button>
+            <div class="sidebar-submenu">
                 <a href="{{ route('admin.products.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                    <i class="fas fa-box text-lg w-5"></i>
-                    <span>Products</span>
+                    class="sidebar-sublink {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>All Products
                 </a>
                 <a href="{{ route('admin.categories.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                    <i class="fas fa-tags text-lg w-5"></i>
-                    <span>Categories</span>
+                    class="sidebar-sublink {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Categories
                 </a>
                 <a href="{{ route('admin.brands.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
-                    <i class="fas fa-copyright text-lg w-5"></i>
-                    <span>Brands</span>
-                </a>
-                <a href="{{ route('admin.reviews.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
-                    <i class="fas fa-star text-lg w-5"></i>
-                    <span>Reviews</span>
+                    class="sidebar-sublink {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Brands
                 </a>
             </div>
+        </div>
 
-            <div class="pt-4">
-                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Customers</p>
-                <a href="{{ route('admin.customers.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <i class="fas fa-users text-lg w-5"></i>
-                    <span>Customers</span>
-                </a>
-            </div>
+        <a href="{{ route('admin.reviews.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}"
+            data-tooltip="Reviews">
+            <span class="sidebar-icon"><i class="fas fa-star"></i></span>
+            <span class="sidebar-label">Reviews</span>
+        </a>
 
-            <div class="pt-4">
-                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Marketing</p>
+        {{-- ── CUSTOMERS ────────────────────────────── --}}
+        <div class="sidebar-section-label">Customers</div>
+
+        <a href="{{ route('admin.customers.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.users.*') || request()->routeIs('admin.customers.*') ? 'active' : '' }}"
+            data-tooltip="Customers">
+            <span class="sidebar-icon"><i class="fas fa-users"></i></span>
+            <span class="sidebar-label">Customers</span>
+        </a>
+
+        {{-- ── MARKETING ────────────────────────────── --}}
+        <div class="sidebar-section-label">Marketing</div>
+
+        <div class="sidebar-group {{ request()->routeIs('admin.coupons.*') || request()->routeIs('admin.banners.*') ? 'open' : '' }}">
+            <button type="button"
+                class="sidebar-group-btn {{ request()->routeIs('admin.coupons.*') || request()->routeIs('admin.banners.*') ? 'active' : '' }}"
+                onclick="toggleSidebarGroup(this)"
+                data-tooltip="Promotions">
+                <span class="sidebar-icon"><i class="fas fa-bullhorn"></i></span>
+                <span class="sidebar-label">Promotions</span>
+                <span class="sidebar-chevron sidebar-label"><i class="fas fa-chevron-right"></i></span>
+            </button>
+            <div class="sidebar-submenu">
                 <a href="{{ route('admin.coupons.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
-                    <i class="fas fa-ticket-alt text-lg w-5"></i>
-                    <span>Coupons</span>
+                    class="sidebar-sublink {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Coupons
                 </a>
                 <a href="{{ route('admin.banners.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
-                    <i class="fas fa-image text-lg w-5"></i>
-                    <span>Banners</span>
-                </a>
-            </div>
-
-            <div class="pt-4">
-                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                    Finance
-                </p>
-
-                <!-- Expenses -->
-                <a href="{{ route('admin.expenses.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.expenses.*') ? 'active' : '' }}">
-                    <i class="fas fa-receipt text-lg w-5"></i>
-                    <span>Expenses</span>
-                </a>
-            </div>
-
-            <div class="pt-4">
-                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">System</p>
-                <a href="{{ route('admin.settings.index') }}"
-                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 rounded-xl transition {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
-                    <i class="fas fa-cog text-lg w-5"></i>
-                    <span>Settings</span>
+                    class="sidebar-sublink {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Banners
                 </a>
             </div>
         </div>
+
+        {{-- ── FINANCE ────────────────────────────── --}}
+        <div class="sidebar-section-label">Finance</div>
+
+        <a href="{{ route('admin.expenses.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.expenses.*') ? 'active' : '' }}"
+            data-tooltip="Expenses">
+            <span class="sidebar-icon"><i class="fas fa-receipt"></i></span>
+            <span class="sidebar-label">Expenses</span>
+        </a>
+
+        {{-- ── SYSTEM ────────────────────────────── --}}
+        <div class="sidebar-section-label">System</div>
+
+        <a href="{{ route('admin.settings.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"
+            data-tooltip="Settings">
+            <span class="sidebar-icon"><i class="fas fa-sliders-h"></i></span>
+            <span class="sidebar-label">Settings</span>
+        </a>
+
     </nav>
 
-    <div class="border-t border-gray-200 p-4">
-        <div class="flex items-center gap-3 px-2 py-2 rounded-xl bg-gray-50">
-            <div
-                class="w-10 h-10 bg-linear-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+    {{-- User Footer --}}
+    <div class="sidebar-footer shrink-0 px-3 py-3 border-t border-gray-100">
+        <div class="flex items-center gap-3 px-2 py-2 rounded-xl">
+            <div class="sidebar-avatar shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold">
                 {{ substr($user->name, 0, 1) }}
             </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-900 truncate">{{ $user->name }}</p>
-                <p class="text-xs text-gray-500 truncate">{{ $user->phone }}</p>
+            <div class="sidebar-text overflow-hidden flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-800 truncate leading-tight">{{ $user->name }}</p>
+                <p class="text-[11px] text-gray-400 truncate">{{ $user->phone }}</p>
             </div>
+            <form method="POST" action="{{ route('auth.logout') }}" class="sidebar-label shrink-0">
+                @csrf
+                <button type="submit"
+                    class="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                    title="Logout">
+                    <i class="fas fa-sign-out-alt text-sm"></i>
+                </button>
+            </form>
         </div>
     </div>
+
+    {{-- Floating tooltip for collapsed state --}}
+    <div id="sidebarTooltip" class="sidebar-tooltip"></div>
 </aside>
