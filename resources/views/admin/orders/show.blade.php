@@ -15,21 +15,23 @@
         </div>
     </div>
     <div class="flex items-center gap-3">
-        @if ($order->is_pos)
-            <button onclick="printReceipt('{{ route('admin.pos.receipt', $order->order_number) }}')" class="px-4 py-2 bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition flex items-center gap-2">
-            <i class="fas fa-download"></i>
-            <span>Print Receipt</span>
-        </button>
+        @if ($order->status->value !== 'draft')
+            @if ($order->is_pos)
+                <button onclick="printReceipt('{{ route('admin.pos.receipt', $order->order_number) }}')" class="px-4 py-2 bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition flex items-center gap-2">
+                <i class="fas fa-download"></i>
+                <span>Print Receipt</span>
+            </button>
+            @endif
+            <button onclick="printReceipt('{{ route('admin.orders.invoice', $order->order_number) }}')" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2">
+                <i class="fas fa-download"></i>
+                <span>Download Invoice</span>
+            </button>
+            <button onclick="openReturnModal()" 
+                class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition flex items-center gap-2">
+                <i class="fas fa-undo"></i>
+                <span>Sale Return</span>
+            </button> 
         @endif
-        <button onclick="printReceipt('{{ route('admin.orders.invoice', $order->order_number) }}')" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2">
-            <i class="fas fa-download"></i>
-            <span>Download Invoice</span>
-        </button>
-        <button onclick="openReturnModal()" 
-            class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition flex items-center gap-2">
-            <i class="fas fa-undo"></i>
-            <span>Sale Return</span>
-        </button>
         @if($order->status->value !== 'cancelled')
         <button onclick="openDeleteModal()" class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition flex items-center gap-2">
             <i class="fas fa-trash"></i>
