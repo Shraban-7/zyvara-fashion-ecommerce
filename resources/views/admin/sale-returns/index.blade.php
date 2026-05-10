@@ -114,7 +114,7 @@
                             <td class="px-6 py-4">
                                 <a href="{{ route('admin.orders.show', $return->sale_id) }}"
                                     class="font-medium text-blue-600 hover:underline">
-                                    {{ $return->order->order_number }}
+                                    {{ $return->order_number }}
                                 </a>
                             </td>
 

@@ -50,7 +50,6 @@ class SaleReturnController extends Controller
 
     public function processReturn(Request $request, $id)
     {
-        // dd($request->all());
         $request->validate([
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|exists:order_items,id',

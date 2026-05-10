@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
-use App\Models\User;
-use App\Models\Category;
 use App\Models\Review;
-use App\Models\Coupon;
+use App\Models\SaleReturn;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -21,95 +23,218 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\View\View
      */
+
     public function index()
     {
-        // Get date ranges
-        $currentMonth = now()->startOfMonth();
-        $lastMonth = now()->subMonth()->startOfMonth();
+        $filter = request('filter', '30_days');
 
-        // Total Revenue
-        $totalRevenue = Order::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('total');
+        $orderQuery = Order::query();
 
-        // Total Orders
-        $totalOrders = Order::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
+        $orderQuery = match ($filter) {
 
-        // Total Customers
+            'today' => $orderQuery->whereDate(
+                'created_at',
+                today()
+            ),
+
+            'yesterday' => $orderQuery->whereDate(
+                'created_at',
+                today()->subDay()
+            ),
+
+            default => $orderQuery->where(
+                'created_at',
+                '>=',
+                now()->subDays(30)
+            ),
+        };
+
+        $chartRevenue = [];
+
+        if (in_array($filter, ['today', 'yesterday'])) {
+
+            $targetDate = $filter === 'today'
+                ? today()
+                : today()->subDay();
+
+            for ($i = 0; $i < 24; $i++) {
+
+                $start = $targetDate->copy()->startOfDay()->addHours($i);
+                $end = $start->copy()->endOfHour();
+
+                $revenue = Order::whereBetween('created_at', [$start, $end])
+                    ->sum('total');
+
+                $chartRevenue[] = [
+                    'label' => str_pad($i, 2, '0', STR_PAD_LEFT) . ':00',
+                    'revenue' => $revenue,
+                ];
+            }
+
+        } else {
+
+            for ($i = 29; $i >= 0; $i--) {
+
+                $date = now()->subDays($i);
+
+                $revenue = Order::whereDate('created_at', $date)
+                    ->sum('total');
+
+                $chartRevenue[] = [
+                    'label' => $date->format('d M'),
+                    'revenue' => $revenue,
+                ];
+            }
+        }
+
+        $chartLabels = collect($chartRevenue)->pluck('label');
+        $chartData = collect($chartRevenue)->pluck('revenue');
+
+        $totalRevenue = (clone $orderQuery)->sum('total');
+
+        $totalOrders = (clone $orderQuery)->count();
+
+        $totalRefund = SaleReturn::when(
+            $filter === 'today',
+            fn($q) => $q->whereDate('created_at', today())
+        )
+            ->when(
+                $filter === 'yesterday',
+                fn($q) => $q->whereDate('created_at', today()->subDay())
+            )
+            ->when(
+                $filter === '30_days',
+                fn($q) => $q->where('created_at', '>=', now()->subDays(30))
+            )
+            ->sum('refund_amount');
+
         $totalCustomers = User::where('role', 'customer')->count();
 
-        // Pending Orders
         $pendingOrders = Order::where('status', 'pending')->count();
 
-        // Recent Orders
-        $recentOrders = Order::with('user')
+        $recentOrders = (clone $orderQuery)
+            ->with('user')
             ->whereNot('status', OrderStatus::DRAFT)
             ->latest()
             ->take(10)
             ->get()
             ->map(function ($order) {
+
                 return [
                     'id' => $order->id,
-                    'customer_name' => $order->shipping_name ?? $order->user->name ?? $order->customer->name ?? 'Walk-In Customer',
+
+                    'order_number' => $order->order_number,
+
+                    'customer_name' =>
+                        $order->shipping_name
+                        ?? $order->user->name
+                        ?? $order->customer->name
+                        ?? 'Walk-In Customer',
+
                     'created_at' => $order->created_at->format('M d, Y'),
+
                     'total' => $order->total,
+
                     'status' => $order->status->value ?? 'pending',
                 ];
             });
 
-        // Top Products
-        $topProducts = OrderItem::select('product_id', DB::raw('SUM(quantity) as sales'), DB::raw('SUM(subtotal) as revenue'))
-            ->with('product.images')
+        $topProducts = OrderItem::select(
+            'product_id',
+            DB::raw('SUM(quantity) as sales'),
+            DB::raw('SUM(subtotal) as revenue')
+        )
+            ->with('product')
             ->groupBy('product_id')
             ->orderByDesc('revenue')
             ->take(5)
             ->get()
             ->map(function ($item) {
+
                 return [
-                    'name' => $item->product->name,
-                    'image' => $item->product->thumbnail,
+                    'name' => $item->product?->name,
+
+                    'image' => $item->product?->thumbnail,
+
                     'sales' => $item->sales,
+
                     'revenue' => $item->revenue,
                 ];
             });
 
-        // Low Stock Products Count
-        $lowStockCount = Product::where('stock_in', '<', 10)->count();
+        $lowStockProducts = Product::with('variants')
+            ->get()
+            ->where('total_stock', '<=', 10)
+            ->sortBy('total_stock')
+            ->take(5);
 
-        // Additional metrics
+        $lowStockCount = $lowStockProducts->count();
+
         $totalProducts = Product::count();
+
         $totalCategories = Category::count();
-        $outOfStock = Product::where('stock_in', '<=', 0)->count();
+
+        $outOfStock = Product::with('variants')
+            ->get()
+            ->where('total_stock', '<=', 0)
+            ->count();
+
         $totalReviews = Review::count();
+
         $activeCoupons = Coupon::where('expires_at', '>', now())->count();
 
-        // Today's metrics
         $todayOrders = Order::whereDate('created_at', today())->count();
+
         $todayRevenue = Order::whereDate('created_at', today())->sum('total');
 
-        // Average Order Value
-        $avgOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+        $avgOrderValue = $totalOrders > 0
+            ? $totalRevenue / $totalOrders
+            : 0;
 
-        $widgets['totalRevenue'] = $totalRevenue;
-        $widgets['totalOrders'] = $totalOrders;
-        $widgets['totalCustomers'] = $totalCustomers;
-        $widgets['pendingOrders'] = $pendingOrders;
-        $widgets['totalProducts'] = $totalProducts;
-        $widgets['totalCategories'] = $totalCategories;
-        $widgets['outOfStock'] = $outOfStock;
-        $widgets['totalReviews'] = $totalReviews;
-        $widgets['activeCoupons'] = $activeCoupons;
-        $widgets['todayOrders'] = $todayOrders;
-        $widgets['todayRevenue'] = $todayRevenue;
-        $widgets['avgOrderValue'] = $avgOrderValue;
+        $websiteOrders = Order::where('is_pos', false)->count();
+
+        $posOrders = Order::where('is_pos', true)->count();
+
+        $totalChannelOrders = $websiteOrders + $posOrders;
+
+        $websitePercentage = $totalChannelOrders > 0
+            ? round(($websiteOrders / $totalChannelOrders) * 100)
+            : 0;
+
+        $posPercentage = $totalChannelOrders > 0
+            ? round(($posOrders / $totalChannelOrders) * 100)
+            : 0;
+
+        $widgets = [
+            'totalRevenue' => $totalRevenue,
+            'totalOrders' => $totalOrders,
+            'totalCustomers' => $totalCustomers,
+            'pendingOrders' => $pendingOrders,
+            'totalProducts' => $totalProducts,
+            'totalCategories' => $totalCategories,
+            'outOfStock' => $outOfStock,
+            'totalReviews' => $totalReviews,
+            'activeCoupons' => $activeCoupons,
+            'todayOrders' => $todayOrders,
+            'todayRevenue' => $todayRevenue,
+            'avgOrderValue' => $avgOrderValue,
+            'totalRefund' => $totalRefund,
+        ];
 
         return view('admin.dashboard', compact(
             'widgets',
             'recentOrders',
             'topProducts',
-            'lowStockCount'
+            'lowStockCount',
+            'lowStockProducts',
+            'chartLabels',
+            'chartData',
+            'websiteOrders',
+            'posOrders',
+            'totalChannelOrders',
+            'websitePercentage',
+            'posPercentage',
+            'filter'
         ));
     }
 }
