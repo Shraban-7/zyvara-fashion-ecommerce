@@ -2,16 +2,13 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
-    {{-- Page Header --}}
-    {{--<div class="mb-8">
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-        <p class="text-gray-500">Welcome back! Here's what's happening with your store today.</p>
-    </div>--}}
+    <div class="mb-4">
+        <h1 class="text-xl font-bold text-gray-900 mb-2">Welcome, {{ auth()->user()->name }}</h1>
+        {{--<p class="text-gray-500">Welcome back! Here's what's happening with your store today.</p>--}}
+    </div>
 
     {{-- Quick Stats Grid --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {{-- Total Revenue --}}
         <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between mb-3">
                 <div
@@ -24,7 +21,6 @@
             <p class="text-xl font-bold text-gray-900">{{ money($widgets['totalRevenue']) }}</p>
         </div>
 
-        {{-- Total Orders --}}
         <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between mb-3">
                 <div
@@ -37,7 +33,6 @@
             <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalOrders'], 0) }}</p>
         </div>
 
-        {{-- Total Customers --}}
         <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between mb-3">
                 <div
@@ -50,7 +45,6 @@
             <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalCustomers'], 0) }}</p>
         </div>
 
-        {{-- Pending Orders --}}
         <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between mb-3">
                 <div
@@ -62,8 +56,7 @@
             <h3 class="text-gray-500 text-xs font-medium mb-1">Pending Orders</h3>
             <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['pendingOrders'], 0) }}</p>
         </div>
-
-        {{-- Total Products --}}
+        
         <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between mb-3">
                 <div
@@ -134,28 +127,6 @@
             <h3 class="text-gray-500 text-xs font-medium mb-1">Out of Stock</h3>
             <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['outOfStock'], 0) }}</p>
         </div>
-
-        {{-- Total Reviews --}}
-        <!-- <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-star text-white text-base"></i>
-                </div>
-            </div>
-            <h3 class="text-gray-500 text-xs font-medium mb-1">Reviews</h3>
-            <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalReviews'], 0) }}</p>
-        </div> -->
-
-        {{-- Active Coupons --}}
-        <!-- <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-violet-500 to-violet-600 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-ticket-alt text-white text-base"></i>
-                </div>
-            </div>
-            <h3 class="text-gray-500 text-xs font-medium mb-1">Active Coupons</h3>
-            <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['activeCoupons'], 0) }}</p>
-        </div> -->
     </div>
 
     {{-- Charts and Recent Activity --}}
@@ -214,7 +185,7 @@
     </div>
 
     {{-- Recent Orders and Activity --}}
-    <div class="grid lg:grid-cols-3 gap-6">
+    <div>
         {{-- Recent Orders --}}
         <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="px-6 py-5 border-b border-gray-100">
@@ -296,68 +267,6 @@
                         @endforelse
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-        {{-- Quick Actions & Stats --}}
-        <div class="space-y-6">
-            {{-- Quick Actions --}}
-            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-1">Quick Actions</h2>
-                <p class="text-sm text-gray-500 mb-6">Common tasks and shortcuts</p>
-
-                <div class="space-y-3">
-                    <a href="{{ route('admin.products.create') }}"
-                        class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition group">
-                        <div
-                            class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900">Add Product</p>
-                            <p class="text-xs text-gray-500">Create new product</p>
-                        </div>
-                    </a>
-                    <a href="{{ route('admin.orders.index') }}"
-                        class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition group">
-                        <div
-                            class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition">
-                            <i class="fas fa-shopping-bag"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900">View Orders</p>
-                            <p class="text-xs text-gray-500">Manage all orders</p>
-                        </div>
-                    </a>
-                    <a href="{{ route('admin.coupons.create') }}"
-                        class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition group">
-                        <div
-                            class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition">
-                            <i class="fas fa-ticket-alt"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900">Create Coupon</p>
-                            <p class="text-xs text-gray-500">New discount code</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            {{-- Low Stock Alert --}}
-            <div class="bg-linear-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white shadow-lg">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-                        <i class="fas fa-exclamation-triangle text-2xl"></i>
-                    </div>
-                    <span class="text-xs font-bold bg-white/20 backdrop-blur px-3 py-1 rounded-full">Alert</span>
-                </div>
-                <h3 class="text-lg font-bold mb-2">Low Stock Products</h3>
-                <p class="text-sm text-white/90 mb-4">{{ $lowStockCount ?? 8 }} products are running low on stock</p>
-                <a href="{{ route('admin.products.index', ['stock' => 'low']) }}"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-white text-orange-600 text-sm font-semibold rounded-lg hover:bg-orange-50 transition">
-                    <span>View Products</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
             </div>
         </div>
     </div>
