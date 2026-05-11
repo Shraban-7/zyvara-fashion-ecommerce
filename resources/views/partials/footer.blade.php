@@ -8,26 +8,30 @@
             <div class="col-span-2 md:col-span-1">
                 <a href="{{ url('/') }}" class="flex items-center mb-4">
                     <span class="text-xl font-bold text-white">Spinner</span>
-                    <span class="text-xl font-bold text-brand-blue">Fashion</span>
+                    <span class="text-xl font-bold text-primary">Fashion</span>
                 </a>
-                <p class="text-gray-400 text-sm mb-4">Premium Bangladeshi clothing brand offering quality fashion at affordable prices. Your trusted partner for modern style.</p>
+                <p class="text-gray-400 text-sm mb-4">Premium Bangladeshi clothing brand offering quality fashion at
+                    affordable prices. Your trusted partner for modern style.</p>
 
                 {{-- Social Links --}}
                 <div class="flex gap-3">
                     @if($settings['facebook_url'] ?? false)
-                    <a href="{{ $settings['facebook_url'] }}" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
+                        <a href="{{ $settings['facebook_url'] }}" target="_blank"
+                            class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
                     @endif
                     @if($settings['instagram_url'] ?? false)
-                    <a href="{{ $settings['instagram_url'] }}" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
-                        <i class="fab fa-instagram"></i>
-                    </a>
+                        <a href="{{ $settings['instagram_url'] }}" target="_blank"
+                            class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
                     @endif
                     @if($settings['tiktok_url'] ?? false)
-                    <a href="{{ $settings['tiktok_url'] }}" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand-blue transition">
-                        <i class="fab fa-tiktok"></i>
-                    </a>
+                        <a href="{{ $settings['tiktok_url'] }}" target="_blank"
+                            class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
                     @endif
                 </div>
             </div>
@@ -36,11 +40,12 @@
             <div>
                 <h4 class="font-semibold text-base mb-4">Quick Links</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">About Us</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Contact Us</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Size Guide</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">FAQs</a></li>
-                    <li><a href="{{ route('track-order.index') }}" class="text-gray-400 text-sm hover:text-brand-blue transition">Track Order</a></li>
+                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">About Us</a></li>
+                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Contact Us</a></li>
+                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Size Guide</a></li>
+                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">FAQs</a></li>
+                    <li><a href="{{ route('track-order.index') }}"
+                            class="text-gray-400 text-sm hover:text-primary transition">Track Order</a></li>
                 </ul>
             </div>
 
@@ -49,7 +54,8 @@
                 <h4 class="font-semibold text-base mb-4">Categories</h4>
                 <ul class="space-y-2">
                     @foreach ($allMenuCategories->take(5) as $category)
-                        <li><a href="{{ route('products.index') }}?category={{ $category->slug }}" class="text-gray-400 text-sm hover:text-brand-blue transition">{{ $category->name }}</a></li>
+                        <li><a href="{{ route('products.index') }}?category={{ $category->slug }}"
+                                class="text-gray-400 text-sm hover:text-primary transition">{{ $category->name }}</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -58,10 +64,11 @@
             <div>
                 <h4 class="font-semibold text-base mb-4">Policies</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Privacy Policy</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Terms & Conditions</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Return Policy</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-brand-blue transition">Shipping Info</a></li>
+                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Privacy Policy</a></li>
+                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Terms & Conditions</a>
+                    </li>
+                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Return Policy</a></li>
+                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Shipping Info</a></li>
                 </ul>
             </div>
 
@@ -94,7 +101,8 @@
         {{-- Copyright --}}
         <div class="border-t border-gray-800 pt-6 text-center">
             <p class="text-gray-500 text-sm">© {{ date('Y') }} {{ $siteName }}. All Rights Reserved.</p>
-            <p class="text-gray-600 text-xs mt-1">Designed & Developed by <a href="https://spinnertech.dev" target="_blank">Spinner Tech</a></p>
+            <p class="text-gray-600 text-xs mt-1">Designed & Developed by <a href="https://spinnertech.dev"
+                    target="_blank">Spinner Tech</a></p>
         </div>
 
     </div>

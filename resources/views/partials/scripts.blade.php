@@ -1,7 +1,7 @@
 {{-- JavaScript --}}
 <script>
     // ===== Hero Slider =====
-    (function() {
+    (function () {
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.slider-dot');
         const prevBtn = document.getElementById('prevSlide');
@@ -144,7 +144,7 @@
 
     // ===== Smooth scroll for anchor links =====
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
             if (href !== '#') {
                 e.preventDefault();
@@ -166,12 +166,12 @@
     //             const originalText = this.textContent;
     //             this.textContent = 'Added! ✓';
     //             this.classList.add('bg-green-500');
-    //             this.classList.remove('bg-brand-blue');
+    //             this.classList.remove('bg-primary');
 
     //             setTimeout(() => {
     //                 this.textContent = originalText;
     //                 this.classList.remove('bg-green-500');
-    //                 this.classList.add('bg-brand-blue');
+    //                 this.classList.add('bg-primary');
     //             }, 1500);
     //         });
     //     }

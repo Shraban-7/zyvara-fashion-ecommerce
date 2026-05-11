@@ -20,7 +20,7 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
                 <div>
                     <p class="text-sm text-gray-500 mb-1">Order Number</p>
-                    <h2 class="text-2xl font-bold text-brand-blue">{{ $order->order_number }}</h2>
+                    <h2 class="text-2xl font-bold text-primary">{{ $order->order_number }}</h2>
                 </div>
                 <div class="flex items-center gap-2 bg-yellow-50 px-4 py-2 rounded-full">
                     <div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
@@ -32,7 +32,7 @@
             <div class="grid md:grid-cols-2 gap-6 py-6 border-b border-gray-200">
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                        <i class="fas fa-user text-brand-blue"></i>
+                        <i class="fas fa-user text-primary"></i>
                         Customer Information
                     </h3>
                     <div class="space-y-2 text-sm text-gray-600">
@@ -46,14 +46,14 @@
 
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                        <i class="fas fa-map-marker-alt text-brand-blue"></i>
+                        <i class="fas fa-map-marker-alt text-primary"></i>
                         Delivery Address
                     </h3>
                     <div class="text-sm text-gray-600">
                         <p>{{ $order->shipping_address }}</p>
                         <p>{{ $order->shipping_city }}, {{ $order->shipping_district }}</p>
                         <p class="mt-2">
-                            <span class="inline-flex items-center gap-1 bg-blue-50 text-brand-blue px-2 py-1 rounded-full text-xs font-medium">
+                            <span class="inline-flex items-center gap-1 bg-blue-50 text-primary px-2 py-1 rounded-full text-xs font-medium">
                                 <i class="fas fa-truck"></i>
                                 {{ $order->delivery_zone->label() }}
                             </span>
@@ -65,7 +65,7 @@
             {{-- Order Items --}}
             <div class="py-6 border-b border-gray-200">
                 <h3 class="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <i class="fas fa-box text-brand-blue"></i>
+                    <i class="fas fa-box text-primary"></i>
                     Order Items ({{ $order->items->count() }})
                 </h3>
                 <div class="space-y-4">
@@ -99,7 +99,7 @@
                     {{-- Payment Info --}}
                     <div class="flex-1">
                         <h3 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                            <i class="fas fa-credit-card text-brand-blue"></i>
+                            <i class="fas fa-credit-card text-primary"></i>
                             Payment Information
                         </h3>
                         <div class="space-y-2 text-sm">
@@ -142,7 +142,7 @@
                             <div class="h-px bg-gray-300 my-2"></div>
                             <div class="flex justify-between text-lg font-bold">
                                 <span class="text-gray-900">Total</span>
-                                <span class="text-brand-blue">{{ money($order->total) }}</span>
+                                <span class="text-primary">{{ money($order->total) }}</span>
                             </div>
                         </div>
                     </div>
@@ -153,7 +153,7 @@
             {{-- Order Notes --}}
             <div class="pt-6 border-t border-gray-200">
                 <h3 class="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                    <i class="fas fa-sticky-note text-brand-blue"></i>
+                    <i class="fas fa-sticky-note text-primary"></i>
                     Order Notes
                 </h3>
                 <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{{ $order->notes }}</p>
@@ -164,12 +164,12 @@
         {{-- What's Next Section --}}
         <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-6">
             <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <i class="fas fa-info-circle text-brand-blue"></i>
+                <i class="fas fa-info-circle text-primary"></i>
                 What Happens Next?
             </h2>
             <div class="grid md:grid-cols-3 gap-4">
                 <div class="flex gap-3">
-                    <div class="w-10 h-10 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center flex-shrink-0">
+                    <div class="w-10 h-10 bg-blue-100 text-primary rounded-full flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-check"></i>
                     </div>
                     <div>
@@ -200,12 +200,12 @@
 
         {{-- Action Buttons --}}
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{ route('home') }}" class="flex items-center justify-center gap-2 px-8 py-3 bg-brand-blue text-white rounded-xl font-semibold hover:bg-blue-600 transition shadow-lg">
+            <a href="{{ route('home') }}" class="flex items-center justify-center gap-2 px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-blue-600 transition shadow-lg">
                 <i class="fas fa-home"></i>
                 Continue Shopping
             </a>
             @auth
-            <a href="#" class="flex items-center justify-center gap-2 px-8 py-3 bg-white text-brand-blue border-2 border-brand-blue rounded-xl font-semibold hover:bg-blue-50 transition">
+            <a href="#" class="flex items-center justify-center gap-2 px-8 py-3 bg-white text-primary border-2 border-primary rounded-xl font-semibold hover:bg-blue-50 transition">
                 <i class="fas fa-receipt"></i>
                 View My Orders
             </a>
@@ -214,7 +214,7 @@
 
         {{-- Support --}}
         <div class="text-center mt-8 text-sm text-gray-500">
-            <p>Need help? Contact us at <a href="tel:+8801234567890" class="text-brand-blue hover:underline font-medium">+880 1234-567890</a></p>
+            <p>Need help? Contact us at <a href="tel:+8801234567890" class="text-primary hover:underline font-medium">+880 1234-567890</a></p>
         </div>
     </div>
 </div>

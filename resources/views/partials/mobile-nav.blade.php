@@ -4,8 +4,8 @@
 
         {{-- Home --}}
         <a href="{{ url('/') }}" class="flex flex-col items-center px-3 py-1 tap-effect">
-            <i class="fas fa-home text-xl text-brand-blue"></i>
-            <span class="text-[10px] font-medium text-brand-blue mt-0.5">Home</span>
+            <i class="fas fa-home text-xl text-primary"></i>
+            <span class="text-[10px] font-medium text-primary mt-0.5">Home</span>
         </a>
 
         {{-- Categories --}}
@@ -14,7 +14,8 @@
             <span class="text-[10px] font-medium text-gray-500 mt-0.5">Shop</span>
         </a>
 
-        <a href="javascript:void(0)" onclick="toggleMobileMenu(true)" class="flex flex-col items-center px-3 py-1 tap-effect">
+        <a href="javascript:void(0)" onclick="toggleMobileMenu(true)"
+            class="flex flex-col items-center px-3 py-1 tap-effect">
             <i class="fas fa-th-large text-xl text-gray-500"></i>
             <span class="text-[10px] font-medium text-gray-500 mt-0.5">Categories</span>
         </a>
@@ -22,7 +23,8 @@
         {{-- Cart --}}
         <a href="#" class="flex flex-col items-center px-3 py-1 tap-effect relative" onclick="openCartDrawer()">
             <i class="fas fa-shopping-cart text-xl text-gray-500"></i>
-            <span class="absolute -top-1 right-1 bg-brand-blue text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
+            <span
+                class="absolute -top-1 right-1 bg-primary text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
             <span class="text-[10px] font-medium text-gray-500 mt-0.5">Cart</span>
         </a>
 
@@ -34,15 +36,15 @@
 
         {{-- Account --}}
         @auth
-        <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center px-3 py-1 tap-effect">
-            <i class="fas fa-user text-xl text-gray-500"></i>
-            <span class="text-[10px] font-medium text-gray-500 mt-0.5">Account</span>
-        </a>
+            <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center px-3 py-1 tap-effect">
+                <i class="fas fa-user text-xl text-gray-500"></i>
+                <span class="text-[10px] font-medium text-gray-500 mt-0.5">Account</span>
+            </a>
         @else
-        <button onclick="openAuthModal('login')" class="flex flex-col items-center px-3 py-1 tap-effect">
-            <i class="fas fa-user text-xl text-gray-500"></i>
-            <span class="text-[10px] font-medium text-gray-500 mt-0.5">Account</span>
-        </button>
+            <button onclick="openAuthModal('login')" class="flex flex-col items-center px-3 py-1 tap-effect">
+                <i class="fas fa-user text-xl text-gray-500"></i>
+                <span class="text-[10px] font-medium text-gray-500 mt-0.5">Account</span>
+            </button>
         @endauth
 
     </div>

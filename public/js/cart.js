@@ -289,7 +289,7 @@ class CartManager {
                                 <i class="fas fa-plus text-xs"></i>
                             </button>
                         </div>
-                        <span class="text-brand-blue font-bold">৳${item.total_price.toLocaleString()}</span>
+                        <span class="text-primary font-bold">৳${item.total_price.toLocaleString()}</span>
                     </div>
                 </div>
                 <button onclick="window.cartManager.removeItem(${item.id})" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition opacity-0 group-hover:opacity-100">
@@ -307,7 +307,7 @@ class CartManager {
                 </div>
                 <h3 class="text-lg font-semibold text-gray-700 mb-2">Your cart is empty</h3>
                 <p class="text-sm text-gray-500 mb-6">Add some products to get started!</p>
-                <button onclick="closeCartDrawer()" class="px-6 py-2 bg-brand-blue text-white rounded-lg hover:bg-blue-600 transition">
+                <button onclick="closeCartDrawer()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">
                     Continue Shopping
                 </button>
             </div>

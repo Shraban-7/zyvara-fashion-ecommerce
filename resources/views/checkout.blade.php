@@ -7,9 +7,9 @@
 <div class="bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center gap-2 text-sm">
-            <a href="{{ url('/') }}" class="text-gray-500 hover:text-brand-blue transition">Home</a>
+            <a href="{{ url('/') }}" class="text-gray-500 hover:text-primary transition">Home</a>
             <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-            <a href="#" onclick="openCartDrawer(); return false;" class="text-gray-500 hover:text-brand-blue transition">Cart</a>
+            <a href="#" onclick="openCartDrawer(); return false;" class="text-gray-500 hover:text-primary transition">Cart</a>
             <i class="fas fa-chevron-right text-xs text-gray-400"></i>
             <span class="text-gray-900 font-medium">Checkout</span>
         </nav>
@@ -19,7 +19,7 @@
 <div class="max-w-7xl mx-auto px-4 py-4">
     {{-- Checkout Header --}}
     <!-- <div class="text-center mb-8">
-        <h1 class="text-2xl md:text-3xl font-bold text-brand-black mb-2">Checkout</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-black mb-2">Checkout</h1>
         <p class="text-gray-500 text-sm">Complete your order by filling in the details below</p>
     </div> -->
 
@@ -48,14 +48,14 @@
             {{-- Customer Information --}}
             {{--<div class="bg-white rounded-2xl p-5 md:p-6 border border-gray-100 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 bg-brand-blue text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                    <h2 class="text-lg font-bold text-brand-black">Customer Information</h2>
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                    <h2 class="text-lg font-bold text-black">Customer Information</h2>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div class="sm:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" required placeholder="Enter your full name" value="{{ old('name', $user?->name) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition @error('name') border-red-500 @else border-gray-200 @enderror">
+                        <input type="text" name="name" required placeholder="Enter your full name" value="{{ old('name', $user?->name) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-primary transition @error('name') border-red-500 @else border-gray-200 @enderror">
                         @error('name')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                         @enderror
@@ -64,7 +64,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
                         <div class="flex">
                             <span class="h-12 px-3 bg-gray-100 border border-r-0 rounded-l-xl flex items-center text-sm text-gray-600 @error('phone') border-red-500 @else border-gray-200 @enderror">+88</span>
-                            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" maxlength="11" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 border rounded-r-xl text-sm focus:outline-none focus:border-brand-blue transition @error('phone') border-red-500 @else border-gray-200 @enderror">
+                            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" maxlength="11" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 border rounded-r-xl text-sm focus:outline-none focus:border-primary transition @error('phone') border-red-500 @else border-gray-200 @enderror">
                         </div>
                         @error('phone')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -74,7 +74,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email <span class="text-gray-400">(Optional)</span></label>
-                        <input type="email" name="email" placeholder="your@email.com" value="{{ old('email', $user?->email) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition @error('email') border-red-500 @else border-gray-200 @enderror">
+                        <input type="email" name="email" placeholder="your@email.com" value="{{ old('email', $user?->email) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-primary transition @error('email') border-red-500 @else border-gray-200 @enderror">
                         @error('email')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                         @enderror
@@ -85,14 +85,14 @@
             {{-- Delivery Address --}}
             <div class="bg-white rounded-2xl p-5 md:p-6 border border-gray-100 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 bg-brand-blue text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                    <h2 class="text-lg font-bold text-brand-black">Delivery Informations</h2>
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                    <h2 class="text-lg font-bold text-black">Delivery Informations</h2>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" required placeholder="Enter your full name" value="{{ old('name', $user?->name) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition @error('name') border-red-500 @else border-gray-200 @enderror">
+                        <input type="text" name="name" required placeholder="Enter your full name" value="{{ old('name', $user?->name) }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-primary transition @error('name') border-red-500 @else border-gray-200 @enderror">
                         @error('name')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                         @enderror
@@ -101,7 +101,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
                         <div class="flex">
                             <span class="h-12 px-3 bg-gray-100 border border-r-0 rounded-l-xl flex items-center text-sm text-gray-600 @error('phone') border-red-500 @else border-gray-200 @enderror">+88</span>
-                            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" maxlength="11" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 border rounded-r-xl text-sm focus:outline-none focus:border-brand-blue transition @error('phone') border-red-500 @else border-gray-200 @enderror">
+                            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" maxlength="11" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 border rounded-r-xl text-sm focus:outline-none focus:border-primary transition @error('phone') border-red-500 @else border-gray-200 @enderror">
                         </div>
                         @error('phone')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -118,14 +118,14 @@
                         @foreach($shippingZones as $index => $zone)
                         <label class="delivery-zone-option relative cursor-pointer">
                             <input type="radio" name="delivery_zone" value="{{ $zone->code }}" data-cost="{{ $zone->shipping_cost }}" class="sr-only peer" {{ $index === 0 ? 'checked' : '' }}>
-                            <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-brand-blue peer-checked:bg-brand-blue/5 transition">
+                            <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 transition">
                                 <div class="flex items-center mb-2">
                                     <span class="font-semibold text-gray-900">{{ $zone->name }}</span>
-                                    <span class="text-brand-blue font-bold ms-2">({{ money($zone->shipping_cost) }})</span>
+                                    <span class="text-primary font-bold ms-2">({{ money($zone->shipping_cost) }})</span>
                                 </div>
                                 <p class="text-xs text-gray-500">Delivery within {{ $zone->estimated_days }}</p>
                             </div>
-                            <div class="absolute top-3 right-3 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-brand-blue peer-checked:bg-brand-blue flex items-center justify-center">
+                            <div class="absolute top-3 right-3 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
                                 <i class="fas fa-check text-white text-xs hidden peer-checked:block"></i>
                             </div>
                         </label>
@@ -136,7 +136,7 @@
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">District <span class="text-red-500">*</span></label>
-                        <select name="district" required class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition bg-white @error('district') border-red-500 @else border-gray-200 @enderror">
+                        <select name="district" required class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-primary transition bg-white @error('district') border-red-500 @else border-gray-200 @enderror">
                             <option value="">Select District</option>
                             @foreach($districts as $district)
                             <option value="{{ $district->id }}" {{ old('district') == $district->id ? 'selected' : '' }}>
@@ -150,14 +150,14 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">City/Area <span class="text-red-500">*</span></label>
-                        <input type="text" name="city" required placeholder="e.g., Uttara, Mirpur, Dhanmondi" value="{{ old('city') }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition @error('city') border-red-500 @else border-gray-200 @enderror">
+                        <input type="text" name="city" required placeholder="e.g., Uttara, Mirpur, Dhanmondi" value="{{ old('city') }}" class="w-full h-12 px-4 border rounded-xl text-sm focus:outline-none focus:border-primary transition @error('city') border-red-500 @else border-gray-200 @enderror">
                         @error('city')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="sm:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Full Address <span class="text-red-500">*</span></label>
-                        <textarea name="address" required rows="3" placeholder="House/Flat No, Road, Block, Area (Be specific for faster delivery)" class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition resize-none @error('address') border-red-500 @else border-gray-200 @enderror">{{ old('address') }}</textarea>
+                        <textarea name="address" required rows="3" placeholder="House/Flat No, Road, Block, Area (Be specific for faster delivery)" class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:border-primary transition resize-none @error('address') border-red-500 @else border-gray-200 @enderror">{{ old('address') }}</textarea>
                         @error('address')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                         @enderror
@@ -174,9 +174,9 @@
                     <div class="w-8 h-8 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center text-sm">
                         <i class="fas fa-sticky-note"></i>
                     </div>
-                    <h2 class="text-lg font-bold text-brand-black">Order Notes <span class="text-gray-400 font-normal text-sm">(Optional)</span></h2>
+                    <h2 class="text-lg font-bold text-black">Order Notes <span class="text-gray-400 font-normal text-sm">(Optional)</span></h2>
                 </div>
-                <textarea name="notes" rows="3" placeholder="Any special instructions for your order? e.g., Gift wrapping, specific delivery time, etc." class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:border-brand-blue transition resize-none @error('notes') border-red-500 @else border-gray-200 @enderror">{{ old('notes') }}</textarea>
+                <textarea name="notes" rows="3" placeholder="Any special instructions for your order? e.g., Gift wrapping, specific delivery time, etc." class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:border-primary transition resize-none @error('notes') border-red-500 @else border-gray-200 @enderror">{{ old('notes') }}</textarea>
                 @error('notes')
                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -186,7 +186,7 @@
         {{-- Right Column - Order Summary --}}
         <div class="lg:col-span-1">
             <div class="bg-white rounded-2xl p-5 md:p-6 border border-gray-100 shadow-sm sticky top-24">
-                <h2 class="text-lg font-bold text-brand-black mb-5">Order Summary</h2>
+                <h2 class="text-lg font-bold text-black mb-5">Order Summary</h2>
 
                 {{-- Cart Items --}}
                 <div class="space-y-4 max-h-64 overflow-y-auto mb-5 pr-2">
@@ -217,13 +217,13 @@
                     @endforeach
                 </div>
 
-                <a href="#" onclick="openCartDrawer(); return false;" class="text-brand-blue text-sm font-medium hover:underline mb-5 inline-block">
+                <a href="#" onclick="openCartDrawer(); return false;" class="text-primary text-sm font-medium hover:underline mb-5 inline-block">
                     <i class="fas fa-edit mr-1"></i> Edit Cart
                 </a>
 
                 <div class="mb-5">
                     <div class="flex gap-2">
-                        <input type="text" name="coupon" id="couponCode" placeholder="Coupon code" class="flex-1 h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-blue transition">
+                        <input type="text" name="coupon" id="couponCode" placeholder="Coupon code" class="flex-1 h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition">
                         <button type="button" id="applyCouponBtn" class="h-11 px-4 bg-gray-100 text-gray-700 rounded-xl font-medium text-sm hover:bg-gray-200 transition">Apply</button>
                     </div>
                     <div id="couponMessage" class="mt-2 text-sm hidden"></div>
@@ -246,7 +246,7 @@
                     <div class="h-px bg-gray-200"></div>
                     <div class="flex items-center justify-between">
                         <span class="text-base font-semibold text-gray-900">Total</span>
-                        <span class="text-2xl font-bold text-brand-blue" id="totalAmount">{{ money($cart->subtotal + ($shippingZones->first()->shipping_cost ?? 0)) }}</span>
+                        <span class="text-2xl font-bold text-primary" id="totalAmount">{{ money($cart->subtotal + ($shippingZones->first()->shipping_cost ?? 0)) }}</span>
                     </div>
                 </div>
 
@@ -255,25 +255,25 @@
                     <div class="grid sm:grid-cols-2 gap-3">
                         <label class="payment-method-option relative cursor-pointer">
                             <input type="radio" name="payment_method" value="cod"  class="sr-only peer">
-                            <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-brand-blue peer-checked:bg-brand-blue/5 transition">
+                            <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 transition">
                                 <div class="flex items-center mb-2">
                                     <span class="font-semibold text-gray-900">COD</span>
                                 </div>
                                 <p class="text-xs text-gray-500">Cash on delivery.</p>
                             </div>
-                            <div class="absolute top-3 right-3 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-brand-blue peer-checked:bg-brand-blue flex items-center justify-center">
+                            <div class="absolute top-3 right-3 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
                                 <i class="fas fa-check text-white text-xs hidden peer-checked:block"></i>
                             </div>
                         </label>
                         <label class="payment-method-option relative cursor-pointer">
                             <input type="radio" name="payment_method" value="online"  class="sr-only peer">
-                            <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-brand-blue peer-checked:bg-brand-blue/5 transition">
+                            <div class="p-4 border-2 border-gray-200 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 transition">
                                 <div class="flex items-center mb-2">
                                     <span class="font-semibold text-gray-900">Pay Now</span>
                                 </div>
                                 <p class="text-xs text-gray-500">Payment online.</p>
                             </div>
-                            <div class="absolute top-3 right-3 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-brand-blue peer-checked:bg-brand-blue flex items-center justify-center">
+                            <div class="absolute top-3 right-3 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
                                 <i class="fas fa-check text-white text-xs hidden peer-checked:block"></i>
                             </div>
                         </label>
@@ -281,7 +281,7 @@
                 </div>
 
                 {{-- Place Order Button --}}
-                <button type="submit" class="w-full mt-6 bg-brand-blue text-white py-4 rounded-xl font-semibold text-base hover:bg-blue-600 transition tap-effect shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-2">
+                <button type="submit" class="w-full mt-6 bg-primary text-white py-4 rounded-xl font-semibold text-base hover:bg-blue-600 transition tap-effect shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
                     <i class="fas fa-check-circle"></i>
                     Place Order
                 </button>
@@ -289,8 +289,8 @@
                 {{-- Terms --}}
                 <p class="text-xs text-gray-400 text-center mt-4">
                     By placing this order, you agree to our
-                    <a href="#" class="text-brand-blue hover:underline">Terms & Conditions</a> and
-                    <a href="#" class="text-brand-blue hover:underline">Privacy Policy</a>
+                    <a href="#" class="text-primary hover:underline">Terms & Conditions</a> and
+                    <a href="#" class="text-primary hover:underline">Privacy Policy</a>
                 </p>
 
                 {{-- Trust Badges --}}
@@ -300,7 +300,7 @@
                         <span class="text-xs">Secure</span>
                     </div>
                     <div class="flex items-center gap-2 text-gray-400">
-                        <i class="fas fa-undo text-brand-blue"></i>
+                        <i class="fas fa-undo text-primary"></i>
                         <span class="text-xs">7 Days Return</span>
                     </div>
                     <div class="flex items-center gap-2 text-gray-400">
@@ -504,8 +504,8 @@
                 const check = label.querySelector('.fa-check');
                 const radio = label.querySelector('input[type="radio"]');
                 if (check && radio) {
-                    check.parentElement.classList.toggle('bg-brand-blue', radio.checked);
-                    check.parentElement.classList.toggle('border-brand-blue', radio.checked);
+                    check.parentElement.classList.toggle('bg-primary', radio.checked);
+                    check.parentElement.classList.toggle('border-primary', radio.checked);
                     check.classList.toggle('hidden', !radio.checked);
                 }
             });

@@ -8,7 +8,7 @@
     <title>@yield('title') - {{ $siteName }}</title>
 
     @if($settings['site_favicon'])
-    <link rel="icon" href="{{ storage_url($settings['site_favicon']) }}" type="image/x-icon">
+        <link rel="icon" href="{{ storage_url($settings['site_favicon']) }}" type="image/x-icon">
     @endif
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,7 @@
     @stack('styles')
 </head>
 
-<body class="bg-brand-light min-h-screen pb-20 md:pb-0">
+<body class="bg-light min-h-screen pb-20 md:pb-0">
     @include('partials.header')
     @include('partials.mobile-category-drawer')
 
@@ -39,9 +39,11 @@
 
     {{-- Floating WhatsApp Button --}}
     @if($settings['whatsapp_number'] ?? false)
-    <a href="https://wa.me/{{ $settings['whatsapp_number'] }}" target="_blank" class="fixed bottom-40 md:bottom-24 right-4 md:right-8 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition tap-effect z-40 animate-bounce" style="animation-duration: 2s;">
-        <i class="fab fa-whatsapp text-3xl text-white"></i>
-    </a>
+        <a href="https://wa.me/{{ $settings['whatsapp_number'] }}" target="_blank"
+            class="fixed bottom-40 md:bottom-24 right-4 md:right-8 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition tap-effect z-40 animate-bounce"
+            style="animation-duration: 2s;">
+            <i class="fab fa-whatsapp text-3xl text-white"></i>
+        </a>
     @endif
 
     @include('partials.auth-modal')

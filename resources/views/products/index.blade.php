@@ -7,7 +7,7 @@
 <div class="bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center gap-2 text-sm">
-            <a href="{{ url('/') }}" class="text-gray-500 hover:text-brand-blue transition">Home</a>
+            <a href="{{ url('/') }}" class="text-gray-500 hover:text-primary transition">Home</a>
             <i class="fas fa-chevron-right text-xs text-gray-400"></i>
             <span class="text-gray-900 font-medium">Products</span>
         </nav>
@@ -19,7 +19,7 @@
 
         {{-- Mobile Filter Toggle --}}
         <div class="lg:hidden flex items-center justify-between mb-2">
-            <h1 class="text-xl font-bold text-brand-black">All Products</h1>
+            <h1 class="text-xl font-bold text-black">All Products</h1>
             <button onclick="toggleMobileFilter()" class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 tap-effect">
                 <i class="fas fa-sliders-h"></i>
                 Filters
@@ -32,8 +32,8 @@
 
                 {{-- Filter Header --}}
                 <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-lg font-bold text-brand-black">Filters</h2>
-                    <button onclick="clearAllFilters()" class="text-sm text-brand-blue hover:underline font-medium">Clear All</button>
+                    <h2 class="text-lg font-bold text-black">Filters</h2>
+                    <button onclick="clearAllFilters()" class="text-sm text-primary hover:underline font-medium">Clear All</button>
                 </div>
 
                 {{-- Category Filter --}}
@@ -56,7 +56,7 @@
                                 value="{{ $category->slug }}"
                                 {{ in_array($category->slug, $selectedCategories) ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue">
+                                class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
                             <span class="text-sm text-gray-600 group-hover:text-gray-900">{{ $category->name }}</span>
                             <span class="ml-auto text-xs text-gray-400">({{ $categoryCounts[$category->id] ?? 0 }})</span>
                         </label>
@@ -68,7 +68,7 @@
                                 value="{{ $child->slug }}"
                                 {{ in_array($child->slug, $selectedCategories) ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue">
+                                class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
                             <span class="text-sm text-gray-500 group-hover:text-gray-900">{{ $child->name }}</span>
                             <span class="ml-auto text-xs text-gray-400">({{ $categoryCounts[$child->id] ?? 0 }})</span>
                         </label>
@@ -101,7 +101,7 @@
                                 value="{{ $brand->slug }}"
                                 {{ in_array($brand->slug, $selectedBrands) ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 rounded border-gray-300 text-brand-blue">
+                                class="w-4 h-4 rounded border-gray-300 text-primary">
 
                             <span class="text-sm text-gray-600 group-hover:text-gray-900">
                                 {{ $brand->name }}
@@ -131,7 +131,7 @@
                                     value="{{ request('min_price') }}"
                                     placeholder="৳0"
                                     onchange="applyFilters()"
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                                    class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
                             </div>
                             <span class="text-gray-400 mt-5">-</span>
                             <div class="flex-1">
@@ -141,28 +141,28 @@
                                     value="{{ request('max_price') }}"
                                     placeholder="৳10000"
                                     onchange="applyFilters()"
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                                    class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
                             </div>
                         </div>
                         <div class="space-y-2">
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-brand-blue focus:ring-brand-blue">
+                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
                                 <span class="text-sm text-gray-600 group-hover:text-gray-900">Under ৳500</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-brand-blue focus:ring-brand-blue">
+                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
                                 <span class="text-sm text-gray-600 group-hover:text-gray-900">৳500 - ৳1000</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-brand-blue focus:ring-brand-blue">
+                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
                                 <span class="text-sm text-gray-600 group-hover:text-gray-900">৳1000 - ৳2000</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-brand-blue focus:ring-brand-blue">
+                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
                                 <span class="text-sm text-gray-600 group-hover:text-gray-900">৳2000 - ৳5000</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-brand-blue focus:ring-brand-blue">
+                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
                                 <span class="text-sm text-gray-600 group-hover:text-gray-900">Above ৳5000</span>
                             </label>
                         </div>
@@ -186,7 +186,7 @@
                         <button
                             type="button"
                             onclick="toggleFilter('sizes[]', '{{ $size->id }}')"
-                            class="size-btn px-4 py-2 border {{ in_array($size->id, $selectedSizes) ? 'border-brand-blue bg-brand-blue/5 text-brand-blue' : 'border-gray-200 text-gray-600' }} rounded-lg text-sm font-medium hover:border-brand-blue hover:text-brand-blue transition">
+                            class="size-btn px-4 py-2 border {{ in_array($size->id, $selectedSizes) ? 'border-primary bg-primary/5 text-primary' : 'border-gray-200 text-gray-600' }} rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition">
                             {{ $size->name }}
                         </button>
                         @endforeach
@@ -211,7 +211,7 @@
                             type="button"
                             onclick="toggleFilter('colors[]', '{{ $color->id }}')"
                             title="{{ $color->name }}"
-                            class="w-8 h-8 rounded-full border-2 {{ in_array($color->id, $selectedColors) ? 'border-brand-blue ring-2 ring-brand-blue/30' : 'border-gray-300' }} hover:border-brand-blue transition relative"
+                            class="w-8 h-8 rounded-full border-2 {{ in_array($color->id, $selectedColors) ? 'border-primary ring-2 ring-primary/30' : 'border-gray-300' }} hover:border-primary transition relative"
                             style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}">
                             @if(in_array($color->id, $selectedColors))
                             <i class="fas fa-check text-xs absolute inset-0 flex items-center justify-center" style="color: {{ $color->code == 'white' || $color->code == 'cream' ? '#000' : '#FFF' }}"></i>
@@ -235,7 +235,7 @@
                                 value="{{ $rating }}"
                                 {{ request('min_rating') == $rating ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 border-gray-300 text-brand-blue focus:ring-brand-blue">
+                                class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
                             <div class="flex text-yellow-400">
                                 @for($i = 1; $i <= 5; $i++)
                                     <i class="fas fa-star text-sm {{ $i <= $rating ? '' : 'text-gray-300' }}"></i>
@@ -248,7 +248,7 @@
                 </div>
 
                 {{-- Apply Filter Button (Mobile) --}}
-                <button onclick="toggleMobileFilter()" class="lg:hidden w-full bg-brand-blue text-white py-3 rounded-xl font-semibold text-sm mt-4 tap-effect">
+                <button onclick="toggleMobileFilter()" class="lg:hidden w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm mt-4 tap-effect">
                     Apply Filters
                 </button>
 
@@ -261,7 +261,7 @@
             {{-- Products Header --}}
             <div class="hidden lg:flex items-center justify-between mb-5">
                 <div>
-                    <h1 class="text-2xl font-bold text-brand-black">
+                    <h1 class="text-2xl font-bold text-black">
                         @if(request('category'))
                         {{ ucfirst(request('category')) }} Products
                         @elseif(request('search'))
@@ -278,7 +278,7 @@
 
                     {{-- Sort Dropdown --}}
                     <div class="relative">
-                        <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue cursor-pointer">
+                        <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary cursor-pointer">
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}" {{ request('sort') == 'featured' ? 'selected' : '' }}>Sort by: Featured</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
@@ -294,7 +294,7 @@
             {{-- Mobile Sort --}}
             <div class="lg:hidden flex items-center justify-between mb-4">
                 <p class="text-sm text-gray-500">{{ $products->total() }} products</p>
-                <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-blue/30">
+                <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30">
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}" {{ request('sort') == 'featured' ? 'selected' : '' }}>Sort: Featured</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
@@ -333,7 +333,7 @@
                 $category = $categories->firstWhere('slug', $categorySlug);
                 @endphp
                 @if($category)
-                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     {{ $category->name }}
                     <button onclick="removeFilter('categories', '{{ $categorySlug }}')" class="hover:text-blue-700">
                         <i class="fas fa-times text-xs"></i>
@@ -348,7 +348,7 @@
                 $brand = $brands->firstWhere('slug', $brandSlug);
                 @endphp
                 @if($brand)
-                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     {{ $brand->name }}
                     <button onclick="removeFilter('categories', '{{ $brandSlug }}')" class="hover:text-blue-700">
                         <i class="fas fa-times text-xs"></i>
@@ -365,7 +365,7 @@
                 $size = $sizes->firstWhere('id', $sizeId);
                 @endphp
                 @if($size)
-                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     Size: {{ $size->name }}
                     <button onclick="removeFilter('sizes', '{{ $sizeId }}')" class="hover:text-blue-700">
                         <i class="fas fa-times text-xs"></i>
@@ -380,7 +380,7 @@
                 $color = $colors->firstWhere('id', $colorId);
                 @endphp
                 @if($color)
-                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     <span class="w-3 h-3 rounded-full border border-gray-300" style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}"></span>
                     {{ $color->name }}
                     <button onclick="removeFilter('colors', '{{ $colorId }}')" class="hover:text-blue-700">
@@ -392,7 +392,7 @@
 
                 {{-- Price Range Filter --}}
                 @if(request('min_price') || request('max_price'))
-                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     Price:
                     @if(request('min_price') && request('max_price'))
                     ৳{{ number_format(request('min_price')) }} - ৳{{ number_format(request('max_price')) }}
@@ -409,7 +409,7 @@
 
                 {{-- Rating Filter --}}
                 @if(request('min_rating'))
-                <span class="inline-flex items-center gap-1.5 bg-brand-blue/10 text-brand-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     <div class="flex text-yellow-500">
                         @for($i = 1; $i <= request('min_rating'); $i++)
                             <i class="fas fa-star text-xs"></i>

@@ -119,16 +119,16 @@ class ProductVariantManager {
         if (product.images && product.images.length > 1) {
             product.images.forEach((image, index) => {
                 const thumb = document.createElement("button");
-                thumb.className = `flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 ${index === 0 ? "border-brand-blue" : "border-transparent hover:border-brand-blue"} transition`;
+                thumb.className = `flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 ${index === 0 ? "border-primary" : "border-transparent hover:border-primary"} transition`;
                 thumb.innerHTML = `<img src="${image.image_url}" alt="${product.name}" class="w-full h-full object-cover">`;
                 thumb.onclick = () => {
                     imgElement.src = image.image_url;
                     thumbnailsContainer
                         .querySelectorAll("button")
                         .forEach((b) =>
-                            b.classList.remove("border-brand-blue"),
+                            b.classList.remove("border-primary"),
                         );
-                    thumb.classList.add("border-brand-blue");
+                    thumb.classList.add("border-primary");
                 };
                 thumbnailsContainer.appendChild(thumb);
             });
@@ -194,7 +194,7 @@ class ProductVariantManager {
             const discountPercent = Math.round(
                 ((product.compare_price - product.price) /
                     product.compare_price) *
-                    100,
+                100,
             );
             discount.textContent = `-${discountPercent}%`;
             discount.classList.remove("hidden");
@@ -257,18 +257,18 @@ class ProductVariantManager {
             colorOptions.innerHTML = "";
             colors.forEach((color) => {
                 const btn = document.createElement("button");
-                if(color.hex_code) {
+                if (color.hex_code) {
                     btn.style.backgroundColor = color.hex_code;
                     btn.className =
-                    "color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-brand-blue transition-all p-1 shadow-sm";
+                        "color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-primary transition-all p-1 shadow-sm";
                 } else {
                     //if no hex code, then use color name inside div
                     btn.style.backgroundColor = "#f0f0f0";
                     btn.textContent = color.name;
                     btn.className =
-                        "size-btn min-w-[56px] h-9 px-3 border border-gray-300 rounded-lg text-sm font-medium transition hover:border-brand-blue hover:text-brand-blue hover:bg-brand-blue/5";
-                }                
-               
+                        "size-btn min-w-[56px] h-9 px-3 border border-gray-300 rounded-lg text-sm font-medium transition hover:border-primary hover:text-primary hover:bg-primary/5";
+                }
+
                 btn.title = color.name;
                 btn.dataset.colorId = color.id;
                 btn.dataset.colorName = color.name;
@@ -287,7 +287,7 @@ class ProductVariantManager {
             sizes.forEach((size) => {
                 const btn = document.createElement("button");
                 btn.className =
-                    "size-btn min-w-[56px] h-9 px-3 border border-gray-300 rounded-lg text-sm font-medium transition hover:border-brand-blue hover:text-brand-blue hover:bg-brand-blue/5";
+                    "size-btn min-w-[56px] h-9 px-3 border border-gray-300 rounded-lg text-sm font-medium transition hover:border-primary hover:text-primary hover:bg-primary/5";
                 btn.textContent = size.name;
                 btn.dataset.sizeId = size.id;
                 btn.dataset.sizeName = size.name;
@@ -323,13 +323,13 @@ class ProductVariantManager {
     selectColor(btn, color) {
         // Remove previous selection
         document.querySelectorAll("#colorOptions .color-btn").forEach((b) => {
-            b.classList.remove("border-brand-blue");
+            b.classList.remove("border-primary");
             b.classList.add("border-gray-300");
         });
 
         // Add selection
         btn.classList.remove("border-gray-300");
-        btn.classList.add("border-brand-blue");
+        btn.classList.add("border-primary");
 
         this.selectedColor = color.id;
         document.getElementById("selectedColorName").textContent = color.name;
@@ -346,9 +346,9 @@ class ProductVariantManager {
         // Remove previous selection
         document.querySelectorAll("#sizeOptions .size-btn").forEach((b) => {
             b.classList.remove(
-                "border-brand-blue",
-                "bg-brand-blue/5",
-                "text-brand-blue",
+                "border-primary",
+                "bg-primary/5",
+                "text-primary",
                 "font-semibold",
             );
             b.classList.add("border-gray-300", "text-gray-700", "font-medium");
@@ -357,9 +357,9 @@ class ProductVariantManager {
         // Add selection
         btn.classList.remove("border-gray-300", "text-gray-700", "font-medium");
         btn.classList.add(
-            "border-brand-blue",
-            "bg-brand-blue/5",
-            "text-brand-blue",
+            "border-primary",
+            "bg-primary/5",
+            "text-primary",
             "font-semibold",
         );
 
@@ -416,7 +416,7 @@ class ProductVariantManager {
                 const discountPercent = Math.round(
                     ((variant.compare_price - variant.price) /
                         variant.compare_price) *
-                        100,
+                    100,
                 );
                 discountElement.textContent = `-${discountPercent}%`;
                 discountElement.classList.remove("hidden");
@@ -439,7 +439,7 @@ class ProductVariantManager {
                     ((this.currentProduct.compare_price -
                         this.currentProduct.price) /
                         this.currentProduct.compare_price) *
-                        100,
+                    100,
                 );
                 discountElement.textContent = `-${discountPercent}%`;
                 discountElement.classList.remove("hidden");
