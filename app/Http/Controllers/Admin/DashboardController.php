@@ -26,40 +26,71 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $filter = request('filter', '30_days');
+        $filter = request('filter', 'today');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Current Period Query
+        |--------------------------------------------------------------------------
+        */
 
         $orderQuery = Order::query();
 
-        $orderQuery = match ($filter) {
+        switch ($filter) {
 
-            'today' => $orderQuery->whereDate(
-                'created_at',
-                today()
-            ),
+            case 'today':
 
-            'yesterday' => $orderQuery->whereDate(
-                'created_at',
-                today()->subDay()
-            ),
+                $currentStart = today()->startOfDay();
+                $currentEnd = today()->endOfDay();
 
-            default => $orderQuery->where(
-                'created_at',
-                '>=',
-                now()->subDays(30)
-            ),
-        };
+                $previousStart = today()->subDay()->startOfDay();
+                $previousEnd = today()->subDay()->endOfDay();
+
+                break;
+
+            case 'this_week':
+                $currentStart = now()->startOfWeek(Carbon::SUNDAY);
+                $currentEnd = now()->endOfWeek(Carbon::SATURDAY);
+                $previousStart = now()
+                    ->subWeek()
+                    ->startOfWeek(Carbon::SUNDAY);
+
+                $previousEnd = now()
+                    ->subWeek()
+                    ->endOfWeek(Carbon::SATURDAY);
+
+                break;
+
+            case 'this_month':
+                $currentStart = now()->startOfMonth();
+                $currentEnd = now()->endOfMonth();
+                $previousStart = now()->subMonth()->startOfMonth();
+                $previousEnd = now()->subMonth()->endOfMonth();
+
+                break;
+
+            default:
+                $currentStart = today()->startOfDay();
+                $currentEnd = today()->endOfDay();
+                $previousStart = today()->subDay()->startOfDay();
+                $previousEnd = today()->subDay()->endOfDay();
+
+                break;
+        }
+
+        $orderQuery->whereBetween('created_at', [
+            $currentStart,
+            $currentEnd
+        ]);
 
         $chartRevenue = [];
 
-        if (in_array($filter, ['today', 'yesterday'])) {
-
-            $targetDate = $filter === 'today'
-                ? today()
-                : today()->subDay();
+        if ($filter === 'today') {
 
             for ($i = 0; $i < 24; $i++) {
 
-                $start = $targetDate->copy()->startOfDay()->addHours($i);
+                $start = today()->copy()->startOfDay()->addHours($i);
+
                 $end = $start->copy()->endOfHour();
 
                 $revenue = Order::whereBetween('created_at', [$start, $end])
@@ -71,17 +102,34 @@ class DashboardController extends Controller
                 ];
             }
 
-        } else {
+        } elseif ($filter === 'this_week') {
 
-            for ($i = 29; $i >= 0; $i--) {
+            for ($i = 0; $i < 7; $i++) {
 
-                $date = now()->subDays($i);
+                $date = now()->startOfWeek()->copy()->addDays($i);
 
                 $revenue = Order::whereDate('created_at', $date)
                     ->sum('total');
 
                 $chartRevenue[] = [
-                    'label' => $date->format('d M'),
+                    'label' => $date->format('D'),
+                    'revenue' => $revenue,
+                ];
+            }
+
+        } elseif ($filter === 'this_month') {
+
+            $daysInMonth = now()->daysInMonth;
+
+            for ($i = 1; $i <= $daysInMonth; $i++) {
+
+                $date = now()->copy()->startOfMonth()->addDays($i - 1);
+
+                $revenue = Order::whereDate('created_at', $date)
+                    ->sum('total');
+
+                $chartRevenue[] = [
+                    'label' => $date->format('d'),
                     'revenue' => $revenue,
                 ];
             }
@@ -89,28 +137,63 @@ class DashboardController extends Controller
 
         $chartLabels = collect($chartRevenue)->pluck('label');
         $chartData = collect($chartRevenue)->pluck('revenue');
-
         $totalRevenue = (clone $orderQuery)->sum('total');
-
         $totalOrders = (clone $orderQuery)->count();
-
-        $totalRefund = SaleReturn::when(
-            $filter === 'today',
-            fn($q) => $q->whereDate('created_at', today())
-        )
-            ->when(
-                $filter === 'yesterday',
-                fn($q) => $q->whereDate('created_at', today()->subDay())
-            )
-            ->when(
-                $filter === '30_days',
-                fn($q) => $q->where('created_at', '>=', now()->subDays(30))
-            )
-            ->sum('refund_amount');
+        $totalRefund = SaleReturn::whereBetween('created_at', [
+            $currentStart,
+            $currentEnd
+        ])->sum('refund_amount');
 
         $totalCustomers = User::where('role', 'customer')->count();
 
-        $pendingOrders = Order::where('status', 'pending')->count();
+        $previousRevenue = Order::whereBetween('created_at', [
+            $previousStart,
+            $previousEnd
+        ])->sum('total');
+
+        $previousOrders = Order::whereBetween('created_at', [
+            $previousStart,
+            $previousEnd
+        ])->count();
+
+        $previousRefund = SaleReturn::whereBetween('created_at', [
+            $previousStart,
+            $previousEnd
+        ])->sum('refund_amount');
+
+        $previousCustomers = User::whereBetween('created_at', [
+            $previousStart,
+            $previousEnd
+        ])->where('role', 'customer')->count();
+
+        $calculatePercentage = function ($current, $previous) {
+
+            if ($previous <= 0) {
+                return 100;
+            }
+
+            return round((($current - $previous) / $previous) * 100, 1);
+        };
+
+        $revenuePercentage = $calculatePercentage(
+            $totalRevenue,
+            $previousRevenue
+        );
+
+        $ordersPercentage = $calculatePercentage(
+            $totalOrders,
+            $previousOrders
+        );
+
+        $customersPercentage = $calculatePercentage(
+            $totalCustomers,
+            $previousCustomers
+        );
+
+        $refundPercentage = $calculatePercentage(
+            $totalRefund,
+            $previousRefund
+        );
 
         $recentOrders = (clone $orderQuery)
             ->with('user')
@@ -191,9 +274,13 @@ class DashboardController extends Controller
             ? $totalRevenue / $totalOrders
             : 0;
 
-        $websiteOrders = Order::where('is_pos', false)->count();
+        $websiteOrders = Order::where('is_pos', false)
+            ->whereBetween('created_at', [$currentStart, $currentEnd])
+            ->count();
 
-        $posOrders = Order::where('is_pos', true)->count();
+        $posOrders = Order::where('is_pos', true)
+            ->whereBetween('created_at', [$currentStart, $currentEnd])
+            ->count();
 
         $totalChannelOrders = $websiteOrders + $posOrders;
 
@@ -207,9 +294,14 @@ class DashboardController extends Controller
 
         $widgets = [
             'totalRevenue' => $totalRevenue,
+            'totalRevenuePercentage' => $revenuePercentage,
             'totalOrders' => $totalOrders,
+            'totalOrdersPercentage' => $ordersPercentage,
             'totalCustomers' => $totalCustomers,
-            'pendingOrders' => $pendingOrders,
+            'totalCustomersPercentage' => $customersPercentage,
+            'totalRefund' => $totalRefund,
+            'totalRefundPercentage' => $refundPercentage,
+            'pendingOrders' => Order::where('status', 'pending')->count(),
             'totalProducts' => $totalProducts,
             'totalCategories' => $totalCategories,
             'outOfStock' => $outOfStock,
@@ -218,7 +310,6 @@ class DashboardController extends Controller
             'todayOrders' => $todayOrders,
             'todayRevenue' => $todayRevenue,
             'avgOrderValue' => $avgOrderValue,
-            'totalRefund' => $totalRefund,
         ];
 
         return view('admin.dashboard', compact(

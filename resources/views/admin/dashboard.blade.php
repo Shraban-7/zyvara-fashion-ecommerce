@@ -13,16 +13,16 @@
                     <select name="filter" onchange="this.form.submit()"
                         class="appearance-none rounded-2xl border border-slate-200 bg-white py-2.5 pl-4 pr-10 text-sm font-semibold text-slate-700 transition focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100">
 
-                        <option value="30_days" {{ request('filter', '30_days') === '30_days' ? 'selected' : '' }}>
-                            Last 30 Days
-                        </option>
-
-                        <option value="today" {{ request('filter') === 'today' ? 'selected' : '' }}>
+                        <option value="today" {{ request('filter', 'today') === 'today' ? 'selected' : '' }}>
                             Today
                         </option>
 
-                        <option value="yesterday" {{ request('filter') === 'yesterday' ? 'selected' : '' }}>
-                            Yesterday
+                        <option value="this_week" {{ request('filter') === 'this_week' ? 'selected' : '' }}>
+                            This Week
+                        </option>
+
+                        <option value="this_month" {{ request('filter') === 'this_month' ? 'selected' : '' }}>
+                            This Month
                         </option>
                     </select>
 
@@ -49,12 +49,28 @@
                 </div>
 
                 <div class="mt-5 flex items-center justify-between">
-                    <span
-                        class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-                        <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
-                        12.8%
+                    @if($widgets['totalRevenuePercentage'] >= 0)
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+                            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                            {{ $widgets['totalRevenuePercentage'] }}%
+                        </span>
+                    @else
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-600">
+                            <i data-lucide="arrow-down-right" class="h-3.5 w-3.5"></i>
+                            {{ abs($widgets['totalRevenuePercentage']) }}%
+                        </span>
+                    @endif
+                    <span class="text-xs text-slate-400">
+                        @if($filter === 'today')
+                            vs yesterday
+                        @elseif($filter === 'this_week')
+                            vs last week
+                        @else
+                            vs last month
+                        @endif
                     </span>
-                    <span class="text-xs text-slate-400">vs last month</span>
                 </div>
             </article>
 
@@ -72,12 +88,28 @@
                 </div>
 
                 <div class="mt-5 flex items-center justify-between">
-                    <span
-                        class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-                        <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
-                        8.2%
+                    @if($widgets['totalOrdersPercentage'] >= 0)
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+                            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                            {{ $widgets['totalOrdersPercentage'] }}%
+                        </span>
+                    @else
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-600">
+                            <i data-lucide="arrow-down-right" class="h-3.5 w-3.5"></i>
+                            {{ abs($widgets['totalOrdersPercentage']) }}%
+                        </span>
+                    @endif
+                    <span class="text-xs text-slate-400">
+                        @if($filter === 'today')
+                            vs yesterday
+                        @elseif($filter === 'this_week')
+                            vs last week
+                        @else
+                            vs last month
+                        @endif
                     </span>
-                    <span class="text-xs text-slate-400">vs last month</span>
                 </div>
             </article>
 
@@ -95,12 +127,28 @@
                 </div>
 
                 <div class="mt-5 flex items-center justify-between">
-                    <span
-                        class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-                        <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
-                        4.6%
+                    @if($widgets['totalCustomersPercentage'] >= 0)
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+                            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                            {{ $widgets['totalCustomersPercentage'] }}%
+                        </span>
+                    @else
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-600">
+                            <i data-lucide="arrow-down-right" class="h-3.5 w-3.5"></i>
+                            {{ abs($widgets['totalCustomersPercentage']) }}%
+                        </span>
+                    @endif
+                    <span class="text-xs text-slate-400">
+                        @if($filter === 'today')
+                            vs yesterday
+                        @elseif($filter === 'this_week')
+                            vs last week
+                        @else
+                            vs last month
+                        @endif
                     </span>
-                    <span class="text-xs text-slate-400">vs last month</span>
                 </div>
             </article>
 
@@ -118,12 +166,28 @@
                 </div>
 
                 <div class="mt-5 flex items-center justify-between">
-                    <span
-                        class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-600">
-                        <i data-lucide="arrow-down-right" class="h-3.5 w-3.5"></i>
-                        2.4%
+                    @if($widgets['totalRefundPercentage'] >= 0)
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+                            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                            {{ $widgets['totalRefundPercentage'] }}%
+                        </span>
+                    @else
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-600">
+                            <i data-lucide="arrow-down-right" class="h-3.5 w-3.5"></i>
+                            {{ abs($widgets['totalRefundPercentage']) }}%
+                        </span>
+                    @endif
+                    <span class="text-xs text-slate-400">
+                        @if($filter === 'today')
+                            vs yesterday
+                        @elseif($filter === 'this_week')
+                            vs last week
+                        @else
+                            vs last month
+                        @endif
                     </span>
-                    <span class="text-xs text-slate-400">vs last month</span>
                 </div>
             </article>
         </section>
@@ -737,25 +801,25 @@
 
         {{-- Total Categories --}}
         <!-- <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-tags text-white text-base"></i>
-                                        </div>
-                                    </div>
-                                    <h3 class="text-gray-500 text-xs font-medium mb-1">Categories</h3>
-                                    <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalCategories'], 0) }}</p>
-                                </div> -->
+                                                            <div class="flex items-center justify-between mb-3">
+                                                                <div class="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
+                                                                    <i class="fas fa-tags text-white text-base"></i>
+                                                                </div>
+                                                            </div>
+                                                            <h3 class="text-gray-500 text-xs font-medium mb-1">Categories</h3>
+                                                            <p class="text-xl font-bold text-gray-900">{{ number_format($widgets['totalCategories'], 0) }}</p>
+                                                        </div> -->
 
         {{-- Average Order Value --}}
         <!-- <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-chart-line text-white text-base"></i>
-                                        </div>
-                                    </div>
-                                    <h3 class="text-gray-500 text-xs font-medium mb-1">Avg Order Value</h3>
-                                    <p class="text-xl font-bold text-gray-900">{{ money($widgets['avgOrderValue']) }}</p>
-                                </div> -->
+                                                            <div class="flex items-center justify-between mb-3">
+                                                                <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                                                                    <i class="fas fa-chart-line text-white text-base"></i>
+                                                                </div>
+                                                            </div>
+                                                            <h3 class="text-gray-500 text-xs font-medium mb-1">Avg Order Value</h3>
+                                                            <p class="text-xl font-bold text-gray-900">{{ money($widgets['avgOrderValue']) }}</p>
+                                                        </div> -->
 
         {{-- Today's Orders --}}
         <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition">
@@ -811,8 +875,8 @@
                 </div>
             </div>
             <!-- <div class="chart-container">
-                                    <canvas id="revenueChart"></canvas>
-                                </div> -->
+                                                            <canvas id="revenueChart"></canvas>
+                                                        </div> -->
         </div>
 
         {{-- Top Products --}}
