@@ -90,7 +90,7 @@ $user = auth()->user();
             </button>
             <div class="sidebar-submenu">
                 <a href="{{ route('admin.products.index') }}"
-                    class="sidebar-sublink {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                    class="sidebar-sublink {{ request()->routeIs('admin.products.index') ? 'active' : '' }}">
                     <span class="sidebar-sublink-dot"></span>All Products
                 </a>
                 <a href="{{ route('admin.categories.index') }}"
@@ -100,6 +100,10 @@ $user = auth()->user();
                 <a href="{{ route('admin.brands.index') }}"
                     class="sidebar-sublink {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
                     <span class="sidebar-sublink-dot"></span>Brands
+                </a>
+                <a href="{{ route('admin.products.printBarcode') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.products.printBarcode') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Print Barcode
                 </a>
             </div>
         </div>

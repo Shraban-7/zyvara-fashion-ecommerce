@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Setting;
 use App\Models\Size;
 use App\Models\StockLog;
 use App\Services\ImageOptimizerService;
@@ -739,5 +740,58 @@ class ProductController extends Controller
 
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    public function printBarcode(Request $request)
+    {
+        $products = Product::with(['variants.size','variants.color'])
+            ->get();
+
+        $siteName = Setting::where('key', 'site_name')->value('value');
+
+        return view('admin.barcodes.index', compact('products','siteName'));
+    }
+
+    public function printBarcodeLabels(Request $request)
+    {
+        $request->validate([
+            'sku' => 'required',
+            'quantity' => 'required|numeric'
+        ]);
+
+        $variant = ProductVariant::where('sku', $request->sku)->first();
+
+        $siteName = Setting::where('key', 'site_name')->value('value');
+
+        if ($variant) {
+            $price = $variant->finalPrice;
+
+            $data = [
+                'sellerName' => $siteName,
+                'productName' => $variant->product->name,
+                'variantName' => $variant->variantName,
+                'sku' => $variant->sku,
+                'price' => money($price),
+                'quantity' => $request->quantity,
+            ];
+
+            return view('admin.barcodes.print_new', compact('data'));
+        }
+
+        $product = Product::where('sku', $request->sku)->first();
+        if ($product) {
+            $data = [
+                'sellerName' => $siteName,
+                'productName' => $product->name,
+                'variantName' => '',
+                'sku' => $product->sku,
+                'price' => money($product->selling_price),
+                'quantity' => $request->quantity,
+            ];
+
+            return view('admin.barcodes.print_new', compact('data'));
+        }
+
+        return redirect()->route('admin.products.printBarcode')->with('error', 'Product not found!');
     }
 }

@@ -31,6 +31,11 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/{product}/stock-history', [ProductController::class, 'stockHistory'])->name('stock-history');
         Route::post('/stock/add', [ProductController::class, 'addStock'])->name('stock.add');
         Route::post('/stock/remove', [ProductController::class, 'removeStock'])->name('stock.remove');
+
+        //barcode
+
+        Route::get('print-barcode', [ProductController::class, 'printBarcode'])->name('printBarcode');
+        Route::get('print-labels', [ProductController::class, 'printBarcodeLabels'])->name('printBarcodeLabels');
     });
 
     Route::prefix('orders')->as('orders.')->group(function () {
