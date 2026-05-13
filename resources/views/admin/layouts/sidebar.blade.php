@@ -159,6 +159,16 @@ $user = auth()->user();
             <span class="sidebar-label">Expenses</span>
         </a>
 
+        {{-- ── Employees ────────────────────────────── --}}
+        <div class="sidebar-section-label">Employees</div>
+
+        <a href="{{ route('admin.employees.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}"
+            data-tooltip="Employees">
+            <span class="sidebar-icon"><i class="fas fa-users"></i></span>
+            <span class="sidebar-label">Employees</span>
+        </a>
+
         {{-- ── SYSTEM ────────────────────────────── --}}
         <div class="sidebar-section-label">System</div>
 

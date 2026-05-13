@@ -324,7 +324,17 @@
                                 </option>
 
                                 @foreach ($employees as $employee)
-                                    <option value="{{ $employee->id }}" {{ isset($order) && $order->employee_id == $employee->id ? 'selected' : '' }}>
+                                    <option value="{{ $employee->id }}"
+                                        {{
+                                            (
+                                                isset($order)
+                                                    ? $order->employee_id == $employee->id
+                                                    : (
+                                                        auth()->user()->role->value === \App\Enums\UserRole::STAFF->value
+                                                        && auth()->id() == $employee->id
+                                                    )
+                                            ) ? 'selected' : ''
+                                        }}>
                                         {{ $employee->name }}
                                     </option>
                                 @endforeach

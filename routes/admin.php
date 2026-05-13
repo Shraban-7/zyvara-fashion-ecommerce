@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CashRegisterController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\Admin\SaleReturnController;
 use Illuminate\Support\Facades\Route;
@@ -88,6 +89,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('customers')->as('customers.')->group(function () {
         Route::get('/', [CustomerController::class, 'index'])->name('index');
         Route::put('/{customer}/update', [CustomerController::class, 'update'])->name('update');
+    });
+
+    Route::prefix('employees')->as('employees.')->group(function () {
+        Route::get('/', [EmployeeController::class, 'index'])->name('index');
+        Route::get('/create', [EmployeeController::class, 'create'])->name('create');
+        Route::post('/store', [EmployeeController::class, 'store'])->name('store');
+        Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('edit');
+        Route::put('/{employee}/update', [EmployeeController::class, 'update'])->name('update');
+        Route::delete('/{employee}/delete', [EmployeeController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('banners')->as('banners.')->group(function () {

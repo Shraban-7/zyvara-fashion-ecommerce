@@ -964,13 +964,9 @@ class PosController extends Controller
         $query = Order::with(['user', 'items','employee'])
             ->where('is_pos', 1);
 
-        // =========================
-        // STATUS FILTER (NEW)
-        // =========================
         if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         } else {
-            // default allowed POS statuses
             $query->whereIn('status', [
                 OrderStatus::DELIVERED,
                 OrderStatus::CANCELLED,
@@ -978,9 +974,6 @@ class PosController extends Controller
             ]);
         }
 
-        // =========================
-        // SEARCH
-        // =========================
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -991,9 +984,6 @@ class PosController extends Controller
             });
         }
 
-        // =========================
-        // DATE FILTER
-        // =========================
         if ($request->filled('date_from') && $request->filled('date_to')) {
             $query->whereBetween('created_at', [
                 $request->date_from . ' 00:00:00',
