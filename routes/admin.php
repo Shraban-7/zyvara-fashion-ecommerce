@@ -99,7 +99,6 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::prefix('pos')->as('pos.')->group(function () {
         Route::get('/', [PosController::class, 'index'])->name('index');
-        Route::get('/sales', [PosController::class, 'posSales'])->name('sales');
         Route::get('/load-orders', [PosController::class, 'getPosOrders'])->name('loadOrders');
         Route::post('/store', [PosController::class, 'store'])->name('store');
         Route::post('/update/{orderId}', [PosController::class, 'update'])->name('update');
@@ -108,6 +107,11 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/search/customer', [PosController::class, 'searchCustomers'])->name('searchCustomers');
         Route::get('/{orderNumber}/receipt', [PosController::class, 'receipt'])->name('receipt');
 
+        Route::prefix('sales')->as('sales.')->group(function () {
+            Route::get('/', [PosController::class, 'posSales'])->name('index');
+            Route::get('/{id}', [PosController::class, 'saleShow'])->name('show');
+            Route::delete('/{id}', [PosController::class, 'saleDelete'])->name('destroy');
+        });
 
         Route::prefix('cart')->as('cart.')->group(function () {
             Route::get('/', [PosController::class, 'getCart'])->name('get');

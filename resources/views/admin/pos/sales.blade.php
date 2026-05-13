@@ -28,30 +28,30 @@
 
     {{-- Filters & Search (MATCH ORDERS PAGE STYLE) --}}
     <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
-        <form method="GET" action="{{ route('admin.pos.sales') }}" class="space-y-4">
+        <form method="GET" action="{{ route('admin.pos.sales.index') }}" class="space-y-4">
 
             {{-- Status Tabs --}}
             <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-4">
 
-                <a href="{{ route('admin.pos.sales', array_merge(request()->except('status'), ['status' => 'all'])) }}"
+                <a href="{{ route('admin.pos.sales.index', array_merge(request()->except('status'), ['status' => 'all'])) }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition
                        {{ request('status', 'all') === 'all' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     All ({{ $statusCounts['all'] ?? 0 }})
                 </a>
 
-                <a href="{{ route('admin.pos.sales', array_merge(request()->except('status'), ['status' => 'draft'])) }}"
+                <a href="{{ route('admin.pos.sales.index', array_merge(request()->except('status'), ['status' => 'draft'])) }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition
                        {{ request('status') === 'draft' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     Draft ({{ $statusCounts['draft'] ?? 0 }})
                 </a>
 
-                <a href="{{ route('admin.pos.sales', array_merge(request()->except('status'), ['status' => 'delivered'])) }}"
+                <a href="{{ route('admin.pos.sales.index', array_merge(request()->except('status'), ['status' => 'delivered'])) }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition
                        {{ request('status') === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     Delivered ({{ $statusCounts['delivered'] ?? 0 }})
                 </a>
 
-                <a href="{{ route('admin.pos.sales', array_merge(request()->except('status'), ['status' => 'cancelled'])) }}"
+                <a href="{{ route('admin.pos.sales.index', array_merge(request()->except('status'), ['status' => 'cancelled'])) }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition
                        {{ request('status') === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     Cancelled ({{ $statusCounts['cancelled'] ?? 0 }})
@@ -107,7 +107,7 @@
                 <button type="submit" class="h-11 px-6 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">
                     Apply Filters
                 </button>
-                <a href="{{ route('admin.pos.sales') }}"
+                <a href="{{ route('admin.pos.sales.index') }}"
                     class="h-11 px-4 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition flex items-center">
                     Clear
                 </a>
@@ -198,7 +198,7 @@
 
                                         <td class="px-6 py-4 text-right">
                                             <div class="flex justify-end gap-2">
-                                                <a href="{{ route('admin.orders.show', ['id' => $order->id,'source' => 'sales']) }}" class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
+                                                <a href="{{ route('admin.pos.sales.show',  $order->id) }}" class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 </a>

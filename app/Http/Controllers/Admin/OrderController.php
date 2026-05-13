@@ -182,10 +182,6 @@ class OrderController extends Controller
         $order->delete();
 
         toast_success('Order deleted successfully!');
-
-        if ($request->source === 'sales') {
-            return redirect()->route('admin.pos.sales');
-        }
         
         return redirect()->route('admin.orders.index');
     }

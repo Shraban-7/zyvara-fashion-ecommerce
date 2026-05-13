@@ -1029,6 +1029,33 @@ class PosController extends Controller
         return view('admin.pos.sales', compact('orders', 'statusCounts'));
     }
 
+    public function saleShow(Request $request, $id)
+    {
+        $order = Order::with([
+            'user',
+            'items.product',
+            'coupon',
+            'statusHistories'
+        ])->findOrFail($id);
+
+        $source = $request->source;
+
+        return view('admin.pos.sale_show', compact('order', 'source'));
+    }
+
+    public function saleDelete(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        $order->items()->delete();
+
+        $order->delete();
+
+        toast_success('Sale deleted successfully!');
+        
+        return redirect()->route('admin.pos.sales.index');
+    }
+
     private function getCartResponse($orderNumber = null)
     {
         $cart = $this->getOrCreateCart($orderNumber);

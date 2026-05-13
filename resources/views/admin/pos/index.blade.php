@@ -826,7 +826,7 @@
                             if (res.data.length === 0) {
                                 html = '<p class="text-center text-gray-500">No orders found</p>';
                             } else {
-                                let orderUrlTemplate = "{{ route('admin.orders.show', ':id') }}";
+                                let orderUrlTemplate = "{{ route('admin.pos.sales.show', ':id') }}";
                                 let posUrlTemplate = "{{ route('admin.pos.index') }}";
 
                                 res.data.forEach(order => {

@@ -61,8 +61,8 @@ $user = auth()->user();
                     class="sidebar-sublink {{ request()->routeIs('admin.pos.index') ? 'active' : '' }}">
                     <span class="sidebar-sublink-dot"></span>POS Terminal
                 </a>
-                <a href="{{ route('admin.pos.sales') }}"
-                    class="sidebar-sublink {{ request()->routeIs('admin.pos.sales') ? 'active' : '' }}">
+                <a href="{{ route('admin.pos.sales.index') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.pos.sales.*') ? 'active' : '' }}">
                     <span class="sidebar-sublink-dot"></span>POS Sales
                 </a>
             </div>
