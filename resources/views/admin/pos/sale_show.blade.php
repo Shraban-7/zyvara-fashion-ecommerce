@@ -10,7 +10,7 @@
             <i class="fas fa-arrow-left text-gray-600"></i>
         </a>
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Order {{ $order->order_number }}</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Sale {{ $order->order_number }}</h1>
             <p class="text-sm text-gray-500 mt-1">Placed on {{ $order->created_at->format('M d, Y \a\t h:i A') }}</p>
         </div>
     </div>
@@ -331,18 +331,18 @@
                 <div class="space-y-3">
                     <div>
                         <p class="text-xs text-gray-500 mb-1">Name</p>
-                        <p class="font-semibold text-gray-900">{{ $order->employee->name }}</p>
+                        <p class="font-semibold text-gray-900">{{ $order->employee->name ?? '' }}</p>
                     </div>
                     <div>
                         <p class="text-xs text-gray-500 mb-1">Phone</p>
-                        <a href="tel:{{ $order->employee->phone }}" class="font-semibold text-blue-600 hover:text-blue-800">
-                            {{ $order->employee->phone }}
+                        <a href="tel:{{ $order->employee->phone ?? '' }}" class="font-semibold text-blue-600 hover:text-blue-800">
+                            {{ $order->employee->phone ?? '' }}
                         </a>
                     </div>
                     <div>
                         <p class="text-xs text-gray-500 mb-1">Email</p>
-                        <a href="mailto:{{ $order->employee->email }}" class="font-semibold text-blue-600 hover:text-blue-800">
-                            {{ $order->employee->email }}
+                        <a href="mailto:{{ $order->employee->email ?? '' }}" class="font-semibold text-blue-600 hover:text-blue-800">
+                            {{ $order->employee->email ?? '' }}
                         </a>
                     </div>
                 </div>
