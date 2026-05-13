@@ -15,20 +15,20 @@
         </div>
     </div>
     <div class="flex items-center gap-3">
-        @if ($order->status->value !== 'draft') 
-            <button onclick="printReceipt('{{ route('admin.pos.receipt', $order->order_number) }}')" class="px-4 py-2 bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition flex items-center gap-2">
-                <i class="fas fa-download"></i>
-                <span>Print Receipt</span>
-            </button>
-            <button onclick="printReceipt('{{ route('admin.orders.invoice', $order->order_number) }}')" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2">
-                <i class="fas fa-download"></i>
-                <span>Download Invoice</span>
-            </button>
-            <button onclick="openReturnModal()" 
-                class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition flex items-center gap-2">
-                <i class="fas fa-undo"></i>
-                <span>Sale Return</span>
-            </button> 
+        @if ($order->status->value !== 'draft')
+        <button onclick="printReceipt('{{ route('admin.pos.receipt', $order->order_number) }}')" class="px-4 py-2 bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition flex items-center gap-2">
+            <i class="fas fa-download"></i>
+            <span>Print Receipt</span>
+        </button>
+        <button onclick="printReceipt('{{ route('admin.orders.invoice', $order->order_number) }}')" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2">
+            <i class="fas fa-download"></i>
+            <span>Download Invoice</span>
+        </button>
+        <button onclick="openReturnModal()"
+            class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition flex items-center gap-2">
+            <i class="fas fa-undo"></i>
+            <span>Sale Return</span>
+        </button>
         @endif
         @if($order->status->value !== 'cancelled')
         <button onclick="openDeleteModal()" class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition flex items-center gap-2">
@@ -82,18 +82,18 @@
 
             <div class="space-y-4">
                 @foreach($order->items as $item)
-                <div class="flex gap-4 p-4 bg-gray-50 rounded-xl relative">
+                <div class="flex gap-4 mb-3 relative">
 
                     <!-- RETURNED BADGE -->
                     @if(!empty($item->return_item_id))
-                        <span class="absolute top-2 right-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-semibold">
-                            Returned
-                        </span>
+                    <span class="absolute top-2 right-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-semibold">
+                        Returned
+                    </span>
                     @endif
 
-                    <div class="w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-white">
-                        <img src="{{ $item->product_image }}" 
-                            alt="{{ $item->product_name }}" 
+                    <div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-white">
+                        <img src="{{ $item->product?->thumbnail }}"
+                            alt="{{ $item->product_name }}"
                             class="w-full h-full object-cover">
                     </div>
 
@@ -220,13 +220,14 @@
             </div>
         </div>
 
-        {{-- Shipping Address --}}
+
         <div class="bg-white rounded-2xl border border-gray-200 p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <i class="fas fa-map-marker-alt text-blue-600"></i>
                 Shipping Address
             </h2>
 
+            @if($order->shipping_address)
             <div class="space-y-3">
                 <div>
                     <p class="text-sm text-gray-900">{{ $order->shipping_address }}</p>
@@ -239,7 +240,9 @@
                     </span>
                 </div>
             </div>
+            @endif
         </div>
+
 
         {{-- Payment Information --}}
         <div class="bg-white rounded-2xl border border-gray-200 p-6">
@@ -322,31 +325,22 @@
 
         {{-- Employee Information --}}
         @if ($order->is_pos == 1)
-            <div class="bg-white rounded-2xl border border-gray-200 p-6">
-                <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <i class="fas fa-user text-blue-600"></i>
-                    Employee Information
-                </h2>
-
-                <div class="space-y-3">
-                    <div>
-                        <p class="text-xs text-gray-500 mb-1">Name</p>
-                        <p class="font-semibold text-gray-900">{{ $order->employee->name ?? '' }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 mb-1">Phone</p>
-                        <a href="tel:{{ $order->employee->phone ?? '' }}" class="font-semibold text-blue-600 hover:text-blue-800">
-                            {{ $order->employee->phone ?? '' }}
-                        </a>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 mb-1">Email</p>
-                        <a href="mailto:{{ $order->employee->email ?? '' }}" class="font-semibold text-blue-600 hover:text-blue-800">
-                            {{ $order->employee->email ?? '' }}
-                        </a>
-                    </div>
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+            <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <i class="fas fa-user text-blue-600"></i>
+                Employee Information
+            </h2>
+            @if($order->employee)
+            <div class="space-y-3">
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Name</p>
+                    <p class="font-semibold text-gray-900">{{ $order->employee->name ?? '' }}</p>
                 </div>
             </div>
+            @else
+            <p class="text-sm text-gray-500">No employee.</p>
+            @endif
+        </div>
         @endif
 
         {{-- Admin Notes --}}
@@ -420,43 +414,43 @@
         <div class="mt-4 max-h-72 overflow-y-auto space-y-2">
 
             @foreach($order->items as $item)
-                <div class="border p-3 rounded flex gap-3 items-start">
+            <div class="border p-3 rounded flex gap-3 items-start">
 
-                    <!-- CHECKBOX -->
-                    <input type="checkbox"
-                           class="return-check mt-1 {{ $item->return_item_id ? 'hidden' : '' }}"
-                           data-id="{{ $item->id }}"
-                           data-max="{{ $item->quantity }}"
-                           data-default-price="{{ $item->unit_price }}">
+                <!-- CHECKBOX -->
+                <input type="checkbox"
+                    class="return-check mt-1 {{ $item->return_item_id ? 'hidden' : '' }}"
+                    data-id="{{ $item->id }}"
+                    data-max="{{ $item->quantity }}"
+                    data-default-price="{{ $item->unit_price }}">
 
-                    <!-- INFO -->
-                    <div class="flex-1">
+                <!-- INFO -->
+                <div class="flex-1">
 
-                        <p class="text-sm font-semibold">
-                            {{ $item->product->name }}
-                        </p>
+                    <p class="text-sm font-semibold">
+                        {{ $item->product->name }}
+                    </p>
 
-                        <p class="text-xs text-gray-500">
-                            Qty: {{ $item->quantity }} | Price: {{ $item->unit_price }}
-                        </p>
+                    <p class="text-xs text-gray-500">
+                        Qty: {{ $item->quantity }} | Price: {{ $item->unit_price }}
+                    </p>
 
-                        <!-- EDIT SECTION -->
-                        <div id="edit-{{ $item->id }}" class="hidden mt-2 flex gap-2">
+                    <!-- EDIT SECTION -->
+                    <div id="edit-{{ $item->id }}" class="hidden mt-2 flex gap-2">
 
-                            <input type="number"
-                                   class="qty-input border rounded px-2 py-1 text-xs w-20"
-                                   min="1"
-                                   max="{{ $item->quantity }}"
-                                   value="{{ $item->quantity }}">
+                        <input type="number"
+                            class="qty-input border rounded px-2 py-1 text-xs w-20"
+                            min="1"
+                            max="{{ $item->quantity }}"
+                            value="{{ $item->quantity }}">
 
-                            <input type="number"
-                                   class="price-input border rounded px-2 py-1 text-xs w-24"
-                                   value="{{ $item->unit_price }}">
+                        <input type="number"
+                            class="price-input border rounded px-2 py-1 text-xs w-24"
+                            value="{{ $item->unit_price }}">
 
-                        </div>
                     </div>
-
                 </div>
+
+            </div>
             @endforeach
 
         </div>
@@ -480,7 +474,7 @@
 
             <!-- ENUM PAYMENT METHOD -->
             <select id="refundMethod"
-                    class="w-full border rounded px-3 py-2 text-sm">
+                class="w-full border rounded px-3 py-2 text-sm">
 
                 <option value="">Select Refund Method</option>
 
@@ -492,8 +486,8 @@
             </select>
 
             <textarea id="refundRemarks"
-                      placeholder="Remarks"
-                      class="w-full border rounded px-3 py-2 text-sm"></textarea>
+                placeholder="Remarks"
+                class="w-full border rounded px-3 py-2 text-sm"></textarea>
 
         </div>
 
@@ -501,12 +495,12 @@
         <div class="flex justify-end gap-2 mt-5">
 
             <button onclick="closeReturnModal()"
-                    class="px-4 py-2 border rounded-lg">
+                class="px-4 py-2 border rounded-lg">
                 Cancel
             </button>
 
             <button onclick="openConfirmReturnModal()"
-                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
                 Process Return
             </button>
 
@@ -556,238 +550,236 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-
-/* =========================
+    /* =========================
    PRINT RECEIPT
 ========================= */
-function printReceipt(url) {
-    let printWindow = window.open(url, '_blank', 'width=800,height=600');
+    function printReceipt(url) {
+        let printWindow = window.open(url, '_blank', 'width=800,height=600');
 
-    printWindow.onload = function () {
-        printWindow.focus();
-        printWindow.print();
+        printWindow.onload = function() {
+            printWindow.focus();
+            printWindow.print();
 
-        printWindow.onafterprint = function () {
-            printWindow.close();
+            printWindow.onafterprint = function() {
+                printWindow.close();
+            };
         };
-    };
-}
+    }
 
-/* =========================
-   RETURN MODAL
-========================= */
-function openReturnModal() {
-    document.getElementById('returnModal').classList.remove('hidden');
+    /* =========================
+       RETURN MODAL
+    ========================= */
+    function openReturnModal() {
+        document.getElementById('returnModal').classList.remove('hidden');
 
-    setTimeout(() => {
+        setTimeout(() => {
+            calculateRefund();
+        }, 100);
+    }
+
+    function closeReturnModal() {
+        document.getElementById('returnModal').classList.add('hidden');
+    }
+
+    /* =========================
+       CALCULATE REFUND
+    ========================= */
+    $(document).on("change input", ".return-check, .qty-input, .price-input", function() {
         calculateRefund();
-    }, 100);
-}
-
-function closeReturnModal() {
-    document.getElementById('returnModal').classList.add('hidden');
-}
-
-/* =========================
-   CALCULATE REFUND
-========================= */
-$(document).on("change input", ".return-check, .qty-input, .price-input", function () {
-    calculateRefund();
-});
-
-function calculateRefund() {
-
-    let total = 0;
-
-    $(".return-check:checked").each(function () {
-
-        let id = $(this).data("id");
-        let row = $("#edit-" + id);
-
-        let qty = parseFloat(row.find(".qty-input").val()) || 0;
-        let price = parseFloat(row.find(".price-input").val()) || 0;
-
-        total += qty * price;
     });
 
-    $("#calculatedRefund").text(total.toFixed(2));
-    $("#refundAmount").val(total.toFixed(2));
-}
+    function calculateRefund() {
 
-/* =========================
-   CONFIRM MODAL (FIXED)
-========================= */
+        let total = 0;
 
-function openConfirmReturnModal() {
+        $(".return-check:checked").each(function() {
 
-    // 1. Close return modal FIRST
-    $("#returnModal").addClass("hidden");
+            let id = $(this).data("id");
+            let row = $("#edit-" + id);
 
-    // 2. Build confirmation data
-    let itemsHTML = '';
-    let total = 0;
+            let qty = parseFloat(row.find(".qty-input").val()) || 0;
+            let price = parseFloat(row.find(".price-input").val()) || 0;
 
-    $(".return-check:checked").each(function () {
+            total += qty * price;
+        });
 
-        let id = $(this).data("id");
-        let row = $("#edit-" + id);
+        $("#calculatedRefund").text(total.toFixed(2));
+        $("#refundAmount").val(total.toFixed(2));
+    }
 
-        let name = row.closest('.flex').find('p').first().text();
+    /* =========================
+       CONFIRM MODAL (FIXED)
+    ========================= */
 
-        let qty = parseFloat(row.find(".qty-input").val()) || 0;
-        let price = parseFloat(row.find(".price-input").val()) || 0;
+    function openConfirmReturnModal() {
 
-        let lineTotal = qty * price;
-        total += lineTotal;
+        // 1. Close return modal FIRST
+        $("#returnModal").addClass("hidden");
 
-        itemsHTML += `
+        // 2. Build confirmation data
+        let itemsHTML = '';
+        let total = 0;
+
+        $(".return-check:checked").each(function() {
+
+            let id = $(this).data("id");
+            let row = $("#edit-" + id);
+
+            let name = row.closest('.flex').find('p').first().text();
+
+            let qty = parseFloat(row.find(".qty-input").val()) || 0;
+            let price = parseFloat(row.find(".price-input").val()) || 0;
+
+            let lineTotal = qty * price;
+            total += lineTotal;
+
+            itemsHTML += `
             <div class="flex justify-between border-b pb-1">
                 <span class="truncate">${name} (x${qty})</span>
                 <span>৳${lineTotal.toFixed(2)}</span>
             </div>
         `;
-    });
-
-    if (!itemsHTML) {
-        alert("Select at least one item");
-        return;
-    }
-
-    let refundInput = parseFloat($("#refundAmount").val()) || 0;
-
-    if (refundInput <= 0) {
-        alert("Invalid refund amount");
-        return;
-    }
-
-    let method = $("#refundMethod").val() || 'N/A';
-
-    // 3. Inject data into confirm modal
-    $("#confirmDetails").html(itemsHTML);
-    $("#confirmRefund").text(total.toFixed(2));
-    $("#confirmMethod").text(method.toUpperCase());
-
-    // 4. Small delay ensures smooth UI transition
-    setTimeout(() => {
-        $("#confirmReturnModal").removeClass("hidden");
-    }, 150);
-}
-
-function closeConfirmReturnModal() {
-    $("#confirmReturnModal").addClass("hidden");
-}
-
-let isProcessingReturn = false;
-
-function confirmReturnAction() {
-    if (isProcessingReturn) return;
-
-    isProcessingReturn = true;
-
-    closeConfirmReturnModal();
-    submitReturn();
-}
-
-/* =========================
-   SUBMIT RETURN
-========================= */
-function submitReturn() {
-
-    let items = [];
-
-    $(".return-check:checked").each(function () {
-
-        let id = $(this).data("id");
-        let row = $("#edit-" + id);
-
-        let quantity = parseInt(row.find(".qty-input").val());
-        let unit_price = parseFloat(row.find(".price-input").val());
-
-        if (!quantity || quantity <= 0) return;
-
-        items.push({
-            id: id,
-            quantity: quantity,
-            unit_price: unit_price
         });
-    });
 
-    if (items.length === 0) {
-        alert("Select at least one item");
-        isProcessingReturn = false;
-        return;
+        if (!itemsHTML) {
+            alert("Select at least one item");
+            return;
+        }
+
+        let refundInput = parseFloat($("#refundAmount").val()) || 0;
+
+        if (refundInput <= 0) {
+            alert("Invalid refund amount");
+            return;
+        }
+
+        let method = $("#refundMethod").val() || 'N/A';
+
+        // 3. Inject data into confirm modal
+        $("#confirmDetails").html(itemsHTML);
+        $("#confirmRefund").text(total.toFixed(2));
+        $("#confirmMethod").text(method.toUpperCase());
+
+        // 4. Small delay ensures smooth UI transition
+        setTimeout(() => {
+            $("#confirmReturnModal").removeClass("hidden");
+        }, 150);
     }
 
-    let payload = {
-        items: items,
-        refund_amount: parseFloat($("#refundAmount").val()) || 0,
-        refund_method: $("#refundMethod").val(),
-        remarks: $("#refundRemarks").val(),
-    };
+    function closeConfirmReturnModal() {
+        $("#confirmReturnModal").addClass("hidden");
+    }
 
-    $.ajax({
-        url: `/admin/orders/{{ $order->id }}/return`,
-        type: "POST",
-        data: JSON.stringify(payload),
-        contentType: "application/json",
-        headers: {
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        success: function (res) {
-            if (res.success) {
+    let isProcessingReturn = false;
 
-                window.showSuccess(res.message || "Return processed successfully");
+    function confirmReturnAction() {
+        if (isProcessingReturn) return;
 
-                setTimeout(() => {
-                    location.reload();
-                }, 800);
+        isProcessingReturn = true;
 
-            } else {
-                window.showError(res.message || "Failed");
-            }
-        },
+        closeConfirmReturnModal();
+        submitReturn();
+    }
 
-        error: function (xhr) {
+    /* =========================
+       SUBMIT RETURN
+    ========================= */
+    function submitReturn() {
 
-            let message = "Something went wrong";
+        let items = [];
 
-            if (xhr.responseJSON) {
-                if (xhr.responseJSON.message) {
-                    message = xhr.responseJSON.message;
-                }
+        $(".return-check:checked").each(function() {
 
-                if (xhr.responseJSON.errors) {
-                    message = Object.values(xhr.responseJSON.errors)
-                        .flat()
-                        .join("\n");
-                }
-            }
+            let id = $(this).data("id");
+            let row = $("#edit-" + id);
 
-            window.showError(message);
-        },
-        complete: function () {
+            let quantity = parseInt(row.find(".qty-input").val());
+            let unit_price = parseFloat(row.find(".price-input").val());
+
+            if (!quantity || quantity <= 0) return;
+
+            items.push({
+                id: id,
+                quantity: quantity,
+                unit_price: unit_price
+            });
+        });
+
+        if (items.length === 0) {
+            alert("Select at least one item");
             isProcessingReturn = false;
+            return;
+        }
+
+        let payload = {
+            items: items,
+            refund_amount: parseFloat($("#refundAmount").val()) || 0,
+            refund_method: $("#refundMethod").val(),
+            remarks: $("#refundRemarks").val(),
+        };
+
+        $.ajax({
+            url: `/admin/orders/{{ $order->id }}/return`,
+            type: "POST",
+            data: JSON.stringify(payload),
+            contentType: "application/json",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            success: function(res) {
+                if (res.success) {
+
+                    window.showSuccess(res.message || "Return processed successfully");
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 800);
+
+                } else {
+                    window.showError(res.message || "Failed");
+                }
+            },
+
+            error: function(xhr) {
+
+                let message = "Something went wrong";
+
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
+
+                    if (xhr.responseJSON.errors) {
+                        message = Object.values(xhr.responseJSON.errors)
+                            .flat()
+                            .join("\n");
+                    }
+                }
+
+                window.showError(message);
+            },
+            complete: function() {
+                isProcessingReturn = false;
+            }
+        });
+    }
+
+    /* =========================
+       DELETE MODAL
+    ========================= */
+    function openDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
         }
     });
-}
-
-/* =========================
-   DELETE MODAL
-========================= */
-function openDeleteModal() {
-    document.getElementById('deleteModal').classList.remove('hidden');
-}
-
-function closeDeleteModal() {
-    document.getElementById('deleteModal').classList.add('hidden');
-}
-
-document.getElementById('deleteModal')?.addEventListener('click', function (e) {
-    if (e.target === this) {
-        closeDeleteModal();
-    }
-});
-
 </script>
 @endpush
 @endsection

@@ -192,7 +192,6 @@ class PosController extends Controller
                 'status' => OrderStatus::DELIVERED,
                 'payment_method' => $paymentMethodEnum->value ?? '',
                 'payment_status' =>  $payment_status,
-                'notes' => 'POS Order',
                 'paid_at' => now(),
             ]);
 
@@ -961,7 +960,7 @@ class PosController extends Controller
 
     public function posSales(Request $request)
     {
-        $query = Order::with(['user', 'items','employee'])
+        $query = Order::with(['user', 'items.product','employee'])
             ->where('is_pos', 1);
 
         if ($request->filled('status') && $request->status !== 'all') {
