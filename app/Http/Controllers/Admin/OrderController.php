@@ -53,7 +53,7 @@ class OrderController extends Controller
             $query->whereDate('created_at', '<=', $request->to_date);
         }
 
-        $orders = $query->paginate(20)->withQueryString();
+        $orders = $query->paginate(20)->appends($request->all());
 
         // Get counts for filters
         $statusCounts = [

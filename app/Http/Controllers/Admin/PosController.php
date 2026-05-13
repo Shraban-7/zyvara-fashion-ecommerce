@@ -961,7 +961,7 @@ class PosController extends Controller
 
     public function posSales(Request $request)
     {
-        $query = Order::with(['user', 'items'])
+        $query = Order::with(['user', 'items','employee'])
             ->where('is_pos', 1);
 
         // =========================

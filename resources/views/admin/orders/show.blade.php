@@ -322,6 +322,35 @@
             </form>
         </div>
 
+        {{-- Employee Information --}}
+        @if ($order->is_pos == 1)
+            <div class="bg-white rounded-2xl border border-gray-200 p-6">
+                <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fas fa-user text-blue-600"></i>
+                    Employee Information
+                </h2>
+
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Name</p>
+                        <p class="font-semibold text-gray-900">{{ $order->employee->name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Phone</p>
+                        <a href="tel:{{ $order->employee->phone }}" class="font-semibold text-blue-600 hover:text-blue-800">
+                            {{ $order->employee->phone }}
+                        </a>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Email</p>
+                        <a href="mailto:{{ $order->employee->email }}" class="font-semibold text-blue-600 hover:text-blue-800">
+                            {{ $order->employee->email }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         {{-- Admin Notes --}}
         <div class="bg-white rounded-2xl border border-gray-200 p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">

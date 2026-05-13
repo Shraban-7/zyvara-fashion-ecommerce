@@ -78,6 +78,11 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'employee_id');
+    }
+
     public function coupon(): BelongsTo
     {
         return $this->belongsTo(Coupon::class);
