@@ -17,8 +17,6 @@
         {{-- Filter --}}
         <form method="GET" class="bg-white border rounded-xl p-4 mb-4">
 
-            <input type="hidden" name="tab" value="pos">
-
             <div class="flex flex-col md:flex-row gap-3">
 
                 {{-- SEARCH --}}
@@ -147,7 +145,6 @@
 
     </div>
 
-    {{-- Delete Confirmation Modal --}}
     {{-- Delete Confirmation Modal --}}
     <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
 

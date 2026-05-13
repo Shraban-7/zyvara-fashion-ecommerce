@@ -15,8 +15,8 @@ class EmployeeController extends Controller
     {
         $query = User::where('role', UserRole::STAFF->value);
 
-        if ($request->filled('web_search')) {
-            $search = $request->web_search;
+        if ($request->filled('search')) {
+            $search = $request->search;
 
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
