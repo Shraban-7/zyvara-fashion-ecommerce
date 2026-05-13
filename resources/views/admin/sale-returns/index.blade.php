@@ -112,10 +112,24 @@
 
                             {{-- ORDER --}}
                             <td class="px-6 py-4">
-                                <a href="{{ route('admin.orders.show', $return->sale_id) }}"
-                                    class="font-medium text-blue-600 hover:underline">
-                                    {{ $return->order_number }}
-                                </a>
+                                @if ($return->order != null)
+                                    @if ($return->order->is_pos)
+                                        <a href="{{ route('admin.pos.sales.show', $return->sale_id) }}"
+                                            class="font-medium text-blue-600 hover:underline">
+                                            {{ $return->order_number }}
+                                        </a>
+                                    @else
+                                        <a href="{{ route('admin.orders.show', $return->sale_id) }}"
+                                            class="font-medium text-blue-600 hover:underline">
+                                            {{ $return->order_number }} 
+                                        </a>
+                                    @endif
+
+                                @else
+                                    <p class="font-medium text-red-600 hover:underline">
+                                        {{ $return->order_number }} (Deleted)
+                                    </p>
+                                @endif
                             </td>
 
                             {{-- CUSTOMER --}}
@@ -204,7 +218,7 @@
 
 
         window.open(`/admin/returns/${id}/print`, '_blank');
-        }
+                }
 
         function exportReturns() {
             const params = new URLSearchParams(window.location.search);
