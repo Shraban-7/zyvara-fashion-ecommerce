@@ -125,6 +125,16 @@ $user = auth()->user();
             <span class="sidebar-label">Customers</span>
         </a>
 
+        {{-- ── Employees ────────────────────────────── --}}
+        <div class="sidebar-section-label">Employees</div>
+
+        <a href="{{ route('admin.employees.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}"
+            data-tooltip="Employees">
+            <span class="sidebar-icon"><i class="fas fa-users"></i></span>
+            <span class="sidebar-label">Employees</span>
+        </a>
+
         {{-- ── MARKETING ────────────────────────────── --}}
         <div class="sidebar-section-label">Marketing</div>
 
@@ -159,15 +169,28 @@ $user = auth()->user();
             <span class="sidebar-label">Expenses</span>
         </a>
 
-        {{-- ── Employees ────────────────────────────── --}}
-        <div class="sidebar-section-label">Employees</div>
-
-        <a href="{{ route('admin.employees.index') }}"
-            class="sidebar-link {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}"
-            data-tooltip="Employees">
-            <span class="sidebar-icon"><i class="fas fa-users"></i></span>
-            <span class="sidebar-label">Employees</span>
-        </a>
+        {{-- ── REPORT ────────────────────────────── --}}
+        <div class="sidebar-section-label">Reports</div>
+        <div class="sidebar-group {{ request()->routeIs('admin.reports.*') ? 'open' : '' }}">
+            <button type="button"
+                class="sidebar-group-btn {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}"
+                onclick="toggleSidebarGroup(this)"
+                data-tooltip="Reports">
+                <span class="sidebar-icon"><i class="fas fa-chart-bar"></i></span>
+                <span class="sidebar-label">Reports</span>
+                <span class="sidebar-chevron sidebar-label"><i class="fas fa-chevron-right"></i></span>
+            </button>
+            <div class="sidebar-submenu">
+                <a href="{{ route('admin.reports.overview') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.reports.overview') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Overview
+                </a>
+                <a href="{{ route('admin.reports.financial') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.reports.financial') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Financial
+                </a>
+            </div>
+        </div>
 
         {{-- ── SYSTEM ────────────────────────────── --}}
         <div class="sidebar-section-label">System</div>

@@ -3,18 +3,19 @@
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CashRegisterController;
-use App\Http\Controllers\Admin\EmployeeController;
-use App\Http\Controllers\Admin\ExpenseController;
-use App\Http\Controllers\Admin\SaleReturnController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PosController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SaleReturnController;
 use App\Http\Controllers\Admin\SettingController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -131,6 +132,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
             Route::post('/update-item-price/{itemId}', [PosController::class, 'updateItemPrice'])->name('updateItemPrice');
             Route::delete('/clear', [PosController::class, 'clearCart'])->name('clear');
         });
+    });
+
+
+    Route::prefix('reports')->as('reports.')->group(function () {
+        Route::get('/financial', [ReportController::class, 'financial'])->name('financial');
+        Route::get('/sales', [ReportController::class, 'sales'])->name('sales');
+        Route::get('/customers', [ReportController::class, 'customers'])->name('customers');
+        Route::get('/overview', [ReportController::class, 'overview'])->name('overview');
+        Route::get('/cash-registers', [ReportController::class, 'cashRegisters'])->name('cashRegisters');
     });
 
     // Categories Routes (placeholder)
