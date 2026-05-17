@@ -70,149 +70,133 @@
 
         {{-- KPI Cards --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-8">
-            
+
             {{-- Total Revenue --}}
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-3 flex items-center gap-2">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-                            <i class="fas fa-sack-dollar text-lg text-white"></i>
-                        </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-blue-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                        <i class="fas fa-sack-dollar text-blue-600 text-lg"></i>
                     </div>
-                    <p class="mb-1 text-xs font-medium uppercase tracking-wider text-blue-100">Total Revenue</p>
-                    <h3 class="mb-2 text-2xl font-bold text-white">{{ money($currentMetrics['totalRevenue']) }}</h3>
-                    <div class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                        @if($changes['revenue'] >= 0)
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                            </svg>
-                        @else
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                            </svg>
-                        @endif
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Total Revenue</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ money($currentMetrics['totalRevenue']) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $changes['revenue'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $changes['revenue'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['revenue']), 2) }}%
-                    </div>
+                    </span>
                 </div>
             </div>
 
             {{-- Gross Profit --}}
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-3 flex items-center gap-2">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-                            <i class="fas fa-hand-holding-dollar text-lg text-white"></i>
-                        </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-cyan-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center">
+                        <i class="fas fa-hand-holding-dollar text-cyan-600 text-lg"></i>
                     </div>
-                    <p class="mb-1 text-xs font-medium uppercase tracking-wider text-cyan-100">Gross Profit</p>
-                    <h3 class="mb-2 text-2xl font-bold text-white">{{ money($currentMetrics['grossProfit']) }}</h3>
-                    <div class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                        @if($changes['grossProfit'] >= 0)
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                            </svg>
-                        @else
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                            </svg>
-                        @endif
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Gross Profit</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ money($currentMetrics['grossProfit']) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $changes['grossProfit'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $changes['grossProfit'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['grossProfit']), 2) }}%
-                    </div>
+                    </span>
                 </div>
             </div>
 
             {{-- Net Profit --}}
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-3 flex items-center gap-2">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-                            <i class="fas fa-coins text-lg text-white"></i>
-                        </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-green-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
+                        <i class="fas fa-coins text-green-600 text-lg"></i>
                     </div>
-                    <p class="mb-1 text-xs font-medium uppercase tracking-wider text-emerald-100">Net Profit</p>
-                    <h3 class="mb-2 text-2xl font-bold text-white">{{ money($currentMetrics['netProfit']) }}</h3>
-                    <div class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                        @if($changes['netProfit'] >= 0)
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                            </svg>
-                        @else
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                            </svg>
-                        @endif
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Net Profit</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ money($currentMetrics['netProfit']) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $changes['netProfit'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $changes['netProfit'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['netProfit']), 2) }}%
-                    </div>
+                    </span>
                 </div>
             </div>
 
             {{-- Total Expenses --}}
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-3 flex items-center gap-2">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-                            <i class="fas fa-wallet text-lg text-white"></i>
-                        </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-rose-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center">
+                        <i class="fas fa-wallet text-rose-600 text-lg"></i>
                     </div>
-                    <p class="mb-1 text-xs font-medium uppercase tracking-wider text-rose-100">Total Expenses</p>
-                    <h3 class="mb-2 text-2xl font-bold text-white">{{ money($currentMetrics['totalExpense']) }}</h3>
-                    <div class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                        @if($changes['expense'] >= 0)
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                            </svg>
-                        @else
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                            </svg>
-                        @endif
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Total Expenses</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ money($currentMetrics['totalExpense']) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $changes['expense'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $changes['expense'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['expense']), 2) }}%
-                    </div>
+                    </span>
                 </div>
             </div>
 
             {{-- Inventory Value --}}
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-3 flex items-center gap-2">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-                            <i class="fas fa-boxes-stacked text-lg text-white"></i>
-                        </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-amber-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
+                        <i class="fas fa-boxes-stacked text-amber-600 text-lg"></i>
                     </div>
-                    <p class="mb-1 text-xs font-medium uppercase tracking-wider text-amber-100">Inventory Value</p>
-                    <h3 class="mb-2 text-2xl font-bold text-white">{{ money($inventoryValue) }}</h3>
-                    <p class="text-xs text-amber-100">Current stock value</p>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Inventory Value</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ money($inventoryValue) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-2 text-xs text-gray-500">
+                    Current stock value
                 </div>
             </div>
 
             {{-- Profit Margin --}}
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-3 flex items-center gap-2">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-                            <i class="fas fa-percent text-lg text-white"></i>
-                        </div>
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-violet-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center">
+                        <i class="fas fa-percent text-violet-600 text-lg"></i>
                     </div>
-                    <p class="mb-1 text-xs font-medium uppercase tracking-wider text-violet-100">Profit Margin</p>
-                    <h3 class="mb-2 text-2xl font-bold text-white">{{ number_format($currentMetrics['profitMargin'], 2) }}%</h3>
-                    <div class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                        @if($changes['profitMargin'] >= 0)
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                            </svg>
-                        @else
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                            </svg>
-                        @endif
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Profit Margin</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ number_format($currentMetrics['profitMargin'], 2) }}%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $changes['profitMargin'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $changes['profitMargin'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['profitMargin']), 2) }}%
-                    </div>
+                    </span>
                 </div>
             </div>
 

@@ -14,7 +14,7 @@
                 <nav class="mt-2 flex items-center gap-2 text-sm text-slate-600">
                     <span>Reports</span>
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                     <span class="font-medium text-slate-900">Customer Report</span>
                 </nav>
@@ -23,8 +23,7 @@
             {{-- Filter --}}
             <form method="GET" class="flex flex-col gap-3 sm:flex-row sm:items-end">
 
-                <select name="range"
-                    onchange="toggleCustomDates(this.value)"
+                <select name="range" onchange="toggleCustomDates(this.value)"
                     class="w-full rounded-lg border-2 border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:w-48">
 
                     <option value="daily" {{ request('range') == 'daily' ? 'selected' : '' }}>Daily</option>
@@ -36,12 +35,10 @@
 
                 <div id="customDateRange" class="{{ request('range') == 'custom' ? 'flex' : 'hidden' }} gap-2">
 
-                    <input type="date" name="date_from"
-                        value="{{ request('date_from') }}"
+                    <input type="date" name="date_from" value="{{ request('date_from') }}"
                         class="rounded-lg border-2 border-slate-200 px-4 py-2.5 text-sm font-medium transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
 
-                    <input type="date" name="date_to"
-                        value="{{ request('date_to') }}"
+                    <input type="date" name="date_to" value="{{ request('date_to') }}"
                         class="rounded-lg border-2 border-slate-200 px-4 py-2.5 text-sm font-medium transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
                 </div>
 
@@ -54,219 +51,254 @@
         </header>
 
         {{-- KPI Cards --}}
-        <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mb-8">
 
-            @php
-                $kpis = [
-                    [
-                        'label' => 'Total Customers',
-                        'value' => number_format($allTimeTotalCustomers),
-                        'change' => 0,
-                        'icon' => 'fa-users',
-                        'color' => 'blue',
-                        'gradient_from' => 'from-blue-500',
-                        'gradient_to' => 'to-blue-600',
-                        'note' => 'All time',
-                        'col_span' => 'xl:col-span-3',
-                    ],
-                    [
-                        'label' => 'New Customers',
-                        'value' => number_format($newCustomersCurrent),
-                        'change' => $newCustomersChange,
-                        'icon' => 'fa-user-plus',
-                        'color' => 'cyan',
-                        'gradient_from' => 'from-cyan-500',
-                        'gradient_to' => 'to-cyan-600',
-                        'note' => 'This period',
-                        'col_span' => 'xl:col-span-3',
-                    ],
-                    [
-                        'label' => 'Returning Rate',
-                        'value' => $returningPercentage . '%',
-                        'change' => null,
-                        'icon' => 'fa-redo-alt',
-                        'color' => 'emerald',
-                        'gradient_from' => 'from-emerald-500',
-                        'gradient_to' => 'to-emerald-600',
-                        'note' => 'Of total customers',
-                        'col_span' => 'xl:col-span-2',
-                    ],
-                    [
-                        'label' => 'Avg CLV',
-                        'value' => money($avgClvCurrent),
-                        'change' => $avgClvChange,
-                        'icon' => 'fa-hand-holding-usd',
-                        'color' => 'amber',
-                        'gradient_from' => 'from-amber-500',
-                        'gradient_to' => 'to-amber-600',
-                        'note' => 'Customer lifetime value',
-                        'col_span' => 'xl:col-span-2',
-                    ],
-                    [
-                        'label' => 'Avg Orders',
-                        'value' => number_format($avgOrdersPerCustomerCurrent, 1),
-                        'change' => $avgOrdersPerCustomerChange,
-                        'icon' => 'fa-cart-shopping',
-                        'color' => 'violet',
-                        'gradient_from' => 'from-violet-500',
-                        'gradient_to' => 'to-violet-600',
-                        'note' => 'Per customer',
-                        'col_span' => 'xl:col-span-2',
-                    ],
-                ];
-            @endphp
+            {{-- Total Customers --}}
+            <div
+                class="bg-white rounded-xl shadow-sm border-l-4 border-blue-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                        <i class="fas fa-users text-blue-600 text-lg"></i>
+                    </div>
 
-            @foreach ($kpis as $kpi)
-                <div class="{{ $kpi['col_span'] }} col-span-12 sm:col-span-6">
-                    <div class="group relative h-full overflow-hidden rounded-2xl bg-gradient-to-br {{ $kpi['gradient_from'] }} {{ $kpi['gradient_to'] }} p-6 shadow-lg transition hover:shadow-xl">
-                        
-                        <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                        
-                        <div class="relative">
-                            <div class="mb-3 flex items-center gap-2">
-                                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-                                    <i class="fas {{ $kpi['icon'] }} text-lg text-white"></i>
-                                </div>
-                            </div>
-                            
-                            <p class="mb-1 text-xs font-medium uppercase tracking-wider text-white/80">
-                                {{ $kpi['label'] }}
-                            </p>
-                            
-                            <h3 class="mb-2 text-2xl font-bold text-white">
-                                {{ $kpi['value'] }}
-                            </h3>
-                            
-                            @if (!is_null($kpi['change']) && $kpi['change'] != 0)
-                                <div class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                                    @if($kpi['change'] >= 0)
-                                        <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                                        </svg>
-                                    @else
-                                        <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                                        </svg>
-                                    @endif
-                                    {{ abs($kpi['change']) }}%
-                                </div>
-                            @else
-                                <p class="text-xs text-white/70">{{ $kpi['note'] }}</p>
-                            @endif
-                        </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Total Customers</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ number_format($allTimeTotalCustomers) }}
+                        </p>
                     </div>
                 </div>
-            @endforeach
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $newCustomersChange >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $newCustomersChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        {{ number_format(abs($newCustomersChange), 2) }}%
+                    </span>
+                </div>
+            </div>
+
+            {{-- New Customers --}}
+            <div
+                class="bg-white rounded-xl shadow-sm border-l-4 border-cyan-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center">
+                        <i class="fas fa-user-plus text-cyan-600 text-lg"></i>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">New Customers</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ number_format($newCustomersCurrent) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $newCustomersChange >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $newCustomersChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        {{ number_format(abs($newCustomersChange), 2) }}%
+                    </span>
+                </div>
+            </div>
+
+            {{-- Returning Rate --}}
+            <div
+                class="bg-white rounded-xl shadow-sm border-l-4 border-emerald-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                        <i class="fas fa-redo-alt text-emerald-600 text-lg"></i>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Returning Rate</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ $returningPercentage }}%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs text-gray-500">
+                    Of total customers
+                </div>
+            </div>
+
+            {{-- Avg CLV --}}
+            <div
+                class="bg-white rounded-xl shadow-sm border-l-4 border-amber-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
+                        <i class="fas fa-hand-holding-usd text-amber-600 text-lg"></i>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Avg CLV</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ money($avgClvCurrent) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $avgClvChange >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $avgClvChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        {{ number_format(abs($avgClvChange), 2) }}%
+                    </span>
+                </div>
+            </div>
+
+            {{-- Avg Orders --}}
+            <div
+                class="bg-white rounded-xl shadow-sm border-l-4 border-violet-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center">
+                        <i class="fas fa-cart-shopping text-violet-600 text-lg"></i>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Avg Orders</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ number_format($avgOrdersPerCustomerCurrent, 1) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $avgOrdersPerCustomerChange >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $avgOrdersPerCustomerChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        {{ number_format(abs($avgOrdersPerCustomerChange), 2) }}%
+                    </span>
+                </div>
+            </div>
+
         </div>
 
         {{-- Charts Section --}}
-        <div class="grid gap-6 lg:grid-cols-12">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12 items-stretch">
 
             {{-- Customer Growth Trend --}}
-            <div class="lg:col-span-7">
-                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    
+            <div class="lg:col-span-6">
+                <div class="h-full rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm flex flex-col">
+
+                    {{-- Header --}}
                     <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
                         <div>
-                            <h3 class="text-lg font-bold text-slate-900">Customer Growth Trend</h3>
-                            <p class="mt-1 text-sm text-slate-500">Track customer acquisition over time</p>
+                            <h3 class="text-lg font-bold text-slate-900">
+                                Customer Growth Trend
+                            </h3>
+                            <p class="mt-1 text-sm text-slate-500">
+                                Track customer acquisition over time
+                            </p>
                         </div>
 
-                        <div class="flex items-center gap-2 rounded-lg bg-slate-100 p-1">
-                            <button type="button"
-                                onclick="showCustomerChart('total')"
-                                id="totalTab"
-                                class="rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition">
+                        <div class="flex w-full lg:w-auto items-center gap-2 rounded-lg bg-slate-100 p-1">
+                            <button type="button" onclick="showCustomerChart('total')" id="totalTab"
+                                class="w-1/2 lg:w-auto rounded-md bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm">
                                 Total
                             </button>
 
-                            <button type="button"
-                                onclick="showCustomerChart('returning')"
-                                id="returningTab"
-                                class="rounded-md px-4 py-2 text-sm font-semibold text-slate-600 transition hover:text-slate-900">
+                            <button type="button" onclick="showCustomerChart('returning')" id="returningTab"
+                                class="w-1/2 lg:w-auto rounded-md px-3 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900">
                                 New vs Returning
                             </button>
                         </div>
                     </div>
 
-                    <div id="totalChartWrapper" class="bg-gray-50 rounded-lg border border-gray-200 p-4">
-                        <canvas id="totalCustomersChart"  height="200"></canvas>
+                    {{-- Charts --}}
+                    <div class="flex-1">
+
+                        <div id="totalChartWrapper" class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+
+                            <canvas id="totalCustomersChart" height="150"></canvas>
+
+                        </div>
+
+                        <div id="returningChartWrapper" class="hidden bg-gray-50 rounded-lg border border-gray-200 p-4">
+
+                            <canvas id="newReturningChart" height="150"></canvas>
+
+                        </div>
+
                     </div>
 
-                    <div id="returningChartWrapper" class="hidden bg-gray-50 rounded-lg border border-gray-200 p-4">
-                        <canvas id="newReturningChart" height="200"></canvas>
-                    </div>
                 </div>
             </div>
 
             {{-- Top High-Value Customers --}}
-            <div class="lg:col-span-5">
-                <div class="h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    
+            <div class="lg:col-span-6">
+                <div class="h-full rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm flex flex-col">
+
                     <div class="mb-6">
-                        <h3 class="text-lg font-bold text-slate-900">Top High-Value Customers</h3>
-                        <p class="mt-1 text-sm text-slate-500">Customers with highest spending</p>
+                        <h3 class="text-lg font-bold text-slate-900">
+                            Top High-Value Customers
+                        </h3>
+                        <p class="mt-1 text-sm text-slate-500">
+                            Customers with highest spending
+                        </p>
                     </div>
 
-                    <div class="overflow-hidden rounded-lg border border-slate-200">
-                        <table class="w-full text-sm">
-                            <thead class="bg-slate-50">
+                    {{-- Table wrapper fixes overflow --}}
+                    <div class="flex-1 overflow-auto rounded-lg border border-slate-200">
+
+                        <table class="min-w-full text-sm">
+
+                            <thead class="bg-slate-50 sticky top-0 z-10">
                                 <tr class="text-slate-600">
-                                    <th class="px-4 py-3 text-left font-semibold">Customer</th>
-                                    <th class="px-4 py-3 text-right font-semibold">Orders</th>
-                                    <th class="px-4 py-3 text-right font-semibold">Total Spent</th>
+                                    <th class="px-4 py-3 text-left whitespace-nowrap">Customer</th>
+                                    <th class="px-4 py-3 text-right whitespace-nowrap">Orders</th>
+                                    <th class="px-4 py-3 text-right whitespace-nowrap">Spent</th>
                                 </tr>
                             </thead>
 
                             <tbody class="divide-y divide-slate-100">
+
                                 @forelse ($topCustomers as $index => $cust)
-                                    <tr class="transition hover:bg-slate-50">
-                                        <td class="px-4 py-3">
+                                    <tr class="hover:bg-slate-50">
+
+                                        <td class="px-4 py-3 min-w-[160px]">
                                             <div class="flex items-center gap-2 font-medium text-slate-900">
                                                 @if ($index === 0)
-                                                    <div class="flex h-6 w-6 items-center justify-center rounded-full bg-amber-100">
-                                                        <i class="fas fa-crown text-xs text-amber-600"></i>
-                                                    </div>
+                                                    <i class="fas fa-crown text-amber-500"></i>
                                                 @elseif ($index === 1)
-                                                    <div class="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100">
-                                                        <i class="fas fa-medal text-xs text-slate-600"></i>
-                                                    </div>
+                                                    <i class="fas fa-medal text-slate-500"></i>
                                                 @elseif ($index === 2)
-                                                    <div class="flex h-6 w-6 items-center justify-center rounded-full bg-amber-50">
-                                                        <i class="fas fa-medal text-xs text-amber-700"></i>
-                                                    </div>
+                                                    <i class="fas fa-medal text-amber-700"></i>
                                                 @endif
-                                                {{ $cust['name'] }}
+
+                                                <span class="truncate max-w-[140px]">
+                                                    {{ $cust['name'] }}
+                                                </span>
                                             </div>
                                         </td>
 
-                                        <td class="px-4 py-3 text-right text-slate-700">
-                                            <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                                        <td class="px-4 py-3 text-right">
+                                            <span
+                                                class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
                                                 {{ $cust['orders'] }}
                                             </span>
                                         </td>
 
-                                        <td class="px-4 py-3 text-right">
-                                            <span class="font-semibold text-emerald-600">
-                                                {{ money($cust['spent']) }}
-                                            </span>
+                                        <td class="px-4 py-3 text-right font-semibold text-emerald-600">
+                                            {{ money($cust['spent']) }}
                                         </td>
+
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="px-4 py-8 text-center text-slate-500">
-                                            <div class="flex flex-col items-center gap-2">
-                                                <i class="fas fa-users text-3xl text-slate-300"></i>
-                                                <p>No customers found for this period.</p>
-                                            </div>
+                                        <td colspan="3" class="px-4 py-10 text-center text-slate-500">
+                                            No customers found
                                         </td>
                                     </tr>
                                 @endforelse
+
                             </tbody>
                         </table>
+
                     </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 @endsection
@@ -284,6 +316,7 @@
         function showCustomerChart(type) {
             const totalWrapper = document.getElementById('totalChartWrapper');
             const returningWrapper = document.getElementById('returningChartWrapper');
+
             const totalTab = document.getElementById('totalTab');
             const returningTab = document.getElementById('returningTab');
 
@@ -292,20 +325,19 @@
                 returningWrapper.classList.add('hidden');
 
                 totalTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-                totalTab.classList.remove('text-slate-600', 'hover:text-slate-900');
-
                 returningTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-                returningTab.classList.add('text-slate-600', 'hover:text-slate-900');
+
             } else {
                 returningWrapper.classList.remove('hidden');
                 totalWrapper.classList.add('hidden');
 
                 returningTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-                returningTab.classList.remove('text-slate-600', 'hover:text-slate-900');
-
                 totalTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-                totalTab.classList.add('text-slate-600', 'hover:text-slate-900');
             }
+
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 50);
         }
 
         // Total Customers Chart

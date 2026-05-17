@@ -51,132 +51,119 @@
         </header>
 
         {{-- KPI Cards --}}
-        <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mb-8">
 
             {{-- Total Revenue --}}
             <div
-                class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-1 flex items-center gap-2">
-                        <svg class="h-5 w-5 text-blue-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p class="text-xs font-medium uppercase tracking-wider text-blue-100">Total Revenue</p>
+                class="bg-white rounded-xl shadow-sm border-l-4 border-blue-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                        <i class="fas fa-sack-dollar text-blue-600 text-lg"></i>
                     </div>
-                    <h3 class="mb-2 text-3xl font-bold text-white">{{ money($totalRevenue) }}</h3>
-                    <div
-                        class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                        @if($revenueGrowth >= 0)
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                            </svg>
-                        @else
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                            </svg>
-                        @endif
-                        {{ abs($revenueGrowth) }}%
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Total Revenue</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ money($totalRevenue) }}
+                        </p>
                     </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $revenueGrowth >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $revenueGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        {{ number_format(abs($revenueGrowth), 2) }}%
+                    </span>
                 </div>
             </div>
 
             {{-- Orders --}}
             <div
-                class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-1 flex items-center gap-2">
-                        <svg class="h-5 w-5 text-cyan-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                        <p class="text-xs font-medium uppercase tracking-wider text-cyan-100">Total Orders</p>
+                class="bg-white rounded-xl shadow-sm border-l-4 border-cyan-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center">
+                        <i class="fas fa-clipboard-list text-cyan-600 text-lg"></i>
                     </div>
-                    <h3 class="mb-2 text-3xl font-bold text-white">{{ number_format($totalOrder) }}</h3>
-                    <div
-                        class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                        @if($orderGrowth >= 0)
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                            </svg>
-                        @else
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                            </svg>
-                        @endif
-                        {{ abs($orderGrowth) }}%
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Total Orders</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ number_format($totalOrder) }}
+                        </p>
                     </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $orderGrowth >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $orderGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        {{ number_format(abs($orderGrowth), 2) }}%
+                    </span>
                 </div>
             </div>
 
             {{-- Average Order Value --}}
             <div
-                class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-1 flex items-center gap-2">
-                        <svg class="h-5 w-5 text-amber-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                        <p class="text-xs font-medium uppercase tracking-wider text-amber-100">Avg Order Value</p>
+                class="bg-white rounded-xl shadow-sm border-l-4 border-amber-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-amber-600 text-lg"></i>
                     </div>
-                    <h3 class="mb-2 text-3xl font-bold text-white">{{ money($avgOrder) }}</h3>
-                    <div
-                        class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white">
-                        @if($avgOrderGrowth >= 0)
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                            </svg>
-                        @else
-                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                            </svg>
-                        @endif
-                        {{ abs($avgOrderGrowth) }}%
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Avg Order Value</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ money($avgOrder) }}
+                        </p>
                     </div>
+                </div>
+
+                <div class="mt-3 text-xs">
+                    <span class="{{ $avgOrderGrowth >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        <i class="fas {{ $avgOrderGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                        {{ number_format(abs($avgOrderGrowth), 2) }}%
+                    </span>
                 </div>
             </div>
 
             {{-- Growth Rate --}}
             <div
-                class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-1 flex items-center gap-2">
-                        <svg class="h-5 w-5 text-emerald-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        <p class="text-xs font-medium uppercase tracking-wider text-emerald-100">Growth Rate</p>
+                class="bg-white rounded-xl shadow-sm border-l-4 border-emerald-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                        <i class="fas fa-arrow-trend-up text-emerald-600 text-lg"></i>
                     </div>
-                    <h3 class="mb-2 text-3xl font-bold text-white">{{ $avgOrderGrowth }}%</h3>
-                    <p class="text-xs text-emerald-100">Period comparison</p>
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Growth Rate</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ $avgOrderGrowth }}%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs text-gray-500">
+                    Period comparison
                 </div>
             </div>
 
-            {{-- Refund Rate --}}
+            {{-- Refund Items --}}
             <div
-                class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 p-6 shadow-lg transition hover:shadow-xl">
-                <div class="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10"></div>
-                <div class="relative">
-                    <div class="mb-1 flex items-center gap-2">
-                        <svg class="h-5 w-5 text-rose-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z" />
-                        </svg>
-                        <p class="text-xs font-medium uppercase tracking-wider text-rose-100">Total Refund Items</p>
+                class="bg-white rounded-xl shadow-sm border-l-4 border-rose-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center">
+                        <i class="fas fa-rotate-left text-rose-600 text-lg"></i>
                     </div>
-                    <h3 class="mb-2 text-3xl font-bold text-white">{{ $totalRefundItems }}</h3>
-                    <p class="text-xs text-rose-100">Of total orders</p>
+
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Refund Items</p>
+                        <p class="text-lg font-bold text-gray-800">
+                            {{ number_format($totalRefundItems) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-xs text-gray-500">
+                    Returned products count
                 </div>
             </div>
 
@@ -190,7 +177,9 @@
                     <p class="text-sm text-slate-500">Track your revenue performance over time</p>
                 </div>
             </div>
-            <canvas id="revenueTrendChart" height="80"></canvas>
+            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                <canvas id="revenueTrendChart" height="80"></canvas>
+            </div>
         </div>
 
         {{-- Middle Section --}}
@@ -205,7 +194,7 @@
 
                 <div class="grid gap-6 md:grid-cols-2">
 
-                    <div class="flex items-center justify-center">
+                    <div class="flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4">
                         <canvas id="categoryPieChart"></canvas>
                     </div>
 
