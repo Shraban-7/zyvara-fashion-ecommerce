@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\CashRegister;
+use App\Models\District;
 use App\Models\Expense;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -334,7 +335,7 @@ class ReportController extends Controller
 
         if ($filter !== 'custom') {
 
-            $dates = $this->getDateRange($filter,$dateFrom,$dateTo);
+            $dates = $this->getDateRange($filter, $dateFrom, $dateTo);
 
             $currentStart = $dates['currentStart'];
             $currentEnd = $dates['currentEnd'];
@@ -721,6 +722,25 @@ class ReportController extends Controller
             return $p;
         });
 
+        $regionData = Order::with('district')->where('is_pos',0)->whereNotNull('shipping_district')
+            ->get();
+
+        $ordersByDistrict = $regionData
+            ->groupBy('shipping_district')
+            ->map(function ($group, $districtId) {
+
+                $district = District::find($districtId);
+
+                return [
+                    'district' => $district?->name,
+                    'orders_count' => $group->count(),
+                ];
+            })
+            ->values();
+
+        $districtLabels = $ordersByDistrict->pluck('district')->toArray();
+        $districtOrders = $ordersByDistrict->pluck('orders_count')->toArray();
+
         return view('admin.reports.sale', compact(
             'totalRevenue',
             'totalOrder',
@@ -737,7 +757,9 @@ class ReportController extends Controller
             'filter',
             'refundItems',
             'totalRefundAmount',
-            'totalRefundItems'
+            'totalRefundItems',
+            'districtLabels',
+            'districtOrders'
         ));
     }
 

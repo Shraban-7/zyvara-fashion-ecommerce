@@ -265,45 +265,82 @@
 
         </div>
 
-        {{-- Top Products --}}
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="mb-6">
-                <h3 class="text-lg font-bold text-slate-900">Top Products</h3>
-                <p class="text-sm text-slate-500">Best performing products by sales volume</p>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            {{-- Top Products --}}
+            <div class="lg:col-span-7">
+                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm h-full">
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-slate-900">Top Products</h3>
+                        <p class="text-sm text-slate-500">Best performing products by sales volume</p>
+                    </div>
+
+                    <div class="overflow-hidden rounded-lg border border-slate-200">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-50">
+                                <tr class="text-slate-600">
+                                    <th class="px-4 py-3 text-left font-semibold">Product</th>
+                                    <th class="px-4 py-3 text-right font-semibold">Price</th>
+                                    <th class="px-4 py-3 text-right font-semibold">Units Sold</th>
+                                    <th class="px-4 py-3 text-right font-semibold">Total Sales</th>
+                                    <th class="px-4 py-3 text-right font-semibold">Margin</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-slate-100">
+                                @foreach ($productStats ?? [] as $prod)
+                                    <tr class="transition hover:bg-slate-50">
+                                        <td class="px-4 py-3 font-semibold text-slate-900">
+                                            {{ $prod['product_name'] }}
+                                        </td>
+
+                                        <td class="px-4 py-3 text-right text-slate-700">
+                                            {{ money($prod['price']) }}
+                                        </td>
+
+                                        <td class="px-4 py-3 text-right text-slate-700">
+                                            {{ number_format($prod['units_sold']) }}
+                                        </td>
+
+                                        <td class="px-4 py-3 text-right">
+                                            <span class="font-semibold text-green-600">
+                                                {{ money($prod['total_sales']) }}
+                                            </span>
+                                        </td>
+
+                                        <td class="px-4 py-3 text-right">
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                                                {{ $prod['profit_margin'] }}%
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
             </div>
 
-            <div class="overflow-hidden rounded-lg border border-slate-200">
-                <table class="w-full text-sm">
-                    <thead class="bg-slate-50">
-                        <tr class="text-slate-600">
-                            <th class="px-4 py-3 text-left font-semibold">Product</th>
-                            <th class="px-4 py-3 text-right font-semibold">Price</th>
-                            <th class="px-4 py-3 text-right font-semibold">Units Sold</th>
-                            <th class="px-4 py-3 text-right font-semibold">Total Sales</th>
-                            <th class="px-4 py-3 text-right font-semibold">Margin</th>
-                        </tr>
-                    </thead>
+            {{-- District Pie Chart --}}
+            <div class="lg:col-span-5">
+                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm h-full">
 
-                    <tbody class="divide-y divide-slate-100">
-                        @foreach ($productStats ?? [] as $prod)
-                            <tr class="transition hover:bg-slate-50">
-                                <td class="px-4 py-3 font-semibold text-slate-900">{{ $prod['product_name'] }}</td>
-                                <td class="px-4 py-3 text-right text-slate-700">{{ money($prod['price']) }}</td>
-                                <td class="px-4 py-3 text-right text-slate-700">{{ number_format($prod['units_sold']) }}</td>
-                                <td class="px-4 py-3 text-right">
-                                    <span class="font-semibold text-green-600">{{ money($prod['total_sales']) }}</span>
-                                </td>
-                                <td class="px-4 py-3 text-right">
-                                    <span
-                                        class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
-                                        {{ $prod['profit_margin'] }}%
-                                    </span>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-slate-900">Orders by District</h3>
+                        <p class="text-sm text-slate-500">Distribution of orders across regions</p>
+                    </div>
+
+                    <div class="relative h-[320px] flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4">
+                        <canvas id="districtPieChart"></canvas>
+                    </div>
+
+                </div>
             </div>
+
         </div>
 
     </div>
@@ -424,6 +461,48 @@
                         bodyColor: '#fff',
                         padding: 12,
                         cornerRadius: 8
+                    }
+                }
+            }
+        });
+
+        const ctx = document.getElementById('districtPieChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: {!! json_encode($districtLabels) !!},
+                datasets: [{
+                    data: {!! json_encode($districtOrders) !!},
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#06b6d4',
+                        '#10b981',
+                        '#f59e0b',
+                        '#ef4444',
+                        '#8b5cf6',
+                        '#14b8a6',
+                        '#f97316'
+                    ],
+                    borderWidth: 1,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#475569',
+                            font: { size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        titleColor: '#fff',
+                        bodyColor: '#fff'
                     }
                 }
             }

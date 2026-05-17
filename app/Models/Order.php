@@ -93,6 +93,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function district()
+    {
+        return $this->belongsTo(District::class,'shipping_district');
+    }
+
     public function statusHistories(): HasMany
     {
         return $this->hasMany(OrderStatusHistory::class)->orderByDesc('created_at');
