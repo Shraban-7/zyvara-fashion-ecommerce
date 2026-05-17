@@ -10,4 +10,9 @@ class SaleReturnItem extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function saleReturn()
+    {
+        return $this->belongsTo(SaleReturn::class);
+    }
 }

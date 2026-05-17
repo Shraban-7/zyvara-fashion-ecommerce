@@ -11,6 +11,11 @@ class CashRegister extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'opened_at' => 'date',
+        'closed_at' => 'date'
+    ];
+
     public function isOpen(): bool
     {
         return $this->closed_at === null;

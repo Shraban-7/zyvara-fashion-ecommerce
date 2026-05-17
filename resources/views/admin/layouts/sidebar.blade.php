@@ -189,6 +189,18 @@ $user = auth()->user();
                     class="sidebar-sublink {{ request()->routeIs('admin.reports.financial') ? 'active' : '' }}">
                     <span class="sidebar-sublink-dot"></span>Financial
                 </a>
+                <a href="{{ route('admin.reports.sales') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.reports.sales') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Sales
+                </a>
+                <a href="{{ route('admin.reports.customers') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.reports.customers') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Customers
+                </a>
+                <a href="{{ route('admin.reports.cashRegisters') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.reports.cashRegisters') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-dot"></span>Cash Register
+                </a>
             </div>
         </div>
 
