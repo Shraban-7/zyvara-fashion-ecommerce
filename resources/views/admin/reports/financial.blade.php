@@ -245,12 +245,12 @@
                                     default => 'Daily Profit Trend',
                                 };
                                 $descriptionText = match (request('range', 'daily')) {
-                                    'daily' => 'Net Profit Over the Last 7 Days',
+                                    'daily' => 'Net Profit Over the Last 30 Days',
                                     'weekly' => 'Net Profit Over the Last 12 Weeks',
                                     'monthly' => 'Net Profit Over the Last 12 Months',
                                     'yearly' => 'Net Profit Over the Last 5 Years',
                                     'custom' => 'Net Profit Over the Selected Date Range',
-                                    default => 'Net Profit Over the Last 7 Days',
+                                    default => 'Net Profit Over the Last 30 Days',
                                 };
                             @endphp
                             <h5 class="text-lg font-bold text-blue-600 mb-1">{{ $filterText }}</h5>
