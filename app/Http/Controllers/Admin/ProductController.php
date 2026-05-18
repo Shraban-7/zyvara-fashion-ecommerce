@@ -491,6 +491,12 @@ class ProductController extends Controller
                 $product->variants()->delete();
             }
 
+            activity_log(
+                action: 'updated',
+                model: $product,
+                description: 'Product updated ',
+            );
+
             DB::commit();
 
             if ($request->ajax() || $request->wantsJson()) {

@@ -369,3 +369,22 @@ if (! function_exists('activity_log')) {
     }
 }
 
+
+if (!function_exists('model_changes')) {
+function model_changes($model, array $newData): array {
+        $changes = [
+            'old' => [],
+            'new' => [],
+        ];
+
+        foreach ($newData as $field => $value) {
+            if ($model->$field != $value) {
+                $changes['old'][$field] = $model->$field;
+                $changes['new'][$field] = $value;
+            }
+        }
+
+        return $changes;
+    }
+}
+
