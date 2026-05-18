@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\SaleReturnController;
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,7 +50,6 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/return', [SaleReturnController::class, 'processReturn'])->name('processReturn');
         Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
         Route::get('/{orderNumber}/invoice', [OrderController::class, 'invoice'])->name('invoice');
-
     });
 
     Route::prefix('sale-returns')->as('saleReturns.')->group(function () {
@@ -170,6 +170,10 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     // Route::get('/banners', function () {
     //     return redirect()->route('admin.dashboard');
     // })->name('banners.index');
+
+    Route::prefix('activity-logs')->as('activity-logs.')->group(function () {
+        Route::get('/', [ActivityLogController::class, 'index'])->name('index');
+    });
 
     // Settings Routes
     Route::prefix('settings')->as('settings.')->group(function () {

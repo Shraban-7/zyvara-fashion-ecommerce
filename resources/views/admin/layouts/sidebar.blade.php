@@ -207,6 +207,13 @@ $user = auth()->user();
         {{-- ── SYSTEM ────────────────────────────── --}}
         <div class="sidebar-section-label">System</div>
 
+        <a href="{{ route('admin.activity-logs.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.activity-logs.*') ? 'active' : '' }}"
+            data-tooltip="Activity Logs">
+            <span class="sidebar-icon"><i class="fas fa-history"></i></span>
+            <span class="sidebar-label">Activity Logs</span>
+        </a>
+
         <a href="{{ route('admin.settings.index') }}"
             class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"
             data-tooltip="Settings">

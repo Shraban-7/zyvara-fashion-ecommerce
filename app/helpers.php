@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
 
 if (!function_exists('apiResponse')) {
     function apiResponse(object|array $data, string|null $message = null, int $statusCode = 200, )
@@ -359,6 +360,12 @@ if (!function_exists('set_image')) {
         }
 
         return asset('assets/images/default.png');
+    }
+}
+
+if (! function_exists('activity_log')) {
+    function activity_log(string $action, ?Model $model = null, ?array $oldValues = null, ?array $newValues = null, ?string $description = null): void {
+        \App\Services\ActivityLogger::log($action, $model, $oldValues, $newValues, $description);
     }
 }
 
