@@ -531,10 +531,21 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
+            if ($product->orderItems()->exists()) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'This product cannot be deleted because it is associated with orders.');
+            }
 
             foreach ($product->images as $image) {
                 delete_file($image->image_path);
             }
+
+            activity_log(
+                action: 'deleted',
+                model: $product,
+                description: 'Product deleted ',
+            );
 
             $product->delete();
 
@@ -606,6 +617,12 @@ class ProductController extends Controller
                     'stock_after' => $stockAfter,
                     'note' => $validated['note'] ?? null,
                 ]);
+
+                activity_log(
+                    action: 'updated',
+                    model: $variant,
+                    description: 'Product stock updated ',
+                );
             } else {
                 $product = Product::findOrFail($validated['product_id']);
                 $stockBefore = $product->currentStock;
@@ -622,7 +639,15 @@ class ProductController extends Controller
                     'stock_after' => $stockAfter,
                     'note' => $validated['note'] ?? null,
                 ]);
+
+                activity_log(
+                    action: 'updated',
+                    model: $product,
+                    description: 'Product stock updated ',
+                );
             }
+
+
 
             DB::commit();
 
@@ -750,12 +775,12 @@ class ProductController extends Controller
 
     public function printBarcode(Request $request)
     {
-        $products = Product::with(['variants.size','variants.color'])
+        $products = Product::with(['variants.size', 'variants.color'])
             ->get();
 
         $siteName = Setting::where('key', 'site_name')->value('value');
 
-        return view('admin.barcodes.index', compact('products','siteName'));
+        return view('admin.barcodes.index', compact('products', 'siteName'));
     }
 
     public function printBarcodeLabels(Request $request)

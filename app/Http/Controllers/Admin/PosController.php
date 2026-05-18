@@ -47,10 +47,10 @@ class PosController extends Controller
 
         $employees = User::where('role', 'staff')->get();
 
-        
+
 
         [$start, $end] = businessDayRange();
-        $orders = Order::where('is_pos',1)
+        $orders = Order::where('is_pos', 1)
             ->whereBetween('created_at', [$start, $end])
             ->get();
 
@@ -191,7 +191,7 @@ class PosController extends Controller
                 'cash_returned' => $request->cash_returned,
                 'status' => OrderStatus::DELIVERED,
                 'payment_method' => $paymentMethodEnum->value ?? '',
-                'payment_status' =>  $payment_status,
+                'payment_status' => $payment_status,
                 'paid_at' => now(),
             ]);
 
@@ -407,6 +407,12 @@ class PosController extends Controller
 
                     $oldItem->delete();
                 });
+
+            activity_log(
+                action: 'updated',
+                model: $order,
+                description: 'Order updated',
+            );
 
             DB::commit();
 
@@ -824,9 +830,9 @@ class PosController extends Controller
                     }
                 }
 
-                $order->subtotal -=$orderItem->subtotal;
-                $order->total -=$orderItem->total;
-                $order->payable -=$orderItem->total;
+                $order->subtotal -= $orderItem->subtotal;
+                $order->total -= $orderItem->total;
+                $order->payable -= $orderItem->total;
                 $order->save();
 
                 $orderItem->delete();
@@ -960,7 +966,7 @@ class PosController extends Controller
 
     public function posSales(Request $request)
     {
-        $query = Order::with(['user', 'items.product','employee'])
+        $query = Order::with(['user', 'items.product', 'employee'])
             ->where('is_pos', 1);
 
         if ($request->filled('status') && $request->status !== 'all') {
@@ -996,9 +1002,6 @@ class PosController extends Controller
 
         $orders = $query->orderByDesc('created_at')->paginate(20);
 
-        // =========================
-        // COUNTS
-        // =========================
         $statusCounts = [
             'delivered' => Order::where('is_pos', 1)
                 ->where('status', OrderStatus::DELIVERED)
@@ -1038,10 +1041,16 @@ class PosController extends Controller
 
         $order->items()->delete();
 
+        activity_log(
+            action: 'deleted',
+            model: $order,
+            description: 'Order deleted ',
+        );
+
         $order->delete();
 
         toast_success('Sale deleted successfully!');
-        
+
         return redirect()->route('admin.pos.sales.index');
     }
 

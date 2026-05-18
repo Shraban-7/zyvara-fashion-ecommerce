@@ -129,6 +129,12 @@ class SaleReturnController extends Controller
 
             }
 
+            activity_log(
+                action: 'updated',
+                model: $saleReturn,
+                description: 'Sale Return updated',
+            );
+
             DB::commit();
 
             return response()->json([
