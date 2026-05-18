@@ -244,20 +244,15 @@
         <div class="flex items-center justify-between px-6 py-5">
             <div>
                 <h2 class="text-lg font-bold text-gray-900">Product Variant Generator</h2>
-                <p class="text-sm text-gray-500">Generate variants using Size & Color</p>
             </div>
         </div>
 
         <div class="p-6 pt-0">
             <!-- Selectors -->
-            <div class="grid md:grid-cols-2 gap-5 mb-6">
+            <div class="grid md:grid-cols-3 gap-5 mb-6">
 
                 <!-- Sizes -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Select Sizes
-                    </label>
-
                     <div class="custom-multiselect" id="sizeMultiselect">
 
                         <div class="multiselect-trigger">
@@ -296,10 +291,6 @@
 
                 <!-- Colors -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Select Colors
-                    </label>
-
                     <div class="custom-multiselect" id="colorMultiselect">
 
                         <div class="multiselect-trigger">
@@ -336,25 +327,19 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Buttons -->
-            <div class="flex items-center gap-3 mb-6">
-                <button type="button" id="generateVariantsBtn"
-                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
-                    <i class="fas fa-layer-group mr-2"></i>
-                    Generate Variants
-                </button>
-
-                <button type="button" id="clearVariantsBtn"
-                    class="btn-secondary inline-flex items-center px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
-                    <i class="fas fa-trash-alt mr-2"></i>
-                    Clear Variants
-                </button>
+                <div class="flex items-end mb-1">
+                    <button type="button" id="generateVariantsBtn"
+                        class="w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                        <i class="fas fa-layer-group mr-2"></i>
+                        Generate Variants
+                    </button>
+                </div>
             </div>
 
             <!-- Variants Container -->
-            <div id="variantsContainer" class="space-y-4">
+            <div id="variantsContainer"
+                class="space-y-4 max-h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
 
                 @if(isset($product) && $product->variants->count() > 0)
 
@@ -367,15 +352,12 @@
                             <input type="hidden" name="variants[{{ $i }}][size_id]" value="{{ $variant->size_id }}">
                             <input type="hidden" name="variants[{{ $i }}][color_id]" value="{{ $variant->color_id }}">
 
-                            <div class="flex items-center justify-between mb-5">
+                            <div class="flex items-center justify-between">
 
                                 <div>
                                     <h3 class="text-sm font-bold text-gray-900">
                                         {{ $variant->size->name ?? '' }} / {{ $variant->color->name ?? '' }}
                                     </h3>
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        Variant #{{ $i + 1 }}
-                                    </p>
                                 </div>
 
                                 <button type="button"
@@ -385,7 +367,7 @@
 
                             </div>
 
-                            <div class="grid md:grid-cols-3 gap-4">
+                            <div class="grid md:grid-cols-4 gap-4">
 
                                 <div>
                                     <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
@@ -405,7 +387,7 @@
                                         class="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-xl">
                                 </div>
 
-                                <div class="md:col-span-3">
+                                <div>
                                     <label class="block text-xs font-medium text-gray-700 mb-1">SKU</label>
                                     <input type="text" name="variants[{{ $i }}][sku]" value="{{ $variant->sku }}"
                                         class="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-xl">
@@ -569,7 +551,6 @@
         const colorMultiselect = new CustomMultiselect(document.getElementById('colorMultiselect'));
 
         const generateVariantsBtn = document.getElementById("generateVariantsBtn");
-        const clearVariantsBtn = document.getElementById("clearVariantsBtn");
         const variantsContainer = document.getElementById("variantsContainer");
 
         generateVariantsBtn.addEventListener("click", function () {
@@ -622,10 +603,6 @@
                             <h3 class="text-sm font-bold text-gray-900">
                                 ${size.name} / ${color.name}
                             </h3>
-
-                            <p class="text-xs text-gray-500 mt-1">
-                                Variant #${index + 1}
-                            </p>
                         </div>
 
                         <button type="button"
@@ -634,7 +611,7 @@
                         </button>
                     </div>
 
-                    <div class="grid md:grid-cols-3 gap-4">
+                    <div class="grid md:grid-cols-4 gap-4">
 
                         <div>
                             <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
@@ -657,7 +634,7 @@
                                 placeholder="0.00">
                         </div>
 
-                        <div class="md:col-span-3">
+                        <div>
                             <label class="block text-xs font-medium text-gray-700 mb-1">SKU</label>
                             <input type="text"
                                 name="variants[${index}][sku]"
@@ -673,13 +650,6 @@
             });
 
             variantsContainer.insertAdjacentHTML('beforeend', html);
-        });
-
-        clearVariantsBtn.addEventListener("click", function () {
-            sizeMultiselect.clear();
-            colorMultiselect.clear();
-
-            document.querySelectorAll('.variant-card').forEach(el => el.remove());
         });
 
         variantsContainer.addEventListener("click", function (e) {
