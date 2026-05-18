@@ -241,7 +241,7 @@
             </div>
 
             {{-- Product Variants --}}
-            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            {{-- <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-lg font-bold text-gray-900">Product Variants</h2>
                     <button type="button" onclick="addVariant()" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
@@ -313,7 +313,9 @@
                 </div>
 
                 <input type="hidden" name="delete_variants[]" id="deleteVariants" value="">
-            </div>
+            </div> --}}
+
+            @include('admin.partials.variant_generator')
 
             {{-- SEO Settings --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
@@ -530,91 +532,6 @@
     const sizes = @json($sizes);
     const colors = @json($colors);
     const productPrice = "{{ $product->price }}";
-
-    // Add new variant
-    function addVariant() {
-        const container = document.getElementById('variantsContainer');
-
-        // Remove "no variants" message if it exists
-        const noVariantsMsg = container.querySelector('p.text-gray-500');
-        if (noVariantsMsg) {
-            noVariantsMsg.remove();
-        }
-
-        const variantRow = document.createElement('div');
-        variantRow.className = 'variant-row p-4 border border-gray-200 rounded-lg bg-gray-50';
-
-        variantRow.innerHTML = `
-            <div class="grid md:grid-cols-5 gap-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
-                    <select 
-                        name="variants[${variantIndex}][size_id]" 
-                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Size</option>
-                        ${sizes.map(size => `
-                            <option value="${size.id}">${size.name}</option>
-                        `).join('')}
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Color</label>
-                    <select 
-                        name="variants[${variantIndex}][color_id]" 
-                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Color</option>
-                        ${colors.map(color => `
-                            <option value="${color.id}">${color.name}</option>
-                        `).join('')}
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Price (৳)</label>
-                    <input 
-                        type="number"
-                        step="0.01"
-                        name="variants[${variantIndex}][price]"
-                        required
-                        value="${productPrice}"
-                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        placeholder="0.00">
-                </div>
-
-
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">SKU</label>
-                    <input 
-                        type="text"
-                        name="variants[${variantIndex}][sku]"
-                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        placeholder="Optional">
-                </div>
-                
-                <div class="flex items-end">
-                    <button 
-                        type="button"
-                        onclick="removeVariant(this)"
-                        class="w-full px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-
-        container.appendChild(variantRow);
-        variantIndex++;
-    }
-
-    // Remove variant
-    function removeVariant(button, variantId = null) {
-        if (variantId) {
-            deleteVariantsArray.push(variantId);
-            updateDeleteVariantsInput();
-        }
-        button.closest('.variant-row').remove();
-    }
 
     // Update hidden input with variants to delete
     function updateDeleteVariantsInput() {
