@@ -571,10 +571,8 @@
         const generateVariantsBtn = document.getElementById("generateVariantsBtn");
         const clearVariantsBtn = document.getElementById("clearVariantsBtn");
         const variantsContainer = document.getElementById("variantsContainer");
-        const emptyVariant = document.getElementById('empty-variant');
 
         generateVariantsBtn.addEventListener("click", function () {
-            emptyVariant.style.display = 'none';
 
             const selectedSizes = sizeMultiselect.getSelected();
             const selectedColors = colorMultiselect.getSelected();
@@ -678,7 +676,6 @@
         });
 
         clearVariantsBtn.addEventListener("click", function () {
-            emptyVariant.style.display = 'block';
             sizeMultiselect.clear();
             colorMultiselect.clear();
 
