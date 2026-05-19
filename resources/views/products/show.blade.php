@@ -72,7 +72,7 @@
                         </div>
 
                         {{-- Thumbnail Images --}}
-                        @if($product->images->count() > 1)
+                        @if($product->images->count() >= 1)
                             <div class="w-full max-w-full overflow-x-auto hide-scrollbar pb-2">
                                 <div class="flex gap-3 w-max">
                                     @foreach($product->images as $index => $image)

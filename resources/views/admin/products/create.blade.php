@@ -273,7 +273,7 @@
 
                 {{-- image --}}
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">image Image <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Image <span class="text-red-500">*</span></label>
                     <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition relative">
                         <input type="file" name="image" id="image" accept="image/*" class="hidden">
                         <div id="imagePlaceholder">

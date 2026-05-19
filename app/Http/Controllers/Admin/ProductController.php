@@ -563,7 +563,7 @@ class ProductController extends Controller
     {
         $product->load(['variants.size', 'variants.color', 'category']);
 
-        return view('admin.products.manage-stock', compact('product'));
+        return view('admin.products.manage-stock-new', compact('product'));
     }
 
     public function stockHistory(Product $product)

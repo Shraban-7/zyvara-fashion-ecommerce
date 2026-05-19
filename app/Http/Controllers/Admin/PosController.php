@@ -29,7 +29,7 @@ class PosController extends Controller
         $products = Product::with(['category', 'variants.size', 'variants.color', 'images'])
             ->where('is_active', true)
             ->get()
-            ->sortByDesc('total_stock')
+            ->sortByDesc('created_at')
             ->values();
 
         $categories = Category::where('is_active', true)->get();
@@ -219,7 +219,6 @@ class PosController extends Controller
                     $product = Product::find($item['product_id']);
                     if ($product) {
                         $product->decrement('stock_in', $item['quantity']);
-                        $product->increment('sold_count', $item['quantity']);
                     }
                 }
             }
@@ -546,7 +545,6 @@ class PosController extends Controller
                     $product = Product::find($item['product_id']);
                     if ($product) {
                         $product->decrement('stock_in', $item['quantity']);
-                        $product->increment('sold_count', $item['quantity']);
                     }
                 }
             }

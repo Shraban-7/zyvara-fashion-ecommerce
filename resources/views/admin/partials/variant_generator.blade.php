@@ -345,55 +345,51 @@
 
                     @foreach($product->variants as $i => $variant)
 
-                        <div class="variant-card p-5 border border-gray-200 rounded-2xl bg-gray-50"
+                        <div class="variant-card p-3 border border-gray-200 rounded-2xl bg-gray-50"
                             data-id="{{ $variant->id }}">
 
                             <input type="hidden" name="variants[{{ $i }}][id]" value="{{ $variant->id }}">
                             <input type="hidden" name="variants[{{ $i }}][size_id]" value="{{ $variant->size_id }}">
                             <input type="hidden" name="variants[{{ $i }}][color_id]" value="{{ $variant->color_id }}">
-
-                            <div class="flex items-center justify-between">
-
-                                <div>
-                                    <h3 class="text-sm font-bold text-gray-900">
-                                        {{ $variant->size->name ?? '' }} / {{ $variant->color->name ?? '' }}
-                                    </h3>
-                                </div>
-
-                                <button type="button"
-                                    class="removeVariantBtn inline-flex items-center justify-center w-9 h-9 text-red-600 bg-red-100 rounded-xl hover:bg-red-200 transition">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-
-                            </div>
-
-                            <div class="grid md:grid-cols-4 gap-4">
-
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
+                            <div class="grid grid-cols-12 gap-2 items-end">
+                                <!-- Size (3 columns) -->
+                                <div class="col-span-3 sm:col-span-3">
+                                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
                                     <input type="text" value="{{ $variant->size->name ?? '' }}" readonly
-                                        class="w-full px-3 py-2 text-sm border-2 border-gray-300 rounded-xl bg-white">
+                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed focus:outline-none">
                                 </div>
 
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">Color</label>
+                                <!-- Color (3 columns) -->
+                                <div class="col-span-3 sm:col-span-3">
+                                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
                                     <input type="text" value="{{ $variant->color->name ?? '' }}" readonly
-                                        class="w-full px-3 py-2 text-sm border-2 border-gray-300 rounded-xl bg-white">
+                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed focus:outline-none">
                                 </div>
 
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">Price</label>
-                                    <input type="number" name="variants[{{ $i }}][price]" value="{{ $variant->price }}"
-                                        class="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-xl">
+                                <!-- Price (3 columns) -->
+                                <div class="col-span-3 sm:col-span-2">
+                                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Price</label>
+                                    <input type="text" name="variants[{{ $i }}][price]" value="{{ $variant->price }}"
+                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
                                 </div>
 
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">SKU</label>
+                                <!-- SKU (2 columns) -->
+                                <div class="col-span-2 sm:col-span-3">
+                                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">SKU</label>
                                     <input type="text" name="variants[{{ $i }}][sku]" value="{{ $variant->sku }}"
-                                        class="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-xl">
+                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
                                 </div>
 
+                                <!-- Delete Button (1 column - No Extra Space) -->
+                                <div class="col-span-1 flex justify-end">
+                                    <button type="button"
+                                        class="removeVariantBtn inline-flex items-center justify-center w-8 h-8 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 active:bg-red-200 transition-colors duration-150">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </div>
                             </div>
+
+
                         </div>
 
                     @endforeach
@@ -592,55 +588,47 @@
                     existingKeys.add(key);
 
                     html += `
-                <div class="variant-card p-5 border border-gray-200 rounded-2xl bg-gray-50">
+                <div class="variant-card p-3 border border-gray-200 rounded-2xl bg-gray-50">
 
                     <input type="hidden" name="variants[${index}][size_id]" value="${size.id}">
                     <input type="hidden" name="variants[${index}][color_id]" value="${color.id}">
 
-                    <div class="flex items-center justify-between mb-5">
-
-                        <div>
-                            <h3 class="text-sm font-bold text-gray-900">
-                                ${size.name} / ${color.name}
-                            </h3>
-                        </div>
-
-                        <button type="button"
-                            class="removeVariantBtn w-9 h-9 text-red-600 bg-red-100 rounded-xl hover:bg-red-200 transition">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-
-                    <div class="grid md:grid-cols-4 gap-4">
-
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
+                   <div class="grid grid-cols-12 gap-2 items-end">
+                        <!-- Size -->
+                        <div class="col-span-3">
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
                             <input type="text" value="${size.name}" readonly
-                                class="w-full px-3 py-2 text-sm border rounded-xl bg-white">
+                                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed focus:outline-none">
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Color</label>
+                        <!-- Color -->
+                        <div class="col-span-3">
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
                             <input type="text" value="${color.name}" readonly
-                                class="w-full px-3 py-2 text-sm border rounded-xl bg-white">
+                                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed focus:outline-none">
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Price</label>
-                            <input type="number" step="0.01"
-                                name="variants[${index}][price]"
-                                value="${productPrice}"
-                                class="w-full px-3 py-2 text-sm border rounded-xl"
-                                placeholder="0.00">
+                        <!-- Price -->
+                        <div class="col-span-3">
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Price</label>
+                            <input type="text" name="variants[${index}][price]" value="${productPrice}" placeholder="0.00"
+                                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">SKU</label>
-                            <input type="text"
-                                name="variants[${index}][sku]"
-                                class="w-full px-3 py-2 text-sm border rounded-xl">
+                        <!-- SKU -->
+                        <div class="col-span-2">
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">SKU</label>
+                            <input type="text" name="variants[${index}][sku]"
+                                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
                         </div>
 
+                        <!-- Delete Button (No Extra Space) -->
+                        <div class="col-span-1 flex justify-end">
+                            <button type="button"
+                                class="removeVariantBtn inline-flex items-center justify-center w-8 h-8 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 active:bg-red-200 transition-colors duration-150">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
