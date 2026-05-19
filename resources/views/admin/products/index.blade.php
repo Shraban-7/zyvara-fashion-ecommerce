@@ -149,17 +149,17 @@
                         </div>
                     </td>
                     <td class="px-6 py-4">
-                        @if($product->stock_in <= 0)
+                        @if($product->totalStock <= 0)
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
                             <i class="fas fa-times-circle mr-1"></i> Out of Stock
                             </span>
-                            @elseif($product->stock_in <= $product->low_stock_threshold)
+                            @elseif($product->totalStock <= $product->low_stock_threshold)
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                                    <i class="fas fa-exclamation-triangle mr-1"></i> Low ({{ $product->stock_in }})
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> Low ({{ $product->totalStock}})
                                 </span>
                                 @else
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    <i class="fas fa-check-circle mr-1"></i> In Stock ({{ $product->stock_in }})
+                                    <i class="fas fa-check-circle mr-1"></i> In Stock ({{ $product->totalStock }})
                                 </span>
                                 @endif
                     </td>

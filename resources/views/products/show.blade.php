@@ -210,14 +210,27 @@
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
-                                @if($product->isLowStock())
-                                    <span class="text-sm text-gray-500">Only <span
-                                            class="text-orange-500 font-semibold">{{ $product->stock_in }} items</span>
-                                        left!</span>
-                                @elseif($product->stock_in > 0)
-                                    <span class="text-sm text-gray-500"><span
-                                            class="text-green-600 font-semibold">{{ $product->stock_in }} items</span>
-                                        available</span>
+                                @if($product->variants->count() == 0)
+                                    @if($product->isLowStock())
+                                        <span class="text-sm text-gray-500">
+                                            Only <span class="text-orange-500 font-semibold">
+                                                {{ $product->currentStock }} items
+                                            </span> left!
+                                        </span>
+
+                                    @elseif($product->currentStock > 0)
+                                        <span class="text-sm text-gray-500">
+                                            <span class="text-green-600 font-semibold">
+                                                {{ $product->currentStock }} items
+                                            </span>
+                                            available
+                                        </span>
+                                    @endif
+
+                                @else
+                                    <span id="stockText" class="text-sm text-gray-500">
+                                        Select size & color
+                                    </span>
                                 @endif
                             </div>
                         </div>
@@ -695,6 +708,7 @@
             btn.classList.add('border-primary');
             document.getElementById('selectedColorName').textContent = colorName;
             updateVariantPrice();
+            updateVariantStock();
         }
 
         // Select size
@@ -707,6 +721,7 @@
             btn.classList.add('border-primary', 'bg-primary/5', 'text-primary', 'font-semibold');
             document.getElementById('selectedSizeName').textContent = sizeName;
             updateVariantPrice();
+            updateVariantStock();
         }
 
         // Switch product tabs
@@ -803,6 +818,70 @@
                 } else {
                     comparePriceElement.classList.add('hidden');
                     savingsElement.classList.add('hidden');
+                }
+            }
+        }
+
+        function updateVariantStock() {
+
+            const selectedColorBtn = document.querySelector('.color-btn.border-primary');
+            const selectedSizeBtn = document.querySelector('.product-size-btn.border-primary');
+
+            if (!productVariants || productVariants.length === 0) {
+                return;
+            }
+
+            // Get selected IDs
+            const colorId = selectedColorBtn ? parseInt(selectedColorBtn.dataset.colorId) : null;
+            const sizeId = selectedSizeBtn ? parseInt(selectedSizeBtn.dataset.sizeId) : null;
+
+            // Detect if product has variants
+            const hasColors = productVariants.some(v => v.color_id);
+            const hasSizes = productVariants.some(v => v.size_id);
+
+            // Find matching variant
+            const variant = productVariants.find(v => {
+                const colorMatch = !hasColors || v.color_id === colorId;
+                const sizeMatch = !hasSizes || v.size_id === sizeId;
+                return colorMatch && sizeMatch;
+            });
+
+            const stockElement = document.getElementById('stockText');
+            const quantityInput = document.getElementById('productQuantity');
+
+            let stock = 0;
+            
+            if (variant && variant.stock_in !== undefined) {
+
+                stock = parseInt(variant.stock_in - variant.stock_out);
+            }
+    
+            // 🔥 STOCK UI LOGIC
+            if (!colorId || !sizeId) {
+                stockElement.innerText = 'Select size & color';
+            }
+            else if (stock <= 0) {
+                stockElement.innerText = 'Out of stock';
+                stockElement.classList.add('text-red-500');
+
+            }
+            else if (stock <= 5) {
+                stockElement.innerHTML = `<span class="text-orange-500 font-semibold">Only ${stock} left!</span>`;
+                stockElement.classList.remove('text-red-500');
+
+            }
+            else {
+                stockElement.innerHTML = `<span class="text-green-600 font-semibold">${stock} items available</span>`;
+                stockElement.classList.remove('text-red-500');
+            }
+
+            // 🔥 Update quantity max limit
+            if (quantityInput) {
+                quantityInput.max = stock > 0 ? stock : 1;
+
+                // reset if current value exceeds stock
+                if (parseInt(quantityInput.value) > stock) {
+                    quantityInput.value = stock > 0 ? stock : 1;
                 }
             }
         }

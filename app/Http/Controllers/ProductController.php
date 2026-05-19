@@ -215,8 +215,13 @@ class ProductController extends Controller
             'approvedReviews.images'
         ])
             ->where('slug', $slug)
-            ->where('is_active', true)
-            ->firstOrFail();
+            ->where('is_active', true)->first();
+
+        $variantTotalStock = 0;
+
+        foreach ($product->variants as $variant) {
+            $variantTotalStock += $variant->currentStock;
+        }
 
         // Increment view count
         $product->incrementViewCount();
@@ -253,7 +258,17 @@ class ProductController extends Controller
             1 => $product->approvedReviews()->where('rating', 1)->count(),
         ];
 
-        return view('products.show', compact('product', 'relatedProducts', 'ratingDistribution', 'availableSizes', 'availableColors'));
+        $variantsMap = $product->variants->map(function ($variant) {
+            return [
+                'size_id' => $variant->size_id,
+                'color_id' => $variant->color_id,
+                'size_name' => $variant->size?->name,
+                'color_name' => $variant->color?->name,
+                'stock' => $variant->currentStock,
+            ];
+        })->values();
+
+        return view('products.show', compact('product', 'relatedProducts', 'ratingDistribution', 'availableSizes', 'availableColors', 'variantTotalStock','variantsMap'));
     }
 
     /**
