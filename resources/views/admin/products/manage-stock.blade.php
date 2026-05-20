@@ -60,7 +60,7 @@
 
                     <div class="grid grid-cols-12 gap-3 items-end">
                         <!-- Action -->
-                        <div class="col-span-4">
+                        <div class="col-span-3">
                             <label class="block text-[11px] font-semibold text-gray-600 mb-1">Action</label>
                             <div class="flex p-0.5 bg-gray-100 rounded-lg">
                                 <label class="flex-1 cursor-pointer text-center">
@@ -79,8 +79,8 @@
                         <!-- Quantity -->
                         <div class="col-span-3">
                             <label class="block text-[11px] font-semibold text-gray-600 mb-1">Qty</label>
-                            <input type="number" name="quantity" min="1" required placeholder="0"
-                                class="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+                            <input type="number" name="quantity" min="1" required placeholder="Qty"
+                                class="quantity-input w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
                         </div>
 
                         <!-- Note -->
@@ -92,10 +92,19 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="col-span-2">
-                            <button type="submit"
-                                class="w-full py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 active:bg-blue-800 transition">
-                                Update
+                        <div class="col-span-3">
+                            <button type="submit" disabled
+                                class="submit-btn w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 active:bg-green-800 transition shadow-sm text-xs font-semibold">
+
+                                <i class="fas fa-plus text-[10px]"></i>
+
+                                <span class="btn-text">
+                                    Add
+                                </span>
+
+                                <span class="preview-stock text-[10px] opacity-90">
+                                    (+0)
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -385,10 +394,10 @@
                             submitBtn.disabled = false;
 
                             submitBtn.innerHTML = `
-                <i class="fas fa-plus text-[10px]"></i>
-                <span class="btn-text">Add</span>
-                <span class="preview-stock text-[10px] opacity-90">(+0)</span>
-            `;
+                                <i class="fas fa-plus text-[10px]"></i>
+                                <span class="btn-text">Add</span>
+                                <span class="preview-stock text-[10px] opacity-90">(+0)</span>
+                            `;
 
                             form.reset();
 

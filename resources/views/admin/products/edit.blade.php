@@ -224,19 +224,54 @@
 
 
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Inventory</h2>
+
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-bold text-gray-900">Inventory</h2>
+
+                    <a href="{{ route('admin.products.manage-stock', $product) }}"
+                    class="px-4 py-2 text-xs font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition">
+                        <i class="fas fa-boxes mr-2"></i>Manage Stock
+                    </a>
+                </div>
+
                 <div class="grid md:grid-cols-2 gap-5">
+
+                    {{-- Stock Quantity --}}
                     <div>
-                        <x-input name="stock_in" type="number" label="Stock Quantity" required placeholder="0" value="{{ old('stock_in', $product->stock_in) }}" :disabled="$product->variants->count() > 0" />
-                        <p class="mt-1 text-xs text-gray-500">Add stock quantity here if no variants available</p>
+                        <x-input
+                            type="number"
+                            label="Stock Quantity"
+                            required
+                            placeholder="0"
+                            value="{{ old('stock_in', $product->totalStock) }}"
+                            :disabled="true"
+                        />
+
+                        <p class="mt-1 text-xs text-gray-500">
+                            Need to update stock? Please click
+                            <a href="{{ route('admin.products.manage-stock', $product) }}">
+                                <span class="font-semibold text-blue-600">Manage Stock</span>
+                            </a>.
+                        </p>
                     </div>
 
                     {{-- Low Stock Threshold --}}
                     <div>
-                        <x-input name="low_stock_threshold" type="number" label="Low Stock Alert" placeholder="5" value="{{ old('low_stock_threshold', $product->low_stock_threshold) }}" />
-                        <p class="mt-1 text-xs text-gray-500">Alert when stock reaches this level</p>
+                        <x-input
+                            name="low_stock_threshold"
+                            type="number"
+                            label="Low Stock Alert"
+                            placeholder="5"
+                            value="{{ old('low_stock_threshold', $product->low_stock_threshold) }}"
+                        />
+
+                        <p class="mt-1 text-xs text-gray-500">
+                            You'll get a warning when stock drops below this level.
+                        </p>
                     </div>
+
                 </div>
+
             </div>
 
             {{-- Product Variants --}}

@@ -50,7 +50,7 @@
             <div>
                 <p class="text-sm text-gray-600 mb-1">Total Stock In</p>
                 <p class="text-3xl font-bold text-green-600">
-                    {{ $stockLogs->where('type', 'in')->sum('quantity') }}
+                    {{ $product->totalStockIn }}
                 </p>
                 <p class="text-xs text-gray-500 mt-1">Added to inventory</p>
             </div>
@@ -65,7 +65,7 @@
             <div>
                 <p class="text-sm text-gray-600 mb-1">Total Stock Out</p>
                 <p class="text-3xl font-bold text-red-600">
-                    {{ $stockLogs->where('type', 'out')->sum('quantity') }}
+                    {{ $product->totalStockOut }}
                 </p>
                 <p class="text-xs text-gray-500 mt-1">Removed from inventory</p>
             </div>

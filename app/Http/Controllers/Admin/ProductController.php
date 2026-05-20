@@ -225,6 +225,27 @@ class ProductController extends Controller
                     ]);
                 }
             }
+
+            if ($product->stock_in>0) {
+                StockLog::create([
+                    'product_id' => $product->id,
+                    'product_variant_id' => null,
+                    'user_id' => Auth::id(),
+                    'type' => 'in',
+                    'quantity' => $product->stock_in,
+                    'stock_before' => 0,
+                    'stock_after' => $product->stock_in,
+                    'note' => $validated['note'] ?? null,
+                ]);
+
+                activity_log(
+                    action: 'updated',
+                    model: $product,
+                    description: 'Product stock updated ',
+                );
+            }
+
+
             DB::commit();
 
             if ($request->ajax() || $request->wantsJson()) {
@@ -297,7 +318,6 @@ class ProductController extends Controller
             'fit_type' => 'nullable|string|in:' . implode(',', FitType::values()),
             'pattern' => 'nullable|string|in:' . implode(',', Pattern::values()),
             'occasion' => 'nullable|string|in:' . implode(',', Occasion::values()),
-            'stock_in' => 'required|integer|min:0',
             'low_stock_threshold' => 'nullable|integer|min:0',
             'weight' => 'nullable|numeric|min:0',
             'is_active' => 'boolean',

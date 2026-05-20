@@ -243,9 +243,7 @@ class Product extends Model
 
     public function totalStock(): Attribute
     {
-        $variants = $this->variants;
-
-        if ($variants) {
+        if ($this->variants->count()) {
             $stock = 0;
             foreach ($this->variants as $variant) {
                 $stock += $variant->stock_in - $variant->stock_out;
@@ -257,6 +255,42 @@ class Product extends Model
         return Attribute::make(
             get: function () use ($stock) {
                 return $stock;
+            }
+        );
+    }
+
+    public function totalStockIn(): Attribute
+    {
+        if ($this->variants->count()) {
+            $stockIn = 0;
+            foreach ($this->variants as $variant) {
+                $stockIn += $variant->stock_in;
+            }
+        } else {
+            $stockIn = $this->stock_in;
+        }
+
+        return Attribute::make(
+            get: function () use ($stockIn) {
+                return $stockIn;
+            }
+        );
+    }
+
+    public function totalStockOut(): Attribute
+    {
+        if ($this->variants->count()) {
+            $stockOut = 0;
+            foreach ($this->variants as $variant) {
+                $stockOut += $variant->stock_out;
+            }
+        } else {
+            $stockOut = $this->stock_out;
+        }
+
+        return Attribute::make(
+            get: function () use ($stockOut) {
+                return $stockOut;
             }
         );
     }
