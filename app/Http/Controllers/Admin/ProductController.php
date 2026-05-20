@@ -606,6 +606,7 @@ class ProductController extends Controller
                 $stockBefore = $variant->currentStock;
                 $stockAfter = $stockBefore + $validated['quantity'];
                 $variant->increment('stock_in', $validated['quantity']);
+                $variant->product->increment('stock_in', $validated['quantity']);
 
                 StockLog::create([
                     'product_id' => $variant->product_id,
@@ -646,8 +647,6 @@ class ProductController extends Controller
                     description: 'Product stock updated ',
                 );
             }
-
-
 
             DB::commit();
 
@@ -705,6 +704,7 @@ class ProductController extends Controller
                 }
 
                 $variant->increment('stock_out', $validated['quantity']);
+                $variant->product->increment('stock_out', $validated['quantity']);
 
                 $stockAfter = $stockBefore - $validated['quantity'];
 
