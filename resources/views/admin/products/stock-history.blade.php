@@ -6,7 +6,7 @@
 <div class="mb-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Stock History</h1>
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Stock History</h1>
             <p class="text-gray-500">{{ $product->name }}</p>
         </div>
         <div class="flex gap-3">
@@ -29,11 +29,7 @@
             <div>
                 <p class="text-sm text-gray-600 mb-1">Current Stock</p>
                 <p class="text-3xl font-bold text-gray-900">
-                    @if($product->variants->isNotEmpty())
-                    {{ $product->variants->sum('stock_in') }}
-                    @else
-                    {{ $product->stock_in }}
-                    @endif
+                    {{ $product->totalStock }}
                 </p>
                 <p class="text-xs text-gray-500 mt-1">
                     @if($product->variants->isNotEmpty())
@@ -82,9 +78,7 @@
 
 {{-- Stock History Table --}}
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-    <div class="p-6 border-b border-gray-100">
-        <h2 class="text-lg font-bold text-gray-900">Transaction History</h2>
-    </div>
+   
 
     @if($stockLogs->count() > 0)
     <div class="overflow-x-auto">

@@ -243,10 +243,15 @@ class Product extends Model
 
     public function totalStock(): Attribute
     {
-        $stock = $this->stock_in - $this->stock_out;
-        
-        foreach ($this->variants as $variant) {
-            $stock += $variant->stock_in - $variant->stock_out;
+        $variants = $this->variants;
+
+        if ($variants) {
+            $stock = 0;
+            foreach ($this->variants as $variant) {
+                $stock += $variant->stock_in - $variant->stock_out;
+            }
+        } else {
+            $stock = $this->stock_in - $this->stock_out;
         }
 
         return Attribute::make(
