@@ -169,10 +169,10 @@
 
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-6">Inventory</h2>
-
                 <div class="grid md:grid-cols-2 gap-5">
                     <div>
                         <x-input name="stock_in" label="Stock Quantity" type="number" required placeholder="0" />
+                        <p class="mt-1 text-xs text-gray-500">Add stock quantity here if no variants available</p>
                     </div>
                     <div>
                         <x-input name="low_stock_threshold" label="Low Stock Alert" type="number" value="{{ old('low_stock_threshold', 5) }}" placeholder="5" />

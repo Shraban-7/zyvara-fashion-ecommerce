@@ -222,14 +222,13 @@
                 </div>
             </div>
 
-            {{-- Inventory --}}
+
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-900 mb-6">Inventory</h2>
-
                 <div class="grid md:grid-cols-2 gap-5">
-                    {{-- Stock Quantity --}}
                     <div>
-                        <x-input name="stock_in" type="number" label="Stock Quantity" required placeholder="0" value="{{ old('stock_in', $product->stock_in) }}" />
+                        <x-input name="stock_in" type="number" label="Stock Quantity" required placeholder="0" value="{{ old('stock_in', $product->stock_in) }}" :disabled="$product->variants->count() > 0" />
+                        <p class="mt-1 text-xs text-gray-500">Add stock quantity here if no variants available</p>
                     </div>
 
                     {{-- Low Stock Threshold --}}
