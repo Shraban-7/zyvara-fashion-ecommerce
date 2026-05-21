@@ -229,7 +229,7 @@
 
                                 @else
                                     <span id="stockText" class="text-sm text-gray-500">
-                                        Select size & color
+                                        Select size or color
                                     </span>
                                 @endif
                             </div>
@@ -835,11 +835,9 @@
             const colorId = selectedColorBtn ? parseInt(selectedColorBtn.dataset.colorId) : null;
             const sizeId = selectedSizeBtn ? parseInt(selectedSizeBtn.dataset.sizeId) : null;
 
-            // Detect if product has variants
             const hasColors = productVariants.some(v => v.color_id);
             const hasSizes = productVariants.some(v => v.size_id);
 
-            // Find matching variant
             const variant = productVariants.find(v => {
                 const colorMatch = !hasColors || v.color_id === colorId;
                 const sizeMatch = !hasSizes || v.size_id === sizeId;
@@ -855,12 +853,8 @@
 
                 stock = parseInt(variant.stock_in - variant.stock_out);
             }
-    
-            // 🔥 STOCK UI LOGIC
-            if (!colorId || !sizeId) {
-                stockElement.innerText = 'Select size & color';
-            }
-            else if (stock <= 0) {
+
+             if (stock <= 0) {
                 stockElement.innerText = 'Out of stock';
                 stockElement.classList.add('text-red-500');
 

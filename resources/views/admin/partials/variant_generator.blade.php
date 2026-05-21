@@ -241,9 +241,13 @@
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm" id="variantGenerator">
 
         <!-- Header -->
-        <div class="flex items-center justify-between px-6 py-5">
-            <div>
+        <div class="px-6 py-5">
+            <div class="flex items-center justify-between">
                 <h2 class="text-lg font-bold text-gray-900">Product Variant Generator</h2>
+                <button type="button" onclick="addVariant()"
+                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-plus mr-2"></i>Add Variant Row
+                </button>
             </div>
         </div>
 
@@ -358,7 +362,7 @@
 
                                     <select name="variants[{{ $i }}][size_id]"
                                         class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
-
+                                        <option value="">Select Size</option>
                                         @foreach($sizes as $size)
                                             <option value="{{ $size->id }}" {{ $variant->size_id == $size->id ? 'selected' : '' }}>
                                                 {{ $size->name }}
@@ -374,7 +378,7 @@
 
                                     <select name="variants[{{ $i }}][color_id]"
                                         class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
-
+                                        <option value="">Select Color</option>
                                         @foreach($colors as $color)
                                             <option value="{{ $color->id }}" {{ $variant->color_id == $color->id ? 'selected' : '' }}>
                                                 {{ $color->name }}
@@ -586,7 +590,7 @@
                             <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
                             <select name="variants[${index}][size_id]"
                                 class="w-full px-2 py-1.5 text-xs border rounded-lg">
-
+                                <option value="">Select Size</option>
                                 ${allSizes.map(s => `
                                     <option value="${s.id}" ${s.id == size.id ? 'selected' : ''}>
                                         ${s.name}
@@ -601,7 +605,7 @@
                             <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
                             <select name="variants[${index}][color_id]"
                                 class="w-full px-2 py-1.5 text-xs border rounded-lg">
-
+                                <option value="">Select Color</option>
                                 ${allColors.map(c => `
                                     <option value="${c.id}" ${c.id == color.id ? 'selected' : ''}>
                                         ${c.name}
@@ -750,6 +754,90 @@
                 sel.dataset.previous = sel.value;
             });
         });
-
     });
+
+    window.addVariant = function () {
+
+        const container = document.getElementById("variantsContainer");
+
+        const allSizes = Array.from(
+            document.querySelectorAll('#sizeMultiselect .multiselect-option')
+        ).map(el => ({ id: el.dataset.id, name: el.dataset.name }));
+
+        const allColors = Array.from(
+            document.querySelectorAll('#colorMultiselect .multiselect-option')
+        ).map(el => ({ id: el.dataset.id, name: el.dataset.name }));
+
+        const price = document.querySelector('[name="price"]')?.value || 0;
+
+        const index = document.querySelectorAll('.variant-card').length;
+
+        const html = `
+        <div class="variant-card p-3 border border-gray-200 rounded-2xl bg-gray-50">
+
+            <div class="grid grid-cols-12 gap-2 items-end">
+
+                <!-- SIZE -->
+                <div class="col-span-3">
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
+                    <select name="variants[${index}][size_id]"
+                        class="w-full px-2 py-1.5 text-xs border rounded-lg">
+
+                        <option value="">Select size</option>
+
+                        ${allSizes.map(s => `
+                            <option value="${s.id}">${s.name}</option>
+                        `).join('')}
+
+                    </select>
+                </div>
+
+                <!-- COLOR -->
+                <div class="col-span-3">
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
+                    <select name="variants[${index}][color_id]"
+                        class="w-full px-2 py-1.5 text-xs border rounded-lg">
+
+                        <option value="">Select color</option>
+
+                        ${allColors.map(c => `
+                            <option value="${c.id}">${c.name}</option>
+                        `).join('')}
+
+                    </select>
+                </div>
+
+                <!-- PRICE -->
+                <div class="col-span-3">
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Price</label>
+                    <input type="text"
+                        name="variants[${index}][price]"
+                        value="${price}"
+                        class="w-full px-2 py-1.5 text-xs border rounded-lg">
+                </div>
+
+                <!-- SKU -->
+                <div class="col-span-2">
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">SKU</label>
+                    <input type="text"
+                        name="variants[${index}][sku]"
+                        class="w-full px-2 py-1.5 text-xs border rounded-lg">
+                </div>
+
+                <!-- DELETE -->
+                <div class="col-span-1 flex justify-end">
+                    <button type="button"
+                        class="removeVariantBtn w-8 h-8 text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
+                        <i class="fas fa-trash text-sm"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    `;
+
+        container.insertAdjacentHTML('beforeend', html);
+
+        showToast('success', 'Variant row added');
+    };
 </script>
