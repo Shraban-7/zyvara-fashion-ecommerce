@@ -6,8 +6,6 @@
 
 @include('home.categories')
 
-@include('home.our-brands')
-
 {{-- @include('home.brands') --}}
 
 @include('home.new-arrivals')
@@ -23,6 +21,8 @@
 @include('home.mens-collection')
 
 @include('home.ladies-collection')
+
+@include('home.our-brands')
 
 @include('home.why-us')
 
