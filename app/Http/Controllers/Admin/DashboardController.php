@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Coupon;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -144,7 +145,10 @@ class DashboardController extends Controller
             $currentEnd
         ])->sum('refund_amount');
 
-        $totalCustomers = User::where('role', 'customer')->count();
+        $totalWebUser = User::where('role', 'customer')->count();
+        $totalPosUser = Customer::count();
+
+        $totalCustomers = $totalWebUser + $totalPosUser;
 
         $previousRevenue = Order::whereBetween('created_at', [
             $previousStart,
