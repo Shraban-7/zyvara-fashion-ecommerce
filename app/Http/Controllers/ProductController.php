@@ -217,6 +217,10 @@ class ProductController extends Controller
             ->where('slug', $slug)
             ->where('is_active', true)->first();
 
+        if (!$product) {
+            abort(404);
+        }
+
         $variantTotalStock = 0;
 
         foreach ($product->variants as $variant) {

@@ -561,6 +561,8 @@ class ProductController extends Controller
                 delete_file($image->image_path);
             }
 
+            $product->variants()->delete();
+
             activity_log(
                 action: 'deleted',
                 model: $product,
