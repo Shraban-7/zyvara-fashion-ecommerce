@@ -66,7 +66,6 @@ class ProductVariantManager {
     // POPULATE UI
     // =========================
     populateQuickView(product) {
-        console.log(product);
 
         document.getElementById("quickViewName").textContent = product.name;
         document.getElementById("quickViewBrand").textContent = formatBrandCategory(product);
@@ -194,6 +193,7 @@ class ProductVariantManager {
             colorBox.innerHTML = "";
 
             colors.forEach((c) => {
+
                 const btn = document.createElement("button");
 
                 const hasValidVariant = this.variants.some(v =>
@@ -207,17 +207,60 @@ class ProductVariantManager {
                     (v.stock) > 0
                 );
 
-                btn.className =
-                    "color-btn w-11 h-11 rounded-full border-2 transition p-1 shadow-sm";
-
-                btn.style.background = c.hex_code || "#eee";
                 btn.dataset.id = c.id;
+                btn.dataset.name = c.name;
+                btn.title = c.name;
 
-                if (!hasValidVariant || !inStock) {
-                    btn.disabled = true;
-                    btn.classList.add("opacity-30", "cursor-not-allowed", "border-gray-200");
+                if (c.hex_code) {
+
+                    btn.className =
+                        "color-btn w-11 h-11 rounded-full border-2 transition p-1 shadow-sm";
+
+                    btn.style.backgroundColor = c.hex_code;
+
+                    if (!hasValidVariant || !inStock) {
+                        btn.disabled = true;
+
+                        btn.classList.add(
+                            "opacity-30",
+                            "cursor-not-allowed",
+                            "border-gray-200"
+                        );
+                    } else {
+                        btn.classList.add(
+                            "border-gray-300",
+                            "hover:border-primary"
+                        );
+                    }
+
                 } else {
-                    btn.classList.add("border-gray-300", "hover:border-primary");
+
+                    btn.className =
+                        "color-btn w-11 h-11 rounded-full border-2 text-[10px] font-semibold flex items-center justify-center uppercase transition shadow-sm";
+
+                    btn.textContent = (c.name || "")
+                        .substring(0, 3)
+                        .toUpperCase();
+
+                    if (!hasValidVariant || !inStock) {
+                        btn.disabled = true;
+
+                        btn.classList.add(
+                            "bg-gray-100",
+                            "text-gray-400",
+                            "border-gray-200",
+                            "cursor-not-allowed",
+                            "opacity-50"
+                        );
+                    } else {
+                        btn.classList.add(
+                            "bg-gray-50",
+                            "text-gray-700",
+                            "border-gray-300",
+                            "hover:border-primary",
+                            "hover:text-primary"
+                        );
+                    }
                 }
 
                 btn.onclick = () => {
@@ -291,9 +334,6 @@ class ProductVariantManager {
         return [...map.values()];
     }
 
-    // =========================
-    // SELECTION
-    // =========================
     selectColor(color, btn) {
         document.querySelectorAll("#colorOptions button")
             .forEach(b => b.classList.remove("border-primary"));
@@ -318,17 +358,11 @@ class ProductVariantManager {
         this.updateVariant();
     }
 
-    // =========================
-    // VARIANT MATCH
-    // =========================
     updateVariant() {
         const variant = this.variants.find(v => {
             return (!this.selectedColor || v.color_id == this.selectedColor) &&
                 (!this.selectedSize || v.size_id == this.selectedSize);
         });
-
-        console.log(variant);
-
 
         if (!variant) return;
 
