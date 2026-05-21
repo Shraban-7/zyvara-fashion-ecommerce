@@ -1,7 +1,6 @@
 {{-- Product Quick View Modal --}}
 <div id="productQuickViewModal"
-
-       class="modal-overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4">
+    class="modal-overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4">
     <div class="modal-container bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
         {{-- Modal Header --}}
         <div class="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
@@ -19,7 +18,7 @@ g               ray-900">Quick View</h3>
                 {{-- Product Image --}}
                 <div class="space-y-3">
 
-                                               <div class="relative bg-gray-50 rounded-xl overflow-hidden aspect-square">
+                    <div class="relative bg-gray-50 rounded-xl overflow-hidden aspect-square">
                         <img id="quickViewImage" src="{{ asset('assets/images/default.png') }}" alt=""
                             class="w-full h-full object-cover">
                         {{-- Badge Container --}}
@@ -52,13 +51,14 @@ g               ray-900">Quick View</h3>
                     </div>
 
                     {{-- Stock Status --}}
-                    <div id="quickViewStock" class="flex items-center gap-2"></div>
+                    <div id="quickViewStock" class="flex items-center gap-2">
+                    </div>
 
                     {{-- Variants Section --}}
                     <div id="variantsSection" class="space-y-4 hidden">
                         {{-- Color Selection --}}
 
-                                                               <div id="colorSection" class="hidden">
+                        <div id="colorSection" class="hidden">
                             <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-sm font-semibold text-gray-900">
                                     Color: <span id="selectedColorName" class="font-normal text-gray-600">Select a
@@ -68,8 +68,8 @@ g               ray-900">Quick View</h3>
                             <div id="colorOptions" class="flex gap-3 flex-wrap"></div>
                         </div>
 
-                                
-                               {{-- Size Selection --}}
+
+                        {{-- Size Selection --}}
                         <div id="sizeSection" class="hidden">
                             <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-sm font-semibold text-gray-900">
@@ -77,7 +77,7 @@ g               ray-900">Quick View</h3>
                                         size</span>
                                 </span>
 
-                                                       </div>
+                            </div>
                             <div id="sizeOptions" class="flex gap-2.5 flex-wrap"></div>
                         </div>
 
@@ -88,27 +88,25 @@ g               ray-900">Quick View</h3>
                             <span id="variantErrorText">Please select all options</span>
                         </div>
 
-                                                   </div>
+                    </div>
 
                     {{-- Quantity --}}
 
-                                                   <div>
-
-                                                       <span class="text-sm font-semibold text-gray-900 mb-3 block">Quantity</span>
+                    <div>
+                        <span class="text-sm font-semibold text-gray-900 mb-3 block">Quantity</span>
                         <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden w-fit">
                             <button onclick="updateQuickViewQuantity(-1)"
                                 class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                                 <i class="fas fa-minus text-sm"></i>
                             </button>
-                            <input type="number" id="quickViewQuantity" value="1" min="1" max="999"
-                                class="w-12 h-10 text-center text-sm font-semibold border-
+                            <input type="number" id="quickViewQuantity" value="1" min="1" max="999" class="w-12 h-10 text-center text-sm font-semibold border-
              x               border-gray-200 focus:outline-none">
                             <button onclick="updateQuickViewQuantity(1)"
                                 class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                                 <i class="fas fa-plus text-sm"></i>
                             </button>
 
-                                                   </div>
+                        </div>
                     </div>
 
                     {{-- Action Buttons --}}
@@ -183,3 +181,266 @@ g               ray-900">Quick View</h3>
         }
     }
 </style>
+
+<script>
+    let quickViewProduct = null;
+    let quickViewVariants = [];
+
+    // ==============================
+    // INIT QUICK VIEW DATA
+    // ==============================
+    function openQuickView(product, variants = []) {
+        quickViewProduct = product;
+        quickViewVariants = variants;
+
+        // Reset UI
+        resetQuickViewUI();
+
+        // Set basic info
+        document.getElementById('quickViewName').textContent = product.name ?? '';
+        document.getElementById('quickViewBrand').textContent = product.brand ?? '';
+        document.getElementById('quickViewDescription').innerHTML = product.short_description ?? '';
+
+        // Image
+        document.getElementById('quickViewImage').src = product.thumbnail || '/assets/images/default.png';
+
+        // Price
+        setQuickViewPrice(product.price, product.compare_price);
+
+        // Stock
+        updateQuickViewStock(product.stock_in ?? 0);
+
+        // Variants
+        renderQuickViewVariants(variants);
+
+        // Show modal
+        const modal = document.getElementById('productQuickViewModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+
+
+    // ==============================
+    // RESET UI
+    // ==============================
+    function resetQuickViewUI() {
+        document.getElementById('quickViewQuantity').value = 1;
+        document.getElementById('selectedColorName').textContent = 'Select';
+        document.getElementById('selectedSizeName').textContent = 'Select';
+
+        document.getElementById('colorOptions').innerHTML = '';
+        document.getElementById('sizeOptions').innerHTML = '';
+
+        document.getElementById('variantsSection').classList.add('hidden');
+    }
+
+    // ==============================
+    // PRICE HANDLING
+    // ==============================
+    function setQuickViewPrice(price, comparePrice = 0) {
+        const priceEl = document.getElementById('quickViewPrice');
+        const compareEl = document.getElementById('quickViewComparePrice');
+        const discountEl = document.getElementById('quickViewDiscount');
+
+        priceEl.textContent = `৳${Number(price).toLocaleString()}`;
+
+        if (comparePrice && comparePrice > price) {
+            compareEl.textContent = `৳${Number(comparePrice).toLocaleString()}`;
+            compareEl.classList.remove('hidden');
+
+            const discount = comparePrice - price;
+            discountEl.textContent = `Save ৳${discount.toLocaleString()}`;
+            discountEl.classList.remove('hidden');
+        } else {
+            compareEl.classList.add('hidden');
+            discountEl.classList.add('hidden');
+        }
+    }
+
+    // ==============================
+    // STOCK
+    // ==============================
+    function updateQuickViewStock(stock) {
+        const stockEl = document.getElementById('quickViewStock');
+
+        if (stock <= 0) {
+            stockEl.innerHTML = `<span class="text-red-600 font-medium">Out of stock</span>`;
+        } else if (stock <= 5) {
+            stockEl.innerHTML = `<span class="text-orange-500 font-medium">Only ${stock} left!</span>`;
+        } else {
+            stockEl.innerHTML = `<span class="text-green-600 font-medium">${stock} in stock</span>`;
+        }
+
+        const qty = document.getElementById('quickViewQuantity');
+        qty.max = stock > 0 ? stock : 1;
+    }
+
+    // ==============================
+    // RENDER VARIANTS
+    // ==============================
+    function renderQuickViewVariants(variants) {
+        if (!variants || variants.length === 0) return;
+
+        const colorBox = document.getElementById('colorOptions');
+        const sizeBox = document.getElementById('sizeOptions');
+
+        const colors = [...new Map(
+            variants.filter(v => v.color).map(v => [v.color.id, v.color])
+        ).values()];
+
+        const sizes = [...new Map(
+            variants.filter(v => v.size).map(v => [v.size.id, v.size])
+        ).values()];
+
+        // Show section
+        document.getElementById('variantsSection').classList.remove('hidden');
+
+        // COLORS
+        if (colors.length > 0) {
+            document.getElementById('colorSection').classList.remove('hidden');
+
+            colors.forEach(color => {
+                const btn = document.createElement('button');
+                btn.className = "w-10 h-10 rounded-full border border-gray-300 hover:border-primary transition";
+                btn.style.backgroundColor = color.hex_code || '#eee';
+                btn.dataset.colorId = color.id;
+                btn.title = color.name;
+
+                btn.onclick = () => selectQuickViewColor(btn, color.name);
+
+                colorBox.appendChild(btn);
+            });
+        }
+
+        // SIZES
+        if (sizes.length > 0) {
+            document.getElementById('sizeSection').classList.remove('hidden');
+
+            sizes.forEach(size => {
+                const btn = document.createElement('button');
+                btn.className = "px-3 py-1 border rounded-md text-sm hover:border-primary";
+                btn.dataset.sizeId = size.id;
+                btn.textContent = size.name;
+
+                btn.onclick = () => selectQuickViewSize(btn, size.name);
+
+                sizeBox.appendChild(btn);
+            });
+        }
+    }
+
+    // ==============================
+    // SELECTIONS
+    // ==============================
+    function selectQuickViewColor(btn, name) {
+        document.querySelectorAll('#colorOptions button').forEach(b => {
+            b.classList.remove('border-primary');
+        });
+
+        btn.classList.add('border-primary');
+        document.getElementById('selectedColorName').textContent = name;
+
+        updateQuickViewVariant();
+    }
+
+    function selectQuickViewSize(btn, name) {
+        document.querySelectorAll('#sizeOptions button').forEach(b => {
+            b.classList.remove('border-primary');
+        });
+
+        btn.classList.add('border-primary');
+        document.getElementById('selectedSizeName').textContent = name;
+
+        updateQuickViewVariant();
+    }
+
+    // ==============================
+    // FIND VARIANT
+    // ==============================
+    function updateQuickViewVariant() {
+        const selectedColor = document.querySelector('#colorOptions .border-primary');
+        const selectedSize = document.querySelector('#sizeOptions .border-primary');
+
+        const colorId = selectedColor ? selectedColor.dataset.colorId : null;
+        const sizeId = selectedSize ? selectedSize.dataset.sizeId : null;
+
+        const variant = quickViewVariants.find(v => {
+            const colorMatch = !colorId || v.color_id == colorId;
+            const sizeMatch = !sizeId || v.size_id == sizeId;
+            return colorMatch && sizeMatch;
+        });
+
+        if (variant) {
+            setQuickViewPrice(variant.price, variant.compare_price);
+            updateQuickViewStock(variant.stock_in - (variant.stock_out ?? 0));
+        }
+    }
+
+    // ==============================
+    // QUANTITY
+    // ==============================
+    function updateQuickViewQuantity(change) {
+        const input = document.getElementById('quickViewQuantity');
+        let val = parseInt(input.value || 1) + change;
+
+        if (val < 1) val = 1;
+
+        const max = parseInt(input.max || 999);
+        if (val > max) val = max;
+
+        input.value = val;
+    }
+
+    // ==============================
+    // ADD TO CART
+    // ==============================
+    function addToCartFromQuickView() {
+        if (!quickViewProduct) return;
+
+        const qty = parseInt(document.getElementById('quickViewQuantity').value || 1);
+
+        const color = document.querySelector('#colorOptions .border-primary');
+        const size = document.querySelector('#sizeOptions .border-primary');
+
+        const payload = {
+            product_id: quickViewProduct.id,
+            variant_id: findQuickViewVariantId(color, size),
+            quantity: qty
+        };
+
+        if (window.cartManager) {
+            window.cartManager.addToCart(
+                payload.product_id,
+                payload.variant_id,
+                payload.quantity
+            ).then(success => {
+                if (success && window.openCartDrawer) {
+                    window.openCartDrawer();
+                }
+            });
+        }
+    }
+
+    function findQuickViewVariantId(colorEl, sizeEl) {
+        const colorId = colorEl ? colorEl.dataset.colorId : null;
+        const sizeId = sizeEl ? sizeEl.dataset.sizeId : null;
+
+        const variant = quickViewVariants.find(v => {
+            return (!colorId || v.color_id == colorId) &&
+                (!sizeId || v.size_id == sizeId);
+        });
+
+        return variant ? variant.id : null;
+    }
+
+    // ==============================
+    // CLOSE ON ESC
+    // ==============================
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeQuickView();
+        }
+    });
+</script>

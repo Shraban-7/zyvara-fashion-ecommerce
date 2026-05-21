@@ -114,9 +114,9 @@ if ($product->compare_price && $product->compare_price > $product->price) {
                 <span class="hidden xs:inline sm:inline">Add to Cart</span>
                 <span class="inline xs:hidden sm:hidden">Add</span>
             </button>
-            <button
+            <button onclick="window.productVariantManager.openQuickView({{ $product->id }})"
                 class="quick-view-btn w-10 flex-shrink-0 bg-gray-100 text-gray-700 py-1.5 rounded-lg hover:bg-gray-200 transition-colors tap-effect"
-                data-product-id="{{ $product->id }}" aria-label="Quick view">
+                 aria-label="Quick view">
                 <i class="far fa-eye text-xs"></i>
             </button>
         </div>

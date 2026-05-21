@@ -151,14 +151,18 @@
                                 </div>
                                 <div class="flex gap-3 flex-wrap">
                                     @foreach($availableColors as $color)
+                                        @php
+                                            $variant = $product->variants->where('color_id', $color->id)->first();
+                                            $isAvailableColor = $variant && $variant->currentStock > 0;
+                                        @endphp
                                         @if($color->hex_code)
                                             <button onclick="selectColor(this, '{{ $color->name }}')" data-color-id="{{ $color->id }}"
-                                                class="color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-primary transition p-1 shadow-sm"
+                                                class="color-btn w-11 h-11 rounded-full  {{ $isAvailableColor ? 'border-2 border-gray-300 hover:border-primary transition p-1 shadow-sm' : 'border-2 border-gray-200 cursor-not-allowed'  }}"
                                                 style="background-color: {{ $color->hex_code }};" title="{{ $color->name }}">
                                             </button>
                                         @else
                                             <button onclick="selectColor(this, '{{ $color->name }}')" data-color-id="{{ $color->id }}"
-                                                class="color-btn w-11 h-11 rounded-full border-2 border-gray-300 hover:border-primary transition p-1 shadow-sm flex items-center justify-center text-xs text-gray-600"
+                                                class="color-btn w-11 h-11 rounded-full text-xs {{ $isAvailableColor ? 'border-2 border-gray-300 hover:border-primary transition p-1 shadow-sm flex items-center justify-center  text-gray-600' : 'border-2 border-gray-200 text-gray-300 cursor-not-allowed'  }}"
                                                 title="{{ $color->name }}">
                                                 {{ strtoupper(substr($color->name, 0, 3)) }}
                                             </button>
@@ -180,7 +184,7 @@
                                     @foreach($availableSizes as $size)
                                         @php
                                             $variant = $product->variants->where('size_id', $size->id)->first();
-                                            $isAvailable = $variant && $variant->stock_in > 0;
+                                            $isAvailable = $variant && $variant->currentStock > 0;
                                         @endphp
                                         <button onclick="selectSize(this, '{{ $size->name }}')" data-size-id="{{ $size->id }}"
                                             class="product-size-btn min-w-[56px] h-9 px-3 border border-gray-300 rounded-lg text-sm font-medium transition
@@ -229,7 +233,7 @@
 
                                 @else
                                     <span id="stockText" class="text-sm text-gray-500">
-                                        Select size or color
+                                      Please Select size or color
                                     </span>
                                 @endif
                             </div>

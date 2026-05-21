@@ -290,16 +290,20 @@ class ProductController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
+        $haveVariant = $product->variants->count();
+
         // Transform product data for API
         $productData = [
             'id' => $product->id,
             'name' => $product->name,
             'slug' => $product->slug,
             'brand' => $product->brand,
+            'category' => $product->category,
             'price' => (float) $product->price,
             'compare_price' => $product->compare_price ? (float) $product->compare_price : null,
             'short_description' => $product->short_description,
             'stock_in' => $product->stock_in,
+            'stock' => $haveVariant>0 ?  0 : $product->currentStock,
             'is_new_arrival' => $product->is_new_arrival,
             'is_best_seller' => $product->is_best_seller,
             'is_on_sale' => $product->is_on_sale,
@@ -320,6 +324,7 @@ class ProductController extends Controller
                     'size_id' => $variant->size_id,
                     'color_id' => $variant->color_id,
                     'stock_in' => $variant->stock_in,
+                    'stock' => $variant->currentStock,
                     'price' => (float) ($variant->price ?? 0),
                     'size' => $variant->size ? [
                         'id' => $variant->size->id,
