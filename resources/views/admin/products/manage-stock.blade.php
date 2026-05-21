@@ -188,8 +188,6 @@
                                         <button type="submit" disabled
                                             class="submit-btn w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 active:bg-green-800 transition shadow-sm text-xs font-semibold">
 
-                                            <i class="fas fa-plus text-[10px]"></i>
-
                                             <span class="btn-text">
                                                 Add
                                             </span>
@@ -222,14 +220,11 @@
                     const quantityInput = form.querySelector('.quantity-input');
                     const actionRadios = form.querySelectorAll('input[name="action_type"]');
                     const submitBtn = form.querySelector('.submit-btn');
-                    const btnText = form.querySelector('.btn-text');
-                    const previewStock = form.querySelector('.preview-stock');
 
                     const variantId = form.dataset.variantId;
                     const productId = form.dataset.productId;
 
                     function getCurrentStock() {
-
                         let stockElement = null;
 
                         if (variantId) {
@@ -242,6 +237,8 @@
                     }
 
                     function updateButtonState() {
+                        const btnText = form.querySelector('.btn-text');
+                        const previewStock = form.querySelector('.preview-stock');
 
                         const quantity = parseInt(quantityInput.value || 0);
 
@@ -254,17 +251,12 @@
 
                         let finalStock = currentStock;
 
-                        // Disable if invalid quantity
+                        // disable invalid
                         if (quantity <= 0 || isNaN(quantity)) {
-
                             submitBtn.disabled = true;
-
                             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
                         } else {
-
                             submitBtn.disabled = false;
-
                             submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                         }
 
@@ -273,48 +265,43 @@
                             finalStock += quantity;
 
                             submitBtn.classList.remove(
-                                'bg-red-600',
-                                'hover:bg-red-700',
-                                'active:bg-red-800'
+                                'bg-red-600', 'hover:bg-red-700', 'active:bg-red-800'
                             );
 
                             submitBtn.classList.add(
-                                'bg-green-600',
-                                'hover:bg-green-700',
-                                'active:bg-green-800'
+                                'bg-green-600', 'hover:bg-green-700', 'active:bg-green-800'
                             );
 
-                            btnText.textContent = 'Add';
+                            if (btnText) btnText.textContent = 'Add';
 
-                            previewStock.textContent = quantity > 0
-                                ? `(${currentStock} → ${finalStock})`
-                                : '(+0)';
+                            if (previewStock) {
+                                previewStock.textContent = quantity > 0
+                                    ? `(${currentStock} → ${finalStock})`
+                                    : '(+0)';
+                            }
 
                         } else {
 
                             finalStock -= quantity;
 
                             submitBtn.classList.remove(
-                                'bg-green-600',
-                                'hover:bg-green-700',
-                                'active:bg-green-800'
+                                'bg-green-600', 'hover:bg-green-700', 'active:bg-green-800'
                             );
 
                             submitBtn.classList.add(
-                                'bg-red-600',
-                                'hover:bg-red-700',
-                                'active:bg-red-800'
+                                'bg-red-600', 'hover:bg-red-700', 'active:bg-red-800'
                             );
 
-                            btnText.textContent = 'Remove';
+                            if (btnText) btnText.textContent = 'Remove';
 
-                            previewStock.textContent = quantity > 0
-                                ? `(${currentStock} → ${finalStock})`
-                                : '(-0)';
+                            if (previewStock) {
+                                previewStock.textContent = quantity > 0
+                                    ? `(${currentStock} → ${finalStock})`
+                                    : '(-0)';
+                            }
                         }
                     }
 
-                    // Events
                     quantityInput?.addEventListener('input', updateButtonState);
 
                     actionRadios.forEach(radio => {
@@ -330,7 +317,10 @@
                         const originalHTML = submitBtn.innerHTML;
 
                         submitBtn.disabled = true;
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Processing...</span>';
+                        submitBtn.innerHTML = `
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Processing...</span>
+                    `;
 
                         try {
 
@@ -359,74 +349,45 @@
                                 const productId = formData.get('product_id');
                                 const variantId = formData.get('variant_id');
 
+                                let stockDisplay = null;
+
                                 if (variantId) {
-
-                                    const stockDisplay =
-                                        document.getElementById('variant-stock-' + variantId);
-
-                                    if (stockDisplay) {
-                                        stockDisplay.textContent = data.stock_after;
-                                    }
-
+                                    stockDisplay = document.getElementById('variant-stock-' + variantId);
                                 } else if (productId) {
+                                    stockDisplay = document.getElementById('product-stock-' + productId);
+                                }
 
-                                    const stockDisplay =
-                                        document.getElementById('product-stock-' + productId);
-
-                                    if (stockDisplay) {
-                                        stockDisplay.textContent = data.stock_after;
-                                    }
+                                if (stockDisplay) {
+                                    stockDisplay.textContent = data.stock_after;
                                 }
 
                                 showToast('success', data.message);
 
                             } else {
-
                                 showToast('error', data.message || 'An error occurred');
                             }
 
                         } catch (error) {
-
                             showToast('error', 'An error occurred. Please try again.');
+                        }
 
-                        } finally {
-
+                        finally {
+                            submitBtn.innerHTML = originalHTML;
                             submitBtn.disabled = false;
-
-                            submitBtn.innerHTML = `
-                                <i class="fas fa-plus text-[10px]"></i>
-                                <span class="btn-text">Add</span>
-                                <span class="preview-stock text-[10px] opacity-90">(+0)</span>
-                            `;
-
                             form.reset();
 
-                            const defaultAdd = form.querySelector(
+                            const defaultAction = form.querySelector(
                                 'input[name="action_type"][value="add"]'
                             );
 
-                            if (defaultAdd) {
-                                defaultAdd.checked = true;
+                            if (defaultAction) {
+                                defaultAction.checked = true;
                             }
-
-                            // reset styling
-                            submitBtn.classList.remove(
-                                'opacity-50',
-                                'cursor-not-allowed',
-                                'bg-red-600',
-                                'hover:bg-red-700',
-                                'active:bg-red-800'
-                            );
-
-                            submitBtn.classList.add(
-                                'bg-green-600',
-                                'hover:bg-green-700',
-                                'active:bg-green-800'
-                            );
 
                             updateButtonState();
                         }
                     });
+
                 });
             });
         </script>
