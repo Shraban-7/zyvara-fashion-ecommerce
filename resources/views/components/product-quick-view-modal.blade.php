@@ -99,8 +99,8 @@ g               ray-900">Quick View</h3>
                                 class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                                 <i class="fas fa-minus text-sm"></i>
                             </button>
-                            <input type="number" id="quickViewQuantity" value="1" min="1" max="999" class="w-12 h-10 text-center text-sm font-semibold border-
-             x               border-gray-200 focus:outline-none">
+                            <input type="number" id="quickViewQuantity" value="1" min="1" max="999"
+                                class="w-12 h-10 text-center text-sm font-semibold border-xl border-gray-200 focus:outline-none">
                             <button onclick="updateQuickViewQuantity(1)"
                                 class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                                 <i class="fas fa-plus text-sm"></i>
@@ -109,19 +109,33 @@ g               ray-900">Quick View</h3>
                         </div>
                     </div>
 
-                    {{-- Action Buttons --}}
-                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                        <button id="quickViewAddToCart" onclick="addToCartFromQuickView()"
-                            class="flex-1 bg-primary text-white py-3 rounded-xl font-semibold text-sm hover:bg-blue-600 transition tap-effect flex items-center justify-center gap-2">
-                            <i class="fas fa-shopping-cart"></i>
-                            Add to Cart
-                        </button>
-                        <button id="quickViewDetails"
-                            class="flex-1 border-2 border-primary text-primary py-3 rounded-xl font-semibold text-sm hover:bg-primary hover:text-white transition tap-effect flex items-center justify-center gap-2">
-                            <i class="fas fa-eye"></i>
-                            View Details
-                        </button>
+                    <div
+                        class="sticky bottom-0 z-50 bg-white border-t border-gray-100 px-0 py-5 pb-[calc(env(safe-area-inset-bottom)+12px)] shadow-[0_-6px_20px_rgba(0,0,0,0.06)]">
+
+                        <div class="flex gap-3">
+
+                            {{-- Add to Cart --}}
+                            <button id="quickViewAddToCart" onclick="addToCartFromQuickView()" class="flex-1 h-12 bg-primary text-white rounded-xl font-semibold text-sm
+                   flex items-center justify-center gap-2
+                   active:scale-[0.98] transition">
+
+                                <i class="fas fa-shopping-cart text-sm"></i>
+                                <span>Add to Cart</span>
+                            </button>
+
+                            {{-- View Details --}}
+                            <button id="quickViewDetails" class="flex-1 h-12 border-2 border-primary text-primary rounded-xl font-semibold text-sm
+                   flex items-center justify-center gap-2
+                   hover:bg-primary hover:text-white
+                   active:scale-[0.98] transition">
+
+                                <i class="fas fa-eye text-sm"></i>
+                                <span>View Details</span>
+                            </button>
+
+                        </div>
                     </div>
+
 
                     {{-- Short Description --}}
                     <div id="quickViewDescription" class="text-sm text-gray-600 pt-2 border-t border-gray-100"></div>
