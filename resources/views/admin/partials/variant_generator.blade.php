@@ -339,7 +339,7 @@
 
             <!-- Variants Container -->
             <div id="variantsContainer"
-                class="space-y-4 max-h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                class="space-y-4 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
 
                 @if(isset($product) && $product->variants->count() > 0)
 
@@ -355,15 +355,33 @@
                                 <!-- Size (3 columns) -->
                                 <div class="col-span-3 sm:col-span-3">
                                     <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
-                                    <input type="text" value="{{ $variant->size->name ?? '' }}" readonly
-                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed focus:outline-none">
+
+                                    <select name="variants[{{ $i }}][size_id]"
+                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+
+                                        @foreach($sizes as $size)
+                                            <option value="{{ $size->id }}" {{ $variant->size_id == $size->id ? 'selected' : '' }}>
+                                                {{ $size->name }}
+                                            </option>
+                                        @endforeach
+
+                                    </select>
                                 </div>
 
                                 <!-- Color (3 columns) -->
                                 <div class="col-span-3 sm:col-span-3">
                                     <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
-                                    <input type="text" value="{{ $variant->color->name ?? '' }}" readonly
-                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed focus:outline-none">
+
+                                    <select name="variants[{{ $i }}][color_id]"
+                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+
+                                        @foreach($colors as $color)
+                                            <option value="{{ $color->id }}" {{ $variant->color_id == $color->id ? 'selected' : '' }}>
+                                                {{ $color->name }}
+                                            </option>
+                                        @endforeach
+
+                                    </select>
                                 </div>
 
                                 <!-- Price (3 columns) -->
@@ -414,6 +432,20 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
+        const allSizes = Array.from(
+            document.querySelectorAll('#sizeMultiselect .multiselect-option')
+        ).map(el => ({
+            id: el.dataset.id,
+            name: el.dataset.name
+        }));
+
+        const allColors = Array.from(
+            document.querySelectorAll('#colorMultiselect .multiselect-option')
+        ).map(el => ({
+            id: el.dataset.id,
+            name: el.dataset.name
+        }));
+
         class CustomMultiselect {
 
             constructor(element) {
@@ -425,7 +457,6 @@
                 this.searchInput = element.querySelector('.multiselect-search-input');
 
                 this.selectedItems = [];
-
                 this.init();
             }
 
@@ -438,13 +469,11 @@
                 this.trigger.addEventListener('click', (e) => {
                     e.stopPropagation();
 
-                    document.querySelectorAll('.multiselect-dropdown.active').forEach(el => {
-                        if (el !== this.dropdown) el.classList.remove('active');
-                    });
+                    document.querySelectorAll('.multiselect-dropdown.active')
+                        .forEach(el => el !== this.dropdown && el.classList.remove('active'));
 
-                    document.querySelectorAll('.multiselect-trigger.active').forEach(el => {
-                        if (el !== this.trigger) el.classList.remove('active');
-                    });
+                    document.querySelectorAll('.multiselect-trigger.active')
+                        .forEach(el => el !== this.trigger && el.classList.remove('active'));
 
                     this.dropdown.classList.toggle('active');
                     this.trigger.classList.toggle('active');
@@ -470,17 +499,14 @@
                     };
 
                     if (option.classList.contains('selected')) {
-
                         option.classList.remove('selected');
                         this.selectedItems = this.selectedItems.filter(i => i.id !== item.id);
-
                     } else {
-
                         option.classList.add('selected');
                         this.selectedItems.push(item);
                     }
 
-                    this.renderSelected();
+                    this.render();
                 });
 
                 this.selectedContainer.addEventListener('click', (e) => {
@@ -488,18 +514,16 @@
                     const removeBtn = e.target.closest('.multiselect-tag-remove');
                     if (!removeBtn) return;
 
-                    e.stopPropagation();
-
                     const tag = removeBtn.closest('.multiselect-tag');
                     const id = tag.dataset.id;
 
-                    this.selectedItems = this.selectedItems.filter(item => item.id != id);
+                    this.selectedItems = this.selectedItems.filter(i => i.id != id);
 
                     this.optionsContainer
                         .querySelector(`[data-id="${id}"]`)
                         ?.classList.remove('selected');
 
-                    this.renderSelected();
+                    this.render();
                 });
 
                 document.addEventListener('click', (e) => {
@@ -510,7 +534,7 @@
                 });
             }
 
-            renderSelected() {
+            render() {
 
                 if (this.selectedItems.length === 0) {
                     this.selectedContainer.innerHTML = `
@@ -535,118 +559,196 @@
 
             clear() {
                 this.selectedItems = [];
-
                 this.optionsContainer.querySelectorAll('.multiselect-option')
-                    .forEach(option => option.classList.remove('selected'));
-
-                this.renderSelected();
+                    .forEach(o => o.classList.remove('selected'));
+                this.render();
             }
         }
 
-        const sizeMultiselect = new CustomMultiselect(document.getElementById('sizeMultiselect'));
-        const colorMultiselect = new CustomMultiselect(document.getElementById('colorMultiselect'));
+        const sizeMS = new CustomMultiselect(document.getElementById('sizeMultiselect'));
+        const colorMS = new CustomMultiselect(document.getElementById('colorMultiselect'));
 
-        const generateVariantsBtn = document.getElementById("generateVariantsBtn");
-        const variantsContainer = document.getElementById("variantsContainer");
+        const container = document.getElementById("variantsContainer");
+        const btn = document.getElementById("generateVariantsBtn");
 
-        generateVariantsBtn.addEventListener("click", function () {
+        function variantTemplate({ index, size, color, price, allSizes, allColors }) {
 
-            const selectedSizes = sizeMultiselect.getSelected();
-            const selectedColors = colorMultiselect.getSelected();
+            return `
+                <div class="variant-card p-3 border border-gray-200 rounded-2xl bg-gray-50">
 
-            if (selectedSizes.length === 0 || selectedColors.length === 0) {
+                    <input type="hidden" name="variants[${index}][size_id]" value="${size.id}">
+                    <input type="hidden" name="variants[${index}][color_id]" value="${color.id}">
+
+                    <div class="grid grid-cols-12 gap-2 items-end">
+
+                        <!-- SIZE DROPDOWN (ALL SIZES) -->
+                        <div class="col-span-3">
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
+                            <select name="variants[${index}][size_id]"
+                                class="w-full px-2 py-1.5 text-xs border rounded-lg">
+
+                                ${allSizes.map(s => `
+                                    <option value="${s.id}" ${s.id == size.id ? 'selected' : ''}>
+                                        ${s.name}
+                                    </option>
+                                `).join('')}
+
+                            </select>
+                        </div>
+
+                        <!-- COLOR DROPDOWN (ALL COLORS) -->
+                        <div class="col-span-3">
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
+                            <select name="variants[${index}][color_id]"
+                                class="w-full px-2 py-1.5 text-xs border rounded-lg">
+
+                                ${allColors.map(c => `
+                                    <option value="${c.id}" ${c.id == color.id ? 'selected' : ''}>
+                                        ${c.name}
+                                    </option>
+                                `).join('')}
+
+                            </select>
+                        </div>
+
+                        <!-- PRICE -->
+                        <div class="col-span-3">
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Price</label>
+                            <input type="text"
+                                name="variants[${index}][price]"
+                                value="${productPrice}"
+                                class="w-full px-2 py-1.5 text-xs border rounded-lg">
+                        </div>
+
+                        <!-- SKU -->
+                        <div class="col-span-2">
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">SKU</label>
+                            <input type="text"
+                                name="variants[${index}][sku]"
+                                class="w-full px-2 py-1.5 text-xs border rounded-lg">
+                        </div>
+
+                        <!-- DELETE -->
+                        <div class="col-span-1 flex justify-end">
+                            <button type="button"
+                                class="removeVariantBtn w-8 h-8 text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>`;
+        }
+
+        btn.addEventListener("click", function () {
+
+            const selectedSizes = sizeMS.getSelected();
+            const selectedColors = colorMS.getSelected();
+
+            if (!selectedSizes.length || !selectedColors.length) {
+                showToast('error', 'Select sizes and colors');
                 return;
             }
 
-            const variantsContainer = document.getElementById("variantsContainer");
-
-            const existingKeys = new Set();
+            const existing = new Set();
 
             document.querySelectorAll('.variant-card').forEach(card => {
-                const sizeId = card.querySelector('input[name*="[size_id]"]')?.value;
-                const colorId = card.querySelector('input[name*="[color_id]"]')?.value;
-
-                if (sizeId && colorId) {
-                    existingKeys.add(`${sizeId}_${colorId}`);
-                }
+                const s = card.querySelector('[name*="size_id"]')?.value;
+                const c = card.querySelector('[name*="color_id"]')?.value;
+                if (s && c) existing.add(`${s}_${c}`);
             });
 
-            let html = '';
             let index = document.querySelectorAll('.variant-card').length;
+            let html = '';
 
-            const productSku = document.querySelector('[name="sku"]')?.value || '';
+            const price = document.querySelector('[name="price"]')?.value || 0;
 
             selectedSizes.forEach(size => {
                 selectedColors.forEach(color => {
 
                     const key = `${size.id}_${color.id}`;
 
-                    if (existingKeys.has(key)) {
+                    if (existing.has(key)) {
+                        showToast('error', `Duplicate: ${size.name} - ${color.name}`);
                         return;
                     }
 
-                    existingKeys.add(key);
+                    existing.add(key);
 
-                    html += `
-                <div class="variant-card p-3 border border-gray-200 rounded-2xl bg-gray-50">
-
-                    <input type="hidden" name="variants[${index}][size_id]" value="${size.id}">
-                    <input type="hidden" name="variants[${index}][color_id]" value="${color.id}">
-
-                   <div class="grid grid-cols-12 gap-2 items-end">
-                        <!-- Size -->
-                        <div class="col-span-3">
-                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
-                            <input type="text" value="${size.name}" readonly
-                                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed focus:outline-none">
-                        </div>
-
-                        <!-- Color -->
-                        <div class="col-span-3">
-                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
-                            <input type="text" value="${color.name}" readonly
-                                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed focus:outline-none">
-                        </div>
-
-                        <!-- Price -->
-                        <div class="col-span-3">
-                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Price</label>
-                            <input type="text" name="variants[${index}][price]" value="${productPrice}" placeholder="0.00"
-                                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
-                        </div>
-
-                        <!-- SKU -->
-                        <div class="col-span-2">
-                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">SKU</label>
-                            <input type="text" name="variants[${index}][sku]"
-                                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
-                        </div>
-
-                        <!-- Delete Button (No Extra Space) -->
-                        <div class="col-span-1 flex justify-end">
-                            <button type="button"
-                                class="removeVariantBtn inline-flex items-center justify-center w-8 h-8 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 active:bg-red-200 transition-colors duration-150">
-                                <i class="fas fa-trash text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+                    html += variantTemplate({
+                        index,
+                        size,
+                        color,
+                        price,
+                        allSizes,
+                        allColors
+                    });
 
                     index++;
                 });
             });
 
-            variantsContainer.insertAdjacentHTML('beforeend', html);
+            container.insertAdjacentHTML('beforeend', html);
+
+            showToast('success', 'Variants generated successfully');
         });
 
-        variantsContainer.addEventListener("click", function (e) {
+        container.addEventListener("click", function (e) {
 
             const btn = e.target.closest(".removeVariantBtn");
 
-            if (btn) {
-                btn.closest(".variant-card").remove();
+            if (!btn) return;
+
+            btn.closest(".variant-card").remove();
+
+            showToast('success', 'Variant removed');
+        });
+
+        function isDuplicate(sizeId, colorId, currentCard = null) {
+
+            let exists = false;
+
+            document.querySelectorAll('.variant-card').forEach(card => {
+
+                if (card === currentCard) return;
+
+                const s = card.querySelector('select[name*="[size_id]"]')?.value
+                    || card.querySelector('input[name*="[size_id]"]')?.value;
+
+                const c = card.querySelector('select[name*="[color_id]"]')?.value
+                    || card.querySelector('input[name*="[color_id]"]')?.value;
+
+                if (s == sizeId && c == colorId) {
+                    exists = true;
+                }
+            });
+
+            return exists;
+        }
+
+        container.addEventListener('change', function (e) {
+
+            const el = e.target;
+
+            if (!el.name.includes('size_id') && !el.name.includes('color_id')) return;
+
+            const card = el.closest('.variant-card');
+
+            const size = card.querySelector('select[name*="[size_id]"]')?.value;
+            const color = card.querySelector('select[name*="[color_id]"]')?.value;
+
+            if (isDuplicate(size, color, card)) {
+
+                showToast('error', 'This Size + Color combination already exists');
+
+                el.value = el.dataset.previous || el.value;
+
+                return;
             }
+
+            card.querySelectorAll('select').forEach(sel => {
+                sel.dataset.previous = sel.value;
+            });
         });
 
     });
