@@ -168,23 +168,25 @@ class ProductController extends Controller
             ->withCount('products')
             ->get();
 
-        // Get counts for filters
-        $categoryCounts = [];
-        foreach ($categories as $category) {
-            $categoryCounts[$category->id] = Product::where('category_id', $category->id)
-                ->where('is_active', true)
-                ->count();
-
-            foreach ($category->children as $child) {
-                $categoryCounts[$child->id] = Product::where('subcategory_id', $child->id)
-                    ->where('is_active', true)
-                    ->count();
-            }
-        }
-
         $brandCounts = [];
         foreach ($brands as $brand) {
             $brandCounts[$brand->id] = $brand->products_count;
+        }
+
+        $cats = Category::whereNull('parent_id')->with('children')->withCount('products')->get();
+        $subCats = Category::whereNotNull('parent_id')
+            ->select('id', 'parent_id')
+            ->withCount('products')
+            ->get();
+
+        $categoryCounts = [];
+        foreach ($cats as $cat) {
+            $productCount = $cat->products_count + $subCats->where('parent_id', $cat->id)->sum('products_count');
+            $categoryCounts[$cat->id] = $productCount;
+        }
+
+        foreach ($subCats as $cat) {
+            $categoryCounts[$cat->id] = $cat->products_count;
         }
 
         return view('products.index', compact(
@@ -272,7 +274,7 @@ class ProductController extends Controller
             ];
         })->values();
 
-        return view('products.show', compact('product', 'relatedProducts', 'ratingDistribution', 'availableSizes', 'availableColors', 'variantTotalStock','variantsMap'));
+        return view('products.show', compact('product', 'relatedProducts', 'ratingDistribution', 'availableSizes', 'availableColors', 'variantTotalStock', 'variantsMap'));
     }
 
     /**
@@ -303,7 +305,7 @@ class ProductController extends Controller
             'compare_price' => $product->compare_price ? (float) $product->compare_price : null,
             'short_description' => $product->short_description,
             'stock_in' => $product->stock_in,
-            'stock' => $haveVariant>0 ?  0 : $product->currentStock,
+            'stock' => $haveVariant > 0 ?  0 : $product->currentStock,
             'is_new_arrival' => $product->is_new_arrival,
             'is_best_seller' => $product->is_best_seller,
             'is_on_sale' => $product->is_on_sale,
