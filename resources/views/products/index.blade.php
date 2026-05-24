@@ -270,9 +270,6 @@
                         All Products
                         @endif
                     </h1>
-                    <p class="text-sm text-gray-500 mt-1">
-                        Showing {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} of {{ $products->total() }} products
-                    </p>
                 </div>
                 <div class="flex items-center gap-3">
 
@@ -293,7 +290,9 @@
 
             {{-- Mobile Sort --}}
             <div class="lg:hidden flex items-center justify-between mb-4">
-                <p class="text-sm text-gray-500">{{ $products->total() }} products</p>
+                <p class="text-sm text-gray-500">
+                    Showing {{ $products->count() }} products
+                </p>
                 <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30">
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}" {{ request('sort') == 'featured' ? 'selected' : '' }}>Sort: Featured</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
@@ -443,9 +442,42 @@
             </div>
 
             {{-- Pagination --}}
-            <div class="flex items-center justify-center gap-2 mt-8">
-                {{ $products->links() }}
-            </div>
+
+            @if($products->hasPages())
+                <div class="flex items-center justify-center gap-3 mt-8">
+
+                    {{-- Previous Button --}}
+                    @if($products->onFirstPage())
+                        <span
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed">
+                            <i class="fas fa-arrow-left text-xs"></i>
+                            Previous
+                        </span>
+                    @else
+                        <a href="{{ $products->previousPageUrl() }}"
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
+                            <i class="fas fa-arrow-left text-xs"></i>
+                            Previous
+                        </a>
+                    @endif
+
+                    {{-- Next Button --}}
+                    @if($products->hasMorePages())
+                        <a href="{{ $products->nextPageUrl() }}"
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
+                            Next
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    @else
+                        <span
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed">
+                            Next
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </span>
+                    @endif
+
+                </div>
+            @endif
 
         </div>
     </div>

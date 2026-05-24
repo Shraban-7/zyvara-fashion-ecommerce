@@ -151,7 +151,7 @@ class ProductController extends Controller
 
         // Pagination
         $perPage = $request->get('per_page', 24);
-        $products = $query->paginate($perPage)->appends($request->query());
+        $products = $query->simplePaginate($perPage)->appends($request->query());
 
         // Get filter data
         $categories = Category::whereNull('parent_id')
@@ -176,7 +176,7 @@ class ProductController extends Controller
                 ->count();
 
             foreach ($category->children as $child) {
-                $categoryCounts[$child->id] = Product::where('category_id', $child->id)
+                $categoryCounts[$child->id] = Product::where('subcategory_id', $child->id)
                     ->where('is_active', true)
                     ->count();
             }
