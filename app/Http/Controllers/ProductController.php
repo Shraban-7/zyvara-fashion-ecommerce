@@ -346,4 +346,33 @@ class ProductController extends Controller
             'product' => $productData
         ]);
     }
+
+    public function search(Request $request)
+    {
+        $name = $request->name;
+
+        $products = Product::where('name', $name)
+            ->orwhere('name', 'LIKE', $name . '%')
+            ->orwhere('name', 'LIKE', '%' . $name . '%')
+            ->limit(8)
+            ->with('category')
+            ->get();
+
+        $data = [];
+
+        foreach ($products as $product) {
+            $data[] = [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => $product->price,
+                'originalPrice' => $product->compare_price,
+                'image' => $product->thumbnail,
+                'category' => $product->category->name,
+                'tags' => $product->tags
+            ];
+        }
+
+        return apiResponse($data);
+    }
 }

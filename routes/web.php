@@ -15,7 +15,7 @@ use App\Models\Size;
 
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
-Route::get('/image-path', function(){
+Route::get('/image-path', function () {
     $products = \App\Models\Product::select('id', 'image')->get();
     foreach ($products as $product) {
         $product->image = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $product->image);
@@ -143,6 +143,7 @@ Route::prefix('auth')->as('auth.')->group(function () {
 
 Route::prefix('products')->as('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
+    Route::get('search', [ProductController::class, 'search'])->name('search');
     Route::get('/{slug}', [ProductController::class, 'show'])->name('show');
     Route::get('/{product}/quickview', [ProductController::class, 'getQuickviewData'])->name('getQuickviewData');
 });

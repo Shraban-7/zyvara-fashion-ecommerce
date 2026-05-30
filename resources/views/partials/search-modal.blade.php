@@ -64,7 +64,7 @@
                     </div>
 
                     {{-- Trending Searches --}}
-                    <div class="mb-6">
+                    <div class="hidden mb-6">
                         <h3 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
                             <i class="fas fa-fire text-orange-500"></i>
                             Trending Now
@@ -90,7 +90,7 @@
                     </div>
 
                     {{-- Popular Categories --}}
-                    <div>
+                    <div class="hidden">
                         <h3 class="text-sm font-semibold text-gray-900 mb-3">Popular Categories</h3>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <a href="{{ route('products.index') }}?category=mens"
@@ -180,109 +180,6 @@
 
 {{-- Search Scripts --}}
 <script>
-    // Static product data
-    const searchProducts = [{
-        id: 1,
-        name: 'Premium Cotton Formal Shirt',
-        slug: 'premium-cotton-formal-shirt',
-        price: 1250,
-        originalPrice: 1500,
-        image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=300&h=400&fit=crop',
-        category: 'Shirts',
-        tags: ['formal', 'shirt', 'cotton', 'premium', 'office']
-    },
-    {
-        id: 2,
-        name: 'Printed Casual Shirt',
-        slug: 'printed-casual-shirt',
-        price: 950,
-        originalPrice: 1200,
-        image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=300&h=400&fit=crop',
-        category: 'Shirts',
-        tags: ['casual', 'shirt', 'printed', 'colorful']
-    },
-    {
-        id: 3,
-        name: 'Classic Round Neck T-Shirt',
-        slug: 'classic-round-neck-tshirt',
-        price: 650,
-        originalPrice: 800,
-        image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=300&h=400&fit=crop',
-        category: 'T-Shirts',
-        tags: ['t-shirt', 'tshirt', 'casual', 'round neck', 'basic']
-    },
-    {
-        id: 4,
-        name: 'Premium Striped Polo',
-        slug: 'premium-striped-polo',
-        price: 990,
-        originalPrice: null,
-        image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=300&h=400&fit=crop',
-        category: 'Polo',
-        tags: ['polo', 't-shirt', 'striped', 'premium', 'casual']
-    },
-    {
-        id: 5,
-        name: 'Denim Casual Jacket',
-        slug: 'denim-casual-jacket',
-        price: 2450,
-        originalPrice: 2800,
-        image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=400&fit=crop',
-        category: 'Jackets',
-        tags: ['jacket', 'denim', 'casual', 'winter']
-    },
-    {
-        id: 6,
-        name: 'Traditional Panjabi - Navy Blue',
-        slug: 'traditional-panjabi-navy',
-        price: 1850,
-        originalPrice: 2200,
-        image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&h=400&fit=crop',
-        category: 'Panjabi',
-        tags: ['panjabi', 'traditional', 'eid', 'festive', 'navy']
-    },
-    {
-        id: 7,
-        name: 'Designer Panjabi - White',
-        slug: 'designer-panjabi-white',
-        price: 2200,
-        originalPrice: null,
-        image: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=300&h=400&fit=crop',
-        category: 'Panjabi',
-        tags: ['panjabi', 'designer', 'white', 'eid', 'premium']
-    },
-    {
-        id: 8,
-        name: 'Cotton Chinos - Beige',
-        slug: 'cotton-chinos-beige',
-        price: 1450,
-        originalPrice: 1700,
-        image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=300&h=400&fit=crop',
-        category: 'Pants',
-        tags: ['pants', 'chinos', 'cotton', 'beige', 'casual']
-    },
-    {
-        id: 9,
-        name: 'Ladies Kameez - Floral Print',
-        slug: 'ladies-kameez-floral',
-        price: 1350,
-        originalPrice: 1600,
-        image: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=300&h=400&fit=crop',
-        category: 'Ladies',
-        tags: ['ladies', 'women', 'kameez', 'floral', 'traditional']
-    },
-    {
-        id: 10,
-        name: 'Kids Panjabi Set',
-        slug: 'kids-panjabi-set',
-        price: 950,
-        originalPrice: 1100,
-        image: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=300&h=400&fit=crop',
-        category: 'Kids',
-        tags: ['kids', 'children', 'panjabi', 'eid', 'festive']
-    }
-    ];
-
     // Search suggestions based on query
     const searchSuggestionKeywords = [
         'formal shirt', 'casual shirt', 'cotton shirt', 'printed shirt',
@@ -294,7 +191,50 @@
         'kids wear', 'kids panjabi'
     ];
 
+    const searchUrl = "{{ route('products.search') }}";
+
     let searchTimeout;
+    let searchAbortController;
+    let latestSearchRequestId = 0;
+
+    function escapeRegex(value) {
+        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function normalizeSearchProducts(payload) {
+        const productList = Array.isArray(payload) ? payload :
+            Array.isArray(payload?.products) ? payload.products :
+            Array.isArray(payload?.data?.products) ? payload.data.products :
+            Array.isArray(payload?.data?.data) ? payload.data.data :
+            Array.isArray(payload?.data) ? payload.data :
+            Array.isArray(payload?.results) ? payload.results :
+            Array.isArray(payload?.items) ? payload.items : [];
+
+        return productList.map(item => {
+            const price = Number(item?.price ?? item?.selling_price ?? item?.sale_price ?? item?.current_price ?? 0);
+            const originalRaw = item?.originalPrice ?? item?.original_price ?? item?.regular_price ?? item?.mrp ?? item?.compare_at_price;
+            const originalPrice = originalRaw === null || originalRaw === undefined || originalRaw === '' ? null : Number(originalRaw);
+
+            return {
+                name: item?.name ?? item?.title ?? 'Unnamed Product',
+                slug: item?.slug ?? item?.product_slug ?? item?.id ?? '',
+                url: item?.url ?? item?.product_url ?? null,
+                image: item?.image ?? item?.image_url ?? item?.thumbnail ?? item?.thumbnail_url ?? item?.featured_image ?? 'https://via.placeholder.com/300x400?text=No+Image',
+                category: item?.category?.name ?? item?.category_name ?? item?.category ?? '',
+                price: Number.isFinite(price) ? price : 0,
+                originalPrice: Number.isFinite(originalPrice) ? originalPrice : null
+            };
+        }).filter(product => product.name && (product.url || product.slug));
+    }
 
     function openSearch() {
         const modal = document.getElementById('searchModal');
@@ -353,7 +293,8 @@
         searchTimeout = setTimeout(() => performSearch(query), 150);
     }
 
-    function performSearch(query) {
+    async function performSearch(query) {
+        const requestId = ++latestSearchRequestId;
         const lowerQuery = query.toLowerCase();
 
         // Find matching suggestions
@@ -361,17 +302,56 @@
             keyword.toLowerCase().includes(lowerQuery)
         ).slice(0, 5);
 
-        // Find matching products
-        const matchingProducts = searchProducts.filter(product => {
-            const searchText = `${product.name} ${product.category} ${product.tags.join(' ')}`.toLowerCase();
-            return searchText.includes(lowerQuery);
-        });
-
         // Render suggestions
         renderSuggestions(matchingSuggestions, query);
 
-        // Render products
-        renderProducts(matchingProducts);
+        if (searchAbortController) {
+            searchAbortController.abort();
+        }
+
+        searchAbortController = new AbortController();
+
+        const params = new URLSearchParams({
+            query,
+            q: query,
+            search: query
+        });
+
+        const requestUrl = `${searchUrl}${searchUrl.includes('?') ? '&' : '?'}${params.toString()}`;
+
+        try {
+            const response = await fetch(requestUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                signal: searchAbortController.signal
+            });
+
+            if (!response.ok) {
+                throw new Error(`Search request failed with status ${response.status}`);
+            }
+
+            const payload = await response.json();
+
+            if (requestId !== latestSearchRequestId) {
+                return;
+            }
+
+            const matchingProducts = normalizeSearchProducts(payload);
+            renderProducts(matchingProducts);
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                return;
+            }
+
+            if (requestId !== latestSearchRequestId) {
+                return;
+            }
+
+            renderProducts([]);
+        }
     }
 
     function renderSuggestions(suggestions, query) {
@@ -383,8 +363,9 @@
         }
 
         const html = suggestions.map(suggestion => {
+            const escapedQuery = escapeRegex(query);
             const highlighted = suggestion.replace(
-                new RegExp(`(${query})`, 'gi'),
+                new RegExp(`(${escapedQuery})`, 'gi'),
                 '<strong class="text-primary">$1</strong>'
             );
             return `
@@ -422,14 +403,14 @@
         viewAllLink.href = `{{ route('products.index') }}?search=${encodeURIComponent(query)}`;
 
         const html = products.slice(0, 8).map(product => `
-            <a href="{{ url('/products') }}/${product.slug}" onclick="closeSearch()" class="bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-primary hover:shadow-lg transition group">
+            <a href="${escapeHtml(product.url || `{{ url('/products') }}/${product.slug}`)}" onclick="closeSearch()" class="bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-primary hover:shadow-lg transition group">
                 <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     ${product.originalPrice ? `<span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-semibold px-2 py-1 rounded-full">-${Math.round((1 - product.price / product.originalPrice) * 100)}%</span>` : ''}
                 </div>
                 <div class="p-3">
-                    <span class="text-[10px] text-gray-400 uppercase tracking-wide">${product.category}</span>
-                    <h4 class="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2 mt-1 group-hover:text-primary transition">${product.name}</h4>
+                    <span class="text-[10px] text-gray-400 uppercase tracking-wide">${escapeHtml(product.category)}</span>
+                    <h4 class="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2 mt-1 group-hover:text-primary transition">${escapeHtml(product.name)}</h4>
                     <div class="flex items-center gap-2 mt-2">
                         <span class="text-primary font-bold text-sm">৳${product.price.toLocaleString()}</span>
                         ${product.originalPrice ? `<span class="text-gray-400 text-xs line-through">৳${product.originalPrice.toLocaleString()}</span>` : ''}
@@ -448,7 +429,7 @@
     }
 
     // Close on Escape key
-    document.addEventListener('keydown', function (e) {
+    document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeSearch();
         }
