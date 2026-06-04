@@ -66,4 +66,11 @@ class OrderController extends Controller
         }
         return view('orders.track');
     }
+
+     public function invoice($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->with('customer', 'items')->first();
+
+        return view('admin.orders.invoice', compact('order'));
+    }
 }

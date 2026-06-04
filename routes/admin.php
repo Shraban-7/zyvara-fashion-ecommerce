@@ -86,6 +86,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::prefix('reviews')->as('reviews.')->group(function () {
         Route::get('/', [ReviewController::class, 'index'])->name('index');
+        Route::post('{review}/approve', [ReviewController::class, 'approve'])->name('approve');
+        Route::post('{review}/delete', [ReviewController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('customers')->as('customers.')->group(function () {

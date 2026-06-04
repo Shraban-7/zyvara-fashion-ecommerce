@@ -1,13 +1,14 @@
 <?php
 
+use App\Models\Setting;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
 
 if (!function_exists('apiResponse')) {
     function apiResponse(object|array $data, string|null $message = null, int $statusCode = 200, )
@@ -385,6 +386,21 @@ function model_changes($model, array $newData): array {
         }
 
         return $changes;
+    }
+}
+
+if (!function_exists('settings')) {
+    function settings(string $key, $default = null)
+    {
+        static $cache = [];
+
+        if (array_key_exists($key, $cache)) {
+            return $cache[$key];
+        }
+
+        $value = Setting::where('key', $key)->value('value');
+
+        return $cache[$key] = $value ?? $default;
     }
 }
 

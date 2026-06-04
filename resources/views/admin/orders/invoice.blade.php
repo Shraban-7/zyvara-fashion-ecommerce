@@ -43,9 +43,9 @@
                         SPINNER FASHION</h1>
                     <div class="w-12 h-0.5 bg-black mb-2"></div>
                     <p class="text-xs text-gray-500 leading-relaxed">
-                        123 Fashion Street, Dhaka 1215, Bangladesh<br>
-                        Phone: +880 1711-123456 | Email: info@spinnerfashion.com<br>
-                        Web: www.spinnerfashion.com
+                        {{ settings('contact_address') }}<br>
+                        Phone: {{ settings('contact_phone') }} | Email: {{ settings('contact_email') }}<br>
+                        Web: {{ preg_replace('#^https?://#', '', config('app.url')) }}
                     </p>
 
                 </div>

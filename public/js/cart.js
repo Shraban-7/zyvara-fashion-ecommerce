@@ -292,7 +292,8 @@ class CartManager {
                         <span class="text-primary font-bold">৳${item.total_price.toLocaleString()}</span>
                     </div>
                 </div>
-                <button onclick="window.cartManager.removeItem(${item.id})" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition opacity-0 group-hover:opacity-100">
+                <button onclick="window.cartManager.removeItem(${item.id})"
+                    class="absolute top-3 right-3 w-7 h-7 rounded-full bg-red-500 shadow flex items-center justify-center text-white transition">
                     <i class="fas fa-trash-alt text-xs"></i>
                 </button>
             </div>

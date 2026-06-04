@@ -7,19 +7,37 @@
         <div class="max-w-4xl mx-auto px-4">
             <!-- Back Button & Header -->
             <div class="mb-8">
+
                 <a href="{{ route('orders.index') }}"
                     class="inline-flex items-center gap-2 text-primary hover:text-blue-700 font-medium mb-4">
                     <i class="fas fa-arrow-left"></i> Back to Orders
                 </a>
+
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+
                     <div>
                         <p class="text-sm text-gray-500 mb-1">Order Number</p>
-                        <h1 class="text-3xl md:text-4xl font-bold text-gray-900">#{{ $order->order_number }}</h1>
+                        <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+                            #{{ $order->order_number }}
+                        </h1>
                     </div>
-                    <div class="flex items-center gap-2 bg-{{ $order->status->color() }}-100 px-4 py-3 rounded-full">
-                        <div class="w-3 h-3 rounded-full animate-pulse" style="background-color: currentColor;"></div>
-                        <span
-                            class="text-sm font-bold text-{{ $order->status->color() }}-600">{{ $order->status->label() }}</span>
+
+                    <div class="flex items-center gap-3">
+
+                        <!-- Status -->
+                        <div class="flex items-center gap-2 bg-{{ $order->status->color() }}-100 px-4 py-3 rounded-full">
+                            <div class="w-3 h-3 rounded-full animate-pulse" style="background-color: currentColor;"></div>
+                            <span class="text-sm font-bold text-{{ $order->status->color() }}-600">
+                                {{ $order->status->label() }}
+                            </span>
+                        </div>
+
+                        <!-- Download Invoice Button -->
+                        <button onclick="printReceipt('{{ route('orders.invoice', $order->order_number) }}')"
+                            class="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-gray-900 text-white hover:bg-gray-800 transition">
+                            <i class="fas fa-file-download text-sm"></i>
+                            <span class="text-sm font-semibold">Invoice</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -36,7 +54,8 @@
                     <div>
                         <p class="text-sm text-gray-500 mb-1">Estimated Delivery</p>
                         <p class="text-lg font-semibold text-gray-900">
-                            {{ $order->updated_at->addDays(5)->format('F d, Y') }}</p>
+                            {{ $order->updated_at->addDays(5)->format('F d, Y') }}
+                        </p>
                     </div>
                 </div>
 
@@ -71,13 +90,14 @@
                         <div class="space-y-3 text-sm text-gray-900">
                             <div>
                                 <p class="font-medium">
-                                    {{ $order->shipping_address ?? $order->user->address->address_line1 ?? 'N/A' }}</p>
+                                    {{ $order->shipping_address ?? $order->user->address->address_line1 ?? 'N/A' }}
+                                </p>
                             </div>
                             <div class="flex gap-2">
                                 <span
                                     class="font-medium">{{ $order->shipping_city ?? $order->user->address->city ?? 'N/A' }},</span>
                                 <span
-                                    class="font-medium">{{ $order->shipping_district ?? $order->user->address->district ?? 'N/A' }}</span>
+                                    class="font-medium">{{ $order?->district?->name ?? $order->user->address->district ?? 'N/A' }}</span>
                             </div>
                         </div>
                     </div>
@@ -92,33 +112,63 @@
                     <div class="space-y-4">
                         @if($order->items && count($order->items) > 0)
                             @foreach($order->items as $item)
-                                <div class="flex gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
-                                    <div class="w-24 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
-                                        @if($item->product)
-                                            <img src="{{ $item->product->thumbnail }}" alt="{{ $item->product->name }}"
+                                <div class="flex gap-3 p-3 bg-gray-50 rounded-lg">
+
+                                    <!-- Product Image -->
+                                    <div class="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                                        @if($item->product && $item->product->thumbnail)
+                                            <img src="{{ $item->product->thumbnail }}" alt="{{ $item->product_name }}"
                                                 class="w-full h-full object-cover">
                                         @else
                                             <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                                <i class="fas fa-image text-2xl"></i>
+                                                <i class="fas fa-image"></i>
                                             </div>
                                         @endif
                                     </div>
+
+                                    <!-- Product Details -->
                                     <div class="flex-1 min-w-0">
-                                        <h4 class="font-semibold text-gray-900 mb-2">{{ $item->product->name ?? 'Product' }}</h4>
-                                        <div class="space-y-1 text-xs text-gray-600 mb-3">
-                                            @if($item->size)
-                                                <p><span class="font-medium">Size:</span> {{ $item->size->name ?? 'N/A' }}</p>
-                                            @endif
-                                            @if($item->color)
-                                                <p><span class="font-medium">Color:</span> {{ $item->color->name ?? 'N/A' }}</p>
-                                            @endif
+
+                                        <h4 class="font-semibold text-sm text-gray-900 leading-5 break-words">
+                                            {{ $item->product_name }}
+                                        </h4>
+
+                                        @if($item->size || $item->color)
+                                            <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-600 mt-1">
+                                                @if($item->size)
+                                                    <span>Size: {{ $item->size }}</span>
+                                                @endif
+
+                                                @if($item->color)
+                                                    <span>Color: {{ $item->color }}</span>
+                                                @endif
+                                            </div>
+                                        @endif
+
+                                        <!-- Qty & Price -->
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mt-2">
+                                            <span class="text-xs text-gray-600">
+                                                Qty: {{ $item->quantity }}
+                                            </span>
+
+                                            <span class="text-sm font-bold text-primary">
+                                                ৳{{ number_format($item->subtotal, 2) }}
+                                            </span>
                                         </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm font-medium text-gray-600">Qty:
-                                                <strong>{{ $item->quantity }}</strong></span>
-                                            <span class="text-lg font-bold text-gray-900">{{ money($item->subtotal) }}</span>
-                                        </div>
+
+                                        @if($order->status->value === 'delivered')
+                                            <div class="mt-3">
+                                                <button type="button"
+                                                    onclick="openReviewModal({{ $item->product_id }}, '{{ addslashes($item->product_name) }}')"
+                                                    class="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium bg-primary text-white rounded-lg hover:opacity-90 transition">
+                                                    <i class="fas fa-star"></i>
+                                                    Write Review
+                                                </button>
+                                            </div>
+                                        @endif
+
                                     </div>
+
                                 </div>
                             @endforeach
                         @else
@@ -203,96 +253,33 @@
                     Order Timeline
                 </h2>
                 <div class="space-y-4">
-
-
-                    @php
-                        $statuses = [
-                            ['key' => 'placed', 'label' => 'Placed', 'date' => $order->created_at, 'always' => true],
-                            ['key' => 'confirmed', 'label' => 'Confirmed', 'date' => $order->confirmed_at],
-                            ['key' => 'processing', 'label' => 'Processing', 'date' => null],
-                            ['key' => 'shipped', 'label' => 'Shipped', 'date' => $order->shipped_at],
-                            ['key' => 'delivered', 'label' => 'Delivered', 'date' => $order->delivered_at],
-                        ];
-
-                        $statusOrder = [
-                            'pending' => 0,
-                            'confirmed' => 1,
-                            'processing' => 2,
-                            'shipped' => 3,
-                            'delivered' => 4,
-                        ];
-
-                        $currentIndex = $statusOrder[$order->status->value] ?? 0;
-                    @endphp
-
-                    @foreach($statuses as $index => $status)
-                                @php
-                                    $isCompleted = ($status['always'] ?? false) || $currentIndex > $index;
-                                    $isCurrent = $currentIndex === $index;
-                                    $isLast = $loop->last;
-                                @endphp
-
-                                <div class="flex gap-4">
-
-                                    <!-- Left Timeline Indicator -->
-                                    <div class="flex flex-col items-center">
-
-                                        <!-- Circle -->
-                                        <div class="w-4 h-4 rounded-full border-4
-                            @if($isCompleted)
-                                bg-green-500 border-green-100
-                            @elseif($isCurrent)
-                                bg-blue-500 border-blue-100
-                            @else
-                                bg-gray-300 border-gray-200
-                            @endif
-                        "></div>
-
-                                        <!-- Vertical Line -->
-                                        @unless($isLast)
-                                                            <div class="w-1 h-12 mt-2
-                                                @if($currentIndex > $index)
-                                                    bg-green-300
-                                                @else
-                                                    bg-gray-300
-                                                @endif
-                                            "></div>
-                                        @endunless
-                                    </div>
-
-                                    <!-- Right Content -->
-                                    <div>
-                                        <p class="font-semibold
-                            @if($isCompleted)
-                                text-gray-900
-                            @elseif($isCurrent)
-                                text-blue-600
-                            @else
-                                text-gray-400
-                            @endif
-                        ">
-                                            {{ $status['label'] }}
-                                        </p>
-
-                                        @if($status['date'])
-                                            <p class="text-sm text-gray-500">
-                                                {{ $status['date']->format('M d, Y h:i A') }}
-                                            </p>
-                                        @elseif($isCurrent)
-                                            <p class="text-sm text-blue-500">
-                                                In progress
-                                            </p>
-                                        @else
-                                            <p class="text-sm text-gray-400">
-                                                Pending
-                                            </p>
-                                        @endif
-                                    </div>
-
+                    @forelse($order->statusHistories as $history)
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
+                                    <i class="fas fa-circle text-blue-600 text-xs"></i>
                                 </div>
-                    @endforeach
-
-
+                                @if(!$loop->last)
+                                    <div class="flex-1 w-0.5 bg-gray-200 my-1"></div>
+                                @endif
+                            </div>
+                            <div class="flex-1 pb-4">
+                                <div class="flex items-start justify-between gap-4 mb-1">
+                                    <span class="font-semibold text-gray-900">{{ $history->status->label() }}</span>
+                                    <span class="text-sm text-gray-500">{{ $history->created_at->diffForHumans() }}</span>
+                                </div>
+                                @if($history->comment)
+                                    <p class="text-sm text-gray-600 mb-1">{{ $history->comment }}</p>
+                                @endif
+                                @if($history->updater)
+                                    <p class="text-xs text-gray-500">By: {{ $history->updater->name }}</p>
+                                @endif
+                                <p class="text-xs text-gray-400">{{ $history->created_at->format('M d, Y \a\t h:i A') }}</p>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-sm text-gray-500 text-center py-4">No status history available</p>
+                    @endforelse
                 </div>
             </div>
 
@@ -318,4 +305,123 @@
             </div>
         </div>
     </div>
+
+
+    <div id="reviewModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center">
+                        <i class="fas fa-pencil text-amber-500 text-sm"></i>
+                    </div>
+                    <h3 class="font-medium text-gray-900 text-base">Write a review</h3>
+                </div>
+                <button type="button" onclick="closeReviewModal()"
+                    class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+
+            <form action="{{ route('review.store') }}" method="POST" class="p-5">
+                @csrf
+                <input type="hidden" name="product_id" id="review_product_id">
+                <input type="hidden" name="order_id" value="{{ $order->id }}">
+                <input type="hidden" name="rating" id="ratingVal" value="0">
+
+                {{-- Product pill --}}
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 mb-5">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                        <i class="fas fa-box text-blue-400"></i>
+                    </div>
+                    <div>
+                        <p id="review_product_name" class="text-sm font-medium text-gray-800"></p>
+                        <p class="text-xs text-gray-400">Purchased item</p>
+                    </div>
+                </div>
+
+                {{-- Star rating --}}
+                <div class="mb-5">
+                    <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">Your rating</label>
+                    <div class="flex items-center gap-1.5" id="starGroup">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <span data-val="{{ $i }}" class="star text-4xl cursor-pointer select-none text-gray-200
+                                      transition-transform hover:scale-110">☆</span>
+                        @endfor
+                        <span id="ratingLabel" class="text-xs text-gray-400 ml-2"></span>
+                    </div>
+                </div>
+
+                {{-- Review text --}}
+                <div class="mb-5">
+                    <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Your review</label>
+                    <textarea name="comment" rows="4" placeholder="Share your experience with this product…" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none
+                  focus:ring-2 focus:ring-gray-300 resize-none text-gray-800 placeholder-gray-300">
+                </textarea>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-primary text-white py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-800 transition-colors">
+                    <i class="fas fa-paper-plane text-xs"></i>
+                    Submit review
+                </button>
+
+                <p class="text-center text-xs text-gray-300 mt-3">Your review helps other shoppers make better decisions.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            function printReceipt(url) {
+                let printWindow = window.open(url, '_blank', 'width=800,height=600');
+
+                printWindow.onload = function () {
+                    printWindow.focus();
+                    printWindow.print();
+
+                    printWindow.onafterprint = function () {
+                        printWindow.close();
+                    };
+                };
+            }
+
+            const labels = ['', 'Terrible', 'Poor', 'Okay', 'Good', 'Excellent'];
+            const stars = document.querySelectorAll('#starGroup .star');
+            let selected = 0;
+
+            function paintStars(upTo) {
+                stars.forEach((s, i) => {
+                    s.textContent = i < upTo ? '★' : '☆';
+                    s.classList.toggle('text-amber-400', i < upTo);
+                    s.classList.toggle('text-gray-200', i >= upTo);
+                });
+                document.getElementById('ratingLabel').textContent = labels[upTo] ?? '';
+            }
+
+            stars.forEach(s => {
+                s.addEventListener('mouseenter', () => paintStars(+s.dataset.val));
+                s.addEventListener('mouseleave', () => paintStars(selected));
+                s.addEventListener('click', () => {
+                    selected = +s.dataset.val;
+                    document.getElementById('ratingVal').value = selected;
+                    paintStars(selected);
+                });
+            });
+
+            function openReviewModal(productId, productName) {
+                document.getElementById('review_product_id').value = productId;
+                document.getElementById('review_product_name').textContent = productName;
+                selected = 0;
+                paintStars(0);
+                document.getElementById('reviewModal').classList.replace('hidden', 'flex');
+            }
+
+            function closeReviewModal() {
+                document.getElementById('reviewModal').classList.replace('flex', 'hidden');
+            }
+        </script>
+    @endpush
 @endsection

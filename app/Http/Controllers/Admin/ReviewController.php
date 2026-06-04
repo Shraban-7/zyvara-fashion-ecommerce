@@ -16,4 +16,20 @@ class ReviewController extends Controller
 
         return view('admin.reviews.index', compact('reviews'));
     }
+
+    public function approve(Review $review)
+    {
+        $review->is_approved = true;
+        $review->save();
+
+        return back()->with('success', 'Review approved successfully.');
+    }
+
+    public function destroy(Review $review)
+    {
+        $review->delete();
+
+        return back()->with('success', 'Review deleted successfully.');
+    }
+
 }

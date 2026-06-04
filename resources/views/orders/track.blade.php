@@ -78,18 +78,57 @@
                 <div class="space-y-4">
                     <!-- Status Header -->
                     <div class="bg-white rounded-xl shadow-md p-4 md:p-6">
+
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+
                             <div>
                                 <p class="text-xs text-gray-500 mb-1">Order Number</p>
-                                <h2 class="text-xl md:text-2xl font-bold text-gray-900">#{{ $order->order_number }}</h2>
-                                <p class="text-xs text-gray-500 mt-1">{{ $order->created_at->format('M d, Y \a\t g:i A') }}</p>
+                                <h2 class="text-xl md:text-2xl font-bold text-gray-900">
+                                    #{{ $order->order_number }}
+                                </h2>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    {{ $order->created_at->format('M d, Y \a\t g:i A') }}
+                                </p>
                             </div>
+
                             <div class="flex items-center gap-2 bg-{{ $order->status->color() }}-100 px-4 py-2 rounded-full">
                                 <div class="w-2 h-2 rounded-full animate-pulse bg-{{ $order->status->color() }}-600"></div>
-                                <span
-                                    class="text-sm font-bold text-{{ $order->status->color() }}-600">{{ $order->status->label() }}</span>
+                                <span class="text-sm font-bold text-{{ $order->status->color() }}-600">
+                                    {{ $order->status->label() }}
+                                </span>
                             </div>
+
                         </div>
+
+                        {{-- NOTES SECTION --}}
+                        @if($order->notes || $order->admin_notes)
+                            <div class="mt-4 pt-4 border-t border-gray-100 flex flex-col gap-2">
+
+                                {{-- Customer Note --}}
+                                @if($order->notes)
+                                    <div class="flex items-start gap-2.5 bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
+                                        <i class="fas fa-user text-gray-300 text-xs mt-0.5 flex-shrink-0"></i>
+                                        <div>
+                                            <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-0.5">Customer Note</p>
+                                            <p class="text-xs text-gray-600">{{ $order->notes }}</p>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- Admin Note --}}
+                                @if($order->admin_notes)
+                                    <div class="flex items-start gap-2.5 bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2.5">
+                                        <i class="fas fa-exclamation-triangle text-yellow-400 text-xs mt-0.5 flex-shrink-0"></i>
+                                        <div>
+                                            <p class="text-[10px] uppercase tracking-widest text-yellow-500 mb-0.5">Admin Note</p>
+                                            <p class="text-xs font-medium text-yellow-700">{{ $order->admin_notes }}</p>
+                                        </div>
+                                    </div>
+                                @endif
+
+                            </div>
+                        @endif
+
                     </div>
 
                     <!-- Grid Layout for Details -->
@@ -114,7 +153,8 @@
                                     <div class="sm:col-span-2">
                                         <p class="text-xs text-gray-500">Address</p>
                                         <p class="font-medium text-gray-900">{{ $order->shipping_address }},
-                                            {{ $order->shipping_city }}, {{ $order->shipping_district }}</p>
+                                            {{ $order->shipping_city }}, {{ $order?->district?->name}}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -128,9 +168,12 @@
                                 <div class="space-y-3">
                                     @foreach($order->items as $item)
                                         <div class="flex gap-3 p-3 bg-gray-50 rounded-lg">
-                                            <div class="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
+
+                                            <!-- Product Image -->
+                                            <div class="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
                                                 @if($item->product && $item->product->thumbnail)
-                                                    <img src="{{ $item->product->thumbnail }}" alt="{{ $item->product_name }}"
+                                                    <img src="{{ $item->product->thumbnail }}"
+                                                        alt="{{ $item->product_name }}"
                                                         class="w-full h-full object-cover">
                                                 @else
                                                     <div class="w-full h-full flex items-center justify-center text-gray-400">
@@ -138,19 +181,39 @@
                                                     </div>
                                                 @endif
                                             </div>
+
+                                            <!-- Product Details -->
                                             <div class="flex-1 min-w-0">
-                                                <h4 class="font-semibold text-sm text-gray-900 truncate">{{ $item->product_name }}
+
+                                                <h4 class="font-semibold text-sm text-gray-900 leading-5 break-words">
+                                                    {{ $item->product_name }}
                                                 </h4>
-                                                <div class="flex gap-3 text-xs text-gray-600 mt-1">
-                                                    @if($item->size)<span>Size: {{ $item->size }}</span>@endif
-                                                    @if($item->color)<span>Color: {{ $item->color }}</span>@endif
+
+                                                @if($item->size || $item->color)
+                                                    <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-600 mt-1">
+                                                        @if($item->size)
+                                                            <span>Size: {{ $item->size }}</span>
+                                                        @endif
+
+                                                        @if($item->color)
+                                                            <span>Color: {{ $item->color }}</span>
+                                                        @endif
+                                                    </div>
+                                                @endif
+
+                                                <!-- Qty & Price -->
+                                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mt-2">
+                                                    <span class="text-xs text-gray-600">
+                                                        Qty: {{ $item->quantity }}
+                                                    </span>
+
+                                                    <span class="text-sm font-bold text-primary">
+                                                        ৳{{ number_format($item->subtotal, 2) }}
+                                                    </span>
                                                 </div>
-                                                <div class="flex items-center justify-between mt-2">
-                                                    <span class="text-xs text-gray-600">Qty: {{ $item->quantity }}</span>
-                                                    <span
-                                                        class="text-sm font-bold text-primary">৳{{ number_format($item->subtotal, 2) }}</span>
-                                                </div>
+
                                             </div>
+
                                         </div>
                                     @endforeach
                                 </div>
@@ -206,59 +269,37 @@
                                     <i class="fas fa-clock text-primary"></i>
                                     Order Timeline
                                 </h3>
-                                <div class="space-y-3">
-                                    @php
-                                        $statuses = [
-                                            ['key' => 'placed', 'label' => 'Placed', 'date' => $order->created_at, 'always' => true],
-                                            ['key' => 'confirmed', 'label' => 'Confirmed', 'date' => $order->confirmed_at],
-                                            ['key' => 'processing', 'label' => 'Processing', 'date' => null],
-                                            ['key' => 'shipped', 'label' => 'Shipped', 'date' => $order->shipped_at],
-                                            ['key' => 'delivered', 'label' => 'Delivered', 'date' => $order->delivered_at],
-                                        ];
-                                        $statusOrder = ['pending' => 0, 'confirmed' => 1, 'processing' => 2, 'shipped' => 3, 'delivered' => 4];
-                                        $currentIndex = $statusOrder[$order->status->value] ?? 0;
-                                    @endphp
-
-                                    @foreach($statuses as $index => $status)
-                                        @php
-                                            $isCompleted = ($status['always'] ?? false) || $currentIndex >= $index;
-                                            $isCurrent = $currentIndex === $index;
-                                        @endphp
-                                        <div class="flex gap-3">
+                                <div class="space-y-4">
+                                    @forelse($order->statusHistories as $history)
+                                        <div class="flex gap-4">
                                             <div class="flex flex-col items-center">
                                                 <div
-                                                    class="w-3 h-3 rounded-full {{ $isCompleted ? 'bg-primary' : ($isCurrent ? 'bg-yellow-500' : 'bg-gray-300') }}">
+                                                    class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
+                                                    <i class="fas fa-circle text-blue-600 text-xs"></i>
                                                 </div>
                                                 @if(!$loop->last)
-                                                    <div class="w-0.5 h-8 {{ $isCompleted ? 'bg-primary' : 'bg-gray-300' }}"></div>
+                                                    <div class="flex-1 w-0.5 bg-gray-200 my-1"></div>
                                                 @endif
                                             </div>
-                                            <div class="flex-1 {{ !$loop->last ? 'pb-2' : '' }}">
-                                                <p
-                                                    class="text-sm font-semibold {{ $isCompleted || $isCurrent ? 'text-gray-900' : 'text-gray-400' }}">
-                                                    {{ $status['label'] }}
-                                                </p>
-                                                @if($status['date'])
-                                                    <p class="text-xs text-gray-500">{{ $status['date']->format('M d, g:i A') }}</p>
-                                                @elseif($isCompleted)
-                                                    <p class="text-xs text-gray-400">Completed</p>
+                                            <div class="flex-1 pb-4">
+                                                <div class="flex items-start justify-between gap-4 mb-1">
+                                                    <span class="font-semibold text-gray-900">{{ $history->status->label() }}</span>
+                                                    <span
+                                                        class="text-sm text-gray-500">{{ $history->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                @if($history->comment)
+                                                    <p class="text-sm text-gray-600 mb-1">{{ $history->comment }}</p>
                                                 @endif
-                                            </div>
-                                        </div>
-                                    @endforeach
-
-                                    @if($order->status->value === 'cancelled')
-                                        <div class="flex gap-3 pt-2 border-t border-gray-200">
-                                            <div class="w-3 h-3 rounded-full bg-red-500 mt-1"></div>
-                                            <div>
-                                                <p class="text-sm font-semibold text-red-600">Cancelled</p>
-                                                @if($order->cancelled_at)
-                                                    <p class="text-xs text-gray-500">{{ $order->cancelled_at->format('M d, g:i A') }}
-                                                    </p>
+                                                @if($history->updater)
+                                                    <p class="text-xs text-gray-500">By: {{ $history->updater->name }}</p>
                                                 @endif
+                                                <p class="text-xs text-gray-400">
+                                                    {{ $history->created_at->format('M d, Y \a\t h:i A') }}</p>
                                             </div>
                                         </div>
-                                    @endif
+                                    @empty
+                                        <p class="text-sm text-gray-500 text-center py-4">No status history available</p>
+                                    @endforelse
                                 </div>
                             </div>
 

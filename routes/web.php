@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
@@ -189,7 +190,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order:order_number}/show', [OrderController::class, 'show'])->name('show');
         Route::post('/{order:order_number}/pay-now', [CheckoutController::class, 'payNow'])->name('payNow');
+        Route::get('/{orderNumber}/invoice', [OrderController::class, 'invoice'])->name('invoice');
     });
+
+    Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
 });
 
 Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribe');

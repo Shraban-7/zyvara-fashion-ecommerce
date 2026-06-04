@@ -100,7 +100,9 @@ class OrderController extends Controller
         $newStatus = OrderStatus::from($request->status);
 
         // Update order status
-        $order->update(['status' => $newStatus]);
+        $order->update([
+            'status' => $newStatus,
+        ]);
 
         // Set timestamps based on status
         match ($newStatus) {
@@ -182,7 +184,7 @@ class OrderController extends Controller
         $order->delete();
 
         toast_success('Order deleted successfully!');
-        
+
         return redirect()->route('admin.orders.index');
     }
 

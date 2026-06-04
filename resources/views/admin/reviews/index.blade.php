@@ -78,7 +78,7 @@
                     <div class="w-full lg:w-48 flex lg:flex-col justify-center gap-2">
                         @if(!$review->is_approved)
                         <form action="{{ route('admin.reviews.approve', $review->id) }}" method="POST" class="w-full">
-                            @csrf @method('PATCH')
+                            @csrf 
                             <button type="submit" class="w-full py-2 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-lg text-sm font-semibold transition">
                                 <i class="fas fa-check mr-2"></i> Approve
                             </button>
@@ -90,7 +90,7 @@
                         @endif
 
                         <form action="{{ route('admin.reviews.destroy', $review->id) }}" method="POST" onsubmit="return confirm('Delete this review forever?')" class="w-full">
-                            @csrf @method('DELETE')
+                            @csrf 
                             <button type="submit" class="w-full py-2 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg text-sm font-semibold transition">
                                 <i class="fas fa-trash-alt mr-2"></i> Delete
                             </button>
