@@ -222,7 +222,7 @@
                                             $iconIndex++;
                                         @endphp
                                         <div>
-                                            <a href="{{ route('products.index') }}?category={{ $category->slug }}"
+                                            <a href="{{ route('products.index') }}?categories={{ $category->slug }}"
                                                 class="flex items-center gap-2 text-sm font-bold text-black mb-3 hover:text-primary transition">
                                                 <span
                                                     class="w-8 h-8 {{ $iconColor['bg'] }} rounded-lg flex items-center justify-center">
@@ -236,12 +236,12 @@
                                             </a>
                                             <ul class="space-y-2">
                                                 @foreach($category->children->take(7) as $child)
-                                                    <li><a href="{{ route('products.index') }}?category={{ $child->slug }}"
+                                                    <li><a href="{{ route('products.index') }}?categories={{ $child->slug }}"
                                                             class="text-sm text-gray-600 hover:text-primary hover:pl-1 transition-all">{{ $child->name }}</a>
                                                     </li>
                                                 @endforeach
                                             </ul>
-                                            <a href="{{ route('products.index') }}?category={{ $category->slug }}"
+                                            <a href="{{ route('products.index') }}?categories={{ $category->slug }}"
                                                 class="inline-flex items-center gap-1 text-xs text-primary font-medium mt-3 hover:underline">
                                                 View All <i class="fas fa-arrow-right text-[10px]"></i>
                                             </a>
@@ -291,7 +291,7 @@
                     {{-- Men Dropdown --}}
                     @foreach($allMenuCategories->take(2) as $category)
                         <div class="relative group">
-                            <a href="{{ route('products.index') }}?category={{ $category->slug }}"
+                            <a href="{{ route('products.index') }}?categories={{ $category->slug }}"
                                 class="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-primary transition-colors h-12">
                                 {{ $category->name }}
                                 @if($category->children->isNotEmpty())
@@ -303,11 +303,11 @@
                                 <div
                                     class="absolute top-full left-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50 py-2">
                                     @foreach($category->children as $child)
-                                        <a href="{{ route('products.index') }}?category={{ $child->slug }}"
+                                        <a href="{{ route('products.index') }}?categories={{ $child->slug }}"
                                             class="block px-4 py-2 text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition">{{ $child->name }}</a>
                                     @endforeach
                                     <div class="border-t border-gray-100 mt-2 pt-2">
-                                        <a href="{{ route('products.index') }}?category={{ $category->slug }}"
+                                        <a href="{{ route('products.index') }}?categories={{ $category->slug }}"
                                             class="block px-4 py-2 text-sm text-primary font-medium hover:bg-primary/5 transition">View
                                             All {{ $category->name }} →</a>
                                     </div>
@@ -322,7 +322,7 @@
                     {{-- Additional Category Links --}}
                     @foreach($allMenuCategories->skip(2)->take(2) as $category)
                         <div class="relative group">
-                            <a href="{{ route('products.index') }}?category={{ $category->slug }}"
+                            <a href="{{ route('products.index') }}?categories={{ $category->slug }}"
                                 class="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-primary transition-colors h-12">
                                 {{ $category->name }}
                                 @if($category->children->isNotEmpty())
@@ -334,11 +334,11 @@
                                 <div
                                     class="absolute top-full left-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50 py-2">
                                     @foreach($category->children as $child)
-                                        <a href="{{ route('products.index') }}?category={{ $child->slug }}"
+                                        <a href="{{ route('products.index') }}?categories={{ $child->slug }}"
                                             class="block px-4 py-2 text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition">{{ $child->name }}</a>
                                     @endforeach
                                     <div class="border-t border-gray-100 mt-2 pt-2">
-                                        <a href="{{ route('products.index') }}?category={{ $category->slug }}"
+                                        <a href="{{ route('products.index') }}?categories={{ $category->slug }}"
                                             class="block px-4 py-2 text-sm text-primary font-medium hover:bg-primary/5 transition">View
                                             All {{ $category->name }} →</a>
                                     </div>

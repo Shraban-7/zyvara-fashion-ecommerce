@@ -328,17 +328,18 @@
 
                 {{-- Category Filters --}}
                 @foreach($selectedCategories as $categorySlug)
-                @php
-                $category = $categories->firstWhere('slug', $categorySlug);
-                @endphp
-                @if($category)
-                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
-                    {{ $category->name }}
-                    <button onclick="removeFilter('categories', '{{ $categorySlug }}')" class="hover:text-blue-700">
-                        <i class="fas fa-times text-xs"></i>
-                    </button>
-                </span>
-                @endif
+                    @php
+                        $category = $allCategories->firstWhere('slug', $categorySlug);
+                    @endphp
+
+                    @if($category)
+                        <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                            {{ $category->name }}
+                            <button onclick="removeFilter('categories', '{{ $categorySlug }}')" class="hover:text-blue-700">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </span>
+                    @endif
                 @endforeach
 
                 {{-- Brand Filters --}}
@@ -349,7 +350,7 @@
                 @if($brand)
                 <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     {{ $brand->name }}
-                    <button onclick="removeFilter('categories', '{{ $brandSlug }}')" class="hover:text-blue-700">
+                    <button onclick="removeFilter('brands', '{{ $brandSlug }}')" class="hover:text-blue-700">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
@@ -562,11 +563,9 @@
                 }
             }
         } else if (filterType === 'price') {
-            // Remove both min and max price
             searchParams.delete('min_price');
             searchParams.delete('max_price');
         } else {
-            // Remove single parameter (like min_rating)
             searchParams.delete(filterType);
         }
 

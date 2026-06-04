@@ -42,7 +42,7 @@
                         <!-- Category link -->
                         <li>
                             <a class="font-semibold text-blue-600"
-                                href="{{ route('products.index',['category'=>$cat->slug]) }}">
+                                href="{{ route('products.index',['categories'=>$cat->slug]) }}">
                                 {{ $cat->name }}
                             </a>
                         </li>
@@ -51,7 +51,7 @@
                         @foreach ($cat->children as $sub)
                         <li>
                             <a class="hover:text-blue-600"
-                                href="{{ route('products.index',['subcategory'=>$sub->slug]) }}">
+                                href="{{ route('products.index',['categories'=>$sub->slug]) }}">
                                 {{ $sub->name }}
                             </a>
                         </li>

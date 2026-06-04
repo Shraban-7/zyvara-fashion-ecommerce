@@ -19,21 +19,35 @@ class ProductController extends Controller
             $categorySlugs = is_array($request->categories) ? $request->categories : explode(',', $request->categories);
             $categoryIds = Category::whereIn('slug', $categorySlugs)->pluck('id')->toArray();
             if (!empty($categoryIds)) {
-                $query->whereIn('category_id', $categoryIds);
+                $query->where(function ($q) use ($categoryIds) {
+                    $q->whereIn('category_id', $categoryIds)
+                        ->orWhereIn('subcategory_id', $categoryIds);
+                });
             }
-        } elseif ($request->has('category')) {
+        } elseif ($request->has('categories')) {
             $category = Category::where('slug', $request->category)->first();
+
             if ($category) {
                 $categoryIds = [$category->id];
-                $children = Category::where('parent_id', $category->id)->pluck('id')->toArray();
+
+                $children = Category::where('parent_id', $category->id)
+                    ->pluck('id')
+                    ->toArray();
+
                 $categoryIds = array_merge($categoryIds, $children);
 
                 if (!empty($children)) {
-                    $grandChildren = Category::whereIn('parent_id', $children)->pluck('id')->toArray();
+                    $grandChildren = Category::whereIn('parent_id', $children)
+                        ->pluck('id')
+                        ->toArray();
+
                     $categoryIds = array_merge($categoryIds, $grandChildren);
                 }
 
-                $query->whereIn('category_id', $categoryIds);
+                $query->where(function ($q) use ($categoryIds) {
+                    $q->whereIn('category_id', $categoryIds)
+                        ->orWhereIn('subcategory_id', $categoryIds);
+                });
             }
         }
 
@@ -176,7 +190,7 @@ class ProductController extends Controller
         $cats = Category::whereNull('parent_id')->with('children')->withCount('products')->get();
         $subCats = Category::whereNotNull('parent_id')
             ->select('id', 'parent_id')
-            ->withCount('products')
+            ->withCount('subCatProducts')
             ->get();
 
         $categoryCounts = [];
@@ -186,8 +200,10 @@ class ProductController extends Controller
         }
 
         foreach ($subCats as $cat) {
-            $categoryCounts[$cat->id] = $cat->products_count;
+            $categoryCounts[$cat->id] = $cat->sub_cat_products_count;
         }
+
+        $allCategories = Category::select('id', 'name', 'slug')->get();
 
         return view('products.index', compact(
             'products',
@@ -196,7 +212,8 @@ class ProductController extends Controller
             'colors',
             'brands',
             'categoryCounts',
-            'brandCounts'
+            'brandCounts',
+            'allCategories'
         ));
     }
 
@@ -305,7 +322,7 @@ class ProductController extends Controller
             'compare_price' => $product->compare_price ? (float) $product->compare_price : null,
             'short_description' => $product->short_description,
             'stock_in' => $product->stock_in,
-            'stock' => $haveVariant > 0 ?  0 : $product->currentStock,
+            'stock' => $haveVariant > 0 ? 0 : $product->currentStock,
             'is_new_arrival' => $product->is_new_arrival,
             'is_best_seller' => $product->is_best_seller,
             'is_on_sale' => $product->is_on_sale,
