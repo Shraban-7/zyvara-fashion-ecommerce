@@ -226,7 +226,7 @@ class ProductController extends Controller
                 }
             }
 
-            if ($product->stock_in>0) {
+            if ($product->stock_in > 0) {
                 StockLog::create([
                     'product_id' => $product->id,
                     'product_variant_id' => null,

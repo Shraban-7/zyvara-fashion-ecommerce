@@ -544,10 +544,9 @@
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-
                 if (error.status === 422 && error.data.errors) {
-                    showToast('error', 'error.data.errors');
+                    const firstError = Object.values(error.data.errors)[0][0];
+                    showToast('error', firstError);
                 } else {
                     const message = error.data?.message || 'An unexpected error occurred. Please try again.';
                     showToast('error', message);
