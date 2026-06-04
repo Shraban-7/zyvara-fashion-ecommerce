@@ -569,6 +569,10 @@ class ProductController extends Controller
                 description: 'Product deleted ',
             );
 
+            $product->sku = $product->sku . '_deleted';
+
+            $product->save();
+
             $product->delete();
 
             return redirect()
