@@ -13,6 +13,10 @@
 
     @stack('header')
 
+    @if($settings['head_scripts'])
+        {!! $settings['head_scripts'] !!}
+    @endif
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,6 +30,11 @@
 </head>
 
 <body class="bg-light min-h-screen pb-20 md:pb-0">
+
+    @if($settings['body_start_scripts'])
+        {!! $settings['body_start_scripts'] !!}
+    @endif
+
     @include('partials.header')
     @include('partials.mobile-category-drawer')
 
@@ -74,6 +83,10 @@
     </script>
 
     @stack('scripts')
+
+    @if($settings['body_end_scripts'])
+        {!! $settings['body_end_scripts'] !!}
+    @endif
 
 </body>
 

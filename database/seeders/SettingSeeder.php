@@ -63,8 +63,10 @@ class SettingSeeder extends Seeder
             ['key' => 'meta_title', 'value' => 'Spinner Fashion - Best Online Fashion Store in Bangladesh', 'type' => 'text', 'group' => 'seo'],
             ['key' => 'meta_description', 'value' => 'Shop latest fashion trends for men, women & kids. Best quality clothing at affordable prices with home delivery across Bangladesh.', 'type' => 'text', 'group' => 'seo'],
             ['key' => 'meta_keywords', 'value' => 'fashion, clothing, online shopping, bangladesh, panjabi, saree, t-shirt', 'type' => 'text', 'group' => 'seo'],
-            ['key' => 'google_analytics_id', 'value' => null, 'type' => 'text', 'group' => 'seo'],
-            ['key' => 'facebook_pixel_id', 'value' => null, 'type' => 'text', 'group' => 'seo'],
+            
+            ['key' => 'head_scripts', 'value' => null, 'type' => 'text', 'group' => 'seo'],
+            ['key' => 'body_start_scripts', 'value' => null, 'type' => 'text', 'group' => 'seo'],
+            ['key' => 'body_end_scripts', 'value' => null, 'type' => 'text', 'group' => 'seo'],
 
             // Store Policies
             ['key' => 'return_policy', 'value' => 'Returns accepted within 7 days of delivery. Product must be unused and in original packaging.', 'type' => 'text', 'group' => 'policy'],

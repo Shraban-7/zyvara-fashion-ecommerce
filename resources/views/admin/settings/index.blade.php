@@ -366,15 +366,21 @@
                         </div>
 
                         <div>
-                            <x-input name="google_analytics_id" label="Google Analytics ID" placeholder="G-XXXXXXXXXX"
-                                value="{{ old('google_analytics_id', $all_settings['seo']['google_analytics_id']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Google Analytics tracking ID</p>
+                             <x-textarea name="head_scripts" label="Head Scripts" rows="4"
+                                placeholder="Enter your head scripts">{{ old('head_scripts', $all_settings['seo']['head_scripts']['value'] ?? '') }}</x-textarea>
+                            <p class="text-xs text-gray-500 mt-1">Scripts to be included in the head section of your site</p>
                         </div>
 
                         <div>
-                            <x-input name="facebook_pixel_id" label="Facebook Pixel ID" placeholder="123456789012345"
-                                value="{{ old('facebook_pixel_id', $all_settings['seo']['facebook_pixel_id']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Facebook Pixel ID for tracking</p>
+                            <x-textarea name="body_start_scripts" label="Body Start Scripts" rows="4"
+                                placeholder="Enter your body start scripts">{{ old('body_start_scripts', $all_settings['seo']['body_start_scripts']['value'] ?? '') }}</x-textarea>
+                            <p class="text-xs text-gray-500 mt-1">Scripts to be included at the start of the body section of your site</p>
+                        </div>
+
+                        <div>
+                            <x-textarea name="body_end_scripts" label="Body End Scripts" rows="4"
+                                placeholder="Enter your body end scripts">{{ old('body_end_scripts', $all_settings['seo']['body_end_scripts']['value'] ?? '') }}</x-textarea>
+                            <p class="text-xs text-gray-500 mt-1">Scripts to be included at the end of the body section of your site</p>
                         </div>
                     </div>
                 </div>
