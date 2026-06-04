@@ -125,6 +125,19 @@ class Product extends Model
         return $this->hasMany(Review::class)->where('is_approved', true);
     }
 
+    public function updateRatingStats()
+    {
+        $this->review_count = $this->reviews()
+            ->where('is_approved', true)
+            ->count();
+
+        $this->average_rating = $this->reviews()
+            ->where('is_approved', true)
+            ->avg('rating') ?? 0;
+
+        $this->save();
+    }
+
     public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class);

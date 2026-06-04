@@ -12,19 +12,15 @@
             {{-- Card 1 --}}
             <div class="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm hover:shadow-md transition">
                 <div
-
-                   
-                                       class="w-14 h-14 md:w-16 md:h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-3 md:mb-4">
+                    class="w-14 h-14 md:w-16 md:h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-3 md:mb-4">
                     <i class="fas fa-certificate text-2xl md:text-3xl text-primary"></i>
                 </div>
                 <h3 class="font-semibold text-sm md:text-base text-black mb-1">Premium Quality</h3>
                 <p class="text-xs md:text-sm text-secondary">100% quality fabric guaranteed</p>
             </div>
 
-            {{-- Car
-d                    2 --}}
-            <div cla
-s                   s="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm hover:shadow-md transition">
+            {{-- Card 2 --}}
+            <div class="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm hover:shadow-md transition">
                 <div
                     class="w-14 h-14 md:w-16 md:h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-3 md:mb-4">
                     <i class="fas fa-dollar-sign text-2xl md:text-3xl text-green-600"></i>
@@ -33,21 +29,19 @@ s                   s="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm hov
                 <p class="text-xs md:text-sm text-secondary">Best value for your money</p>
             </div>
 
-                   
-            {{-- Car
-                   d 3 --}}
+
+            {{-- Card 3 --}}
             <div class="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm hover:shadow-md transition">
                 <div
                     class="w-14 h-14 md:w-16 md:h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-3 md:mb-4">
                     <i class="fas fa-shield-alt text-2xl md:text-3xl text-purple-600"></i>
                 </div>
-                <h3 
-                   class="font-semibold text-sm md:text-base text-black mb-1">Trusted Brand</h3>
+                <h3 class="font-semibold text-sm md:text-base text-black mb-1">Trusted Brand</h3>
                 <p class="text-xs md:text-sm text-secondary">10,000+ happy customers</p>
             </div>
 
 
-                               {{-- Card 4 --}}
+            {{-- Card 4 --}}
             <div class="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm hover:shadow-md transition">
                 <div
                     class="w-14 h-14 md:w-16 md:h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-3 md:mb-4">

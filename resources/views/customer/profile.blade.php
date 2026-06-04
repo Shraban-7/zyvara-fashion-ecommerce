@@ -85,7 +85,7 @@
 
         <!-- Change Password -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-700">
+            <div class="px-6 py-4 border-b border-gray-200 bg-primary">
                 <h2 class="text-xl font-bold text-white flex items-center gap-2">
                     <i class="fas fa-lock"></i>
                     Change Password
@@ -152,7 +152,7 @@
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end pt-4">
                         <button type="submit"
-                            class="bg-gray-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition flex items-center gap-2">
+                            class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition flex items-center gap-2">
                             <i class="fas fa-shield-alt"></i>
                             Update Password
                         </button>

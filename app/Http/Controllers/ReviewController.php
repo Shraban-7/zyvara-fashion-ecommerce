@@ -34,7 +34,7 @@ class ReviewController extends Controller
             [
                 'product_id' => $validated['product_id'],
                 'user_id' => $user->id,
-                'order_id' => $validated['order_id']
+                'order_id' => $validated['order_id'],
             ],
             [
                 'rating' => $validated['rating'],
@@ -43,6 +43,9 @@ class ReviewController extends Controller
                 'is_verified_purchase' => true,
             ]
         );
+
+        // 🔥 IMPORTANT: update product rating AFTER review change
+        $review->product->updateRatingStats();
 
         return back()->with(
             'success',
