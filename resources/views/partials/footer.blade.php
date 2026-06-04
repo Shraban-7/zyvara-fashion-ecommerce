@@ -1,4 +1,7 @@
-{{-- Footer --}}
+<?php
+$leftPages = \App\Models\StaticPage::active()->where('footer_position', 1)->orderBy('sort_order')->pluck('title', 'slug');
+$rightPages = \App\Models\StaticPage::active()->where('footer_position', 2)->orderBy('sort_order')->pluck('title', 'slug');
+?>
 <footer class="bg-gray-900 text-white pt-10 pb-24 md:pb-10">
     <div class="max-w-7xl mx-auto px-4">
 
@@ -16,22 +19,22 @@
                 {{-- Social Links --}}
                 <div class="flex gap-3">
                     @if($settings['facebook_url'] ?? false)
-                        <a href="{{ $settings['facebook_url'] }}" target="_blank"
-                            class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
+                    <a href="{{ $settings['facebook_url'] }}" target="_blank"
+                        class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
                     @endif
                     @if($settings['instagram_url'] ?? false)
-                        <a href="{{ $settings['instagram_url'] }}" target="_blank"
-                            class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
-                            <i class="fab fa-instagram"></i>
-                        </a>
+                    <a href="{{ $settings['instagram_url'] }}" target="_blank"
+                        class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
                     @endif
                     @if($settings['tiktok_url'] ?? false)
-                        <a href="{{ $settings['tiktok_url'] }}" target="_blank"
-                            class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
-                            <i class="fab fa-tiktok"></i>
-                        </a>
+                    <a href="{{ $settings['tiktok_url'] }}" target="_blank"
+                        class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
                     @endif
                 </div>
             </div>
@@ -40,12 +43,14 @@
             <div>
                 <h4 class="font-semibold text-base mb-4">Quick Links</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">About Us</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Contact Us</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Size Guide</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">FAQs</a></li>
-                    <li><a href="{{ route('track-order.index') }}"
-                            class="text-gray-400 text-sm hover:text-primary transition">Track Order</a></li>
+                    @foreach ($leftPages as $leftPageslug => $leftPagetitle)
+                    <li>
+                        <a href="{{ route('static_page.show', $leftPageslug) }}"
+                            class="text-gray-400 text-sm hover:text-primary transition">{{ $leftPagetitle }}
+                        </a>
+                    </li>
+                    @endforeach
+                    <li><a href="{{ route('track-order.index') }}" class="text-gray-400 text-sm hover:text-primary transition">Track Order</a></li>
                 </ul>
             </div>
 
@@ -54,8 +59,8 @@
                 <h4 class="font-semibold text-base mb-4">Categories</h4>
                 <ul class="space-y-2">
                     @foreach ($allMenuCategories->take(5) as $category)
-                        <li><a href="{{ route('products.index') }}?category={{ $category->slug }}"
-                                class="text-gray-400 text-sm hover:text-primary transition">{{ $category->name }}</a></li>
+                    <li><a href="{{ route('products.index') }}?category={{ $category->slug }}"
+                            class="text-gray-400 text-sm hover:text-primary transition">{{ $category->name }}</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -64,11 +69,13 @@
             <div>
                 <h4 class="font-semibold text-base mb-4">Policies</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Privacy Policy</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Terms & Conditions</a>
+                    @foreach ($rightPages as $rightPageslug => $rightPagetitle)
+                    <li>
+                        <a href="{{ route('static_page.show', $rightPageslug) }}"
+                            class="text-gray-400 text-sm hover:text-primary transition">{{ $rightPagetitle }}
+                        </a>
                     </li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Return Policy</a></li>
-                    <li><a href="#" class="text-gray-400 text-sm hover:text-primary transition">Shipping Info</a></li>
+                    @endforeach
                 </ul>
             </div>
 

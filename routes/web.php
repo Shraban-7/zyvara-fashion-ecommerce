@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\StaticPageController;
 use App\Models\Size;
 
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
@@ -199,6 +200,8 @@ Route::prefix('payment')->as('payment.')->group(function () {
     Route::get('/failed', [PaymentController::class, 'failed'])->name('failed');
     Route::post('/ipn', [PaymentController::class, 'ipn'])->name('ipn');
 });
+
+Route::get('/pages/{slug}', [StaticPageController::class, 'show'])->name('static_page.show');
 
 Route::post('/logout', function () {
     Auth::logout();

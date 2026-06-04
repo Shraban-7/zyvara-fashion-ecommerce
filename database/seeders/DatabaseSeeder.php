@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             CouponSeeder::class,
             BannerSeeder::class,
             BrandSeeder::class,
+
+            StaticPageSeeder::class,
         ]);
 
         if (app()->environment('local')) {
