@@ -20,7 +20,7 @@
 <div class="min-h-screen max-w-7xl mx-auto px-4 py-6">
     <div class="mb-8">
         <h1 class="text-3xl text-center font-bold text-gray-900 mb-3">{{ $page->title }}</h1>
-        <p class="text-lg text-gray-600 mb-2">{!! nl2br(e($page->content)) !!}</p>
+        <p class="text-lg text-gray-600 mb-2">{!! $page->content !!}</p>
     </div>
 </div>
 
