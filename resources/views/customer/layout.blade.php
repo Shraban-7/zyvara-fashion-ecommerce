@@ -52,13 +52,13 @@
                                     <span class="font-medium">My Orders</span>
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a href="{{ route('customer.wishlist') }}"
                                     class="flex items-center gap-3 px-4 py-3 hover:bg-primary-50 transition {{ request()->routeIs('customer.wishlist') ? 'bg-primary-50 text-primary border-r-4 border-primary' : 'text-gray-700' }}">
                                     <i class="fas fa-heart w-5"></i>
                                     <span class="font-medium">Wishlist</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li>
                                 <a href="{{ route('customer.addresses') }}"
                                     class="flex items-center gap-3 px-4 py-3 hover:bg-primary-50 transition {{ request()->routeIs('customer.addresses') ? 'bg-primary-50 text-primary border-r-4 border-primary' : 'text-gray-700' }}">

@@ -3,7 +3,7 @@
 
 @section('dashboard-content')
     <!-- Dashboard Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
         <!-- Total Orders -->
         <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
@@ -39,7 +39,7 @@
         </div>
 
         <!-- Wishlist -->
-        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+        {{-- <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-gray-500 text-sm font-medium">Wishlist Items</p>
@@ -53,7 +53,7 @@
                 class="text-gray-600 text-sm font-medium mt-4 inline-flex items-center gap-1 hover:gap-2 transition-all">
                 View wishlist <i class="fas fa-arrow-right text-xs"></i>
             </a>
-        </div>
+        </div> --}}
 
         <!-- Saved Addresses -->
         <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
@@ -161,7 +161,7 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
+    {{-- <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
         <a href="{{ route('products.index') }}"
             class="bg-primary text-white rounded-lg p-6 hover:bg-primary-700 transition">
             <div class="flex items-center gap-4">
@@ -199,5 +199,5 @@
                 </div>
             </div>
         </a>
-    </div>
+    </div> --}}
 @endsection
