@@ -81,7 +81,7 @@ $showCurrency = false;
 
 <body>
     <div class="center">
-        <h3 class="bold">SPINNER FASHION</h3>
+        <h3 class="bold">{{ $siteName }}</h3>
         <p>123 Fashion Street, Dhaka 1215, Bangladesh</p>
         <p> Phone: +880 1711-123456</p>
     </div>

@@ -29,7 +29,7 @@
                 style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #000;">
                 <div style="flex: 1;">
                     <h1 style="font-size: 28px; font-weight: 700; color: #000; margin: 0 0 3px 0; letter-spacing: -0.5px;">
-                        SPINNER FASHION</h1>
+                        {{ $siteName }}</h1>
                     <div style="width: 50px; height: 2px; background: #000; margin-bottom: 8px;"></div>
                     <p style="font-size: 9px; color: #444; margin: 0; line-height: 1.6;">
                         123 Fashion Street, Dhaka 1215, Bangladesh<br>
@@ -264,7 +264,7 @@
                 </p>
                 <div style="text-align: center; border-top: 1px solid #e5e7eb; padding-top: 12px;">
                     <p style="margin: 0 0 4px 0; font-size: 10px; color: #000; font-weight: 700;">Thank you for shopping
-                        with Spinner Fashion!</p>
+                        with {{ $siteName }}!</p>
                     <p style="margin: 0; font-size: 8px; color: #666;">
                         For support & inquiries: +880 1711-123456 | info@spinnerfashion.com | www.spinnerfashion.com
                     </p>
