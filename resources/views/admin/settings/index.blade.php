@@ -334,7 +334,7 @@
                         </div>
 
                         <div>
-                            <x-input type="text" name="sms_sender_id" label="SMS Sender ID" placeholder="Spinner Fashion"
+                            <x-input type="text" name="sms_sender_id" label="SMS Sender ID"
                                 value="{{ old('sms_sender_id', $all_settings['sms']['sms_sender_id']['value'] ?? '') }}" />
                             <p class="text-xs text-gray-500 mt-1">Name that appears as sender in SMS</p>
                         </div>

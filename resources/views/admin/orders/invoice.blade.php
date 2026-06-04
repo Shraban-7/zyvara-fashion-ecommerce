@@ -38,9 +38,9 @@
 
                 {{-- Left: Logo & Seller Info --}}
                 <div class="flex-1">
-                    <h1
-                        style="font-size: 28px; font-weight: 700; color: #000; margin: 0 0 3px 0; letter-spacing: -0.5px;">
-                        SPINNER FASHION</h1>
+                    <h1 style="font-size: 28px; font-weight: 700; color: #000; margin: 0 0 3px 0; letter-spacing: -0.5px;">
+                        {{ $siteName }}
+                    </h1>
                     <div class="w-12 h-0.5 bg-black mb-2"></div>
                     <p class="text-xs text-gray-500 leading-relaxed">
                         123 Fashion Street, Dhaka 1215, Bangladesh<br>
