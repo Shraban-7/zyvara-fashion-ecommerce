@@ -30,13 +30,24 @@
                 @if($settings['site_logo'])
                     <img src="{{ storage_url($settings['site_logo']) }}" alt="logo" class="h-14">
                 @else
-                    <div class="relative">
-                        <span class="text-2xl md:text-3xl font-extrabold logo-text tracking-tight">Spinner</span>
-                        <span class="text-2xl md:text-3xl font-extrabold logo-accent tracking-tight">Fashion</span>
-                        <div
+                    <?php
+                        $siteNames= null;
+                        $siteName = $settings['site_name'] ?? null;
+                        if ($siteName) {
+                            $siteNames = explode(' ', $siteName);
+                        }
+                    ?>
+                    @if ($siteNames)
+                        <div class="relative">
+                            <span class="text-2xl md:text-3xl font-extrabold logo-text tracking-tight">{{ $siteNames[0] }}</span>
+                            @if (isset($siteNames[1]))
+                                <span class="text-2xl md:text-3xl font-extrabold logo-accent tracking-tight">{{ $siteNames[1] }}</span>
+                            @endif
+                             <div
                             class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-blue-400 group-hover:w-full transition-all duration-300">
                         </div>
-                    </div>
+                        </div>
+                    @endif
                 @endif
             </a>
 
