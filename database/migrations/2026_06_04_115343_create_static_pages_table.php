@@ -15,14 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            
+
             $table->longText('content')->nullable();
 
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
-
-            $table->string('featured_image')->nullable();
 
             $table->integer('sort_order')->default(0);
             $table->tinyInteger('footer_position')->default(1);

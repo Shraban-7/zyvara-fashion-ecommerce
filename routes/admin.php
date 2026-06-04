@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\SaleReturnController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StaticPageController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
@@ -106,6 +107,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/store', [BannerController::class, 'store'])->name('store');
         Route::put('/{banner}/update', [BannerController::class, 'update'])->name('update');
         Route::delete('/{banner}/delete', [BannerController::class, 'delete'])->name('delete');
+    });
+
+    Route::prefix('static-pages')->as('static_pages.')->group(function () {
+        Route::get('/', [StaticPageController::class, 'index'])->name('index');
+        Route::get('/create', [StaticPageController::class, 'create'])->name('create');
+        Route::post('/store', [StaticPageController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [StaticPageController::class, 'edit'])->name('edit');
+        Route::put('/{id}/update', [StaticPageController::class, 'update'])->name('update');
+        Route::delete('/{id}/delete', [StaticPageController::class, 'destroy'])->name('delete');
     });
 
     Route::prefix('pos')->as('pos.')->group(function () {

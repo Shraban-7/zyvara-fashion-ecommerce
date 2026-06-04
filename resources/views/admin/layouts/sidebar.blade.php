@@ -214,6 +214,13 @@ $user = auth()->user();
             <span class="sidebar-label">Activity Logs</span>
         </a>
 
+        <a href="{{ route('admin.static_pages.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.static_pages.*') ? 'active' : '' }}"
+            data-tooltip="Static Pages">
+            <span class="sidebar-icon"><i class="fas fa-file-alt"></i></span>
+            <span class="sidebar-label">Static Pages</span>
+        </a>
+
         <a href="{{ route('admin.settings.index') }}"
             class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"
             data-tooltip="Settings">
