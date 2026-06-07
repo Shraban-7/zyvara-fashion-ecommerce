@@ -46,6 +46,11 @@ Route::get('save-products', function () {
                 'stock_in' => $product['stock'],
                 'stock_out' => 0,
             ]);
+
+            if (isset($product['variants']) && is_array($product['variants'])) {
+                saveVariants($alreadyExists, $product['variants']);
+            }
+            
             continue; // Skip if product already exists
         }
 
@@ -92,48 +97,56 @@ Route::get('save-products', function () {
             ]);
         }
 
-        foreach ($product['variants'] as $variant) {
-
-            $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->first();
-            if ($alreadyExists) {
-                $alreadyExists->update([
-                    'stock_in' => $variant['stock'],
-                    'stock_out' => 0,
-                    'price' => $variant['price'] ?? 0,
-                    'cost_price' => $variant['buying_price'] ?? 0,
-                ]);
-                continue; // Skip if variant already exists
-            }
-
-            $size = $color = null;
-            if ($variant['size']) {
-                $size = Size::firstOrCreate([
-                    'name' => $variant['size'],
-                    'code' => strtolower($variant['size']),
-                ]);
-            }
-
-            if ($variant['color']) {
-                $color = \App\Models\Color::firstOrCreate(['name' => $variant['color']]);
-            }
-
-            try {
-                $newProduct->variants()->create([
-                    'sku' => $variant['sku'],
-                    'size_id' => $size->id ?? null,
-                    'color_id' => $color->id ?? null,
-                    'stock_in' => $variant['stock'],
-                    'price' => $variant['price'] ?? 0,
-                    'cost_price' => $variant['buying_price'] ?? 0,
-                ]);
-            } catch (\Exception $e) {
-                dump('Error creating product variant: ' . $e->getMessage());
-            }
+        if (isset($product['variants']) && is_array($product['variants'])) {
+            saveVariants($newProduct, $product['variants']);
         }
     }
 
     echo 'done';
 });
+
+function saveVariants($newProduct, $variants)
+{
+    foreach ($variants as $variant) {
+
+        $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->first();
+
+        if ($alreadyExists) {
+            $alreadyExists->update([
+                'stock_in' => $variant['stock'],
+                'stock_out' => 0,
+                'price' => $variant['price'] ?? 0,
+                'cost_price' => $variant['buying_price'] ?? 0,
+            ]);
+            continue; // Skip if variant already exists
+        }
+
+        $size = $color = null;
+        if ($variant['size']) {
+            $size = Size::firstOrCreate([
+                'name' => $variant['size'],
+                'code' => strtolower($variant['size']),
+            ]);
+        }
+
+        if ($variant['color']) {
+            $color = \App\Models\Color::firstOrCreate(['name' => $variant['color']]);
+        }
+
+        try {
+            $newProduct->variants()->create([
+                'sku' => $variant['sku'],
+                'size_id' => $size->id ?? null,
+                'color_id' => $color->id ?? null,
+                'stock_in' => $variant['stock'],
+                'price' => $variant['price'] ?? 0,
+                'cost_price' => $variant['buying_price'] ?? 0,
+            ]);
+        } catch (\Exception $e) {
+            dump('Error creating product variant: ' . $e->getMessage());
+        }
+    }
+}
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
