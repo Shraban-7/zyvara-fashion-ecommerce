@@ -181,17 +181,19 @@
 {{-- Search Scripts --}}
 <script>
     // Search suggestions based on query
-    const searchSuggestionKeywords = [
-        'formal shirt', 'casual shirt', 'cotton shirt', 'printed shirt',
-        't-shirt', 'polo t-shirt', 'round neck t-shirt',
-        'panjabi', 'premium panjabi', 'eid panjabi', 'designer panjabi',
-        'jacket', 'denim jacket', 'winter jacket',
-        'pants', 'chinos', 'formal pants',
-        'ladies wear', 'kameez', 'saree',
-        'kids wear', 'kids panjabi'
-    ];
+    // const searchSuggestionKeywords = [
+    //     'formal shirt', 'casual shirt', 'cotton shirt', 'printed shirt',
+    //     't-shirt', 'polo t-shirt', 'round neck t-shirt',
+    //     'panjabi', 'premium panjabi', 'eid panjabi', 'designer panjabi',
+    //     'jacket', 'denim jacket', 'winter jacket',
+    //     'pants', 'chinos', 'formal pants',
+    //     'ladies wear', 'kameez', 'saree',
+    //     'kids wear', 'kids panjabi'
+    // ];
 
     const searchUrl = "{{ route('products.search') }}";
+    const suggestionUrl = "{{ route('products.suggestions') }}";
+
 
     let searchTimeout;
     let searchAbortController;
@@ -213,11 +215,11 @@
     function normalizeSearchProducts(payload) {
         const productList = Array.isArray(payload) ? payload :
             Array.isArray(payload?.products) ? payload.products :
-            Array.isArray(payload?.data?.products) ? payload.data.products :
-            Array.isArray(payload?.data?.data) ? payload.data.data :
-            Array.isArray(payload?.data) ? payload.data :
-            Array.isArray(payload?.results) ? payload.results :
-            Array.isArray(payload?.items) ? payload.items : [];
+                Array.isArray(payload?.data?.products) ? payload.data.products :
+                    Array.isArray(payload?.data?.data) ? payload.data.data :
+                        Array.isArray(payload?.data) ? payload.data :
+                            Array.isArray(payload?.results) ? payload.results :
+                                Array.isArray(payload?.items) ? payload.items : [];
 
         return productList.map(item => {
             const price = Number(item?.price ?? item?.selling_price ?? item?.sale_price ?? item?.current_price ?? 0);
@@ -293,17 +295,37 @@
         searchTimeout = setTimeout(() => performSearch(query), 150);
     }
 
+    async function loadSuggestions(query) {
+
+        if (query.length < 2) {
+            document.getElementById('searchSuggestions').innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `${suggestionUrl}?query=${encodeURIComponent(query)}`,
+                {
+                    headers: {
+                        Accept: 'application/json'
+                    }
+                }
+            );
+
+            const suggestions = await response.json();
+
+            renderSuggestions(suggestions, query);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     async function performSearch(query) {
+
         const requestId = ++latestSearchRequestId;
-        const lowerQuery = query.toLowerCase();
 
-        // Find matching suggestions
-        const matchingSuggestions = searchSuggestionKeywords.filter(keyword =>
-            keyword.toLowerCase().includes(lowerQuery)
-        ).slice(0, 5);
-
-        // Render suggestions
-        renderSuggestions(matchingSuggestions, query);
+        await loadSuggestions(query);
 
         if (searchAbortController) {
             searchAbortController.abort();
@@ -311,26 +333,22 @@
 
         searchAbortController = new AbortController();
 
-        const params = new URLSearchParams({
-            query,
-            q: query,
-            search: query
-        });
-
-        const requestUrl = `${searchUrl}${searchUrl.includes('?') ? '&' : '?'}${params.toString()}`;
+        const requestUrl =
+            `${searchUrl}?query=${encodeURIComponent(query)}`;
 
         try {
+
             const response = await fetch(requestUrl, {
                 method: 'GET',
                 headers: {
-                    'Accept': 'application/json',
+                    Accept: 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 signal: searchAbortController.signal
             });
 
             if (!response.ok) {
-                throw new Error(`Search request failed with status ${response.status}`);
+                throw new Error('Search failed');
             }
 
             const payload = await response.json();
@@ -339,14 +357,13 @@
                 return;
             }
 
-            const matchingProducts = normalizeSearchProducts(payload);
-            renderProducts(matchingProducts);
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                return;
-            }
+            renderProducts(
+                normalizeSearchProducts(payload)
+            );
 
-            if (requestId !== latestSearchRequestId) {
+        } catch (error) {
+
+            if (error.name === 'AbortError') {
                 return;
             }
 
@@ -355,26 +372,59 @@
     }
 
     function renderSuggestions(suggestions, query) {
-        const container = document.getElementById('searchSuggestions');
 
-        if (suggestions.length === 0) {
+        const container =
+            document.getElementById('searchSuggestions');
+
+        if (!suggestions.length) {
             container.innerHTML = '';
             return;
         }
 
-        const html = suggestions.map(suggestion => {
-            const escapedQuery = escapeRegex(query);
-            const highlighted = suggestion.replace(
-                new RegExp(`(${escapedQuery})`, 'gi'),
+        const html = suggestions.map(item => {
+
+            let icon = 'fa-search';
+
+            switch (item.type) {
+                case 'product':
+                    icon = 'fa-box';
+                    break;
+
+                case 'category':
+                    icon = 'fa-folder';
+                    break;
+
+                case 'subcategory':
+                    icon = 'fa-folder-open';
+                    break;
+
+                case 'brand':
+                    icon = 'fa-tag';
+                    break;
+            }
+
+            const highlighted = item.name.replace(
+                new RegExp(`(${escapeRegex(query)})`, 'ig'),
                 '<strong class="text-primary">$1</strong>'
             );
+
             return `
-                <button onclick="setSearchQuery('${suggestion}')" class="flex items-center gap-3 w-full px-4 md:px-5 py-3 hover:bg-gray-50 transition text-left">
-                    <i class="fas fa-search text-gray-300 text-sm"></i>
-                    <span class="text-sm text-gray-600">${highlighted}</span>
-                    <i class="fas fa-arrow-up-right text-gray-300 text-xs ml-auto rotate-45"></i>
-                </button>
-            `;
+            <button
+                onclick="setSearchQuery('${item.name.replace(/'/g, "\\'")}')"
+                class="flex items-center gap-3 w-full px-4 md:px-5 py-3 hover:bg-gray-50 transition text-left">
+
+                <i class="fas ${icon} text-gray-400"></i>
+
+                <span class="text-sm text-gray-700">
+                    ${highlighted}
+                </span>
+
+                <span class="ml-auto text-xs uppercase text-gray-400">
+                    ${item.type}
+                </span>
+
+            </button>
+        `;
         }).join('');
 
         container.innerHTML = html;
@@ -429,7 +479,7 @@
     }
 
     // Close on Escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             closeSearch();
         }

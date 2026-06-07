@@ -364,32 +364,121 @@ class ProductController extends Controller
         ]);
     }
 
-    public function search(Request $request)
+    // public function search(Request $request)
+    // {
+    //     $name = $request->name;
+
+    //     $products = Product::where('name', $name)
+    //         ->orwhere('name', 'LIKE', $name . '%')
+    //         ->orwhere('name', 'LIKE', '%' . $name . '%')
+    //         ->limit(8)
+    //         ->with('category')
+    //         ->get();
+
+    //     $data = [];
+
+    //     foreach ($products as $product) {
+    //         $data[] = [
+    //             'id' => $product->id,
+    //             'name' => $product->name,
+    //             'slug' => $product->slug,
+    //             'price' => $product->price,
+    //             'originalPrice' => $product->compare_price,
+    //             'image' => $product->thumbnail,
+    //             'category' => $product->category->name,
+    //             'tags' => $product->tags
+    //         ];
+    //     }
+
+    //     return apiResponse($data);
+    // }
+
+    public function suggestions(Request $request)
     {
-        $name = $request->name;
+        $query = trim($request->query('query'));
 
-        $products = Product::where('name', $name)
-            ->orwhere('name', 'LIKE', $name . '%')
-            ->orwhere('name', 'LIKE', '%' . $name . '%')
-            ->limit(8)
-            ->with('category')
-            ->get();
-
-        $data = [];
-
-        foreach ($products as $product) {
-            $data[] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'slug' => $product->slug,
-                'price' => $product->price,
-                'originalPrice' => $product->compare_price,
-                'image' => $product->thumbnail,
-                'category' => $product->category->name,
-                'tags' => $product->tags
-            ];
+        if (!$query) {
+            return response()->json([]);
         }
 
-        return apiResponse($data);
+        $suggestions = collect();
+
+        $products = Product::where('is_active', true)
+            ->where('name', 'like', "%{$query}%")
+            ->limit(5)
+            ->get()
+            ->map(fn($item) => [
+                'type' => 'product',
+                'name' => $item->name,
+                'slug' => $item->slug,
+            ]);
+
+        $categories = Category::where('name', 'like', "%{$query}%")
+            ->limit(6)
+            ->get()
+            ->map(fn($item) => [
+                'type' => $item->parent_id ? 'subcategory' : 'category',
+                'name' => $item->name,
+                'slug' => $item->slug,
+            ]);
+
+        $brands = Brand::where('name', 'like', "%{$query}%")
+            ->limit(3)
+            ->get()
+            ->map(fn($item) => [
+                'type' => 'brand',
+                'name' => $item->name,
+                'slug' => $item->slug,
+            ]);
+
+        $suggestions = $products
+            ->concat($categories)
+            ->concat($brands)
+            ->unique('name')
+            ->take(10)
+            ->values();
+
+        return response()->json($suggestions);
+    }
+
+    public function search(Request $request)
+    {
+        $query = trim($request->query('query'));
+
+        if (empty($query)) {
+            return response()->json([
+                'products' => []
+            ]);
+        }
+
+        $products = Product::with('category')
+            ->where('is_active', true)
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                    ->orWhere('sku', 'LIKE', "%{$query}%")
+                    ->orWhere('short_description', 'LIKE', "%{$query}%")
+                    ->orWhereHas('category', function ($cat) use ($query) {
+                        $cat->where('name', 'LIKE', "%{$query}%");
+                    });
+            })
+            ->latest()
+            ->take(12)
+            ->get();
+
+        return response()->json([
+            'products' => $products->map(function ($product) {
+                return [
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'price' => $product->sale_price ?? $product->price,
+                    'original_price' => $product->price,
+                    'image' => $product->featured_image_url,
+                    'url' => route('products.show', $product->slug),
+                    'category' => [
+                        'name' => $product->category?->name
+                    ]
+                ];
+            })
+        ]);
     }
 }

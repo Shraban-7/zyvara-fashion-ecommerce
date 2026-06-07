@@ -143,9 +143,11 @@ Route::prefix('auth')->as('auth.')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
+
 Route::prefix('products')->as('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
     Route::get('search', [ProductController::class, 'search'])->name('search');
+    Route::get('/suggestions', [ProductController::class, 'suggestions'])->name('suggestions');
     Route::get('/{slug}', [ProductController::class, 'show'])->name('show');
     Route::get('/{product}/quickview', [ProductController::class, 'getQuickviewData'])->name('getQuickviewData');
 });
