@@ -31,122 +31,134 @@ Route::get('/image-path', function () {
     }
 });
 
-// Route::get('save-products', function () {
-//     ini_set('max_execution_time', 3600);
-//     $json = file_get_contents('sp_products.json');
-//     $products = json_decode($json, true);
+Route::get('save-products', function () {
+    ini_set('max_execution_time', 3600);
+    $json = file_get_contents('sp_products.json');
+    $products = json_decode($json, true);
 
-//     foreach ($products as $product) {
-//         $alreadyExists = \App\Models\Product::where('name', $product['name'])->first();
-//         if ($alreadyExists) {
-//             $alreadyExists->update([
-//                 'sku' => $product['sku'],
-//                 'price' => $product['price'] ?? 0,
-//                 'cost_price' => $product['buying_price'] ?? 0,
-//                 'stock_in' => $product['stock'],
-//                 'stock_out' => 0,
-//             ]);
+    foreach ($products as $product) {
+        $brandId = $brandName = null;
 
-//             if (isset($product['variants']) && is_array($product['variants'])) {
-//                 saveVariants($alreadyExists, $product['variants']);
-//             }
-            
-//             continue; // Skip if product already exists
-//         }
+        if ($product['brand'] != null) {
+            $brandName = $product['brand'];
+            $brand = \App\Models\Brand::firstOrCreate([
+                'name' => $brandName,
+                'slug' => str_slug($brandName),
+            ]);
 
-//         $category = \App\Models\Category::firstOrCreate([
-//             'name' => $product['category'],
-//             'slug' => str_slug($product['category']),
-//         ]);
+            $brandId = $brand->id;
+        }
+        $alreadyExists = \App\Models\Product::where('name', $product['name'])->first();
+        if ($alreadyExists) {
+            $alreadyExists->update([
+                'sku' => $product['sku'],
+                'price' => $product['price'] ?? 0,
+                'cost_price' => $product['buying_price'] ?? 0,
+                'stock_in' => $product['stock'],
+                'stock_out' => 0,
+            ]);
 
-//         $subcategory = null;
+            if (isset($product['variants']) && is_array($product['variants'])) {
+                saveVariants($alreadyExists, $product['variants']);
+            }
 
-//         if ($product['subcategory']) {
-//             $cat_id = $category->id;
-//             $subcategory = \App\Models\Category::firstOrCreate([
-//                 'name' => $product['subcategory'],
-//                 'parent_id' => $cat_id,
-//                 'slug' => str_slug($product['subcategory']),
-//             ]);
-//         }
+            continue; // Skip if product already exists
+        }
 
-//         $newProduct = \App\Models\Product::create([
-//             'name' => $product['name'],
-//             'slug' => $product['slug'],
-//             'sku' => $product['sku'],
-//             'image' => str_replace(['images/spinner-fashion', 'spinner-fashion'], '', $product['thumbnail']),
+        $category = \App\Models\Category::firstOrCreate([
+            'name' => $product['category'],
+            'slug' => str_slug($product['category']),
+        ]);
 
-//             'description' => $product['description'] ?? null,
-//             'short_description' => $product['short_description'] ?? null,
+        $subcategory = null;
 
-//             'price' => $product['price'] ?? 0,
-//             'cost_price' => $product['buying_price'] ?? 0,
+        if ($product['subcategory']) {
+            $cat_id = $category->id;
+            $subcategory = \App\Models\Category::firstOrCreate([
+                'name' => $product['subcategory'],
+                'parent_id' => $cat_id,
+                'slug' => str_slug($product['subcategory']),
+            ]);
+        }
 
-//             'category_id' => $category->id ?? null,
-//             'subcategory_id' => $subcategory->id ?? null,
+        $newProduct = \App\Models\Product::create([
+            'name' => $product['name'],
+            'slug' => $product['slug'],
+            'sku' => $product['sku'],
+            'image' => str_replace(['images/spinner-fashion', 'spinner-fashion'], '', $product['thumbnail']),
 
-//             'brand' => $product['brand'] ?? null,
-//             'stock_in' => $product['stock'],
-//             'stock_out' => 0,
-//         ]);
+            'description' => $product['description'] ?? null,
+            'short_description' => $product['short_description'] ?? null,
 
-//         foreach ($product['images'] as $imageUrl) {
-//             \App\Models\ProductImage::create([
-//                 'product_id' => $newProduct->id,
-//                 'image_path' => str_replace(['images/spinner-fashion', 'spinner-fashion'], '', $imageUrl),
-//             ]);
-//         }
+            'price' => $product['price'] ?? 0,
+            'cost_price' => $product['buying_price'] ?? 0,
 
-//         if (isset($product['variants']) && is_array($product['variants'])) {
-//             saveVariants($newProduct, $product['variants']);
-//         }
-//     }
+            'category_id' => $category->id ?? null,
+            'subcategory_id' => $subcategory->id ?? null,
 
-//     echo 'done';
-// });
+            'brand_name' => $brandName,
+            'brand_id' => $brandId,
+            'stock_in' => $product['stock'],
+            'stock_out' => 0,
+        ]);
 
-// function saveVariants($newProduct, $variants)
-// {
-//     foreach ($variants as $variant) {
+        foreach ($product['images'] as $imageUrl) {
+            \App\Models\ProductImage::create([
+                'product_id' => $newProduct->id,
+                'image_path' => str_replace(['images/spinner-fashion', 'spinner-fashion'], '', $imageUrl),
+            ]);
+        }
 
-//         $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->first();
+        if (isset($product['variants']) && is_array($product['variants'])) {
+            saveVariants($newProduct, $product['variants']);
+        }
+    }
 
-//         if ($alreadyExists) {
-//             $alreadyExists->update([
-//                 'stock_in' => $variant['stock'],
-//                 'stock_out' => 0,
-//                 'price' => $variant['price'] ?? 0,
-//                 'cost_price' => $variant['buying_price'] ?? 0,
-//             ]);
-//             continue; // Skip if variant already exists
-//         }
+    echo 'done';
+});
 
-//         $size = $color = null;
-//         if ($variant['size']) {
-//             $size = Size::firstOrCreate([
-//                 'name' => $variant['size'],
-//                 'code' => strtolower($variant['size']),
-//             ]);
-//         }
+function saveVariants($newProduct, $variants)
+{
+    foreach ($variants as $variant) {
 
-//         if ($variant['color']) {
-//             $color = \App\Models\Color::firstOrCreate(['name' => $variant['color']]);
-//         }
+        $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->first();
 
-//         try {
-//             $newProduct->variants()->create([
-//                 'sku' => $variant['sku'],
-//                 'size_id' => $size->id ?? null,
-//                 'color_id' => $color->id ?? null,
-//                 'stock_in' => $variant['stock'],
-//                 'price' => $variant['price'] ?? 0,
-//                 'cost_price' => $variant['buying_price'] ?? 0,
-//             ]);
-//         } catch (\Exception $e) {
-//             dump('Error creating product variant: ' . $e->getMessage());
-//         }
-//     }
-// }
+        if ($alreadyExists) {
+            $alreadyExists->update([
+                'stock_in' => $variant['stock'],
+                'stock_out' => 0,
+                'price' => $variant['price'] ?? 0,
+                'cost_price' => $variant['buying_price'] ?? 0,
+            ]);
+            continue; // Skip if variant already exists
+        }
+
+        $size = $color = null;
+        if ($variant['size']) {
+            $size = Size::firstOrCreate([
+                'name' => $variant['size'],
+                'code' => strtolower($variant['size']),
+            ]);
+        }
+
+        if ($variant['color']) {
+            $color = \App\Models\Color::firstOrCreate(['name' => $variant['color']]);
+        }
+
+        try {
+            $newProduct->variants()->create([
+                'sku' => $variant['sku'],
+                'size_id' => $size->id ?? null,
+                'color_id' => $color->id ?? null,
+                'stock_in' => $variant['stock'],
+                'price' => $variant['price'] ?? 0,
+                'cost_price' => $variant['buying_price'] ?? 0,
+            ]);
+        } catch (\Exception $e) {
+            dump('Error creating product variant: ' . $e->getMessage());
+        }
+    }
+}
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
