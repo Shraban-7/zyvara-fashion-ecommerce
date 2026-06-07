@@ -4,9 +4,9 @@
     <div id="authModalBackdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
 
     {{-- Modal Container --}}
-    <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto">
         <div id="authModalContent"
-            class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md transform transition-all scale-95 opacity-0">
+            class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md transform transition-all scale-95 opacity-0 max-h-[90vh] overflow-y-auto my-4">
 
             {{-- Close Button --}}
             <button onclick="closeAuthModal()"
