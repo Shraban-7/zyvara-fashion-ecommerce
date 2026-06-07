@@ -82,7 +82,7 @@ Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'inde
 //         }
 
 //         $newProduct = \App\Models\Product::create([
-//             'name' => $product['name'],
+//             'name' => ucwords($product['name']),
 //             'slug' => $product['slug'],
 //             'sku' => $product['sku'],
 //             'image' => str_replace(['images/spinner-fashion', 'spinner-fashion'], '', $product['thumbnail']),
