@@ -198,7 +198,7 @@
 
                                         <td class="px-6 py-4 text-right">
                                             <div class="flex justify-end gap-2">
-                                                <a href="{{ route('admin.pos.sales.show',  $order->id) }}" class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
+                                                <a href="{{ route('admin.pos.sales.show',  $order->order_number) }}" class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 </a>

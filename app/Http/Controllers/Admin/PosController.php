@@ -14,12 +14,14 @@ use App\Models\Customer;
 use App\Models\Expense;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrderStatusHistory;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\SaleReturn;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PosController extends Controller
@@ -222,6 +224,13 @@ class PosController extends Controller
                     }
                 }
             }
+
+            OrderStatusHistory::create([
+                'order_id' => $order->id,
+                'status' => OrderStatus::DELIVERED,
+                'comment' => "Order Delivered",
+                'updated_by' => Auth::id(),
+            ]);
 
             DB::commit();
 
@@ -1019,25 +1028,25 @@ class PosController extends Controller
         return view('admin.pos.sales', compact('orders', 'statusCounts'));
     }
 
-    public function saleShow(Request $request, $id)
+    public function saleShow(Request $request, $order_number)
     {
         $order = Order::with([
             'user',
             'items.product',
             'coupon',
             'statusHistories'
-        ])->findOrFail($id);
+        ])->where('order_number', $order_number)->first();
 
         $source = $request->source;
 
-        $refunds =SaleReturn::where('sale_id', $order->id)
+        $refunds = SaleReturn::where('sale_id', $order->id)
             ->selectRaw('refund_method, SUM(refund_amount) as total')
             ->groupBy('refund_method')
             ->pluck('total', 'refund_method');
 
         $totalRefund = $refunds->sum();
 
-        return view('admin.pos.sale_show', compact('order', 'source','refunds','totalRefund'));
+        return view('admin.pos.sale_show', compact('order', 'source', 'refunds', 'totalRefund'));
     }
 
     public function saleDelete(Request $request, $id)

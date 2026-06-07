@@ -72,14 +72,14 @@ class OrderController extends Controller
     /**
      * Display the specified order.
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $order_number)
     {
         $order = Order::with([
             'user',
             'items.product',
             'coupon',
             'statusHistories'
-        ])->findOrFail($id);
+        ])->where('order_number',$order_number)->first();
 
         $source = $request->source;
 
