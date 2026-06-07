@@ -17,19 +17,19 @@ use App\Models\Size;
 
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
-Route::get('/image-path', function () {
-    $products = \App\Models\Product::select('id', 'image')->get();
-    foreach ($products as $product) {
-        $product->image = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $product->image);
-        $product->save();
-    }
+// Route::get('/image-path', function () {
+//     $products = \App\Models\Product::select('id', 'image')->get();
+//     foreach ($products as $product) {
+//         $product->image = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $product->image);
+//         $product->save();
+//     }
 
-    $productImages = \App\Models\ProductImage::select('id', 'image_path')->get();
-    foreach ($productImages as $productImage) {
-        $productImage->image_path = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $productImage->image_path);
-        $productImage->save();
-    }
-});
+//     $productImages = \App\Models\ProductImage::select('id', 'image_path')->get();
+//     foreach ($productImages as $productImage) {
+//         $productImage->image_path = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $productImage->image_path);
+//         $productImage->save();
+//     }
+// });
 
 // Route::get('save-products', function () {
 //     ini_set('max_execution_time', 3600);
@@ -37,6 +37,17 @@ Route::get('/image-path', function () {
 //     $products = json_decode($json, true);
 
 //     foreach ($products as $product) {
+//         $brandId = $brandName = null;
+
+//         if ($product['brand'] != null) {
+//             $brandName = $product['brand'];
+//             $brand = \App\Models\Brand::firstOrCreate([
+//                 'name' => $brandName,
+//                 'slug' => str_slug($brandName),
+//             ]);
+
+//             $brandId = $brand->id;
+//         }
 //         $alreadyExists = \App\Models\Product::where('name', $product['name'])->first();
 //         if ($alreadyExists) {
 //             $alreadyExists->update([
@@ -50,7 +61,7 @@ Route::get('/image-path', function () {
 //             if (isset($product['variants']) && is_array($product['variants'])) {
 //                 saveVariants($alreadyExists, $product['variants']);
 //             }
-            
+
 //             continue; // Skip if product already exists
 //         }
 
@@ -85,7 +96,8 @@ Route::get('/image-path', function () {
 //             'category_id' => $category->id ?? null,
 //             'subcategory_id' => $subcategory->id ?? null,
 
-//             'brand' => $product['brand'] ?? null,
+//             'brand_name' => $brandName,
+//             'brand_id' => $brandId,
 //             'stock_in' => $product['stock'],
 //             'stock_out' => 0,
 //         ]);
