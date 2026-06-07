@@ -1030,7 +1030,14 @@ class PosController extends Controller
 
         $source = $request->source;
 
-        return view('admin.pos.sale_show', compact('order', 'source'));
+        $refunds =SaleReturn::where('sale_id', $order->id)
+            ->selectRaw('refund_method, SUM(refund_amount) as total')
+            ->groupBy('refund_method')
+            ->pluck('total', 'refund_method');
+
+        $totalRefund = $refunds->sum();
+
+        return view('admin.pos.sale_show', compact('order', 'source','refunds','totalRefund'));
     }
 
     public function saleDelete(Request $request, $id)

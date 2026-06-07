@@ -112,18 +112,20 @@
                     <div class="space-y-4">
                         @if($order->items && count($order->items) > 0)
                             @foreach($order->items as $item)
-                                <div class="flex gap-3 p-3 bg-gray-50 rounded-lg">
+                                <div class="flex gap-3 p-3 bg-gray-50 rounded-lg relative">
+                                    <!-- Refund Badge -->
+                                    @if(!empty($item->return_item_id))
+                                        <span
+                                            class="absolute top-2 right-2 text-[10px] font-semibold px-2 py-1 rounded-full bg-red-100 text-red-600 border border-red-200">
+                                            Returned
+                                        </span>
+                                    @endif
 
                                     <!-- Product Image -->
-                                    <div class="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
-                                        @if($item->product && $item->product->thumbnail)
-                                            <img src="{{ $item->product->thumbnail }}" alt="{{ $item->product_name }}"
-                                                class="w-full h-full object-cover">
-                                        @else
-                                            <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                                <i class="fas fa-image"></i>
-                                            </div>
-                                        @endif
+                                    <div class="w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-white">
+                                        <img src="{{ $item->product_image }}" 
+                                            alt="{{ $item->product_name }}" 
+                                            class="w-full h-full object-cover">
                                     </div>
 
                                     <!-- Product Details -->
@@ -133,26 +135,22 @@
                                             {{ $item->product_name }}
                                         </h4>
 
-                                        @if($item->size || $item->color)
-                                            <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-600 mt-1">
-                                                @if($item->size)
-                                                    <span>Size: {{ $item->size }}</span>
-                                                @endif
-
-                                                @if($item->color)
-                                                    <span>Color: {{ $item->color }}</span>
-                                                @endif
-                                            </div>
+                                        @if($item->size_name || $item->color_name)
+                                            <p class="text-sm text-gray-500 mb-2">
+                                                @if($item->size_name)Size: {{ $item->size_name }}@endif
+                                                @if($item->size_name && $item->color_name) | @endif
+                                                @if($item->color_name)Color: {{ $item->color_name }}@endif
+                                            </p>
                                         @endif
 
                                         <!-- Qty & Price -->
                                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mt-2">
-                                            <span class="text-xs text-gray-600">
-                                                Qty: {{ $item->quantity }}
+                                            <span class="text-sm text-gray-600">
+                                                Qty: {{ $item->quantity }} × {{ money($item->unit_price) }}
                                             </span>
 
                                             <span class="text-sm font-bold text-primary">
-                                                ৳{{ number_format($item->subtotal, 2) }}
+                                                {{ money($item->total) }}
                                             </span>
                                         </div>
 
@@ -220,26 +218,65 @@
                         <!-- Price Breakdown -->
                         <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
                             <h3 class="text-sm font-bold text-gray-900 mb-4">Order Summary</h3>
+
                             <div class="space-y-2 text-sm">
+
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Subtotal</span>
                                     <span class="font-medium text-gray-900">{{ money($order->subtotal) }}</span>
                                 </div>
+
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Shipping</span>
                                     <span class="font-medium text-gray-900">{{ money($order->shipping_cost ?? 0) }}</span>
                                 </div>
+
                                 @if($order->discount_amount && $order->discount_amount > 0)
                                     <div class="flex justify-between text-green-600">
                                         <span>Discount</span>
                                         <span class="font-medium">{{ money($order->discount_amount) }}</span>
                                     </div>
                                 @endif
+
+
+                                {{-- Refund Summary --}}
+                                @if($totalRefund > 0)
+                                    <div class="flex justify-between text-red-600">
+                                        <span>Total Refund</span>
+                                        <span class="font-medium">-{{ money($totalRefund) }}</span>
+                                    </div>
+
+                                    {{-- Method-wise breakdown --}}
+                                    <div class="pt-1 space-y-1">
+                                        @foreach($refunds as $method => $amount)
+                                            <div class="flex justify-between text-xs text-gray-500 pl-2">
+                                                <span class="capitalize">{{ $method }}</span>
+                                                <span>-{{ money($amount) }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+
                                 <div class="h-px bg-gray-300 my-3"></div>
+
+
                                 <div class="flex justify-between text-lg">
                                     <span class="font-bold text-gray-900">Total</span>
                                     <span class="font-bold text-primary">{{ money($order->total) }}</span>
                                 </div>
+
+
+                                {{-- Net Paid --}}
+                                @if($totalRefund > 0)
+                                    <div class="flex justify-between text-sm text-gray-700 mt-2">
+                                        <span>Net Paid</span>
+                                        <span class="font-semibold">
+                                            {{ money($order->total - $totalRefund) }}
+                                        </span>
+                                    </div>
+                                @endif
+
                             </div>
                         </div>
                     </div>
@@ -347,7 +384,7 @@
                     <div class="flex items-center gap-1.5" id="starGroup">
                         @for ($i = 1; $i <= 5; $i++)
                             <span data-val="{{ $i }}" class="star text-4xl cursor-pointer select-none text-gray-200
-                                      transition-transform hover:scale-110">☆</span>
+                                              transition-transform hover:scale-110">☆</span>
                         @endfor
                         <span id="ratingLabel" class="text-xs text-gray-400 ml-2"></span>
                     </div>
@@ -357,8 +394,8 @@
                 <div class="mb-5">
                     <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Your review</label>
                     <textarea name="comment" rows="4" placeholder="Share your experience with this product…" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none
-                  focus:ring-2 focus:ring-gray-300 resize-none text-gray-800 placeholder-gray-300">
-                </textarea>
+                      focus:ring-2 focus:ring-gray-300 resize-none text-gray-800 placeholder-gray-300">
+                    </textarea>
                 </div>
 
                 <button type="submit"

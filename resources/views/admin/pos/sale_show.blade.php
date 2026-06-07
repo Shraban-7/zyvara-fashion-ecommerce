@@ -128,25 +128,70 @@
 
             {{-- Order Summary --}}
             <div class="mt-6 pt-6 border-t border-gray-200 space-y-3">
+
                 <div class="flex justify-between text-sm">
                     <span class="text-gray-600">Subtotal</span>
                     <span class="font-medium text-gray-900">{{ money($order->subtotal) }}</span>
                 </div>
+
                 <div class="flex justify-between text-sm">
                     <span class="text-gray-600">Shipping Cost</span>
                     <span class="font-medium text-gray-900">{{ money($order->shipping_cost) }}</span>
                 </div>
+
                 @if($order->discount_amount > 0)
-                <div class="flex justify-between text-sm text-green-600">
-                    <span>Discount @if($order->coupon)({{ $order->coupon->code }})@endif</span>
-                    <span class="font-medium">-{{ money($order->discount_amount) }}</span>
-                </div>
+                    <div class="flex justify-between text-sm text-green-600">
+                        <span>
+                            Discount 
+                            @if($order->coupon)
+                                ({{ $order->coupon->code }})
+                            @endif
+                        </span>
+                        <span class="font-medium">-{{ money($order->discount_amount) }}</span>
+                    </div>
                 @endif
+
+
+                {{-- Refund Section --}}
+                @if($totalRefund > 0)
+                    <div class="flex justify-between text-sm text-red-600">
+                        <span>Total Refund</span>
+                        <span class="font-medium">-{{ money($totalRefund) }}</span>
+                    </div>
+
+                    {{-- Method-wise breakdown --}}
+                    <div class="space-y-1 pl-2">
+                        @foreach($refunds as $method => $amount)
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span class="capitalize">{{ $method }}</span>
+                                <span>-{{ money($amount) }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+
                 <div class="h-px bg-gray-200"></div>
+
+
                 <div class="flex justify-between text-lg">
                     <span class="font-bold text-gray-900">Total</span>
-                    <span class="text-2xl font-bold text-blue-600">{{ money($order->total) }}</span>
+                    <span class="text-2xl font-bold text-blue-600">
+                        {{ money($order->total) }}
+                    </span>
                 </div>
+
+
+                {{-- Net Paid --}}
+                @if($totalRefund > 0)
+                    <div class="flex justify-between text-sm text-gray-700 pt-2">
+                        <span>Net Paid</span>
+                        <span class="font-semibold">
+                            {{ money($order->total - $totalRefund) }}
+                        </span>
+                    </div>
+                @endif
+
             </div>
         </div>
 
@@ -475,9 +520,6 @@
             <!-- ENUM PAYMENT METHOD -->
             <select id="refundMethod"
                 class="w-full border rounded px-3 py-2 text-sm">
-
-                <option value="">Select Refund Method</option>
-
                 <option value="cash">Cash</option>
                 <option value="bkash">bKash</option>
                 <option value="bank">Bank</option>

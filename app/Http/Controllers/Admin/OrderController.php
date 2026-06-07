@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
+use App\Models\SaleReturn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -82,7 +83,14 @@ class OrderController extends Controller
 
         $source = $request->source;
 
-        return view('admin.orders.show', compact('order', 'source'));
+        $refunds =SaleReturn::where('sale_id', $order->id)
+            ->selectRaw('refund_method, SUM(refund_amount) as total')
+            ->groupBy('refund_method')
+            ->pluck('total', 'refund_method');
+
+        $totalRefund = $refunds->sum();
+
+        return view('admin.orders.show', compact('order', 'source','refunds','totalRefund'));
     }
 
     /**
