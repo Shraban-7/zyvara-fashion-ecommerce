@@ -481,4 +481,40 @@ class ProductController extends Controller
             })
         ]);
     }
+
+    public function updateCategory()
+    {
+        $products = Product::whereNull('category_id')
+            ->select(
+                'id',
+                'name',
+                'image',
+                'category_id',
+                'subcategory_id',
+                'sub_subcategory_id'
+            )
+            ->latest()
+            ->get();
+
+        $categories = Category::whereNull('parent_id')
+            ->with('children.children')
+            ->get();
+
+        return view('products.update_category', compact('products', 'categories'));
+    }
+
+    public function setCategory($product_id, Request $request)
+    {
+        $categoryId = $request->input('category_id');
+        $subcategory_id = $request->input('subcategory_id');
+        $sub_subcategory_id = $request->input('sub_subcategory_id');
+
+        $product = Product::findOrFail($product_id);
+        $product->category_id = $categoryId;
+        $product->subcategory_id = $subcategory_id;
+        $product->sub_subcategory_id = $sub_subcategory_id;
+        $product->save();
+
+        return redirect()->back()->with('success', 'Product category updated successfully.');
+    }
 }
