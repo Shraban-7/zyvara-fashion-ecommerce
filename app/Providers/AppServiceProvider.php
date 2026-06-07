@@ -47,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 return Category::with(['children' => function ($query) {
                     $query->with('children')->active()->ordered();
                 }])
+                    ->where('show_in_menu', true)
                     ->active()
                     ->parents()
                     ->ordered()
