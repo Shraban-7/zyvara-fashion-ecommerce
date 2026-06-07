@@ -59,13 +59,13 @@
                                     <span class="font-medium">Wishlist</span>
                                 </a>
                             </li> --}}
-                            <li>
+                            {{-- <li>
                                 <a href="{{ route('customer.addresses') }}"
                                     class="flex items-center gap-3 px-4 py-3 hover:bg-primary-50 transition {{ request()->routeIs('customer.addresses') ? 'bg-primary-50 text-primary border-r-4 border-primary' : 'text-gray-700' }}">
                                     <i class="fas fa-map-marker-alt w-5"></i>
                                     <span class="font-medium">Addresses</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li>
                                 <a href="{{ route('customer.profile') }}"
                                     class="flex items-center gap-3 px-4 py-3 hover:bg-primary-50 transition {{ request()->routeIs('customer.profile') ? 'bg-primary-50 text-primary border-r-4 border-primary' : 'text-gray-700' }}">

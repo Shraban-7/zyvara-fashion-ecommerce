@@ -198,7 +198,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right">
                         <div class="flex items-center justify-end gap-2">
-                            <a href="{{ route('admin.orders.show', $order->id) }}" class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg transition" title="View Details">
+                            <a href="{{ route('admin.orders.show', $order->order_number) }}" class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg transition" title="View Details">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </div>
