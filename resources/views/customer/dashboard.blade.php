@@ -3,7 +3,7 @@
 
 @section('dashboard-content')
     <!-- Dashboard Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
         <!-- Total Orders -->
         <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
@@ -56,7 +56,7 @@
         </div> --}}
 
         <!-- Saved Addresses -->
-        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+        {{-- <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-gray-500 text-sm font-medium">Saved Addresses</p>
@@ -70,7 +70,7 @@
                 class="text-green-600 text-sm font-medium mt-4 inline-flex items-center gap-1 hover:gap-2 transition-all">
                 Manage addresses <i class="fas fa-arrow-right text-xs"></i>
             </a>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Recent Orders -->

@@ -155,11 +155,11 @@
                                                 <i class="fas fa-box text-gray-400 w-5"></i>
                                                 <span class="text-sm text-gray-700">Orders</span>
                                             </a>
-                                            <a href="{{ route('customer.addresses') }}"
+                                            {{-- <a href="{{ route('customer.addresses') }}"
                                                 class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
                                                 <i class="fas fa-map-marker-alt text-gray-400 w-5"></i>
                                                 <span class="text-sm text-gray-700">Addresses</span>
-                                            </a>
+                                            </a> --}}
                                             <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition">
                                                 <i class="fas fa-cog text-gray-400 w-5"></i>
                                                 <span class="text-sm text-gray-700">Settings</span>
