@@ -102,24 +102,30 @@ class ProductController extends Controller
 
     private function getCategories()
     {
-        $categories = Category::category()->active()->orderBy('name')->with('children')->get();
+        $categories = Category::category()
+            ->active()
+            ->orderBy('name')
+            ->with('children.children')
+            ->get();
 
-        $data = [];
-
-        foreach ($categories as $category) {
-            $data[] = [
+        return $categories->map(function ($category) {
+            return [
                 'id' => $category->id,
                 'name' => $category->name,
                 'children' => $category->children->map(function ($child) {
                     return [
                         'id' => $child->id,
                         'name' => $child->name,
+                        'children' => $child->children->map(function ($subChild) {
+                            return [
+                                'id' => $subChild->id,
+                                'name' => $subChild->name,
+                            ];
+                        })->values(),
                     ];
-                }),
+                })->values(),
             ];
-        }
-
-        return $data;
+        })->values();
     }
 
 
@@ -156,6 +162,7 @@ class ProductController extends Controller
             'cost_price' => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:categories,id',
+            'sub_subcategory_id' => 'nullable|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
             'material' => 'nullable|string|max:255',
             'fit_type' => 'nullable|string|in:' . implode(',', FitType::values()),
@@ -313,6 +320,7 @@ class ProductController extends Controller
             'cost_price' => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:categories,id',
+            'sub_subcategory_id' => 'nullable|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
             'material' => 'nullable|string|max:255',
             'fit_type' => 'nullable|string|in:' . implode(',', FitType::values()),

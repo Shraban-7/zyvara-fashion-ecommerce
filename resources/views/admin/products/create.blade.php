@@ -232,6 +232,17 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+                <div class="mb-5">
+                    <label for="sub_subcategory_id" class="block text-sm font-medium text-gray-700 mb-2">Sub Subcategory</label>
+                    <select name="sub_subcategory_id" id="sub_subcategory_id"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('subcategory_id') border-red-500 @enderror">
+                        <option value="">Select Sub Subcategory</option>
+                       
+                    </select>
+                    @error('sub_subcategory_id')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 {{-- Product Status Checkboxes --}}
                 <div class="space-y-3">
@@ -336,31 +347,91 @@
 
 @push('scripts')
 <script>
-    const CATEGORIES = @json($categories);
+     const CATEGORIES = @json($categories);
 
-    const subcatId = "{{ old('subcategory_id', 'null') }}";
+    const oldSubcategoryId = "{{ old('subcategory_id') }}";
+    const oldSubSubcategoryId = "{{ old('sub_subcategory_id') }}";
 
-    document.getElementById('category_id').addEventListener('change', function() {
+    document.getElementById('category_id').addEventListener('change', function () {
         loadSubcategories(this.value);
+    });
+
+    document.getElementById('subcategory_id').addEventListener('change', function () {
+        const categoryId = document.getElementById('category_id').value;
+        loadSubSubcategories(categoryId, this.value);
     });
 
     function loadSubcategories(categoryId) {
         const subcategorySelect = document.getElementById('subcategory_id');
-        subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+        const subSubcategorySelect = document.getElementById('sub_subcategory_id');
+
+        subcategorySelect.innerHTML =
+            '<option value="">Select Subcategory</option>';
+
+        subSubcategorySelect.innerHTML =
+            '<option value="">Select Sub Subcategory</option>';
 
         const category = CATEGORIES.find(cat => cat.id == categoryId);
-        if (category && category.children) {
+
+        if (category?.children) {
             category.children.forEach(subcat => {
                 const option = document.createElement('option');
                 option.value = subcat.id;
                 option.textContent = subcat.name;
-                if (subcat.id == subcatId) {
+
+                if (subcat.id == oldSubcategoryId) {
                     option.selected = true;
                 }
+
                 subcategorySelect.appendChild(option);
+            });
+
+            // Load sub-subcategories for old value
+            if (oldSubcategoryId) {
+                loadSubSubcategories(categoryId, oldSubcategoryId);
+            }
+        }
+    }
+
+    function loadSubSubcategories(categoryId, subcategoryId) {
+        const subSubcategorySelect = document.getElementById('sub_subcategory_id');
+
+        subSubcategorySelect.innerHTML =
+            '<option value="">Select Sub Subcategory</option>';
+
+        const category = CATEGORIES.find(cat => cat.id == categoryId);
+
+        if (!category?.children) return;
+
+        const subcategory = category.children.find(
+            subcat => Number(subcat.id) === Number(subcategoryId)
+        );        
+
+        if (subcategory?.children) {
+            console.log("have children");
+            
+            subcategory.children.forEach(subSubcat => {
+                const option = document.createElement('option');
+                option.value = subSubcat.id;
+                option.textContent = subSubcat.name;
+
+                if (subSubcat.id == oldSubSubcategoryId) {
+                    option.selected = true;
+                }
+
+                subSubcategorySelect.appendChild(option);
             });
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const categoryId = document.getElementById('category_id').value;
+
+        if (categoryId) {
+            loadSubcategories(categoryId);
+        }
+    });
+
     
     // image preview functionality
     const imgInput = document.getElementById('image');
@@ -569,8 +640,7 @@
 
         const previewPrice = document.getElementById('preview-price');
         const previewComparePrice = document.getElementById('preview-compare-price');
-        const previewSaleBadge = document.getElementById('preview-sale-badge');
-        const previewDiscount = document.getElementById('preview-discount');
+
 
         function updatePricePreview() {
 
@@ -584,20 +654,13 @@
                 previewComparePrice.textContent = `৳${comparePrice.toFixed(2)}`;
 
                 previewComparePrice.classList.remove('hidden');
-                previewSaleBadge.classList.remove('hidden');
-                previewDiscount.classList.remove('hidden');
 
                 const discount = Math.round(
                     ((comparePrice - price) / comparePrice) * 100
                 );
 
-                previewDiscount.textContent = `Save ${discount}%`;
-
             } else {
-
                 previewComparePrice.classList.add('hidden');
-                previewSaleBadge.classList.add('hidden');
-                previewDiscount.classList.add('hidden');
             }
         }
 

@@ -401,6 +401,15 @@
                     </select>
                 </div>
 
+                <div class="mb-5">
+                    <label for="sub_subcategory_id" class="block text-sm font-medium text-gray-700 mb-2">Sub Subcategory</label>
+                    <select name="sub_subcategory_id" id="sub_subcategory_id"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('subcategory_id') border-red-500 @enderror">
+                        <option value="">Select Sub Subcategory</option>
+                       
+                    </select>
+                </div>
+
                 {{-- Product Status Checkboxes --}}
                 <div class="space-y-3">
                     <label class="flex items-center">
@@ -529,34 +538,75 @@
     const CATEGORIES = @json($categories);
 
     const catId = "{{ old('category_id', $product->category_id) }}";
-    const subcatId = "{{ old('subcategory_id', $product->subcategory_id ?? 'null') }}";
+    const subcatId = "{{ old('subcategory_id', $product->subcategory_id ?? '') }}";
+    const subSubcatId = "{{ old('sub_subcategory_id', $product->sub_subcategory_id ?? '') }}";
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         if (catId) {
-            loadSubcategories(catId);
+            loadSubcategories(catId, true);
         }
     });
 
-    document.getElementById('category_id').addEventListener('change', function() {
-        loadSubcategories(this.value);
+    document.getElementById('category_id').addEventListener('change', function () {
+        loadSubcategories(this.value, false);
     });
 
-    function loadSubcategories(categoryId) {
+    document.getElementById('subcategory_id').addEventListener('change', function () {
+        loadSubSubcategories(catId, this.value, false);
+    });
+
+    function loadSubcategories(categoryId, isInit = false) {
         const subcategorySelect = document.getElementById('subcategory_id');
+        const subSubcategorySelect = document.getElementById('sub_subcategory_id');
+
         subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+        subSubcategorySelect.innerHTML = '<option value="">Select Sub Subcategory</option>';
 
         const category = CATEGORIES.find(cat => cat.id == categoryId);
-        if (category && category.children) {
-            category.children.forEach(subcat => {
-                const option = document.createElement('option');
-                option.value = subcat.id;
-                option.textContent = subcat.name;
-                if (subcat.id == subcatId) {
-                    option.selected = true;
-                }
-                subcategorySelect.appendChild(option);
-            });
+        if (!category?.children) return;
+
+        category.children.forEach(subcat => {
+            const option = document.createElement('option');
+            option.value = subcat.id;
+            option.textContent = subcat.name;
+
+            if (isInit && subcat.id == subcatId) {
+                option.selected = true;
+            }
+
+            subcategorySelect.appendChild(option);
+        });
+
+        if (isInit && subcatId) {
+            loadSubSubcategories(categoryId, subcatId, true);
         }
+    }
+
+    function loadSubSubcategories(categoryId, subcategoryId, isInit = false) {
+        const subSubcategorySelect = document.getElementById('sub_subcategory_id');
+
+        subSubcategorySelect.innerHTML = '<option value="">Select Sub Subcategory</option>';
+
+        const category = CATEGORIES.find(cat => cat.id == categoryId);
+        if (!category?.children) return;
+
+        const subcategory = category.children.find(
+            sub => sub.id == subcategoryId
+        );
+
+        if (!subcategory?.children) return;
+
+        subcategory.children.forEach(subSubcat => {
+            const option = document.createElement('option');
+            option.value = subSubcat.id;
+            option.textContent = subSubcat.name;
+
+            if (isInit && subSubcat.id == subSubcatId) {
+                option.selected = true;
+            }
+
+            subSubcategorySelect.appendChild(option);
+        });
     }
 
 
