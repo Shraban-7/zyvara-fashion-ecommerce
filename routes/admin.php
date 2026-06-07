@@ -40,6 +40,9 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
         Route::get('print-barcode', [ProductController::class, 'printBarcode'])->name('printBarcode');
         Route::get('print-labels', [ProductController::class, 'printBarcodeLabels'])->name('printBarcodeLabels');
+
+        Route::get('/update-category', [ProductController::class, 'updateCategory'])->name('updateCategory');
+        Route::post('/update-category/{product_id}', [ProductController::class, 'setCategory'])->name('setCategory');
     });
 
     Route::prefix('orders')->as('orders.')->group(function () {
