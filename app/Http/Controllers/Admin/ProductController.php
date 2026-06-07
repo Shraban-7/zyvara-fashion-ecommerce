@@ -191,6 +191,7 @@ class ProductController extends Controller
         $imageService = new ImageOptimizerService;
 
         try {
+            $validated['name'] = strtoupper($request->name);
             $validated['slug'] = Str::slug($validated['name']);
 
             $originalSlug = $validated['slug'];
@@ -357,6 +358,7 @@ class ProductController extends Controller
         DB::beginTransaction();
 
         try {
+            $validated['name'] = strtoupper($request->name);
             if ($validated['name'] !== $product->name) {
                 $validated['slug'] = Str::slug($validated['name']);
 

@@ -16,18 +16,19 @@
 
     <div class="space-y-6">
         @foreach($categories as $category)
-        <div class="border rounded-lg bg-white">
+        <div class="border rounded-lg bg-white shadow-sm">
 
             {{-- Parent Category --}}
             <div class="flex justify-between items-center bg-gray-100 px-4 py-3 rounded-t-lg">
 
                 <div class="flex items-center gap-3">
                     @if($category->image)
-                    <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-12 h-12 object-cover rounded-lg border border-gray-300">
+                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
+                            class="w-12 h-12 object-cover rounded-lg border border-gray-300">
                     @else
-                    <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <i class="{{ $category->icon ?? 'fas fa-image' }} text-gray-400"></i>
-                    </div>
+                        <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                            <i class="{{ $category->icon ?? 'fas fa-image' }} text-gray-400"></i>
+                        </div>
                     @endif
                     <h3 class="font-semibold text-gray-800">
                         {{ $category->name }}
@@ -36,67 +37,125 @@
 
                 <div class="space-x-3">
                     <button type="button"
-                        onclick="openEditModal({{ $category->id }}, '{{ addslashes($category->name) }}', {{ $category->parent_id ?? 'null' }}, '{{ $category->icon }}', {{ $category->sort_order }}, {{ $category->is_active ? 'true' : 'false' }}, {{ $category->is_featured ? 'true' : 'false' }}, '{{ $category->image }}')"
+                        onclick="openEditModal(
+                            {{ $category->id }},
+                            '{{ addslashes($category->name) }}',
+                            {{ $category->parent_id ?? 'null' }},
+                            '{{ $category->icon }}',
+                            {{ $category->sort_order }},
+                            {{ $category->is_active ? 'true' : 'false' }},
+                            {{ $category->is_featured ? 'true' : 'false' }},
+                            '{{ $category->image }}'
+                        )"
                         class="text-blue-500 text-sm hover:underline">
                         Edit
                     </button>
 
-                    <form action="{{ route('admin.categories.delete', $category->id) }}"
-                        method="POST"
-                        class="inline"
+                    <form action="{{ route('admin.categories.delete', $category->id) }}" method="POST" class="inline"
                         onsubmit="return confirm('Are you sure you want to delete this category?');">
                         @csrf
                         @method('DELETE')
-                        <button class="text-red-500 text-sm hover:underline">
-                            Delete
-                        </button>
+                        <button class="text-red-500 text-sm hover:underline">Delete</button>
                     </form>
                 </div>
             </div>
 
-            {{-- Subcategories --}}
+            {{-- Subcategories (Level 2) --}}
             <div class="divide-y">
-                @forelse($category->children as $sub)
-                <div class="flex justify-between items-center px-6 py-3">
+                @foreach($category->children as $sub)
 
-                    <div class="flex items-center gap-3">
-                        @if($sub->image)
-                        <img src="{{ asset('storage/' . $sub->image) }}" alt="{{ $sub->name }}" class="w-10 h-10 object-cover rounded-lg border border-gray-300">
-                        @else
-                        <div class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
-                            <i class="{{ $sub->icon ?? 'fas fa-image' }} text-gray-400 text-sm"></i>
+                {{-- Level 2 Row --}}
+                <div>
+                    <div class="flex justify-between items-center px-6 py-3 bg-white">
+
+                        <div class="flex items-center gap-3">
+                            <span class="text-gray-300 text-xs ml-1">└─</span>
+                            @if($sub->image)
+                                <img src="{{ asset('storage/' . $sub->image) }}" alt="{{ $sub->name }}"
+                                    class="w-10 h-10 object-cover rounded-lg border border-gray-300">
+                            @else
+                                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <i class="{{ $sub->icon ?? 'fas fa-image' }} text-gray-400 text-sm"></i>
+                                </div>
+                            @endif
+                            <span class="text-gray-700 font-medium">{{ $sub->name }}</span>
                         </div>
-                        @endif
-                        <span class="text-gray-700">
-                            {{ $sub->name }}
-                        </span>
-                    </div>
 
-                    <div class="space-x-3">
-                        <button type="button"
-                            onclick="openEditModal({{ $sub->id }}, '{{ addslashes($sub->name) }}', {{ $sub->parent_id ?? 'null' }}, '{{ $sub->icon }}', {{ $sub->sort_order }}, {{ $sub->is_active ? 'true' : 'false' }}, {{ $sub->is_featured ? 'true' : 'false' }}, '{{ $sub->image }}')"
-                            class="text-blue-500 text-sm hover:underline">
-                            Edit
-                        </button>
-
-                        <form action="{{ route('admin.categories.delete', $sub->id) }}"
-                            method="POST"
-                            class="inline"
-                            onsubmit="return confirm('Are you sure you want to delete this subcategory?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="text-red-500 text-sm hover:underline">
-                                Delete
+                        <div class="space-x-3">
+                            <button type="button"
+                                onclick="openEditModal(
+                                    {{ $sub->id }},
+                                    '{{ addslashes($sub->name) }}',
+                                    {{ $sub->parent_id ?? 'null' }},
+                                    '{{ $sub->icon }}',
+                                    {{ $sub->sort_order }},
+                                    {{ $sub->is_active ? 'true' : 'false' }},
+                                    {{ $sub->is_featured ? 'true' : 'false' }},
+                                    '{{ $sub->image }}'
+                                )"
+                                class="text-blue-500 text-sm hover:underline">
+                                Edit
                             </button>
-                        </form>
 
+                            <form action="{{ route('admin.categories.delete', $sub->id) }}" method="POST" class="inline"
+                                onsubmit="return confirm('Are you sure you want to delete this subcategory?');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-red-500 text-sm hover:underline">Delete</button>
+                            </form>
+                        </div>
                     </div>
+
+                    {{-- Level 3 Children --}}
+                    @if($sub->children->count())
+                    <div class="divide-y border-t border-dashed border-gray-100">
+                        @foreach($sub->children as $sub_child)
+                        <div class="flex justify-between items-center px-12 py-2.5 bg-gray-50">
+
+                            <div class="flex items-center gap-3">
+                                <span class="text-gray-300 text-xs ml-1">└─</span>
+                                @if($sub_child->image)
+                                    <img src="{{ asset('storage/' . $sub_child->image) }}" alt="{{ $sub_child->name }}"
+                                        class="w-8 h-8 object-cover rounded-lg border border-gray-200">
+                                @else
+                                    <div class="w-8 h-8 bg-gray-200 rounded-lg flex items-center justify-center">
+                                        <i class="{{ $sub_child->icon ?? 'fas fa-image' }} text-gray-400 text-xs"></i>
+                                    </div>
+                                @endif
+                                <span class="text-gray-600 text-sm">{{ $sub_child->name }}</span>
+                            </div>
+
+                            <div class="space-x-3">
+                                <button type="button"
+                                    onclick="openEditModal(
+                                        {{ $sub_child->id }},
+                                        '{{ addslashes($sub_child->name) }}',
+                                        {{ $sub_child->parent_id ?? 'null' }},
+                                        '{{ $sub_child->icon }}',
+                                        {{ $sub_child->sort_order }},
+                                        {{ $sub_child->is_active ? 'true' : 'false' }},
+                                        {{ $sub_child->is_featured ? 'true' : 'false' }},
+                                        '{{ $sub_child->image }}'
+                                    )"
+                                    class="text-blue-500 text-sm hover:underline">
+                                    Edit
+                                </button>
+
+                                <form action="{{ route('admin.categories.delete', $sub_child->id) }}" method="POST" class="inline"
+                                    onsubmit="return confirm('Are you sure you want to delete this subcategory?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="text-red-500 text-sm hover:underline">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+
                 </div>
-                @empty
-                <div class="px-6 py-3 text-sm text-gray-400">
-                    No subcategories
-                </div>
-                @endforelse
+
+                @endforeach
             </div>
 
         </div>
@@ -106,10 +165,8 @@
     {{-- Add Category Modal --}}
     <div id="createModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            {{-- Background Backdrop --}}
             <div onclick="closeCreateModal()" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
-            {{-- Modal Content --}}
             <div class="inline-block w-full max-w-lg p-6 my-8 text-left align-middle bg-white shadow-xl rounded-2xl relative">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-bold text-gray-900">Add New Category</h3>
@@ -131,7 +188,10 @@
                                 class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
                                 <option value="">None (Root Category)</option>
                                 @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    @foreach($cat->children as $catChild)
+                                        <option value="{{ $catChild->id }}">└─ {{ $catChild->name }}</option>
+                                    @endforeach
                                 @endforeach
                             </select>
                         </div>
@@ -152,7 +212,7 @@
                                 <p class="mt-1 text-xs text-gray-500">FontAwesome icon class</p>
                             </div>
                             <div>
-                                <x-input name="sort_order" type="number" value="0" label="Sort Order" placeholder="fas fa-tag" required />
+                                <x-input name="sort_order" type="number" value="0" label="Sort Order" required />
                             </div>
                         </div>
 
@@ -188,10 +248,8 @@
     {{-- Edit Category Modal --}}
     <div id="editModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            {{-- Background Backdrop --}}
             <div onclick="closeEditModal()" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
-            {{-- Modal Content --}}
             <div class="inline-block w-full max-w-lg p-6 my-8 text-left align-middle bg-white shadow-xl rounded-2xl relative">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-bold text-gray-900">Edit Category</h3>
@@ -205,7 +263,8 @@
                     @method('PUT')
                     <div class="space-y-4">
                         <div>
-                            <x-input name="name" type="text" label="Category Name *" id="edit_name" placeholder="e.g. Men's Fashion" required />
+                            <x-input name="name" type="text" label="Category Name *" id="edit_name"
+                                placeholder="e.g. Men's Fashion" required />
                         </div>
 
                         <div>
@@ -214,7 +273,10 @@
                                 class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
                                 <option value="">None (Root Category)</option>
                                 @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    @foreach($cat->children as $catChild)
+                                        <option value="{{ $catChild->id }}">└─ {{ $catChild->name }}</option>
+                                    @endforeach
                                 @endforeach
                             </select>
                         </div>
@@ -225,7 +287,8 @@
                                 class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition"
                                 onchange="previewEditImage(event)">
                             <div id="editImagePreview" class="mt-3">
-                                <img id="edit_image_preview" src="" alt="Preview" class="w-24 h-24 object-cover rounded-lg border border-gray-300">
+                                <img id="edit_image_preview" src="" alt="Preview"
+                                    class="w-24 h-24 object-cover rounded-lg border border-gray-300">
                             </div>
                             <p class="mt-1 text-xs text-gray-500">Leave empty to keep current image</p>
                         </div>
@@ -268,6 +331,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 @push('scripts')
@@ -299,14 +363,10 @@
             imagePreview.classList.add('hidden');
         }
 
-        // Hide the parent option that matches the current category
+        // Hide the parent option that matches the current category to prevent self-reference
         const parentSelect = document.getElementById('edit_parent_id');
         Array.from(parentSelect.options).forEach(option => {
-            if (option.value == id) {
-                option.style.display = 'none';
-            } else {
-                option.style.display = 'block';
-            }
+            option.style.display = (option.value == id) ? 'none' : 'block';
         });
 
         document.getElementById('editModal').classList.remove('hidden');
@@ -317,22 +377,20 @@
     }
 
     // Close modals on ESC key
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
             closeCreateModal();
             closeEditModal();
         }
     });
 
-    // Image preview functions
     function previewCreateImage(event) {
         const preview = document.getElementById('createImagePreview');
         const img = preview.querySelector('img');
         const file = event.target.files[0];
-
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 img.src = e.target.result;
                 preview.classList.remove('hidden');
             };
@@ -345,10 +403,9 @@
     function previewEditImage(event) {
         const img = document.getElementById('edit_image_preview');
         const file = event.target.files[0];
-
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 img.src = e.target.result;
                 document.getElementById('editImagePreview').classList.remove('hidden');
             };
