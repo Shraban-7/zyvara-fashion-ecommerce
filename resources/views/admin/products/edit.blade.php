@@ -552,7 +552,8 @@
     });
 
     document.getElementById('subcategory_id').addEventListener('change', function () {
-        loadSubSubcategories(catId, this.value, false);
+        const categoryId = document.getElementById('category_id').value;
+        loadSubSubcategories(categoryId, this.value, false);
     });
 
     function loadSubcategories(categoryId, isInit = false) {
@@ -583,16 +584,24 @@
     }
 
     function loadSubSubcategories(categoryId, subcategoryId, isInit = false) {
+        console.log('Category:', categoryId);
+        console.log('Subcategory:', subcategoryId);
+
         const subSubcategorySelect = document.getElementById('sub_subcategory_id');
 
-        subSubcategorySelect.innerHTML = '<option value="">Select Sub Subcategory</option>';
+        subSubcategorySelect.innerHTML =
+            '<option value="">Select Sub Subcategory</option>';
 
         const category = CATEGORIES.find(cat => cat.id == categoryId);
+        console.log('Found category:', category);
+
         if (!category?.children) return;
 
         const subcategory = category.children.find(
             sub => sub.id == subcategoryId
         );
+
+        console.log('Found subcategory:', subcategory);
 
         if (!subcategory?.children) return;
 
@@ -826,8 +835,7 @@
 
         const previewPrice = document.getElementById('preview-price');
         const previewComparePrice = document.getElementById('preview-compare-price');
-        const previewSaleBadge = document.getElementById('preview-sale-badge');
-        const previewDiscount = document.getElementById('preview-discount');
+
 
         function updatePricePreview() {
 
@@ -841,8 +849,6 @@
                 previewComparePrice.textContent = `৳${comparePrice.toFixed(2)}`;
 
                 previewComparePrice.classList.remove('hidden');
-                previewSaleBadge.classList.remove('hidden');
-                previewDiscount.classList.remove('hidden');
 
                 const discount = Math.round(
                     ((comparePrice - price) / comparePrice) * 100
@@ -853,8 +859,6 @@
             } else {
 
                 previewComparePrice.classList.add('hidden');
-                previewSaleBadge.classList.add('hidden');
-                previewDiscount.classList.add('hidden');
             }
         }
 
