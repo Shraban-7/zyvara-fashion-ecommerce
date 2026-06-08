@@ -584,9 +584,6 @@
     }
 
     function loadSubSubcategories(categoryId, subcategoryId, isInit = false) {
-        console.log('Category:', categoryId);
-        console.log('Subcategory:', subcategoryId);
-
         const subSubcategorySelect = document.getElementById('sub_subcategory_id');
 
         subSubcategorySelect.innerHTML =
