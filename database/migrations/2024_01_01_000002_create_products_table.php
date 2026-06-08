@@ -30,9 +30,9 @@ return new class extends Migration
             $table->unsignedBigInteger('subcategory_id')->nullable();
             $table->unsignedBigInteger('sub_subcategory_id')->nullable();
 
-            $table->unsignedBigInteger('brand_id')->nullable()->after('subcategory_id');
-            $table->renameColumn('brand', 'brand_name');
-
+            $table->unsignedBigInteger('brand_id')->nullable();
+            $table->string('brand_name')->nullable();
+            
             $table->string('material')->nullable();
             $table->enum('fit_type', FitType::values())->nullable();
             $table->enum('pattern', Pattern::values())->nullable();
