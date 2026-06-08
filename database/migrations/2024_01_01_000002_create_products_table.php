@@ -25,7 +25,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->decimal('compare_price', 10, 2)->nullable(); // Original price for showing discount
             $table->decimal('cost_price', 10, 2)->nullable(); // For profit calculation
-            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->foreignId('subcategory_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->foreignId('sub_subcategory_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->string('brand')->nullable();
