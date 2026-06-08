@@ -105,7 +105,14 @@ class ProductController extends Controller
         $categories = Category::category()
             ->active()
             ->orderBy('name')
-            ->with('children.children')
+            ->with([
+                'children' => function ($query) {
+                    $query->orderBy('name');
+                },
+                'children.children' => function ($query) {
+                    $query->orderBy('name');
+                }
+            ])
             ->get();
 
         return $categories->map(function ($category) {
