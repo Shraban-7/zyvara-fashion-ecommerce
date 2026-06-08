@@ -667,7 +667,7 @@
 
 @push('scripts')
     <script>
-        const maxQuantity = "{{ $product->stock_in ?? 0 }}";
+        const maxQuantity =  "{{ $product->stock_in ?? 0 }}";
         const productVariants = @json($product->variants);
 
         // Change main product image
@@ -707,10 +707,14 @@
         // Update quantity
         function updateQuantity(change) {
             const input = document.getElementById('productQuantity');
-            let value = parseInt(input.value) + change;
-            if (value < 1) value = 1;
-            if (value > maxQuantity) value = maxQuantity;
-            input.value = value;
+            let val = parseInt(input.value || 1) + change;
+
+            if (val < 1) val = 1;
+
+            const max = parseInt(input.max || 999);
+            if (val > max) val = max;
+
+            input.value = val;
         }
 
         // Select color
