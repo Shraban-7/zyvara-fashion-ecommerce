@@ -18,8 +18,8 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_number')->unique(); // SF2026011901
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null'); // Nullable for guest orders
-            $table->foreignId('coupon_id')->nullable()->constrained()->onDelete('set null');
+            $table->unsignedBigInteger('user_id')->nullable(); // Nullable for guest orders
+            $table->unsignedBigInteger('coupon_id')->nullable();
 
             // Order Status
             $table->string('status')->default(OrderStatus::PENDING->value);

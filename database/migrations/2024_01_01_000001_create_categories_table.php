@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('parent_id')
-                ->nullable()
-                ->constrained('categories')
-                ->nullOnDelete();
+            $table->unsignedBigInteger('parent_id')
+                ->nullable();
 
             $table->string('name');
             $table->string('slug')->unique();

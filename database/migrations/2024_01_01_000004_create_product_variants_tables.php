@@ -32,9 +32,9 @@ return new class extends Migration
         // Product variants (size + color combinations with stock)
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->foreignId('size_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('color_id')->nullable()->constrained()->onDelete('set null');
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('size_id');
+            $table->unsignedBigInteger('color_id');
             $table->string('sku')->unique()->nullable(); // Variant-specific SKU
             $table->decimal('price', 10, 2)->nullable(); // Variant-specific price override
             $table->integer('stock_in')->default(0);

@@ -267,8 +267,6 @@ class ProductController extends Controller
             ->pluck('total', 'id')
             ->toArray();
 
-        //return [$counts,$subCounts,$subSubCounts];
-
         $categoryCounts = [];
 
         // foreach ([$counts, $subCounts, $subSubCounts] as $set) {
@@ -288,10 +286,6 @@ class ProductController extends Controller
         foreach ($subSubCounts as $id => $count) {
             $categoryCounts[$id] = $count;
         }
-
-        return $categoryCounts;
-
-
 
         $brandCounts = [];
 
