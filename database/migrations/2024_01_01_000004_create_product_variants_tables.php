@@ -24,7 +24,7 @@ return new class extends Migration
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // White, Black, Blue, etc.
-            $table->string('code'); // white, black, blue
+            $table->string('code')->nullable(); // white, black, blue
             $table->string('hex_code')->nullable(); // #FFFFFF
             $table->timestamps();
         });
