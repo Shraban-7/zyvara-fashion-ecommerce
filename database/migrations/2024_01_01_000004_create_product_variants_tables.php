@@ -24,7 +24,7 @@ return new class extends Migration
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // White, Black, Blue, etc.
-            $table->string('code'); // white, black, blue
+            $table->string('code')->nullable(); // white, black, blue
             $table->string('hex_code')->nullable(); // #FFFFFF
             $table->timestamps();
         });
@@ -33,8 +33,8 @@ return new class extends Migration
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('size_id');
-            $table->unsignedBigInteger('color_id');
+            $table->unsignedBigInteger('size_id')->nullable();
+            $table->unsignedBigInteger('color_id')->nullable();
             $table->string('sku')->unique()->nullable(); // Variant-specific SKU
             $table->decimal('price', 10, 2)->nullable(); // Variant-specific price override
             $table->integer('stock_in')->default(0);

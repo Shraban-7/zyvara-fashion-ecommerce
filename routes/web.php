@@ -17,16 +17,16 @@ use App\Models\Size;
 
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
-Route::get('fix-category', function(){
-    $products = \App\Models\Product::get();
-    foreach($products as $product) {
-        $product->update([
-            'category_id' => null,
-            'subcategory_id' => null,
-            'sub_subcategory_id' => null
-        ]);
-    }
-});
+// Route::get('fix-category', function(){
+//     $products = \App\Models\Product::get();
+//     foreach($products as $product) {
+//         $product->update([
+//             'category_id' => null,
+//             'subcategory_id' => null,
+//             'sub_subcategory_id' => null
+//         ]);
+//     }
+// });
 
 // Route::get('/image-path', function () {
 //     $products = \App\Models\Product::select('id', 'image')->get();
@@ -41,6 +41,11 @@ Route::get('fix-category', function(){
 //         $productImage->save();
 //     }
 // });
+
+// function fixThumbnailPath($path)
+// {
+//     return str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $path);
+// }
 
 // Route::get('save-products', function () {
 //     ini_set('max_execution_time', 3600);
@@ -76,27 +81,27 @@ Route::get('fix-category', function(){
 //             continue; // Skip if product already exists
 //         }
 
-//         $category = \App\Models\Category::firstOrCreate([
-//             'name' => $product['category'],
-//             'slug' => str_slug($product['category']),
-//         ]);
+//         // $category = \App\Models\Category::firstOrCreate([
+//         //     'name' => $product['category'],
+//         //     'slug' => str_slug($product['category']),
+//         // ]);
 
-//         $subcategory = null;
+//         // $subcategory = null;
 
-//         if ($product['subcategory']) {
-//             $cat_id = $category->id;
-//             $subcategory = \App\Models\Category::firstOrCreate([
-//                 'name' => $product['subcategory'],
-//                 'parent_id' => $cat_id,
-//                 'slug' => str_slug($product['subcategory']),
-//             ]);
-//         }
+//         // if ($product['subcategory']) {
+//         //     $cat_id = $category->id;
+//         //     $subcategory = \App\Models\Category::firstOrCreate([
+//         //         'name' => $product['subcategory'],
+//         //         'parent_id' => $cat_id,
+//         //         'slug' => str_slug($product['subcategory']),
+//         //     ]);
+//         // }
 
 //         $newProduct = \App\Models\Product::create([
 //             'name' => ucwords($product['name']),
 //             'slug' => $product['slug'],
 //             'sku' => $product['sku'],
-//             'image' => str_replace(['images/spinner-fashion', 'spinner-fashion'], '', $product['thumbnail']),
+//             'image' => fixThumbnailPath($product['thumbnail']),
 
 //             'description' => $product['description'] ?? null,
 //             'short_description' => $product['short_description'] ?? null,
@@ -104,8 +109,8 @@ Route::get('fix-category', function(){
 //             'price' => $product['price'] ?? 0,
 //             'cost_price' => $product['buying_price'] ?? 0,
 
-//             'category_id' => $category->id ?? null,
-//             'subcategory_id' => $subcategory->id ?? null,
+//             //'category_id' => $category->id ?? null,
+//             //'subcategory_id' => $subcategory->id ?? null,
 
 //             'brand_name' => $brandName,
 //             'brand_id' => $brandId,
@@ -116,7 +121,7 @@ Route::get('fix-category', function(){
 //         foreach ($product['images'] as $imageUrl) {
 //             \App\Models\ProductImage::create([
 //                 'product_id' => $newProduct->id,
-//                 'image_path' => str_replace(['images/spinner-fashion', 'spinner-fashion'], '', $imageUrl),
+//                 'image_path' => fixThumbnailPath($imageUrl),
 //             ]);
 //         }
 
