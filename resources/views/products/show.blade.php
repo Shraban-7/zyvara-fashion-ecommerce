@@ -70,10 +70,10 @@
                             </div>
 
                             {{-- Wishlist Button --}}
-                            <button
+                            {{-- <button
                                 class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-50 transition tap-effect">
                                 <i class="far fa-heart text-gray-600 text-lg"></i>
-                            </button>
+                            </button> --}}
 
                             {{-- Zoom Button --}}
                             <button onclick="openImageModal()"
