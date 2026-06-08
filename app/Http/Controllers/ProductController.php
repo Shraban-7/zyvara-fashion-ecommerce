@@ -13,29 +13,38 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with('category', 'brand')->where('is_active', true);
+        $query = Product::with('category', 'brand')
+            ->where('is_active', true);
 
-        if ($request->has('categories') && !empty($request->categories)) {
-            $categorySlugs = is_array($request->categories) ? $request->categories : explode(',', $request->categories);
-            $categoryIds = Category::whereIn('slug', $categorySlugs)->pluck('id')->toArray();
-            if (!empty($categoryIds)) {
-                $query->where(function ($q) use ($categoryIds) {
-                    $q->whereIn('category_id', $categoryIds)
-                        ->orWhereIn('subcategory_id', $categoryIds);
-                });
-            }
-        } elseif ($request->has('categories')) {
-            $category = Category::where('slug', $request->category)->first();
+        /*
+        |--------------------------------------------------------------------------
+        | CATEGORY FILTER (3 LEVEL SUPPORT)
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('categories')) {
 
-            if ($category) {
-                $categoryIds = [$category->id];
+            $categorySlugs = is_array($request->categories)
+                ? $request->categories
+                : explode(',', $request->categories);
 
+            $selectedCategories = Category::whereIn('slug', $categorySlugs)
+                ->get(['id']);
+
+            $categoryIds = [];
+
+            foreach ($selectedCategories as $category) {
+
+                // include selected category
+                $categoryIds[] = $category->id;
+
+                // level 2
                 $children = Category::where('parent_id', $category->id)
                     ->pluck('id')
                     ->toArray();
 
                 $categoryIds = array_merge($categoryIds, $children);
 
+                // level 3
                 if (!empty($children)) {
                     $grandChildren = Category::whereIn('parent_id', $children)
                         ->pluck('id')
@@ -43,16 +52,23 @@ class ProductController extends Controller
 
                     $categoryIds = array_merge($categoryIds, $grandChildren);
                 }
-
-                $query->where(function ($q) use ($categoryIds) {
-                    $q->whereIn('category_id', $categoryIds)
-                        ->orWhereIn('subcategory_id', $categoryIds);
-                });
             }
+
+            $categoryIds = array_unique($categoryIds);
+
+            $query->where(function ($q) use ($categoryIds) {
+                $q->whereIn('category_id', $categoryIds)
+                    ->orWhereIn('subcategory_id', $categoryIds)
+                    ->orWhereIn('sub_subcategory_id', $categoryIds);
+            });
         }
 
-        // Brand filter
-        if ($request->has('brands') && !empty($request->brands)) {
+        /*
+        |--------------------------------------------------------------------------
+        | BRAND FILTER
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('brands')) {
 
             $brandSlugs = is_array($request->brands)
                 ? $request->brands
@@ -67,140 +83,220 @@ class ProductController extends Controller
             }
         }
 
-        // Price range filter
-        if ($request->has('min_price') && $request->min_price != '') {
+        /*
+        |--------------------------------------------------------------------------
+        | PRICE FILTER
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
-        if ($request->has('max_price') && $request->max_price != '') {
+
+        if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
 
-        // Size filter
-        if ($request->has('sizes') && !empty($request->sizes)) {
-            $sizeIds = is_array($request->sizes) ? $request->sizes : explode(',', $request->sizes);
+        /*
+        |--------------------------------------------------------------------------
+        | SIZE FILTER
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('sizes')) {
+
+            $sizeIds = is_array($request->sizes)
+                ? $request->sizes
+                : explode(',', $request->sizes);
+
             $query->whereHas('variants', function ($q) use ($sizeIds) {
                 $q->whereIn('size_id', $sizeIds);
             });
         }
 
-        // Color filter
-        if ($request->has('colors') && !empty($request->colors)) {
-            $colorIds = is_array($request->colors) ? $request->colors : explode(',', $request->colors);
+        /*
+        |--------------------------------------------------------------------------
+        | COLOR FILTER
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('colors')) {
+
+            $colorIds = is_array($request->colors)
+                ? $request->colors
+                : explode(',', $request->colors);
+
             $query->whereHas('variants', function ($q) use ($colorIds) {
                 $q->whereIn('color_id', $colorIds);
             });
         }
 
-        // Brand filter
-        if ($request->has('brands') && !empty($request->brands)) {
-            $brands = is_array($request->brands) ? $request->brands : explode(',', $request->brands);
-            $brandIds = Brand::whereIn('slug', $brands)->pluck('id')->toArray();
-            $query->whereIn('brand_id', $brandIds);
-        }
-
-        // Rating filter
-        if ($request->has('min_rating') && $request->min_rating != '') {
+        /*
+        |--------------------------------------------------------------------------
+        | RATING FILTER
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('min_rating')) {
             $query->where('average_rating', '>=', $request->min_rating);
         }
 
-        // Special filters
-        if ($request->has('filter')) {
+        /*
+        |--------------------------------------------------------------------------
+        | SPECIAL FILTERS
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('filter')) {
             switch ($request->filter) {
                 case 'new-arrivals':
                     $query->where('is_new_arrival', true);
                     break;
+
                 case 'best-sellers':
                     $query->where('is_best_seller', true);
                     break;
+
                 case 'featured':
                     $query->where('is_featured', true);
                     break;
+
                 case 'on-sale':
                     $query->where('is_on_sale', true);
                     break;
             }
         }
 
-        // Search
-        if ($request->has('search') && $request->search != '') {
+        /*
+        |--------------------------------------------------------------------------
+        | SEARCH
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('search')) {
+
             $searchTerm = $request->search;
+
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('name', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('description', 'like', '%' . $searchTerm . '%')
-                    //->orWhere('brand', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('tags', 'like', '%' . $searchTerm . '%');
+                $q->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%")
+                    ->orWhere('tags', 'like', "%{$searchTerm}%");
             });
         }
 
-        // Sorting
-        $sortBy = $request->get('sort', 'featured');
-        switch ($sortBy) {
+        /*
+        |--------------------------------------------------------------------------
+        | SORTING
+        |--------------------------------------------------------------------------
+        */
+        switch ($request->get('sort', 'featured')) {
+
             case 'price_asc':
                 $query->orderBy('price', 'asc');
                 break;
+
             case 'price_desc':
                 $query->orderBy('price', 'desc');
                 break;
+
             case 'newest':
                 $query->orderBy('created_at', 'desc');
                 break;
+
             case 'best_selling':
-                $query->where('is_best_seller', true)->orderBy('review_count', 'desc');
+                $query->where('is_best_seller', true)
+                    ->orderBy('review_count', 'desc');
                 break;
+
             case 'top_rated':
-                $query->orderBy('average_rating', 'desc')->orderBy('review_count', 'desc');
+                $query->orderBy('average_rating', 'desc')
+                    ->orderBy('review_count', 'desc');
                 break;
+
             case 'name_asc':
                 $query->orderBy('name', 'asc');
                 break;
+
             case 'name_desc':
                 $query->orderBy('name', 'desc');
                 break;
-            default: // featured
+
+            default:
                 $query->orderBy('is_featured', 'desc')
                     ->orderBy('is_new_arrival', 'desc')
                     ->orderBy('review_count', 'desc');
                 break;
         }
 
-        // Pagination
-        $perPage = $request->get('per_page', 24);
-        $products = $query->simplePaginate($perPage)->appends($request->query());
+        /*
+        |--------------------------------------------------------------------------
+        | PAGINATION
+        |--------------------------------------------------------------------------
+        */
 
-        // Get filter data
-        $categories = Category::whereNull('parent_id')
-            ->with('children')
+        $totalProducts = (clone $query)->count();
+        $perPage = $request->get('per_page', 24);
+
+        $products = $query->simplePaginate($perPage)
+            ->appends($request->query());
+
+        $categories = Category::category()
+            ->with(['children', 'children.children'])
             ->orderBy('sort_order')
             ->get();
 
         $sizes = Size::orderBy('sort_order')->get();
         $colors = Color::orderBy('name')->get();
 
-        // Get available brands from products
         $brands = Brand::active()
             ->orderBy('name')
             ->withCount('products')
             ->get();
 
-        $brandCounts = [];
-        foreach ($brands as $brand) {
-            $brandCounts[$brand->id] = $brand->products_count;
-        }
+        $counts = Product::where('is_active', true)
+            ->selectRaw('category_id as id, COUNT(*) as total')
+            ->groupBy('category_id')
+            ->pluck('total', 'id')
+            ->toArray();
 
-        $cats = Category::whereNull('parent_id')->with('children')->withCount('products')->get();
-        $subCats = Category::whereNotNull('parent_id')
-            ->select('id', 'parent_id')
-            ->withCount('subCatProducts')
-            ->get();
+        $subCounts = Product::where('is_active', true)
+            ->selectRaw('subcategory_id as id, COUNT(*) as total')
+            ->whereNotNull('subcategory_id')
+            ->groupBy('subcategory_id')
+           ->pluck('total', 'id')
+           ->toArray();
+
+        $subSubCounts = Product::where('is_active', true)
+            ->selectRaw('sub_subcategory_id as id, COUNT(*) as total')
+            ->whereNotNull('sub_subcategory_id')
+            ->groupBy('sub_subcategory_id')
+            ->pluck('total', 'id')
+            ->toArray();
+
+        //return [$counts,$subCounts,$subSubCounts];
 
         $categoryCounts = [];
-        foreach ($cats as $cat) {
-            $productCount = $cat->products_count + $subCats->where('parent_id', $cat->id)->sum('products_count');
-            $categoryCounts[$cat->id] = $productCount;
+
+        // foreach ([$counts, $subCounts, $subSubCounts] as $set) {
+        //     foreach ($set as $id => $count) {
+        //         $categoryCounts[$id] = ($categoryCounts[$id] ?? 0) + $count;
+        //     }
+        // }
+
+        foreach ($counts as $id => $count) {
+            $categoryCounts[$id] = $count;
         }
 
-        foreach ($subCats as $cat) {
-            $categoryCounts[$cat->id] = $cat->sub_cat_products_count;
+        foreach ($subCounts as $id => $count) {
+            $categoryCounts[$id] = $count;
+        }
+
+        foreach ($subSubCounts as $id => $count) {
+            $categoryCounts[$id] = $count;
+        }
+
+        return $categoryCounts;
+
+
+
+        $brandCounts = [];
+
+        foreach ($brands as $brand) {
+            $brandCounts[$brand->id] = $brand->products_count;
         }
 
         $allCategories = Category::select('id', 'name', 'slug')->get();
@@ -213,7 +309,8 @@ class ProductController extends Controller
             'brands',
             'categoryCounts',
             'brandCounts',
-            'allCategories'
+            'allCategories',
+            'totalProducts'
         ));
     }
 

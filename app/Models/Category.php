@@ -27,7 +27,7 @@ class Category extends Model
 
     public function children(): HasMany
     {
-        return $this->hasMany(Category::class, 'parent_id')->orderBy('sort_order')->with('children');
+        return $this->hasMany(Category::class, 'parent_id')->orderBy('sort_order');
     }
 
     public function products(): HasMany
@@ -38,6 +38,11 @@ class Category extends Model
     public function subCatProducts(): HasMany
     {
         return $this->hasMany(Product::class,'subcategory_id');
+    }
+
+    public function subSubCatProducts(): HasMany
+    {
+        return $this->hasMany(Product::class,'sub_subcategory_id');
     }
 
     // Scopes

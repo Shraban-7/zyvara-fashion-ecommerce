@@ -17,6 +17,15 @@ use App\Models\Size;
 
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
+Route::get('fix-category', function(){
+    $products = \App\Models\Product::whereNotNull('subcategory_id')->whereNull('category_id')->with('subcategory')->get();
+    foreach($products as $product) {
+        $product->update([
+            'category_id' => $product->subcategory->parent_id
+        ]);
+    }
+});
+
 // Route::get('/image-path', function () {
 //     $products = \App\Models\Product::select('id', 'image')->get();
 //     foreach ($products as $product) {
