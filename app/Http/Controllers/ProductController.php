@@ -269,12 +269,6 @@ class ProductController extends Controller
 
         $categoryCounts = [];
 
-        // foreach ([$counts, $subCounts, $subSubCounts] as $set) {
-        //     foreach ($set as $id => $count) {
-        //         $categoryCounts[$id] = ($categoryCounts[$id] ?? 0) + $count;
-        //     }
-        // }
-
         foreach ($counts as $id => $count) {
             $categoryCounts[$id] = $count;
         }
