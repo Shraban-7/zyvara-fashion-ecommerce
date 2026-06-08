@@ -217,8 +217,11 @@
                                         class="w-12 h-12 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <input type="number" id="productQuantity" value="1" min="1"
-                                        max="{{ $product->stock_in }}"
+                                    <input type="number"
+                                        id="productQuantity"
+                                        value="1"
+                                        min="1"
+                                        max="{{ $product->variants->count() ? 1 : $product->currentStock }}"
                                         class="w-16 h-12 text-center text-base font-semibold border-x-2 border-gray-300 focus:outline-none">
                                     <button onclick="updateQuantity(1)"
                                         class="w-12 h-12 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
@@ -867,35 +870,41 @@
             const quantityInput = document.getElementById('productQuantity');
 
             let stock = 0;
-            
-            if (variant && variant.stock_in !== undefined) {
 
-                stock = parseInt(variant.stock_in - variant.stock_out);
+            if (variant) {
+                stock = parseInt((variant.stock_in || 0) - (variant.stock_out || 0));
             }
 
-             if (stock <= 0) {
-                stockElement.innerText = 'Out of stock';
-                stockElement.classList.add('text-red-500');
+            // No variant selected yet
+            if (!variant) {
+                quantityInput.disabled = true;
+                quantityInput.value = 1;
+                quantityInput.max = 1;
 
+                stockElement.innerHTML = 'Please select size or color';
+                return;
+            }
+
+            quantityInput.disabled = false;
+
+            if (stock <= 0) {
+                stockElement.innerHTML =
+                    `<span class="text-red-500 font-semibold">Out of stock</span>`;
             }
             else if (stock <= 5) {
-                stockElement.innerHTML = `<span class="text-orange-500 font-semibold">Only ${stock} left!</span>`;
-                stockElement.classList.remove('text-red-500');
-
+                stockElement.innerHTML =
+                    `<span class="text-orange-500 font-semibold">Only ${stock} left!</span>`;
             }
             else {
-                stockElement.innerHTML = `<span class="text-green-600 font-semibold">${stock} items available</span>`;
-                stockElement.classList.remove('text-red-500');
+                stockElement.innerHTML =
+                    `<span class="text-green-600 font-semibold">${stock} items available</span>`;
             }
 
-            // 🔥 Update quantity max limit
-            if (quantityInput) {
-                quantityInput.max = stock > 0 ? stock : 1;
+            // Update quantity max limit
+            quantityInput.max = stock > 0 ? stock : 1;
 
-                // reset if current value exceeds stock
-                if (parseInt(quantityInput.value) > stock) {
-                    quantityInput.value = stock > 0 ? stock : 1;
-                }
+            if (parseInt(quantityInput.value) > stock) {
+                quantityInput.value = stock > 0 ? stock : 1;
             }
         }
 
