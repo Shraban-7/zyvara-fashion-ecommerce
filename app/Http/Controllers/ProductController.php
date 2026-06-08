@@ -235,8 +235,16 @@ class ProductController extends Controller
             ->appends($request->query());
 
         $categories = Category::category()
-            ->with(['children', 'children.children'])
-            ->orderBy('sort_order')
+            ->with([
+                'children' => function ($query) {
+                    $query->orderBy('sort_order', 'asc')->orderBy('name', 'asc');
+                },
+                'children.children' => function ($query) {
+                    $query->orderBy('sort_order', 'asc')->orderBy('name', 'asc');
+                }
+            ])
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('name', 'asc')
             ->get();
 
         $sizes = Size::orderBy('sort_order')->get();
@@ -257,8 +265,8 @@ class ProductController extends Controller
             ->selectRaw('subcategory_id as id, COUNT(*) as total')
             ->whereNotNull('subcategory_id')
             ->groupBy('subcategory_id')
-           ->pluck('total', 'id')
-           ->toArray();
+            ->pluck('total', 'id')
+            ->toArray();
 
         $subSubCounts = Product::where('is_active', true)
             ->selectRaw('sub_subcategory_id as id, COUNT(*) as total')

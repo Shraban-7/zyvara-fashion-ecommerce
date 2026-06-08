@@ -19,30 +19,34 @@ class Category extends Model
         'is_featured' => 'boolean',
         'sort_order' => 'integer',
     ];
-    
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    public function children(): HasMany
+    // Inside App\Models\Category.php
+
+    public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id')->orderBy('sort_order');
+        return $this->hasMany(Category::class, 'parent_id')
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('name', 'asc');
     }
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class,'category_id');
+        return $this->hasMany(Product::class, 'category_id');
     }
 
     public function subCatProducts(): HasMany
     {
-        return $this->hasMany(Product::class,'subcategory_id');
+        return $this->hasMany(Product::class, 'subcategory_id');
     }
 
     public function subSubCatProducts(): HasMany
     {
-        return $this->hasMany(Product::class,'sub_subcategory_id');
+        return $this->hasMany(Product::class, 'sub_subcategory_id');
     }
 
     // Scopes
