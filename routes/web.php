@@ -17,164 +17,164 @@ use App\Models\Size;
 
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
-Route::get('fix-category', function(){
-    $products = \App\Models\Product::get();
-    foreach($products as $product) {
-        $product->update([
-            'category_id' => null,
-            'subcategory_id' => null,
-            'sub_subcategory_id' => null
-        ]);
-    }
-});
+// Route::get('fix-category', function(){
+//     $products = \App\Models\Product::get();
+//     foreach($products as $product) {
+//         $product->update([
+//             'category_id' => null,
+//             'subcategory_id' => null,
+//             'sub_subcategory_id' => null
+//         ]);
+//     }
+// });
 
-Route::get('/image-path', function () {
-    $products = \App\Models\Product::select('id', 'image')->get();
-    foreach ($products as $product) {
-        $product->image = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $product->image);
-        $product->save();
-    }
+// Route::get('/image-path', function () {
+//     $products = \App\Models\Product::select('id', 'image')->get();
+//     foreach ($products as $product) {
+//         $product->image = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $product->image);
+//         $product->save();
+//     }
 
-    $productImages = \App\Models\ProductImage::select('id', 'image_path')->get();
-    foreach ($productImages as $productImage) {
-        $productImage->image_path = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $productImage->image_path);
-        $productImage->save();
-    }
-});
+//     $productImages = \App\Models\ProductImage::select('id', 'image_path')->get();
+//     foreach ($productImages as $productImage) {
+//         $productImage->image_path = str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $productImage->image_path);
+//         $productImage->save();
+//     }
+// });
 
-function fixThumbnailPath($path)
-{
-    return str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $path);
-}
+// function fixThumbnailPath($path)
+// {
+//     return str_replace(['images/spinner-fashion', 'https://slash-mart.com/storage/', 'spinner-fashion'], '', $path);
+// }
 
-Route::get('save-products', function () {
-    ini_set('max_execution_time', 3600);
-    $json = file_get_contents('sp_products.json');
-    $products = json_decode($json, true);
+// Route::get('save-products', function () {
+//     ini_set('max_execution_time', 3600);
+//     $json = file_get_contents('sp_products.json');
+//     $products = json_decode($json, true);
 
-    foreach ($products as $product) {
-        $brandId = $brandName = null;
+//     foreach ($products as $product) {
+//         $brandId = $brandName = null;
 
-        if ($product['brand'] != null) {
-            $brandName = $product['brand'];
-            $brand = \App\Models\Brand::firstOrCreate([
-                'name' => $brandName,
-                'slug' => str_slug($brandName),
-            ]);
+//         if ($product['brand'] != null) {
+//             $brandName = $product['brand'];
+//             $brand = \App\Models\Brand::firstOrCreate([
+//                 'name' => $brandName,
+//                 'slug' => str_slug($brandName),
+//             ]);
 
-            $brandId = $brand->id;
-        }
-        $alreadyExists = \App\Models\Product::where('name', $product['name'])->first();
-        if ($alreadyExists) {
-            $alreadyExists->update([
-                'sku' => $product['sku'],
-                'price' => $product['price'] ?? 0,
-                'cost_price' => $product['buying_price'] ?? 0,
-                'stock_in' => $product['stock'],
-                'stock_out' => 0,
-            ]);
+//             $brandId = $brand->id;
+//         }
+//         $alreadyExists = \App\Models\Product::where('name', $product['name'])->first();
+//         if ($alreadyExists) {
+//             $alreadyExists->update([
+//                 'sku' => $product['sku'],
+//                 'price' => $product['price'] ?? 0,
+//                 'cost_price' => $product['buying_price'] ?? 0,
+//                 'stock_in' => $product['stock'],
+//                 'stock_out' => 0,
+//             ]);
 
-            if (isset($product['variants']) && is_array($product['variants'])) {
-                saveVariants($alreadyExists, $product['variants']);
-            }
+//             if (isset($product['variants']) && is_array($product['variants'])) {
+//                 saveVariants($alreadyExists, $product['variants']);
+//             }
 
-            continue; // Skip if product already exists
-        }
+//             continue; // Skip if product already exists
+//         }
 
-        // $category = \App\Models\Category::firstOrCreate([
-        //     'name' => $product['category'],
-        //     'slug' => str_slug($product['category']),
-        // ]);
+//         // $category = \App\Models\Category::firstOrCreate([
+//         //     'name' => $product['category'],
+//         //     'slug' => str_slug($product['category']),
+//         // ]);
 
-        // $subcategory = null;
+//         // $subcategory = null;
 
-        // if ($product['subcategory']) {
-        //     $cat_id = $category->id;
-        //     $subcategory = \App\Models\Category::firstOrCreate([
-        //         'name' => $product['subcategory'],
-        //         'parent_id' => $cat_id,
-        //         'slug' => str_slug($product['subcategory']),
-        //     ]);
-        // }
+//         // if ($product['subcategory']) {
+//         //     $cat_id = $category->id;
+//         //     $subcategory = \App\Models\Category::firstOrCreate([
+//         //         'name' => $product['subcategory'],
+//         //         'parent_id' => $cat_id,
+//         //         'slug' => str_slug($product['subcategory']),
+//         //     ]);
+//         // }
 
-        $newProduct = \App\Models\Product::create([
-            'name' => ucwords($product['name']),
-            'slug' => $product['slug'],
-            'sku' => $product['sku'],
-            'image' => fixThumbnailPath($product['thumbnail']),
+//         $newProduct = \App\Models\Product::create([
+//             'name' => ucwords($product['name']),
+//             'slug' => $product['slug'],
+//             'sku' => $product['sku'],
+//             'image' => fixThumbnailPath($product['thumbnail']),
 
-            'description' => $product['description'] ?? null,
-            'short_description' => $product['short_description'] ?? null,
+//             'description' => $product['description'] ?? null,
+//             'short_description' => $product['short_description'] ?? null,
 
-            'price' => $product['price'] ?? 0,
-            'cost_price' => $product['buying_price'] ?? 0,
+//             'price' => $product['price'] ?? 0,
+//             'cost_price' => $product['buying_price'] ?? 0,
 
-            //'category_id' => $category->id ?? null,
-            //'subcategory_id' => $subcategory->id ?? null,
+//             //'category_id' => $category->id ?? null,
+//             //'subcategory_id' => $subcategory->id ?? null,
 
-            'brand_name' => $brandName,
-            'brand_id' => $brandId,
-            'stock_in' => $product['stock'],
-            'stock_out' => 0,
-        ]);
+//             'brand_name' => $brandName,
+//             'brand_id' => $brandId,
+//             'stock_in' => $product['stock'],
+//             'stock_out' => 0,
+//         ]);
 
-        foreach ($product['images'] as $imageUrl) {
-            \App\Models\ProductImage::create([
-                'product_id' => $newProduct->id,
-                'image_path' => fixThumbnailPath($imageUrl),
-            ]);
-        }
+//         foreach ($product['images'] as $imageUrl) {
+//             \App\Models\ProductImage::create([
+//                 'product_id' => $newProduct->id,
+//                 'image_path' => fixThumbnailPath($imageUrl),
+//             ]);
+//         }
 
-        if (isset($product['variants']) && is_array($product['variants'])) {
-            saveVariants($newProduct, $product['variants']);
-        }
-    }
+//         if (isset($product['variants']) && is_array($product['variants'])) {
+//             saveVariants($newProduct, $product['variants']);
+//         }
+//     }
 
-    echo 'done';
-});
+//     echo 'done';
+// });
 
-function saveVariants($newProduct, $variants)
-{
-    foreach ($variants as $variant) {
+// function saveVariants($newProduct, $variants)
+// {
+//     foreach ($variants as $variant) {
 
-        $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->first();
+//         $alreadyExists = \App\Models\ProductVariant::where('sku', $variant['sku'])->first();
 
-        if ($alreadyExists) {
-            $alreadyExists->update([
-                'stock_in' => $variant['stock'],
-                'stock_out' => 0,
-                'price' => $variant['price'] ?? 0,
-                'cost_price' => $variant['buying_price'] ?? 0,
-            ]);
-            continue; // Skip if variant already exists
-        }
+//         if ($alreadyExists) {
+//             $alreadyExists->update([
+//                 'stock_in' => $variant['stock'],
+//                 'stock_out' => 0,
+//                 'price' => $variant['price'] ?? 0,
+//                 'cost_price' => $variant['buying_price'] ?? 0,
+//             ]);
+//             continue; // Skip if variant already exists
+//         }
 
-        $size = $color = null;
-        if ($variant['size']) {
-            $size = Size::firstOrCreate([
-                'name' => $variant['size'],
-                'code' => strtolower($variant['size']),
-            ]);
-        }
+//         $size = $color = null;
+//         if ($variant['size']) {
+//             $size = Size::firstOrCreate([
+//                 'name' => $variant['size'],
+//                 'code' => strtolower($variant['size']),
+//             ]);
+//         }
 
-        if ($variant['color']) {
-            $color = \App\Models\Color::firstOrCreate(['name' => $variant['color']]);
-        }
+//         if ($variant['color']) {
+//             $color = \App\Models\Color::firstOrCreate(['name' => $variant['color']]);
+//         }
 
-        try {
-            $newProduct->variants()->create([
-                'sku' => $variant['sku'],
-                'size_id' => $size->id ?? null,
-                'color_id' => $color->id ?? null,
-                'stock_in' => $variant['stock'],
-                'price' => $variant['price'] ?? 0,
-                'cost_price' => $variant['buying_price'] ?? 0,
-            ]);
-        } catch (\Exception $e) {
-            dump('Error creating product variant: ' . $e->getMessage());
-        }
-    }
-}
+//         try {
+//             $newProduct->variants()->create([
+//                 'sku' => $variant['sku'],
+//                 'size_id' => $size->id ?? null,
+//                 'color_id' => $color->id ?? null,
+//                 'stock_in' => $variant['stock'],
+//                 'price' => $variant['price'] ?? 0,
+//                 'cost_price' => $variant['buying_price'] ?? 0,
+//             ]);
+//         } catch (\Exception $e) {
+//             dump('Error creating product variant: ' . $e->getMessage());
+//         }
+//     }
+// }
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
