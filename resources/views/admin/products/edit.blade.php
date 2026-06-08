@@ -598,8 +598,6 @@
             sub => sub.id == subcategoryId
         );
 
-        console.log('Found subcategory:', subcategory);
-
         if (!subcategory?.children) return;
 
         subcategory.children.forEach(subSubcat => {
