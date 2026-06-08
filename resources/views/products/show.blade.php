@@ -17,6 +17,17 @@
                         class="text-gray-500 hover:text-primary transition flex-shrink-0">{{ $product->category->name }}</a>
                     <i class="fas fa-chevron-right text-xs text-gray-400 flex-shrink-0"></i>
                 @endif
+                @if($product->subcategory)
+                    <a href="{{ route('products.index', ['category' => $product->subcategory->slug]) }}"
+                        class="text-gray-500 hover:text-primary transition flex-shrink-0">{{ $product->subcategory->name }}</a>
+                    <i class="fas fa-chevron-right text-xs text-gray-400 flex-shrink-0"></i>
+                @endif
+                @if($product->subsubcategory)
+                    <a href="{{ route('products.index', ['category' => $product->subsubcategory->slug]) }}"
+                        class="text-gray-500 hover:text-primary transition flex-shrink-0">{{ $product->subsubcategory->name }}</a>
+                    <i class="fas fa-chevron-right text-xs text-gray-400 flex-shrink-0"></i>
+                @endif
+
                 <span class="text-gray-900 font-medium flex-shrink-0">{{ $product->name }}</span>
             </nav>
         </div>
