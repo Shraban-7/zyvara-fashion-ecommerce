@@ -369,7 +369,7 @@
                                 <h3 class="text-lg font-bold text-gray-900 mb-4">Product Description</h3>
                                 @if($product->short_description)
                                     <p class="text-gray-600 mb-4">
-                                        {{ $product->short_description }}
+                                        {!! $product->short_description !!}
                                     </p>
                                 @endif
                                 @if($product->description)
