@@ -69,8 +69,16 @@ class ProductVariantManager {
 
         document.getElementById("quickViewName").textContent = product.name;
         document.getElementById("quickViewBrand").textContent = formatBrandCategory(product);
-        document.getElementById("quickViewDescription").innerHTML =
-            product.short_description || "";
+
+        const desc = document.getElementById('quickViewDescription');
+
+        if (product.short_description) {
+            desc.innerHTML = product.short_description;
+            desc.classList.remove('hidden');
+        } else {
+            desc.innerHTML = '';
+            desc.classList.add('hidden');
+        }
 
         document.getElementById("quickViewImage").src =
             product.image || product.thumbnail || "/assets/images/default.png";
@@ -78,7 +86,12 @@ class ProductVariantManager {
         this.setPrice(product.price, product.compare_price);
         this.setStock(product.stock ?? 0);
 
-        this.renderVariants();
+
+        if (this.variants.length > 0) {
+            this.renderVariants();
+        } else {
+            document.getElementById('variantsSection').classList.add('hidden');
+        }
 
         document.getElementById("quickViewDetails").onclick = () => {
             window.location.href = `/products/${product.slug}`;

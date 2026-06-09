@@ -18,9 +18,9 @@ g               ray-900">Quick View</h3>
                 {{-- Product Image --}}
                 <div class="space-y-4">
 
-                    <div class="relative bg-gray-50 rounded-xl overflow-hidden aspect-auto">
+                    <div class="relative bg-gray-50 rounded-xl overflow-hidden aspect-square lg:aspect-auto">
                         <img id="quickViewImage" src="{{ asset('assets/images/default.png') }}" alt=""
-                            class="w-full h-full object-cover">
+                            class="w-full h-full object-contain object-center">
                         {{-- Badge Container --}}
                         <div id="quickViewBadges" class="absolute top-3 left-3 flex flex-col gap-2"></div>
                     </div>
@@ -29,7 +29,7 @@ g               ray-900">Quick View</h3>
                 </div>
 
                 {{-- Product Info --}}
-                <div class="">
+                <div class="space-y-4">
                     {{-- Title --}}
                     <div>
                         <p id="quickViewBrand" class="text-sm text-primary font-medium mb-1"></p>
@@ -111,34 +111,34 @@ g               ray-900">Quick View</h3>
 
                     <div
                         class="sticky bottom-0 z-50 bg-white border-gray-100 px-0 py-5 pb-[calc(env(safe-area-inset-bottom)+12px)] shadow-[0_-6px_20px_rgba(0,0,0,0.06)]">
-
+    
                         <div class="flex gap-3">
-
+    
                             {{-- Add to Cart --}}
                             <button id="quickViewAddToCart" onclick="addToCartFromQuickView()" class="flex-1 h-12 bg-primary text-white rounded-xl font-semibold text-sm
                    flex items-center justify-center gap-2
                    active:scale-[0.98] transition cursor-pointer">
-
+    
                                 <i class="fas fa-shopping-cart text-sm"></i>
                                 <span>Add to Cart</span>
                             </button>
-
+    
                             {{-- View Details --}}
                             <button id="quickViewDetails" class="flex-1 h-12 border-2 border-primary text-primary rounded-xl font-semibold text-sm
                    flex items-center justify-center gap-2
                    hover:bg-primary hover:text-white
                    active:scale-[0.98] transition cursor-pointer">
-
+    
                                 <i class="fas fa-eye text-sm"></i>
                                 <span>View Details</span>
                             </button>
-
+    
                         </div>
                     </div>
-
-
+    
+    
                     {{-- Short Description --}}
-                    <div id="quickViewDescription" class="text-sm text-gray-600 pt-2 border-t border-gray-100"></div>
+                    <div id="quickViewDescription" class="text-sm text-gray-600 border-t border-gray-100 hidden"></div>
                 </div>
             </div>
         </div>
@@ -196,7 +196,8 @@ g               ray-900">Quick View</h3>
     }
 </style>
 
-{{-- <script>
+{{--
+<script>
     let quickViewProduct = null;
     let quickViewVariants = [];
 
