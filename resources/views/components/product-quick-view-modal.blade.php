@@ -14,7 +14,7 @@ g               ray-900">Quick View</h3>
 
         {{-- Modal Content --}}
         <div id="quickViewContent" class="overflow-y-auto max-h-[calc(90vh-5rem)]">
-            <div class="grid md:grid-cols-2 gap-6 p-6">
+            <div class="grid md:grid-cols-2 gap-6 px-6 pt-6">
                 {{-- Product Image --}}
                 <div class="space-y-4">
 
@@ -29,7 +29,7 @@ g               ray-900">Quick View</h3>
                 </div>
 
                 {{-- Product Info --}}
-                <div class="space-y-4">
+                <div class="flex flex-col gap-4">
                     {{-- Title --}}
                     <div>
                         <p id="quickViewBrand" class="text-sm text-primary font-medium mb-1"></p>
@@ -110,8 +110,7 @@ g               ray-900">Quick View</h3>
                     </div>
 
                     <div
-                        class="sticky bottom-0 z-50 bg-white border-gray-100 px-0 py-5 pb-[calc(env(safe-area-inset-bottom)+12px)] shadow-[0_-6px_20px_rgba(0,0,0,0.06)]">
-    
+                        class="sticky bottom-0 z-50 bg-white border-gray-100 pb-6">
                         <div class="flex gap-3">
     
                             {{-- Add to Cart --}}
