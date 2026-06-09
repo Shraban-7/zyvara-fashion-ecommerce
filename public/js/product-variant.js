@@ -69,7 +69,7 @@ class ProductVariantManager {
 
         document.getElementById("quickViewName").textContent = product.name;
         document.getElementById("quickViewBrand").textContent = formatBrandCategory(product);
-        document.getElementById("quickViewDescription").textContent =
+        document.getElementById("quickViewDescription").innerHTML =
             product.short_description || "";
 
         document.getElementById("quickViewImage").src =
