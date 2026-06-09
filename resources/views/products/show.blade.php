@@ -212,9 +212,9 @@
                         <div>
                             <span class="text-sm font-semibold text-gray-900 mb-2.5 block">Quantity</span>
                             <div class="flex flex-wrap items-center gap-3">
-                                <div class="flex items-center border-2 border-gray-300 rounded-xl overflow-hidden">
+                                <div class="flex items-center border-2 border-gray-300 rounded-xl overflow-hidden w-fit">
                                     <button onclick="updateQuantity(-1)"
-                                        class="w-12 h-12 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
+                                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                                         <i class="fas fa-minus"></i>
                                     </button>
                                     <input type="number"
@@ -222,9 +222,9 @@
                                         value="1"
                                         min="1"
                                         max="{{ $product->variants->count() ? 1 : $product->currentStock }}"
-                                        class="w-16 h-12 text-center text-base font-semibold border-x-2 border-gray-300 focus:outline-none">
+                                        class="w-12 h-10 text-center text-sm font-semibold border-xl border-gray-200 focus:outline-none">
                                     <button onclick="updateQuantity(1)"
-                                        class="w-12 h-12 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
+                                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
