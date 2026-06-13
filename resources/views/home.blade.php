@@ -28,7 +28,7 @@
 
 @include('home.showroom')
 
-@include('home.delivery-info')
+{{-- @include('home.delivery-info') --}}
 
 @include('home.newsletter')
 @endsection

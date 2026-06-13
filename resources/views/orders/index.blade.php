@@ -5,58 +5,61 @@
     <div class="space-y-6">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-800">Order History</h2>
+                <h2 class="text-2xl font-bold text-primary">Order History</h2>
+                <p class="text-sm text-secondary mt-1">Track and manage your orders</p>
             </div>
         </div>
         <div class="space-y-4">
             @if ($orders->isEmpty())
                 <!-- Empty State -->
-                <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
-                    <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a2 2 0 012-2z" />
-                    </svg>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No Orders Yet</h3>
-                    <p class="text-gray-600 mb-6">Start shopping to see your orders here</p>
+                <div class="bg-white rounded-2xl shadow-sm border border-primary-100 p-12 text-center">
+                    <div class="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary-100">
+                        <svg class="h-8 w-8 text-secondary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a2 2 0 012-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">No Orders Yet</h3>
+                    <p class="text-secondary mb-6">Start shopping to see your orders here</p>
                     <a href="/"
-                        class="inline-block bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">Continue
+                        class="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">Continue
                         Shopping</a>
                 </div>
             @else
                 <!-- Orders Grid for Mobile & Table for Desktop -->
-                <div class="hidden lg:block bg-white rounded-2xl shadow-sm overflow-hidden">
+                <div class="hidden lg:block bg-white rounded-2xl shadow-sm border border-primary-100 overflow-hidden">
                     <table class="w-full">
-                        <thead class="bg-gray-50 border-b border-gray-200">
+                        <thead class="bg-light border-b border-primary-100">
                             <tr>
-                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Order ID</th>
-                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Date</th>
-                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Items</th>
-                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
-                                <th class="px-6 py-4 text-right text-sm font-semibold text-gray-900">Total</th>
-                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Action</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-primary">Order ID</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-primary">Date</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-primary">Items</th>
+                                <th class="px-6 py-4 text-left text-sm font-bold text-primary">Status</th>
+                                <th class="px-6 py-4 text-right text-sm font-bold text-primary">Total</th>
+                                <th class="px-6 py-4 text-center text-sm font-bold text-primary">Action</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
+                        <tbody class="divide-y divide-primary-100">
                             @foreach ($orders as $order)
-                                <tr class="hover:bg-gray-50 transition">
+                                <tr class="hover:bg-light transition-colors duration-200">
                                     <td class="px-6 py-4">
-                                        <span class="font-semibold text-gray-900">#{{ $order->order_number }}</span>
+                                        <span class="font-bold text-primary">#{{ $order->order_number }}</span>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $order->created_at->format('M d, Y h:i a') }}
+                                    <td class="px-6 py-4 text-sm text-secondary">{{ $order->created_at->format('M d, Y h:i a') }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                    <td class="px-6 py-4 text-sm text-secondary">
                                         {{ $order->items_count ?? ($order->items ? (is_countable($order->items) ? count($order->items) : 0) : 0) }}
                                         item(s)</td>
                                     <td class="px-6 py-4">
                                         <span
-                                            class="px-3 py-1 rounded-full text-xs font-semibold text-{{ $order->status->color() }}-600 bg-{{ $order->status->color() }}-100">
+                                            class="px-3 py-1 rounded-full text-xs font-bold text-{{ $order->status->color() }}-600 bg-{{ $order->status->color() }}-50 border border-{{ $order->status->color() }}-100">
                                             {{ $order->status->label() }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-right font-bold text-gray-900">{{ money($order->total) }}</td>
+                                    <td class="px-6 py-4 text-right font-bold text-primary">{{ money($order->total) }}</td>
                                     <td class="px-6 py-4 text-center">
                                         <a href="{{ route('orders.show', $order->order_number) }}"
-                                            class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium">
+                                            class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 text-sm font-bold shadow-sm hover:shadow-md">
                                             View Details
                                         </a>
                                     </td>
@@ -69,36 +72,36 @@
                 <!-- Mobile Card View -->
                 <div class="lg:hidden space-y-4">
                     @foreach ($orders as $order)
-                        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+                        <div class="bg-white rounded-2xl shadow-sm p-6 border border-primary-100 hover:shadow-md transition-shadow duration-200">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
-                                    <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Order</p>
-                                    <p class="font-bold text-lg text-gray-900">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
+                                    <p class="text-xs text-secondary uppercase tracking-wide mb-1 font-bold">Order</p>
+                                    <p class="font-bold text-lg text-primary">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
                                 </div>
                                 <span
-                                    class="px-3 py-1 rounded-full text-xs font-semibold text-{{ $order->status->color() }}-600 bg-{{ $order->status->color() }}-100">
+                                    class="px-3 py-1 rounded-full text-xs font-bold text-{{ $order->status->color() }}-600 bg-{{ $order->status->color() }}-50 border border-{{ $order->status->color() }}-100">
                                     {{ $order->status->label() }}
                                 </span>
                             </div>
 
-                            <div class="space-y-3 mb-6 pb-6 border-b border-gray-100">
+                            <div class="space-y-3 mb-6 pb-6 border-b border-primary-100">
                                 <div class="flex justify-between text-sm">
-                                    <span class="text-gray-600">Date</span>
-                                    <span class="font-medium text-gray-900">{{ $order->created_at->format('M d, Y') }}</span>
+                                    <span class="text-secondary">Date</span>
+                                    <span class="font-semibold text-primary">{{ $order->created_at->format('M d, Y') }}</span>
                                 </div>
                                 <div class="flex justify-between text-sm">
-                                    <span class="text-gray-600">Items</span>
+                                    <span class="text-secondary">Items</span>
                                     <span
-                                        class="font-medium text-gray-900">{{ $order->items_count ?? ($order->items ? (is_countable($order->items) ? count($order->items) : 0) : 0) }}</span>
+                                        class="font-semibold text-primary">{{ $order->items_count ?? ($order->items ? (is_countable($order->items) ? count($order->items) : 0) : 0) }}</span>
                                 </div>
                                 <div class="flex justify-between text-sm">
-                                    <span class="text-gray-600">Total</span>
-                                    <span class="font-bold text-lg text-gray-900">{{ money($order->total) }}</span>
+                                    <span class="text-secondary">Total</span>
+                                    <span class="font-bold text-lg text-primary">{{ money($order->total) }}</span>
                                 </div>
                             </div>
 
                             <a href="{{ route('orders.show', $order->order_number) }}"
-                                class="block w-full bg-primary text-white py-3 rounded-lg font-semibold text-center hover:bg-blue-700 transition">
+                                class="block w-full bg-primary text-white py-3 rounded-xl font-bold text-center hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">
                                 View Details
                             </a>
                         </div>

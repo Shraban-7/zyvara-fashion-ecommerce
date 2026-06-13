@@ -71,20 +71,20 @@
         createToast(id, type, message) {
             const toast = document.createElement('div');
             toast.id = `toast-${id}`;
-            toast.className = 'toast bg-white rounded-xl shadow-2xl p-4 w-80 sm:w-96 flex items-start gap-3 border-l-4';
+            toast.className = 'toast bg-surface rounded-2xl shadow-2xl p-4 w-80 sm:w-96 flex items-start gap-3 border-l-4 border border-secondary-100';
 
             const config = this.getTypeConfig(type);
             toast.classList.add(config.borderColor);
 
             toast.innerHTML = `
-                <div class="flex-shrink-0 ${config.iconBg} w-10 h-10 rounded-full flex items-center justify-center">
+                <div class="flex-shrink-0 ${config.iconBg} w-10 h-10 rounded-full flex items-center justify-center shadow-sm">
                     <i class="${config.icon} ${config.iconColor}"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h4 class="font-semibold text-gray-900 text-sm mb-1">${config.title}</h4>
-                    <p class="text-sm text-gray-600 break-words">${message}</p>
+                    <h4 class="font-semibold text-black text-sm mb-1">${config.title}</h4>
+                    <p class="text-sm text-secondary-500 break-words">${message}</p>
                 </div>
-                <button onclick="window.toastManager.remove(${id})" class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition">
+                <button onclick="window.toastManager.remove(${id})" class="flex-shrink-0 text-secondary-400 hover:text-secondary-600 transition-colors">
                     <i class="fas fa-times"></i>
                 </button>
             `;
@@ -97,30 +97,30 @@
                 success: {
                     title: 'Success',
                     icon: 'fas fa-check',
-                    iconColor: 'text-green-600',
-                    iconBg: 'bg-green-100',
-                    borderColor: 'border-green-500'
+                    iconColor: 'text-success-600',
+                    iconBg: 'bg-success-100',
+                    borderColor: 'border-success-500'
                 },
                 error: {
                     title: 'Error',
                     icon: 'fas fa-exclamation-circle',
-                    iconColor: 'text-red-600',
-                    iconBg: 'bg-red-100',
-                    borderColor: 'border-red-500'
+                    iconColor: 'text-danger-600',
+                    iconBg: 'bg-danger-100',
+                    borderColor: 'border-danger-500'
                 },
                 warning: {
                     title: 'Warning',
                     icon: 'fas fa-exclamation-triangle',
-                    iconColor: 'text-yellow-600',
-                    iconBg: 'bg-yellow-100',
-                    borderColor: 'border-yellow-500'
+                    iconColor: 'text-warning-600',
+                    iconBg: 'bg-warning-100',
+                    borderColor: 'border-warning-500'
                 },
                 info: {
                     title: 'Info',
                     icon: 'fas fa-info-circle',
-                    iconColor: 'text-blue-600',
-                    iconBg: 'bg-blue-100',
-                    borderColor: 'border-blue-500'
+                    iconColor: 'text-primary-600',
+                    iconBg: 'bg-primary-100',
+                    borderColor: 'border-primary-500'
                 }
             };
 

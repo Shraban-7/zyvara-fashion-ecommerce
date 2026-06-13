@@ -5,13 +5,13 @@ $badge = null;
 $badgeClass = '';
 
 if ($showBadge && $badgeType === 'auto') {
-    if ($product->is_new_arrival)    { $badge = 'NEW';      $badgeClass = 'pc2-badge--new';  }
-    elseif ($product->is_best_seller){ $badge = 'HOT';      $badgeClass = 'pc2-badge--hot';  }
-    elseif ($product->is_on_sale)    { $badge = 'SALE';     $badgeClass = 'pc2-badge--sale'; }
-    elseif ($product->is_featured)   { $badge = 'FEATURED'; $badgeClass = 'pc2-badge--feat'; }
+    if ($product->is_new_arrival)    { $badge = 'NEW';      $badgeClass = 'pc3-badge--new';  }
+    elseif ($product->is_best_seller){ $badge = 'HOT';      $badgeClass = 'pc3-badge--hot';  }
+    elseif ($product->is_on_sale)    { $badge = 'SALE';     $badgeClass = 'pc3-badge--sale'; }
+    elseif ($product->is_featured)   { $badge = 'FEATURED'; $badgeClass = 'pc3-badge--feat'; }
 } elseif ($showBadge && $badgeType !== 'auto') {
     $badge = $badgeType;
-    $badgeClass = 'pc2-badge--new';
+    $badgeClass = 'pc3-badge--new';
 }
 
 $discountPercent = 0;
@@ -19,37 +19,49 @@ if ($product->compare_price && $product->compare_price > $product->price) {
     $discountPercent = round((($product->compare_price - $product->price) / $product->compare_price) * 100);
 }
 
-// Collect variant color swatches (up to 4)
+// Collect variant color swatches (up to 5)
 $colorVariants = collect();
 try {
     $colorVariants = $product->variants
         ->where('type', 'color')
-        ->take(4);
+        ->take(5);
 } catch (\Throwable $e) {}
 
-// Brand / category label
 $brandLabel = '';
 try {
     $brandLabel = $product->brand?->name ?? $product->category?->name ?? '';
 } catch (\Throwable $e) {}
+
+$hasVariants = $product->variants->count() > 0;
 ?>
 
-<div class="pc2-card group">
+<div class="pc3-card group">
 
-    {{-- ── Image Block ── --}}
-    <div class="pc2-img-wrap">
+    {{-- Image Block --}}
+    <div class="pc3-img-wrap">
 
-        {{-- Main image link --}}
-        <a href="{{ route('products.show', $product->slug) }}" class="pc2-img-link">
+        <a href="{{ route('products.show', $product->slug) }}" class="pc3-img-link">
             <img src="{{ $product->thumbnail }}"
                  alt="{{ $product->name }}"
-                 class="pc2-img"
-                 loading="lazy">
+                 class="pc3-img"
+                 loading="lazy"
+                 width="400"
+                 height="400">
+            
+            {{-- Secondary image hover effect (if available) --}}
+            @if($product->secondary_image)
+            <img src="{{ $product->secondary_image }}"
+                 alt="{{ $product->name }} - alternate view"
+                 class="pc3-img-hover"
+                 loading="lazy"
+                 width="400"
+                 height="400">
+            @endif
         </a>
 
-        {{-- Badge top-left --}}
+        {{-- Badge --}}
         @if($badge)
-            <span class="pc2-badge {{ $badgeClass }}">
+            <span class="pc3-badge {{ $badgeClass }}">
                 @if($discountPercent > 0 && $product->is_on_sale)
                     -{{ $discountPercent }}%
                 @else
@@ -57,83 +69,94 @@ try {
                 @endif
             </span>
         @elseif($discountPercent > 0)
-            <span class="pc2-badge pc2-badge--sale">-{{ $discountPercent }}%</span>
+            <span class="pc3-badge pc3-badge--sale">-{{ $discountPercent }}%</span>
         @endif
 
-        {{-- Wishlist / heart top-right --}}
-        <button class="pc2-heart" aria-label="Add to wishlist"
-            onclick="event.preventDefault()">
-            <i class="far fa-heart text-gray-400 text-sm group-[:hover]:text-gray-600"></i>
+        {{-- Wishlist --}}
+        <button class="pc3-heart" 
+                aria-label="Add to wishlist"
+                onclick="event.preventDefault(); toggleWishlist(this, {{ $product->id }})">
+            <svg class="pc3-heart-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
         </button>
 
-        {{-- Slide-up cart panel on hover --}}
-        <div class="pc2-cart-panel">
-            <button
-                class="pc2-cart-btn"
-                onclick="handleProductCardAddToCart({{ $product->id }}, {{ $product->variants->count() }})"
-                data-product-id="{{ $product->id }}"
-                aria-label="Add to cart">
-                <i class="fas fa-shopping-bag text-xs"></i>
-                Add to Cart
+        {{-- Action Panel --}}
+        <div class="pc3-actions">
+            <button class="pc3-action-btn pc3-cart-btn"
+                    onclick="handleProductCardAddToCart({{ $product->id }}, {{ $hasVariants ? 1 : 0 }})"
+                    data-product-id="{{ $product->id }}"
+                    aria-label="Add to cart">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                <span>Add to Cart</span>
             </button>
-            <button
-                onclick="window.productVariantManager.openQuickView({{ $product->id }})"
-                class="pc2-qv-btn"
-                aria-label="Quick view">
-                <i class="far fa-eye text-sm"></i>
+            
+            <button class="pc3-action-btn pc3-qv-btn"
+                    onclick="window.productVariantManager?.openQuickView({{ $product->id }})"
+                    aria-label="Quick view">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
             </button>
         </div>
     </div>
 
-    {{-- ── Info Block ── --}}
-    <div class="pc2-info">
+    {{-- Info Block --}}
+    <div class="pc3-info">
 
-        {{-- Color swatches + variant label --}}
+        {{-- Color swatches --}}
         @if($colorVariants->isNotEmpty())
-        <div class="pc2-swatches">
+        <div class="pc3-swatches">
             @foreach($colorVariants as $variant)
-                <span class="pc2-swatch"
-                    title="{{ $variant->value }}"
-                    style="background: {{ $variant->value }}; border-color: {{ $variant->value === '#ffffff' || strtolower($variant->value) === 'white' ? '#d1d5db' : $variant->value }};"></span>
+                <span class="pc3-swatch {{ $variant->value === '#ffffff' || strtolower($variant->value) === 'white' ? 'pc3-swatch--white' : '' }}"
+                      title="{{ $variant->value }}"
+                      style="background: {{ $variant->value }};"></span>
             @endforeach
-            <span class="pc2-swatch-label">{{ $colorVariants->first()->value }}</span>
+            @if($product->variants->where('type', 'color')->count() > 5)
+                <span class="pc3-swatch-more">+{{ $product->variants->where('type', 'color')->count() - 5 }}</span>
+            @endif
         </div>
         @endif
 
-        {{-- Brand / category --}}
+        {{-- Brand --}}
         @if($brandLabel)
-        <p class="pc2-brand">{{ strtoupper($brandLabel) }}</p>
+        <p class="pc3-brand">{{ $brandLabel }}</p>
         @endif
 
         {{-- Name --}}
-        <a href="{{ route('products.show', $product->slug) }}" class="pc2-name-link">
-            <h3 class="pc2-name">{{ $product->name }}</h3>
+        <a href="{{ route('products.show', $product->slug) }}" class="pc3-name-link">
+            <h3 class="pc3-name">{{ $product->name }}</h3>
         </a>
 
         {{-- Rating --}}
         @if($product->review_count > 0)
-        <div class="pc2-rating">
-            <div class="pc2-stars">
+        <div class="pc3-rating">
+            <div class="pc3-stars">
                 @for($i = 1; $i <= 5; $i++)
                     @if($i <= floor($product->average_rating))
-                        <i class="fas fa-star"></i>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                     @elseif($i - 0.5 <= $product->average_rating)
-                        <i class="fas fa-star-half-alt"></i>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><defs><linearGradient id="half{{ $product->id }}"><stop offset="50%" stop-color="currentColor"/><stop offset="50%" stop-color="#e2e8f0"/></linearGradient></defs><polygon fill="url(#half{{ $product->id }})" points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                     @else
-                        <i class="far fa-star pc2-star-empty"></i>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#e2e8f0" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                     @endif
                 @endfor
             </div>
-            <span class="pc2-rating-count">{{ number_format($product->average_rating, 1) }}</span>
-            <span class="pc2-rating-total">({{ $product->review_count }})</span>
+            <span class="pc3-rating-text">{{ number_format($product->average_rating, 1) }} <span class="pc3-rating-count">({{ $product->review_count }})</span></span>
         </div>
         @endif
 
         {{-- Price --}}
-        <div class="pc2-price-row">
-            <span class="pc2-price">৳{{ number_format($product->price, 0) }}</span>
+        <div class="pc3-price-row">
+            <span class="pc3-price">৳{{ number_format($product->price, 0) }}</span>
             @if($product->compare_price && $product->compare_price > $product->price)
-                <span class="pc2-compare">৳{{ number_format($product->compare_price, 0) }}</span>
+                <span class="pc3-compare">৳{{ number_format($product->compare_price, 0) }}</span>
+                <span class="pc3-save">Save ৳{{ number_format($product->compare_price - $product->price, 0) }}</span>
             @endif
         </div>
     </div>
@@ -141,288 +164,396 @@ try {
 
 <style>
 /* ====================================================
-   PRODUCT CARD v2 — Reference Style
-   Inspired by: minimal editorial e-commerce card
-   Primary: #228bcc
+   PRODUCT CARD v3 — Modern Minimal
+   Design: Clean, spacious, refined interactions
+   Primary: #0f172a (slate-900)
+   Accent:  #3b82f6 (blue-500)
 ==================================================== */
 
-.pc2-card {
+.pc3-card {
     display: flex;
     flex-direction: column;
     height: 100%;
     background: #fff;
-    border-radius: 18px;
+    border-radius: 16px;
     overflow: hidden;
     position: relative;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
-    transition: transform 0.32s cubic-bezier(0.34,1.2,0.64,1),
-                box-shadow 0.32s ease;
+    border: 1px solid #f1f5f9;
+    transition: box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.pc2-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 48px rgba(0,0,0,0.13), 0 4px 12px rgba(34,139,204,0.08);
+.pc3-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12),
+                0 0 0 1px rgba(0, 0, 0, 0.04);
 }
 
 /* ── Image ── */
-.pc2-img-wrap {
+.pc3-img-wrap {
     position: relative;
     overflow: hidden;
-    background: #f4f4f5;
+    background: #f8fafc;
     border-radius: 16px;
     aspect-ratio: 1 / 1;
     flex-shrink: 0;
-    /* small inner padding so image feels framed */
-    margin: 6px 6px 0;
+    margin: 8px;
 }
 
-.pc2-img-link {
+.pc3-img-link {
     display: block;
     width: 100%;
     height: 100%;
+    position: relative;
 }
 
-.pc2-img {
+.pc3-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
-    transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.4s ease;
     will-change: transform;
 }
 
-.pc2-card:hover .pc2-img { transform: scale(1.06); }
+.pc3-img-hover {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.pc3-card:hover .pc3-img {
+    transform: scale(1.03);
+}
+
+.pc3-card:hover .pc3-img-hover {
+    opacity: 1;
+    transform: scale(1.03);
+}
 
 /* ── Badge ── */
-.pc2-badge {
+.pc3-badge {
     position: absolute;
     top: 12px;
     left: 12px;
     z-index: 3;
     font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    padding: 4px 10px;
-    border-radius: 99px;
-    line-height: 1.4;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 6px;
+    line-height: 1;
+    text-transform: uppercase;
 }
 
-/* Reference style: white pill with colored text */
-.pc2-badge--new  { background: #fff; color: #16a34a; box-shadow: 0 1px 6px rgba(0,0,0,0.12); }
-.pc2-badge--hot  { background: #fff; color: #dc2626; box-shadow: 0 1px 6px rgba(0,0,0,0.12); }
-.pc2-badge--sale {
-    background: #ef4444;
-    color: #fff;
-    box-shadow: 0 1px 8px rgba(239,68,68,0.35);
-}
-.pc2-badge--feat { background: #fff; color: #228bcc; box-shadow: 0 1px 6px rgba(0,0,0,0.12); }
+.pc3-badge--new  { background: #ecfdf5; color: #059669; }
+.pc3-badge--hot  { background: #fef2f2; color: #dc2626; }
+.pc3-badge--sale { background: #dc2626; color: #fff; }
+.pc3-badge--feat { background: #eff6ff; color: #2563eb; }
 
-/* ── Heart button ── */
-.pc2-heart {
+/* ── Heart ── */
+.pc3-heart {
     position: absolute;
     top: 10px;
     right: 10px;
     z-index: 3;
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    transition: background 0.2s, transform 0.18s;
+    color: #94a3b8;
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: scale(0.8);
 }
-.pc2-heart:hover {
-    background: #fff;
-    transform: scale(1.08);
-}
-.pc2-heart:hover i { color: #ef4444 !important; }
 
-/* ── Slide-up cart panel ── */
-.pc2-cart-panel {
+.pc3-card:hover .pc3-heart {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.pc3-heart:hover {
+    background: #fff;
+    color: #ef4444;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.pc3-heart.active {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.pc3-heart-icon {
+    transition: transform 0.2s ease;
+}
+
+.pc3-heart:hover .pc3-heart-icon {
+    transform: scale(1.15);
+}
+
+/* ── Actions Panel ── */
+.pc3-actions {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
     display: flex;
     gap: 8px;
-    padding: 12px 10px;
-    background: linear-gradient(to top, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.20) 70%, transparent 100%);
-    transform: translateY(8px);
     opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1),
-                opacity 0.25s ease;
+    transform: translateY(8px);
+    transition: all 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
     z-index: 4;
 }
 
-.pc2-card:hover .pc2-cart-panel {
-    transform: translateY(0);
+.pc3-card:hover .pc3-actions {
     opacity: 1;
+    transform: translateY(0);
 }
 
-.pc2-cart-btn {
-    flex: 1;
-    height: 38px;
-    background: #fff;
-    color: #111827;
-    border: none;
-    border-radius: 99px;
-    font-size: 12.5px;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    transition: background 0.18s, color 0.18s, transform 0.15s;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.20);
-    letter-spacing: 0.01em;
-}
-.pc2-cart-btn:hover {
-    background: #228bcc;
-    color: #fff;
-    transform: scale(1.02);
-}
-
-
-
-.pc2-qv-btn {
-    width: 36px;
+.pc3-action-btn {
     height: 36px;
-    flex-shrink: 0;
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(4px);
-    border: 1.5px solid rgba(255,255,255,0.5);
-    border-radius: 50%;
-    color: #fff;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.18s;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
-.pc2-qv-btn:hover { background: rgba(255,255,255,0.35); }
 
-/* ── Info block ── */
-.pc2-info {
-    padding: 12px 10px 10px;
+.pc3-cart-btn {
+    flex: 1;
+    background: #0f172a;
+    color: #fff;
+    padding: 0 14px;
+}
+
+.pc3-cart-btn:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.pc3-cart-btn:active {
+    transform: translateY(0);
+}
+
+.pc3-qv-btn {
+    width: 36px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    color: #475569;
+}
+
+.pc3-qv-btn:hover {
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ── Info ── */
+.pc3-info {
+    padding: 12px 14px 14px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     flex: 1;
 }
 
-/* Color swatches */
-.pc2-swatches {
+/* Swatches */
+.pc3-swatches {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 1px;
+    gap: 5px;
+    margin-bottom: 2px;
 }
 
-.pc2-swatch {
-    width: 14px;
-    height: 14px;
+.pc3-swatch {
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    border: 2px solid;
+    border: 2px solid transparent;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
     flex-shrink: 0;
-    display: inline-block;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.pc2-swatch-label {
-    font-size: 10.5px;
-    color: #6b7280;
+.pc3-swatch:hover {
+    transform: scale(1.2);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2), 0 0 0 2px #fff, 0 0 0 3px #cbd5e1;
+}
+
+.pc3-swatch--white {
+    box-shadow: inset 0 0 0 1px #cbd5e1;
+    border: 2px solid #fff;
+}
+
+.pc3-swatch-more {
+    font-size: 10px;
+    color: #94a3b8;
     font-weight: 500;
-    letter-spacing: 0.01em;
+    margin-left: 2px;
 }
 
 /* Brand */
-.pc2-brand {
-    font-size: 10px;
-    font-weight: 700;
-    color: #b0b8c8;
-    letter-spacing: 0.10em;
+.pc3-brand {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     line-height: 1;
     margin: 0;
 }
 
 /* Name */
-.pc2-name-link { text-decoration: none; }
+.pc3-name-link {
+    text-decoration: none;
+    display: block;
+}
 
-.pc2-name {
-    font-size: 13.5px;
-    font-weight: 700;
+.pc3-name {
+    font-size: 14px;
+    font-weight: 600;
     color: #0f172a;
-    line-height: 1.42;
+    line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin: 0;
-    transition: color 0.18s;
-    letter-spacing: -0.01em;
+    transition: color 0.2s ease;
 }
-.pc2-name-link:hover .pc2-name { color: #228bcc; }
+
+.pc3-name-link:hover .pc3-name {
+    color: #3b82f6;
+}
 
 /* Rating */
-.pc2-rating {
+.pc3-rating {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    margin-top: 2px;
 }
 
-.pc2-stars {
+.pc3-stars {
     display: flex;
-    gap: 1.5px;
-    color: #fbbf24;
-    font-size: 10.5px;
+    gap: 2px;
+    color: #f59e0b;
 }
-.pc2-star-empty { color: #e2e8f0; }
 
-.pc2-rating-count {
-    font-size: 11.5px;
-    font-weight: 700;
-    color: #1f2937;
+.pc3-rating-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
 }
-.pc2-rating-total {
-    font-size: 10.5px;
-    color: #9ca3af;
+
+.pc3-rating-count {
+    font-weight: 400;
+    color: #94a3b8;
 }
 
 /* Price */
-.pc2-price-row {
+.pc3-price-row {
     display: flex;
-    align-items: baseline;
-    gap: 7px;
+    align-items: center;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-top: 3px;
+    margin-top: 4px;
 }
 
-.pc2-price {
+.pc3-price {
     font-size: 16px;
-    font-weight: 900;
+    font-weight: 800;
     color: #0f172a;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     line-height: 1;
 }
 
-.pc2-compare {
-    font-size: 12px;
-    color: #cbd5e1;
+.pc3-compare {
+    font-size: 13px;
+    color: #94a3b8;
     text-decoration: line-through;
-    font-weight: 400;
+    font-weight: 500;
+}
+
+.pc3-save {
+    font-size: 11px;
+    font-weight: 600;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
 }
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-    .pc2-card, .pc2-img, .pc2-cart-panel { transition: none !important; }
+    .pc3-card, .pc3-img, .pc3-img-hover, .pc3-actions, .pc3-heart {
+        transition: none !important;
+    }
+    .pc3-card:hover {
+        transform: none;
+    }
+}
+
+/* Mobile touch optimization */
+@media (hover: none) {
+    .pc3-heart {
+        opacity: 1;
+        transform: scale(1);
+    }
+    .pc3-actions {
+        opacity: 1;
+        transform: translateY(0);
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        margin-top: 8px;
+    }
+    .pc3-img-wrap {
+        margin-bottom: 0;
+    }
 }
 </style>
+
+<script>
+function toggleWishlist(btn, productId) {
+    btn.classList.toggle('active');
+    // Add your wishlist AJAX logic here
+    const isActive = btn.classList.contains('active');
+    btn.setAttribute('aria-label', isActive ? 'Remove from wishlist' : 'Add to wishlist');
+    
+    // Optional: Show toast notification
+    // showToast(isActive ? 'Added to wishlist' : 'Removed from wishlist');
+}
+
+// Handle variant-aware add to cart
+function handleProductCardAddToCart(productId, hasVariants) {
+    if (hasVariants) {
+        window.productVariantManager?.openQuickView(productId);
+    } else {
+        // Direct add to cart
+        addToCart(productId, 1);
+    }
+}
+</script>

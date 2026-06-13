@@ -2,63 +2,62 @@
 @section('title', 'Payment Successful')
 @section('content')
 
-    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="min-h-screen flex items-center justify-center px-4 py-12 bg-light">
         <div class="max-w-lg w-full">
             <!-- Success Icon -->
             <div class="text-center mb-8">
-                <div
-                    class="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-green-100 mb-6 animate-pulse">
-                    <svg class="h-16 w-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-success-100 mb-6 animate-pulse shadow-lg shadow-success-100/50">
+                    <svg class="h-16 w-16 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                 </div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
-                <p class="text-gray-600">Your order has been placed successfully.</p>
+                <h1 class="text-3xl font-bold text-black mb-2">Payment Successful!</h1>
+                <p class="text-secondary-400">Your order has been placed successfully.</p>
             </div>
 
             <!-- Order Details Card -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+            <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-6 mb-6 border border-secondary-100">
+                <div class="flex items-center justify-between mb-4 pb-4 border-b border-secondary-200">
                     <div>
-                        <p class="text-sm text-gray-600">Order Number</p>
-                        <p class="text-lg font-semibold text-gray-900">#{{ $order->order_number }}</p>
+                        <p class="text-sm text-secondary-400">Order Number</p>
+                        <p class="text-lg font-semibold text-black">#{{ $order->order_number }}</p>
                     </div>
-                    <div class="bg-green-100 px-3 py-1 rounded-full">
-                        <span class="text-sm font-medium text-green-800">Confirmed</span>
+                    <div class="bg-success-100 px-3 py-1 rounded-full border border-success-200">
+                        <span class="text-sm font-medium text-success-700">Confirmed</span>
                     </div>
                 </div>
 
                 <div class="space-y-3">
                     <div class="flex items-start">
-                        <i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i>
+                        <i class="fas fa-check-circle text-success-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-gray-900">Payment received</p>
-                            <p class="text-xs text-gray-600">We've received your payment successfully</p>
+                            <p class="text-sm font-medium text-black">Payment received</p>
+                            <p class="text-xs text-secondary-400">We've received your payment successfully</p>
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <i class="fas fa-envelope text-green-600 mt-1 mr-3"></i>
+                        <i class="fas fa-envelope text-success-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-gray-900">Confirmation email sent</p>
-                            <p class="text-xs text-gray-600">Check your email for order details</p>
+                            <p class="text-sm font-medium text-black">Confirmation email sent</p>
+                            <p class="text-xs text-secondary-400">Check your email for order details</p>
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <i class="fas fa-truck text-green-600 mt-1 mr-3"></i>
+                        <i class="fas fa-truck text-success-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-gray-900">Order is being processed</p>
-                            <p class="text-xs text-gray-600">We'll notify you when it ships</p>
+                            <p class="text-sm font-medium text-black">Order is being processed</p>
+                            <p class="text-xs text-secondary-400">We'll notify you when it ships</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Redirect Message -->
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-6">
                 <div class="flex items-center">
-                    <i class="fas fa-info-circle text-primary mr-3"></i>
-                    <p class="text-sm text-gray-700">
-                        Redirecting in <span id="countdown" class="font-bold text-primary">3.5</span> seconds...
+                    <i class="fas fa-info-circle text-primary-500 mr-3"></i>
+                    <p class="text-sm text-secondary-600">
+                        Redirecting in <span id="countdown" class="font-bold text-primary-500">3.5</span> seconds...
                     </p>
                 </div>
             </div>
@@ -67,17 +66,17 @@
             <div class="flex flex-col sm:flex-row gap-3">
                 @auth
                     <a href="{{ route('orders.index') }}"
-                        class="flex-1 bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-primary-600 transition text-center">
+                        class="flex-1 bg-primary text-white py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
                         <i class="fas fa-shopping-bag mr-2"></i>View Orders
                     </a>
                 @else
                     <a href="{{ route('home') }}"
-                        class="flex-1 bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-primary-600 transition text-center">
+                        class="flex-1 bg-primary text-white py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
                         <i class="fas fa-home mr-2"></i>Go to Home
                     </a>
                 @endauth
                 <a href="{{ route('products.index') }}"
-                    class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-lg font-medium hover:bg-primary hover:text-white transition text-center">
+                    class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-white transition text-center">
                     <i class="fas fa-shopping-cart mr-2"></i>Continue Shopping
                 </a>
             </div>

@@ -4,12 +4,12 @@
 
 @section('content')
 {{-- Breadcrumb --}}
-<div class="bg-white border-b border-gray-100">
+<div class="bg-white border-b border-primary-100">
     <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center gap-2 text-sm">
-            <a href="{{ url('/') }}" class="text-gray-500 hover:text-primary transition">Home</a>
-            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-            <span class="text-gray-900 font-medium">Products</span>
+            <a href="{{ url('/') }}" class="text-secondary hover:text-primary transition-colors duration-200">Home</a>
+            <i class="fas fa-chevron-right text-[10px] text-secondary-300"></i>
+            <span class="text-primary font-medium">Products</span>
         </nav>
     </div>
 </div>
@@ -19,8 +19,8 @@
 
         {{-- Mobile Filter Toggle --}}
         <div class="lg:hidden flex items-center justify-between mb-2">
-            <h1 class="text-xl font-bold text-black">All Products</h1>
-            <button onclick="toggleMobileFilter()" class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 tap-effect">
+            <h1 class="text-xl font-bold text-primary">All Products</h1>
+            <button onclick="toggleMobileFilter()" class="flex items-center gap-2 bg-white border border-primary-100 rounded-xl px-4 py-2.5 text-sm font-medium text-primary tap-effect shadow-sm">
                 <i class="fas fa-sliders-h"></i>
                 Filters
             </button>
@@ -28,16 +28,16 @@
 
         {{-- Sidebar Filters --}}
         <aside id="filterSidebar" class="hidden lg:block w-full lg:w-72 flex-shrink-0">
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-28">
+            <div class="bg-white rounded-2xl shadow-sm border border-primary-100 p-5 sticky top-28">
 
                 {{-- Filter Header --}}
                 <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-lg font-bold text-black">Filters</h2>
-                    <button onclick="clearAllFilters()" class="text-sm text-primary hover:underline font-medium">Clear All</button>
+                    <h2 class="text-lg font-bold text-primary">Filters</h2>
+                    <button onclick="clearAllFilters()" class="text-sm text-primary hover:text-secondary font-medium transition-colors duration-200">Clear All</button>
                 </div>
 
                 {{-- ============================================================
-                     CATEGORY FILTER — 3 LEVEL TREE
+                     CATEGORY FILTER — 3 LEVEL TREE (INDEPENDENT SELECTION)
                      ============================================================ --}}
                 @php
                     $selectedCategories = request('categories', []);
@@ -47,29 +47,28 @@
                     $selectedCategories = array_map('trim', $selectedCategories);
                 @endphp
 
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('categoryFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-primary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('categoryFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3 hover:text-secondary transition-colors duration-200">
                         Category
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="categoryFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-300 transition-transform duration-200" id="categoryFilterIcon"></i>
                     </button>
 
-                    <div id="categoryFilter" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                    <div id="categoryFilter" class="space-y-2 max-h-64 overflow-y-auto pr-1 qv-scroll">
                         @foreach($categories as $category)
 
                             {{-- LEVEL 1 --}}
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox"
-                                    class="cat-checkbox w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-                                    data-role="parent"
+                                    class="cat-checkbox w-4 h-4 rounded border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0"
                                     data-id="cat-{{ $category->id }}"
                                     name="categories[]"
                                     value="{{ $category->slug }}"
                                     {{ in_array($category->slug, $selectedCategories) ? 'checked' : '' }}
-                                    onchange="handleTree(this)">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900 font-medium">
+                                    onchange="applyFilters()">
+                                <span class="text-sm text-secondary group-hover:text-primary font-medium transition-colors duration-200">
                                     {{ $category->name }}
                                 </span>
-                                <span class="ml-auto text-xs text-gray-400 flex-shrink-0">
+                                <span class="ml-auto text-xs text-secondary-300 flex-shrink-0">
                                     ({{ $categoryCounts[$category->id] ?? 0 }})
                                 </span>
                             </label>
@@ -79,18 +78,16 @@
                                 {{-- LEVEL 2 --}}
                                 <label class="flex items-center gap-3 cursor-pointer group ml-3">
                                     <input type="checkbox"
-                                        class="cat-checkbox w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-                                        data-role="child"
-                                        data-parent="cat-{{ $category->id }}"
+                                        class="cat-checkbox w-4 h-4 rounded border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0"
                                         data-id="sub-{{ $child->id }}"
                                         name="categories[]"
                                         value="{{ $child->slug }}"
                                         {{ in_array($child->slug, $selectedCategories) ? 'checked' : '' }}
-                                        onchange="handleTree(this)">
-                                    <span class="text-sm text-gray-500 group-hover:text-gray-900">
+                                        onchange="applyFilters()">
+                                    <span class="text-sm text-secondary-400 group-hover:text-primary transition-colors duration-200">
                                         {{ $child->name }}
                                     </span>
-                                    <span class="ml-auto text-xs text-gray-400 flex-shrink-0">
+                                    <span class="ml-auto text-xs text-secondary-300 flex-shrink-0">
                                         ({{ $categoryCounts[$child->id] ?? 0 }})
                                     </span>
                                 </label>
@@ -100,18 +97,16 @@
                                     {{-- LEVEL 3 --}}
                                     <label class="flex items-center gap-3 cursor-pointer group ml-6">
                                         <input type="checkbox"
-                                            class="cat-checkbox w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-                                            data-role="leaf"
-                                            data-parent="sub-{{ $child->id }}"
+                                            class="cat-checkbox w-4 h-4 rounded border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0"
                                             data-id="leaf-{{ $subChild->id }}"
                                             name="categories[]"
                                             value="{{ $subChild->slug }}"
                                             {{ in_array($subChild->slug, $selectedCategories) ? 'checked' : '' }}
-                                            onchange="handleTree(this)">
-                                        <span class="text-sm text-gray-400 group-hover:text-gray-900 truncate">
+                                            onchange="applyFilters()">
+                                        <span class="text-sm text-secondary-300 group-hover:text-primary truncate transition-colors duration-200">
                                             {{ $subChild->name }}
                                         </span>
-                                        <span class="ml-auto text-xs text-gray-400 flex-shrink-0">
+                                        <span class="ml-auto text-xs text-secondary-300 flex-shrink-0">
                                             ({{ $categoryCounts[$subChild->id] ?? 0 }})
                                         </span>
                                     </label>
@@ -125,13 +120,13 @@
                 {{-- ============================================================
                      BRAND FILTER
                      ============================================================ --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('brandFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-primary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('brandFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3 hover:text-secondary transition-colors duration-200">
                         Brand
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="brandFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-300 transition-transform duration-200" id="brandFilterIcon"></i>
                     </button>
 
-                    <div id="brandFilter" class="space-y-2 max-h-64 overflow-y-auto">
+                    <div id="brandFilter" class="space-y-2 max-h-64 overflow-y-auto qv-scroll">
                         @php
                             $selectedBrands = request('brands', []);
                             if (!is_array($selectedBrands)) {
@@ -146,11 +141,11 @@
                                 value="{{ $brand->slug }}"
                                 {{ in_array($brand->slug, $selectedBrands) ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 rounded border-gray-300 text-primary">
-                            <span class="text-sm text-gray-600 group-hover:text-gray-900">
+                                class="w-4 h-4 rounded border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0">
+                            <span class="text-sm text-secondary group-hover:text-primary transition-colors duration-200">
                                 {{ $brand->name }}
                             </span>
-                            <span class="ml-auto text-xs text-gray-400">
+                            <span class="ml-auto text-xs text-secondary-300">
                                 ({{ $brandCounts[$brand->id] ?? 0 }})
                             </span>
                         </label>
@@ -161,43 +156,43 @@
                 {{-- ============================================================
                      PRICE RANGE FILTER
                      ============================================================ --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('priceFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-primary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('priceFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3 hover:text-secondary transition-colors duration-200">
                         Price Range
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="priceFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-300 transition-transform duration-200" id="priceFilterIcon"></i>
                     </button>
                     <div id="priceFilter" class="space-y-3">
 
                         {{-- Custom min/max inputs --}}
                         <div class="flex items-center gap-3">
                             <div class="flex-1">
-                                <label class="text-xs text-gray-500 mb-1 block">Min</label>
+                                <label class="text-xs text-secondary-400 mb-1 block font-medium">Min</label>
                                 <input type="number"
                                     id="minPriceInput"
                                     name="min_price"
                                     value="{{ request('min_price') }}"
                                     placeholder="৳0"
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                                    class="w-full bg-light border border-primary-100 rounded-lg py-2 px-3 text-sm text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200">
                             </div>
-                            <span class="text-gray-400 mt-5">-</span>
+                            <span class="text-secondary-300 mt-5">-</span>
                             <div class="flex-1">
-                                <label class="text-xs text-gray-500 mb-1 block">Max</label>
+                                <label class="text-xs text-secondary-400 mb-1 block font-medium">Max</label>
                                 <input type="number"
                                     id="maxPriceInput"
                                     name="max_price"
                                     value="{{ request('max_price') }}"
                                     placeholder="৳10000"
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                                    class="w-full bg-light border border-primary-100 rounded-lg py-2 px-3 text-sm text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200">
                             </div>
                         </div>
 
                         {{-- Apply price button --}}
-                        <button onclick="applyPriceFilter()" class="w-full bg-primary/10 text-primary text-sm font-medium py-2 rounded-lg hover:bg-primary hover:text-white transition">
+                        <button onclick="applyPriceFilter()" class="w-full bg-primary text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm hover:shadow-md">
                             Apply Price
                         </button>
 
                         {{-- Quick range presets --}}
-                        <div class="space-y-1.5">
+                        <div class="space-y-1.5 pt-1">
                             @php
                                 $priceRanges = [
                                     ['label' => 'Under ৳500',      'min' => '',    'max' => '500'],
@@ -217,12 +212,12 @@
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="radio"
                                     name="price_preset"
-                                    class="price-preset w-4 h-4 border-gray-300 text-primary focus:ring-primary"
+                                    class="price-preset w-4 h-4 border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0"
                                     data-min="{{ $range['min'] }}"
                                     data-max="{{ $range['max'] }}"
                                     {{ $isActive ? 'checked' : '' }}
                                     onchange="applyPricePreset(this)">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900">{{ $range['label'] }}</span>
+                                <span class="text-sm text-secondary group-hover:text-primary transition-colors duration-200">{{ $range['label'] }}</span>
                             </label>
                             @endforeach
                         </div>
@@ -232,10 +227,10 @@
                 {{-- ============================================================
                      SIZE FILTER
                      ============================================================ --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('sizeFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-primary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('sizeFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3 hover:text-secondary transition-colors duration-200">
                         Size
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="sizeFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-300 transition-transform duration-200" id="sizeFilterIcon"></i>
                     </button>
                     <div id="sizeFilter" class="flex flex-wrap gap-2">
                         @php
@@ -251,7 +246,7 @@
                             data-filter-type="sizes[]"
                             data-filter-value="{{ $size->id }}"
                             onclick="toggleSizeColor(this, 'sizes[]', '{{ $size->id }}')"
-                            class="size-color-btn px-4 py-2 border {{ in_array((string)$size->id, array_map('strval', $selectedSizes)) ? 'border-primary bg-primary/5 text-primary' : 'border-gray-200 text-gray-600' }} rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition">
+                            class="size-color-btn px-4 py-2 border {{ in_array((string)$size->id, array_map('strval', $selectedSizes)) ? 'border-primary bg-primary text-white shadow-sm' : 'border-primary-100 text-secondary hover:border-primary hover:text-primary' }} rounded-lg text-sm font-medium transition-all duration-200">
                             {{ $size->name }}
                         </button>
                         @endforeach
@@ -261,12 +256,12 @@
                 {{-- ============================================================
                      COLOR FILTER
                      ============================================================ --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('colorFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-primary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('colorFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3 hover:text-secondary transition-colors duration-200">
                         Color
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="colorFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-300 transition-transform duration-200" id="colorFilterIcon"></i>
                     </button>
-                    <div id="colorFilter" class="flex flex-wrap gap-2">
+                    <div id="colorFilter" class="flex flex-wrap gap-2.5">
                         @php
                             $selectedColors = request('colors', []);
                             if (!is_array($selectedColors)) {
@@ -284,10 +279,10 @@
                             data-filter-type="colors[]"
                             data-filter-value="{{ $color->id }}"
                             onclick="toggleSizeColor(this, 'colors[]', '{{ $color->id }}')"
-                            class="size-color-btn w-8 h-8 rounded-full border-2 {{ $isColorSelected ? 'border-primary ring-2 ring-primary/30' : 'border-gray-300' }} hover:border-primary transition relative flex items-center justify-center"
+                            class="size-color-btn w-9 h-9 rounded-full border-2 {{ $isColorSelected ? 'border-primary ring-2 ring-primary/30 scale-110' : 'border-primary-100 hover:border-primary' }} transition-all duration-200 relative flex items-center justify-center"
                             style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}">
                             @if($isColorSelected)
-                            <i class="fas fa-check text-xs" style="color: {{ in_array($color->code ?? '', ['white','cream','yellow']) ? '#000' : '#FFF' }}"></i>
+                            <i class="fas fa-check text-xs" style="color: {{ in_array(strtolower($color->code ?? ''), ['white','cream','yellow','beige','lightpink','offwhite','ivory']) ? '#1c1c1e' : '#fff' }}"></i>
                             @endif
                         </button>
                         @endforeach
@@ -298,11 +293,11 @@
                      RATING FILTER
                      ============================================================ --}}
                 <div class="pb-2">
-                    <button onclick="toggleFilterSection('ratingFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                    <button onclick="toggleFilterSection('ratingFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3 hover:text-secondary transition-colors duration-200">
                         Rating
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="ratingFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-300 transition-transform duration-200" id="ratingFilterIcon"></i>
                     </button>
-                    <div id="ratingFilter" class="space-y-2">
+                    <div id="ratingFilter" class="space-y-2.5">
                         @foreach([5, 4, 3, 2, 1] as $rating)
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="radio"
@@ -310,20 +305,20 @@
                                 value="{{ $rating }}"
                                 {{ request('min_rating') == $rating ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
+                                class="w-4 h-4 border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0">
                             <div class="flex text-yellow-400">
                                 @for($i = 1; $i <= 5; $i++)
-                                    <i class="fas fa-star text-sm {{ $i <= $rating ? '' : 'text-gray-300' }}"></i>
+                                    <i class="fas fa-star text-sm {{ $i <= $rating ? '' : 'text-primary-100' }}"></i>
                                 @endfor
                             </div>
-                            <span class="text-xs text-gray-400">& up</span>
+                            <span class="text-xs text-secondary-300 font-medium">& up</span>
                         </label>
                         @endforeach
                     </div>
                 </div>
 
                 {{-- Apply Filter Button (Mobile) --}}
-                <button onclick="toggleMobileFilter()" class="lg:hidden w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm mt-4 tap-effect">
+                <button onclick="toggleMobileFilter()" class="lg:hidden w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm mt-4 tap-effect shadow-lg shadow-primary/20">
                     Apply Filters
                 </button>
 
@@ -338,7 +333,7 @@
             {{-- Products Header (Desktop) --}}
             <div class="hidden lg:flex items-center justify-between mb-5">
                 <div>
-                    <h1 class="text-2xl font-bold text-black">
+                    <h1 class="text-2xl font-bold text-primary">
                         @if(request('category'))
                             {{ ucfirst(request('category')) }} Products
                         @elseif(request('search'))
@@ -347,13 +342,13 @@
                             All Products
                         @endif
                     </h1>
-                    <p class="text-sm text-gray-500 mt-0.5">{{ $totalProducts }} products found</p>
+                    <p class="text-sm text-secondary mt-0.5">{{ $totalProducts }} products found</p>
                 </div>
 
                 <div class="flex items-center gap-3">
                     {{-- Sort Dropdown --}}
                     <div class="relative">
-                        <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary cursor-pointer">
+                        <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-primary-100 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer transition-all duration-200 shadow-sm">
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}"    {{ request('sort','featured') == 'featured'     ? 'selected' : '' }}>Sort by: Featured</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}"  {{ request('sort') == 'price_asc'   ? 'selected' : '' }}>Price: Low to High</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" {{ request('sort') == 'price_desc'  ? 'selected' : '' }}>Price: High to Low</option>
@@ -361,15 +356,15 @@
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'best_selling']) }}" {{ request('sort') == 'best_selling'? 'selected' : '' }}>Best Selling</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'top_rated']) }}"  {{ request('sort') == 'top_rated'   ? 'selected' : '' }}>Top Rated</option>
                         </select>
-                        <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none"></i>
+                        <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-secondary-300 pointer-events-none"></i>
                     </div>
                 </div>
             </div>
 
             {{-- Mobile Sort --}}
             <div class="lg:hidden flex items-center justify-between mb-4">
-                <p class="text-sm text-gray-500">Showing {{ $products->count() }} products</p>
-                <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <p class="text-sm text-secondary">Showing {{ $products->count() }} products</p>
+                <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-primary-100 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}"    {{ request('sort','featured') == 'featured'  ? 'selected' : '' }}>Sort: Featured</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}"  {{ request('sort') == 'price_asc'  ? 'selected' : '' }}>Price: Low to High</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
@@ -397,16 +392,16 @@
 
             @if($hasFilters)
             <div class="flex flex-wrap items-center gap-2 mb-5">
-                <span class="text-sm text-gray-500 font-medium">Active:</span>
+                <span class="text-sm text-secondary font-medium">Active:</span>
 
                 {{-- Category chips --}}
                 @foreach($selectedCategories as $catSlug)
                     @php $cat = $allCategories->firstWhere('slug', trim($catSlug)); @endphp
                     @if($cat)
-                    <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                    <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
                         <i class="fas fa-tag text-xs opacity-70"></i>
                         {{ $cat->name }}
-                        <button onclick="removeFilter('categories', '{{ trim($catSlug) }}')" class="hover:text-blue-700 ml-0.5">
+                        <button onclick="removeFilter('categories', '{{ trim($catSlug) }}')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                             <i class="fas fa-times text-xs"></i>
                         </button>
                     </span>
@@ -417,9 +412,9 @@
                 @foreach($selectedBrands as $brandSlug)
                     @php $brand = $brands->firstWhere('slug', trim($brandSlug)); @endphp
                     @if($brand)
-                    <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                    <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
                         {{ $brand->name }}
-                        <button onclick="removeFilter('brands', '{{ trim($brandSlug) }}')" class="hover:text-blue-700 ml-0.5">
+                        <button onclick="removeFilter('brands', '{{ trim($brandSlug) }}')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                             <i class="fas fa-times text-xs"></i>
                         </button>
                     </span>
@@ -430,9 +425,9 @@
                 @foreach($selectedSizes as $sizeId)
                     @php $size = $sizes->firstWhere('id', $sizeId); @endphp
                     @if($size)
-                    <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                    <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
                         Size: {{ $size->name }}
-                        <button onclick="removeFilter('sizes', '{{ $sizeId }}')" class="hover:text-blue-700 ml-0.5">
+                        <button onclick="removeFilter('sizes', '{{ $sizeId }}')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                             <i class="fas fa-times text-xs"></i>
                         </button>
                     </span>
@@ -443,10 +438,10 @@
                 @foreach($selectedColors as $colorId)
                     @php $color = $colors->firstWhere('id', $colorId); @endphp
                     @if($color)
-                    <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
-                        <span class="w-3 h-3 rounded-full border border-gray-300 flex-shrink-0" style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}"></span>
+                    <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
+                        <span class="w-3 h-3 rounded-full border border-white/30 flex-shrink-0" style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}"></span>
                         {{ $color->name }}
-                        <button onclick="removeFilter('colors', '{{ $colorId }}')" class="hover:text-blue-700 ml-0.5">
+                        <button onclick="removeFilter('colors', '{{ $colorId }}')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                             <i class="fas fa-times text-xs"></i>
                         </button>
                     </span>
@@ -455,7 +450,7 @@
 
                 {{-- Price chip --}}
                 @if(request('min_price') || request('max_price'))
-                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
                     Price:
                     @if(request('min_price') && request('max_price'))
                         ৳{{ number_format(request('min_price')) }} – ৳{{ number_format(request('max_price')) }}
@@ -464,7 +459,7 @@
                     @else
                         Below ৳{{ number_format(request('max_price')) }}
                     @endif
-                    <button onclick="removeFilter('price')" class="hover:text-blue-700 ml-0.5">
+                    <button onclick="removeFilter('price')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
@@ -472,20 +467,20 @@
 
                 {{-- Rating chip --}}
                 @if(request('min_rating'))
-                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
-                    <span class="flex text-yellow-500">
+                <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
+                    <span class="flex text-yellow-400">
                         @for($i = 1; $i <= (int)request('min_rating'); $i++)
                             <i class="fas fa-star text-xs"></i>
                         @endfor
                     </span>
                     & up
-                    <button onclick="removeFilter('min_rating')" class="hover:text-blue-700 ml-0.5">
+                    <button onclick="removeFilter('min_rating')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
                 @endif
 
-                <button onclick="clearAllFilters()" class="text-sm text-red-500 hover:text-red-600 hover:underline font-medium ml-2 transition">
+                <button onclick="clearAllFilters()" class="text-sm text-red-500 hover:text-red-600 font-medium ml-2 transition-colors">
                     Clear All
                 </button>
             </div>
@@ -494,15 +489,17 @@
             {{-- ================================================================
                  PRODUCTS GRID
                  ================================================================ --}}
-            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
                 @forelse ($products as $product)
                     <x-product-card :product="$product" />
                 @empty
                     <div class="col-span-full text-center py-16">
-                        <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
-                        <p class="text-gray-500">Try adjusting your filters or search criteria.</p>
-                        <button onclick="clearAllFilters()" class="mt-4 px-5 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary/90 transition">
+                        <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                            <i class="fas fa-box-open text-3xl text-secondary-300"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-primary mb-2">No products found</h3>
+                        <p class="text-secondary mb-6">Try adjusting your filters or search criteria.</p>
+                        <button onclick="clearAllFilters()" class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">
                             Clear Filters
                         </button>
                     </div>
@@ -516,25 +513,25 @@
             <div class="flex items-center justify-center gap-3 mt-8">
 
                 @if($products->onFirstPage())
-                    <span class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed">
+                    <span class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-secondary-300 bg-light border border-primary-100 rounded-xl cursor-not-allowed">
                         <i class="fas fa-arrow-left text-xs"></i> Previous
                     </span>
                 @else
-                    <a href="{{ $products->previousPageUrl() }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
+                    <a href="{{ $products->previousPageUrl() }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-primary bg-white border border-primary-100 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
                         <i class="fas fa-arrow-left text-xs"></i> Previous
                     </a>
                 @endif
 
-                <span class="text-sm text-gray-500">
+                <span class="text-sm text-secondary font-medium">
                     Page {{ $products->currentPage() }}
                 </span>
 
                 @if($products->hasMorePages())
-                    <a href="{{ $products->nextPageUrl() }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
+                    <a href="{{ $products->nextPageUrl() }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-primary bg-white border border-primary-100 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
                         Next <i class="fas fa-arrow-right text-xs"></i>
                     </a>
                 @else
-                    <span class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed">
+                    <span class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-secondary-300 bg-light border border-primary-100 rounded-xl cursor-not-allowed">
                         Next <i class="fas fa-arrow-right text-xs"></i>
                     </span>
                 @endif
@@ -547,7 +544,7 @@
 </div>
 
 {{-- Mobile Filter Overlay --}}
-<div id="mobileFilterOverlay" class="fixed inset-0 bg-black/50 z-[60] hidden lg:hidden" onclick="toggleMobileFilter()"></div>
+<div id="mobileFilterOverlay" class="fixed inset-0 bg-black/50 z-[60] hidden lg:hidden backdrop-blur-sm" onclick="toggleMobileFilter()"></div>
 
 @endsection
 
@@ -587,7 +584,7 @@ function applyFilters() {
         if (url.searchParams.get(k)) params.set(k, url.searchParams.get(k));
     });
 
-    // Categories (checkboxes)
+    // Categories (checkboxes) — INDEPENDENT: only get explicitly checked boxes
     const categories = [...document.querySelectorAll('input[name="categories[]"]:checked')]
         .map(cb => cb.value.trim())
         .filter(Boolean);
@@ -651,19 +648,32 @@ function toggleSizeColor(btn, name, value) {
     // Update visual state of button
     if (name === 'colors[]') {
         if (cb.checked) {
-            btn.classList.add('border-primary', 'ring-2', 'ring-primary/30');
-            btn.classList.remove('border-gray-300');
+            btn.classList.add('border-primary', 'ring-2', 'ring-primary/30', 'scale-110');
+            btn.classList.remove('border-primary-100');
+            // Add checkmark icon if not present
+            if (!btn.querySelector('.fa-check')) {
+                const checkIcon = document.createElement('i');
+                checkIcon.className = 'fas fa-check text-xs';
+                const isLight = ['white','cream','yellow','beige','lightpink','offwhite','ivory'].some(c => 
+                    btn.title.toLowerCase().includes(c)
+                );
+                checkIcon.style.color = isLight ? '#1c1c1e' : '#fff';
+                btn.appendChild(checkIcon);
+            }
         } else {
-            btn.classList.remove('border-primary', 'ring-2', 'ring-primary/30');
-            btn.classList.add('border-gray-300');
+            btn.classList.remove('border-primary', 'ring-2', 'ring-primary/30', 'scale-110');
+            btn.classList.add('border-primary-100');
+            // Remove checkmark icon
+            const checkIcon = btn.querySelector('.fa-check');
+            if (checkIcon) checkIcon.remove();
         }
     } else {
         if (cb.checked) {
-            btn.classList.add('border-primary', 'bg-primary/5', 'text-primary');
-            btn.classList.remove('border-gray-200', 'text-gray-600');
+            btn.classList.remove('border-primary-100', 'text-secondary', 'hover:border-primary', 'hover:text-primary');
+            btn.classList.add('border-primary', 'bg-primary', 'text-white', 'shadow-sm');
         } else {
-            btn.classList.remove('border-primary', 'bg-primary/5', 'text-primary');
-            btn.classList.add('border-gray-200', 'text-gray-600');
+            btn.classList.remove('border-primary', 'bg-primary', 'text-white', 'shadow-sm');
+            btn.classList.add('border-primary-100', 'text-secondary', 'hover:border-primary', 'hover:text-primary');
         }
     }
 
@@ -742,68 +752,20 @@ function toggleFilterSection(sectionId) {
 }
 
 // ============================================================
-// CATEGORY TREE — DOWNWARD + UPWARD PROPAGATION
-// ============================================================
-let filterTimer = null;
-
-function handleTree(checkbox) {
-    // Propagate checked state downward to all children
-    setChildrenState(checkbox.dataset.id, checkbox.checked);
-
-    // Propagate indeterminate/checked state upward to all ancestors
-    updateAncestors(checkbox);
-
-    // Debounce to avoid multiple rapid URL changes
-    clearTimeout(filterTimer);
-    filterTimer = setTimeout(() => applyFilters(), 250);
-}
-
-function setChildrenState(parentId, state) {
-    document.querySelectorAll(`[data-parent="${parentId}"]`).forEach(cb => {
-        cb.checked = state;
-        cb.indeterminate = false;
-        setChildrenState(cb.dataset.id, state); // recurse
-    });
-}
-
-function updateAncestors(checkbox) {
-    let current = checkbox;
-
-    while (current.dataset.parent) {
-        const parentSelector = `[data-id="${current.dataset.parent}"]`;
-        const parent = document.querySelector(parentSelector);
-        if (!parent) break;
-
-        const siblings = document.querySelectorAll(`[data-parent="${current.dataset.parent}"]`);
-        const checkedCount = [...siblings].filter(cb => cb.checked || cb.indeterminate).length;
-        const allChecked  = [...siblings].every(cb => cb.checked);
-
-        parent.checked       = allChecked;
-        parent.indeterminate = !allChecked && checkedCount > 0;
-
-        current = parent;
-    }
-}
-
-// ============================================================
-// ON PAGE LOAD — RESTORE TREE STATE FROM URL
+// ON PAGE LOAD — INITIALIZE HIDDEN CHECKBOXES FOR PRE-SELECTED
 // ============================================================
 document.addEventListener('DOMContentLoaded', function () {
-
-    // 1. Restore category tree indeterminate states based on pre-checked checkboxes
-    document.querySelectorAll('.cat-checkbox:checked').forEach(cb => {
-        updateAncestors(cb);
-    });
-
-    // 2. Initialise hidden checkboxes for size/color buttons that are pre-selected
-    //    (they are rendered as buttons, not real checkboxes, so we seed the store)
+    // Initialise hidden checkboxes for size/color buttons that are pre-selected
     document.querySelectorAll('.size-color-btn').forEach(btn => {
         const name  = btn.dataset.filterType;
         const value = btn.dataset.filterValue;
         if (!name || !value) return;
 
         // If button already has active classes set by Blade, create a pre-checked hidden checkbox
-        const isActive = btn.classList.contains('border-primary');
+        const isActive = name === 'colors[]' 
+            ? btn.classList.contains('border-primary') && btn.classList.contains('ring-2')
+            : btn.classList.contains('border-primary') && btn.classList.contains('bg-primary');
+        
         if (isActive) {
             const cb = getOrCreateHiddenCheckbox(name, value);
             cb.checked = true;

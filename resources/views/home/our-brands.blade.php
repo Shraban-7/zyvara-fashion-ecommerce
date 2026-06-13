@@ -2,10 +2,15 @@
 <section class="home-section">
     <div class="home-wrap">
         <div class="section-head">
-            <div>
+            <div class="section-head-text">
+                <span class="section-eyebrow">Trusted Partners</span>
                 <h2 class="section-title">Our Brands</h2>
                 <p class="section-sub">Premium labels, exceptional quality</p>
             </div>
+            <a href="{{ route('products.index') }}" class="section-link">
+                All Brands
+                <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
 
         <div class="brands-grid">
@@ -14,9 +19,10 @@
                 class="brand-card group">
                 <div class="brand-logo-wrap">
                     <img src="{{ set_image($brand->logo) }}" alt="{{ $brand->name }}"
-                        class="brand-logo">
+                        class="brand-logo" loading="lazy">
                 </div>
                 <span class="brand-name">{{ $brand->name }}</span>
+                <span class="brand-count">{{ $brand->products_count ?? '0' }} items</span>
             </a>
             @endforeach
         </div>
@@ -24,54 +30,114 @@
 </section>
 
 <style>
+    /* ====================================================
+       BRANDS SECTION — Modern Charcoal Design
+    ==================================================== */
+
     .brands-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+        gap: 12px;
     }
-    @media (min-width: 480px)  { .brands-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; } }
-    @media (min-width: 768px)  { .brands-grid { grid-template-columns: repeat(5, 1fr); gap: 14px; } }
-    @media (min-width: 1024px) { .brands-grid { grid-template-columns: repeat(6, 1fr); gap: 16px; } }
 
+    @media (min-width: 480px) {
+        .brands-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .brands-grid {
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .brands-grid {
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .brands-grid {
+            grid-template-columns: repeat(8, 1fr);
+        }
+    }
+
+    /* ── Brand Card ── */
     .brand-card {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 8px;
         text-decoration: none;
-        padding: 14px 10px;
-        border: 1.5px solid #f0f0f0;
-        border-radius: 14px;
+        padding: 20px 14px;
+        border: 1.5px solid #f1f5f9;
+        border-radius: 16px;
         background: #fff;
-        transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-    }
-    .brand-card:hover {
-        border-color: #a3d3ef;
-        box-shadow: 0 6px 20px rgba(34,139,204,0.14);
-        transform: translateY(-3px);
+        transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
     }
 
-    .brand-logo-wrap {
-        width: 64px; height: 64px;
-        display: flex; align-items: center; justify-content: center;
-        background: #f8f9fa;
-        border-radius: 10px;
-        overflow: hidden;
-        transition: background 0.2s;
+    .brand-card:hover {
+        border-color: #e2e8f0;
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px -12px rgba(15, 23, 42, 0.1);
     }
-    .brand-card:hover .brand-logo-wrap { background: #e8f4fb; }
+
+    @media (min-width: 768px) {
+        .brand-card {
+            padding: 24px 16px;
+            gap: 10px;
+        }
+    }
+
+    /* ── Logo ── */
+    .brand-logo-wrap {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    @media (min-width: 768px) {
+        .brand-logo-wrap {
+            width: 64px;
+            height: 64px;
+        }
+    }
+
+    .brand-card:hover .brand-logo-wrap {
+        background: #0f172a;
+    }
 
     .brand-logo {
-        max-width: 100%; max-height: 100%;
+        max-width: 80%;
+        max-height: 80%;
         object-fit: contain;
-        transition: transform 0.3s;
+        transition: all 0.3s ease;
+        filter: grayscale(0.3);
     }
-    .brand-card:hover .brand-logo { transform: scale(1.08); }
 
+    .brand-card:hover .brand-logo {
+        transform: scale(1.08);
+        filter: grayscale(0) brightness(1.1);
+    }
+
+    /* ── Name ── */
     .brand-name {
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 700;
-        color: #374151;
+        color: #0f172a;
         text-align: center;
         line-height: 1.3;
         transition: color 0.2s;
@@ -81,6 +147,35 @@
         overflow: hidden;
         max-width: 100%;
     }
-    .brand-card:hover .brand-name { color: #228bcc; }
+
+    .brand-card:hover .brand-name {
+        color: #0f172a;
+    }
+
+    /* ── Count ── */
+    .brand-count {
+        font-size: 11px;
+        font-weight: 500;
+        color: #94a3b8;
+        text-align: center;
+        line-height: 1;
+        transition: color 0.2s;
+    }
+
+    .brand-card:hover .brand-count {
+        color: #64748b;
+    }
+
+    /* ── Accessibility ── */
+    @media (prefers-reduced-motion: reduce) {
+        .brand-card,
+        .brand-logo-wrap,
+        .brand-logo {
+            transition: none !important;
+        }
+        .brand-card:hover {
+            transform: none;
+        }
+    }
 </style>
 @endif

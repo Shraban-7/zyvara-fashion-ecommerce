@@ -1,4 +1,3 @@
-
 * {
     font-family: 'Inter', sans-serif;
 }
@@ -58,20 +57,20 @@ main {
 }
 
 .icon-btn:hover {
-    background: linear-gradient(135deg, #228bcc15 0%, #228bcc25 100%);
+    background: linear-gradient(135deg, rgba(28, 28, 30, 0.08) 0%, rgba(28, 28, 30, 0.15) 100%);
     transform: translateY(-2px);
 }
 
 /* Logo animation */
 .logo-text {
-    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+    background: linear-gradient(135deg, #1c1c1e 0%, #363638 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .logo-accent {
-    background: linear-gradient(135deg, #228bcc 0%, #1a6fa8 100%);
+    background: linear-gradient(135deg, #636366 0%, #48484a 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

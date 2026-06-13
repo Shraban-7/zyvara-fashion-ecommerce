@@ -1,13 +1,13 @@
 <!-- ==================== MOBILE MENU OVERLAY & DRAWER ==================== -->
-<div id="mobileMenuOverlay" class="fixed inset-0 bg-black/50 z-[200] hidden opacity-0"></div>
+<div id="mobileMenuOverlay" class="fixed inset-0 bg-black/50 z-[200] hidden opacity-0 transition-opacity duration-300"></div>
 
 <div id="mobileMenuDrawer"
-    class="fixed top-0 left-0 w-[85%] max-w-[300px] h-full bg-white z-[210] transform -translate-x-full shadow-2xl flex flex-col">
+    class="fixed top-0 left-0 w-[85%] max-w-[300px] h-full bg-surface z-[210] transform -translate-x-full shadow-2xl flex flex-col transition-transform duration-300">
 
     <!-- Drawer Header -->
-    <div class="p-4 bg-blue-500 text-white flex justify-between items-center">
+    <div class="p-4 bg-primary text-white flex justify-between items-center">
         <span class="font-bold text-lg">Categories</span>
-        <button id="closeMobileMenu" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+        <button id="closeMobileMenu" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition">
             <i class="fas fa-times"></i>
         </button>
     </div>
@@ -18,7 +18,7 @@
 
             <!-- Home -->
             <li>
-                <a href="#" class="block py-2.5 px-2 text-gray-700 font-medium hover:bg-gray-50 rounded">
+                <a href="#" class="block py-2.5 px-2 text-black font-medium hover:bg-light rounded transition-colors">
                     Home
                 </a>
             </li>
@@ -28,20 +28,20 @@
             <li>
                 <button type="button"
                     class="mob-acc-btn w-full flex justify-between items-center py-2.5 px-2 
-                               text-gray-700 font-medium hover:bg-gray-50 rounded"
+                               text-black font-medium hover:bg-light rounded transition-colors"
                     data-target="#mob-{{ $cat->slug }}">
 
                     <span>{{ $cat->name }}</span>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-300 text-secondary-400"></i>
                 </button>
 
                 <!-- Submenu -->
-                <div id="mob-{{ $cat->slug }}" class="mob-acc-panel pl-4 bg-gray-50 rounded-lg">
-                    <ul class="py-2 space-y-2 text-sm text-gray-600">
+                <div id="mob-{{ $cat->slug }}" class="mob-acc-panel pl-4 bg-light rounded-lg">
+                    <ul class="py-2 space-y-2 text-sm text-secondary-500">
 
                         <!-- Category link -->
                         <li>
-                            <a class="font-semibold text-blue-600"
+                            <a class="font-semibold text-primary-500 hover:text-primary-700 transition-colors"
                                 href="{{ route('products.index',['categories'=>$cat->slug]) }}">
                                 {{ $cat->name }}
                             </a>
@@ -50,7 +50,7 @@
                         <!-- Subcategories -->
                         @foreach ($cat->children as $sub)
                         <li>
-                            <a class="hover:text-blue-600"
+                            <a class="hover:text-primary-500 transition-colors"
                                 href="{{ route('products.index',['categories'=>$sub->slug]) }}">
                                 {{ $sub->name }}
                             </a>
@@ -64,12 +64,12 @@
 
             <!-- Other Static Links -->
             <li>
-                <a href="#" class="block py-2.5 px-2 text-gray-700 font-medium hover:bg-gray-50 rounded">
+                <a href="#" class="block py-2.5 px-2 text-black font-medium hover:bg-light rounded transition-colors">
                     Shop
                 </a>
             </li>
             <li>
-                <a href="{{ route('track-order.index') }}" class="block py-2.5 px-2 text-gray-700 font-medium hover:bg-gray-50 rounded">
+                <a href="{{ route('track-order.index') }}" class="block py-2.5 px-2 text-black font-medium hover:bg-light rounded transition-colors">
                     Track Order
                 </a>
             </li>
@@ -105,7 +105,9 @@
     function toggleMobileMenu(show) {
         if (show) {
             mobileMenuOverlay.classList.remove('hidden');
-            setTimeout(() => mobileMenuOverlay.classList.remove('opacity-0'), 10);
+            // Force reflow
+            void mobileMenuOverlay.offsetWidth;
+            mobileMenuOverlay.classList.remove('opacity-0');
             mobileMenuDrawer.classList.remove('-translate-x-full');
             document.body.style.overflow = 'hidden';
         } else {
@@ -118,14 +120,12 @@
         }
     }
 
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', () => toggleMobileMenu(true));
-    }
-
+    // Close button event
     if (closeMobileMenu) {
         closeMobileMenu.addEventListener('click', () => toggleMobileMenu(false));
     }
 
+    // Overlay click to close
     if (mobileMenuOverlay) {
         mobileMenuOverlay.addEventListener('click', () => toggleMobileMenu(false));
     }
