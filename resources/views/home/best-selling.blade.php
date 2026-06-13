@@ -1,23 +1,20 @@
 @if($bestSelling->isNotEmpty())
-    <section class="py-6 md:py-10 bg-white">
-        <div class="max-w-7xl mx-auto px-2 sm:px-4">
-            <div class="flex items-center justify-between mb-4 md:mb-6">
-                <div>
-                    <h2 class="text-lg md:text-2xl font-bold text-black">Best Selling</h2>
-                    <p class="text-xs md:text-sm text-secondary">Customer favorites</p>
-                </div>
-                <a href="{{ route('products.index', ['filter' => 'best-sellers']) }}"
-                    class="text-primary text-sm font-semibold flex items-center gap-1 tap-effect">
-                    View All
-                    <i class="fas fa-chevron-right text-sm"></i>
-                </a>
-    </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5">
-                @foreach($bestSelling as $product)
-                    <x-product-card :product="$product" badgeType="HOT" />
-                @endforeach
+<section class="home-section-alt">
+    <div class="home-wrap">
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">Best Selling</h2>
+                <p class="section-sub">Top picks loved by customers</p>
             </div>
+            <a href="{{ route('products.index', ['filter' => 'best-sellers']) }}" class="section-link">
+                View All <i class="fas fa-arrow-right text-xs"></i>
+            </a>
         </div>
-    </section>
+        <div class="products-grid">
+            @foreach($bestSelling as $product)
+                <x-product-card :product="$product" badgeType="HOT" />
+            @endforeach
+        </div>
+    </div>
+</section>
 @endif

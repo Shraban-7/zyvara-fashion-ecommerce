@@ -1,29 +1,22 @@
 @if($mensProducts->isNotEmpty())
-    <section class="py-6 md:py-10 bg-white">
-        <div class="max-w-7xl mx-auto px-2 sm:px-4">
-            <div class="flex items-center justify-between mb-4 md:mb-6">
-                <div>
-                    <h2 class="text-lg md:text-2xl font-bold text-black">Men's Collection</h2>
-                    <p class="text-xs md:text-sm text-secondary">Stylish picks for men</p>
-                </div>
-                <a href="{{ route('products.index', ['category' => 'men']) }}"
-                    class="text-primary text-sm font-semibold flex items-center gap-1 tap-effect">
-                    View All
-                    <i class="fas fa-chevron-right text-sm"></i>
-                </a>
+<section class="home-section">
+    <div class="home-wrap">
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">Men's Collection</h2>
+                <p class="section-sub">Stylish picks for the modern man</p>
             </div>
-
-            {{-- Horizontal Scroll Products --}}
-            <div class="flex gap-3 md:gap-5 overflow-x-auto hide-scrollbar pb-2">
-
-
-                              @foreach($mensProducts as $product)
-                                <div
-                                    class="min-w-[160px] sm:min-w-[180px] md:min-w-[220px] max-w-[160px] sm:max-w-[180px] md:max-w-[220px]">
-                                    <x-product-card :product="$product" />
-                                </div>
-                            @endforeach
-            </div>
+            <a href="{{ route('products.index', ['category' => 'men']) }}" class="section-link">
+                View All <i class="fas fa-arrow-right text-xs"></i>
+            </a>
         </div>
-    </section>
+        <div class="products-scroll">
+            @foreach($mensProducts as $product)
+                <div class="products-scroll-item">
+                    <x-product-card :product="$product" />
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
 @endif

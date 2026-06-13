@@ -1,25 +1,22 @@
 @if($womensProducts->isNotEmpty())
-    <section class="py-6 md:py-10">
-        <div class="max-w-7xl mx-auto px-2 sm:px-4">
-            <div class="flex items-center justify-between mb-4 md:mb-6">
-                <div>
-                    <h2 class="text-lg md:text-2xl font-bold text-black">Ladies Collection</h2>
-                    <p class="text-xs md:text-sm text-secondary">Elegant styles for women</p>
-                </div>
-                <a href="{{ route('products.index', ['category' => 'women']) }}"
-                    class="text-primary text-sm font-semibold flex items-center gap-1 tap-effect">
-                    View All
-                    <i class="fas fa-chevron-right text-sm"></i>
-                </a>
+<section class="home-section-alt">
+    <div class="home-wrap">
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">Ladies Collection</h2>
+                <p class="section-sub">Elegant styles for every woman</p>
             </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5">
-                @foreach($womensProducts as $product)
-                    <div class="max-w-[220px] mx-auto w-full">
-                        <x-product-card :product="$product" />
-                    </div>
-                @endforeach
-            </div>
+            <a href="{{ route('products.index', ['category' => 'women']) }}" class="section-link">
+                View All <i class="fas fa-arrow-right text-xs"></i>
+            </a>
         </div>
-    </section>
+        <div class="products-scroll">
+            @foreach($womensProducts as $product)
+                <div class="products-scroll-item">
+                    <x-product-card :product="$product" />
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
 @endif
