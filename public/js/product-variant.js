@@ -108,18 +108,38 @@ class ProductVariantManager {
         const compareEl = document.getElementById("quickViewComparePrice");
         const discountEl = document.getElementById("quickViewDiscount");
 
-        priceEl.textContent = `৳${Number(price).toLocaleString()}`;
+        // 1. Safely parse the main price
+        const numPrice = parseFloat(price) || 0;
+        priceEl.textContent = `৳${numPrice.toLocaleString()}`;
 
-        if (comparePrice && comparePrice > price) {
-            compareEl.textContent = `৳${Number(comparePrice).toLocaleString()}`;
+        // 2. Safely parse the compare price
+        const numComparePrice = parseFloat(comparePrice);
+
+        // 3. Strict check: comparePrice must exist, be a valid number, AND be strictly greater than price
+        if (
+            comparePrice !== null &&
+            comparePrice !== undefined &&
+            comparePrice !== "" &&
+            !isNaN(numComparePrice) &&
+            numComparePrice > numPrice
+        ) {
+            // SHOW discount
+            compareEl.textContent = `৳${numComparePrice.toLocaleString()}`;
             compareEl.classList.remove("hidden");
 
-            const discount = Math.round(((comparePrice - price) / comparePrice) * 100);
+            const discount = Math.round(((numComparePrice - numPrice) / numComparePrice) * 100);
             discountEl.textContent = `-${discount}%`;
             discountEl.classList.remove("hidden");
+            
+            discountEl.classList.add("qv-badge-save");
         } else {
+            // HIDE and CLEAR both elements to prevent lingering data
             compareEl.classList.add("hidden");
+            compareEl.textContent = "";
+
             discountEl.classList.add("hidden");
+            discountEl.classList.remove("qv-badge-save");
+            discountEl.textContent = "";
         }
     }
 

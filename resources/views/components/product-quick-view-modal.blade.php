@@ -1,202 +1,553 @@
-{{-- Product Quick View Modal --}}
+{{-- Product Quick View Modal - Professional Redesign --}}
 <div id="productQuickViewModal"
-    class="modal-overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4">
-    <div class="modal-container bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
-        {{-- Modal Header --}}
-        <div class="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
-            <h3 class="text-lg font-bold text-
-g               ray-900">Quick View</h3>
-            <button onclick="closeQuickView()"
-                class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition">
-                <i class="fas fa-times text-gray-600"></i>
+    class="qv-overlay fixed inset-0 z-[9999] hidden items-center justify-center p-3 sm:p-4 md:p-6"
+    onclick="handleQuickViewOverlayClick(event)">
+
+    <div class="qv-container bg-white w-full sm:max-w-[480px] md:max-w-[720px] max-h-[90vh] sm:max-h-[85vh] md:max-h-[82vh] overflow-hidden shadow-2xl flex flex-col rounded-2xl">
+
+        {{-- Header --}}
+        <div class="qv-header flex items-center justify-between px-4 py-3 border-b border-gray-100 shrink-0">
+            <div class="flex items-center gap-2">
+                <div class="w-1 h-4 bg-primary rounded-full"></div>
+                <h3 class="text-sm font-bold text-gray-800 tracking-tight">Quick View</h3>
+            </div>
+            <button id="qvCloseBtn" onclick="closeQuickView()" aria-label="Close quick view"
+                class="qv-close-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200">
+                <i class="fas fa-times text-xs"></i>
             </button>
         </div>
 
-        {{-- Modal Content --}}
-        <div id="quickViewContent" class="overflow-y-auto max-h-[calc(90vh-5rem)]">
-            <div class="grid md:grid-cols-2 gap-6 px-6 pt-6">
-                {{-- Product Image --}}
-                <div class="space-y-4">
+        {{-- Modal Body --}}
+        <div id="quickViewContent" class="flex-1 overflow-y-auto qv-scroll md:overflow-hidden md:flex md:flex-col min-h-0">
 
-                    <div class="relative bg-gray-50 rounded-xl overflow-hidden aspect-square lg:aspect-auto">
-                        <img id="quickViewImage" src="{{ asset('assets/images/default.png') }}" alt=""
-                            class="w-full h-full object-contain object-center">
-                        {{-- Badge Container --}}
-                        <div id="quickViewBadges" class="absolute top-3 left-3 flex flex-col gap-2"></div>
+            {{-- Loading Skeleton --}}
+            <div id="qvSkeleton" class="grid md:grid-cols-2 gap-0 h-full hidden">
+                <div class="p-5 md:p-6 space-y-4 border-r border-gray-100">
+                    <div class="qv-skeleton aspect-square rounded-xl w-full"></div>
+                    <div class="flex gap-2">
+                        <div class="qv-skeleton h-14 w-14 rounded-lg flex-shrink-0"></div>
+                        <div class="qv-skeleton h-14 w-14 rounded-lg flex-shrink-0"></div>
+                        <div class="qv-skeleton h-14 w-14 rounded-lg flex-shrink-0"></div>
                     </div>
+                </div>
+                <div class="p-5 md:p-6 space-y-4">
+                    <div class="qv-skeleton h-4 w-24 rounded-md"></div>
+                    <div class="qv-skeleton h-7 w-4/5 rounded-md"></div>
+                    <div class="qv-skeleton h-4 w-32 rounded-md"></div>
+                    <div class="qv-skeleton h-20 w-full rounded-xl"></div>
+                    <div class="qv-skeleton h-4 w-28 rounded-md"></div>
+                    <div class="flex gap-2">
+                        <div class="qv-skeleton h-10 w-10 rounded-full"></div>
+                        <div class="qv-skeleton h-10 w-10 rounded-full"></div>
+                        <div class="qv-skeleton h-10 w-10 rounded-full"></div>
+                    </div>
+                    <div class="qv-skeleton h-12 w-full rounded-xl mt-4"></div>
+                </div>
+            </div>
+
+            {{-- Actual Content --}}
+            <div id="qvMainContent" class="flex flex-col md:grid md:grid-cols-2 md:flex-1 md:min-h-0">
+
+                {{-- Left: Image Gallery --}}
+                <div class="qv-image-panel flex flex-col border-b md:border-b-0 md:border-r border-gray-100">
+
+                    {{-- Mobile: compact image strip --}}
+                    <div class="relative bg-gray-50 overflow-hidden group qv-main-image-wrap flex-1">
+                        <img id="quickViewImage"
+                            src="{{ asset('assets/images/default.png') }}"
+                            alt="Product image"
+                            class="w-full h-full object-contain object-center transition-all duration-500 qv-main-img">
+
+                        {{-- Zoom Icon (desktop only) --}}
+                        <div class="hidden md:flex absolute inset-0 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                            <div class="bg-white/80 backdrop-blur-sm rounded-full w-9 h-9 flex items-center justify-center shadow-md">
+                                <i class="fas fa-search-plus text-gray-500 text-xs"></i>
+                            </div>
+                        </div>
+
+                        {{-- Badges --}}
+                        <div id="quickViewBadges" class="absolute top-2 left-2 flex flex-col gap-1"></div>
+                    </div>
+
                     {{-- Thumbnails --}}
-                    <div id="quickViewThumbnails" class="flex gap-2 overflow-x-auto hide-scrollbar pb-1"></div>
+                    <div id="quickViewThumbnails" class="flex gap-1.5 p-2 overflow-x-auto qv-thumb-scroll"></div>
                 </div>
 
-                {{-- Product Info --}}
-                <div class="flex flex-col gap-4">
-                    {{-- Title --}}
-                    <div>
-                        <p id="quickViewBrand" class="text-sm text-primary font-medium mb-1"></p>
-                        <h2 id="quickViewName" class="text-xl md:text-2xl font-bold text-gray-900 mb-2"></h2>
+                {{-- Right: Product Info --}}
+                <div class="qv-info-panel flex flex-col md:overflow-hidden">
+                    <div class="flex-1 p-3 sm:p-4 md:p-5 space-y-3 overflow-y-auto qv-scroll">
 
-                        {{-- Rating --}}
-                        <div id="quickViewRating" class="flex items-center gap-2 mb-3"></div>
-                    </div>
+                        {{-- Brand & Name --}}
+                        <div>
+                            <p id="quickViewBrand" class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1"></p>
+                            <h2 id="quickViewName" class="text-base sm:text-lg md:text-xl font-bold text-gray-900 leading-snug mb-2"></h2>
 
-                    {{-- Price --}}
-                    <div class="bg-gradient-to-r from-blue-50 to-light rounded-xl p-4">
-                        <div class="flex items-end gap-2
-                                flex-wrap">
-                            <span id="quickViewPrice" class="text-2xl md:text-3xl font-bold text-primary"></span>
-                            <span id="quickViewComparePrice" class="text-lg text-gray-400 line-through hidden"></span>
-                            <span id="quickViewDiscount"
-                                class="bg-red-100 text-red-600 text-xs font-semibold px-2 py-1 rounded-lg hidden"></span>
+                            {{-- Rating --}}
+                            <div id="quickViewRating" class="flex items-center gap-1.5"></div>
                         </div>
-                    </div>
 
-                    {{-- Stock Status --}}
-                    <div id="quickViewStock" class="flex items-center gap-2">
-                    </div>
-
-                    {{-- Variants Section --}}
-                    <div id="variantsSection" class="space-y-4 hidden">
-                        {{-- Color Selection --}}
-
-                        <div id="colorSection" class="hidden">
-                            <div class="flex items-center justify-between mb-2.5">
-                                <span class="text-sm font-semibold text-gray-900">
-                                    Color: <span id="selectedColorName" class="font-normal text-gray-600">Select a
-                                        color</span>
-                                </span>
+                        {{-- Price Block --}}
+                        <div class="qv-price-block rounded-xl p-3">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span id="quickViewPrice" class="text-2xl font-extrabold text-primary leading-none"></span>
+                                <div class="flex items-center gap-1.5">
+                                    <span id="quickViewComparePrice" class="text-sm text-gray-400 line-through hidden"></span>
+                                    <span id="quickViewDiscount" class="qv-badge-save hidden"></span>
+                                </div>
                             </div>
-                            <div id="colorOptions" class="flex gap-3 flex-wrap"></div>
                         </div>
 
+                        {{-- Stock Status --}}
+                        <div id="quickViewStock" class="flex items-center gap-2 text-sm"></div>
 
-                        {{-- Size Selection --}}
-                        <div id="sizeSection" class="hidden">
-                            <div class="flex items-center justify-between mb-2.5">
-                                <span class="text-sm font-semibold text-gray-900">
-                                    Size: <span id="selectedSizeName" class="font-normal text-gray-600">Select a
-                                        size</span>
-                                </span>
+                        {{-- Variants --}}
+                        <div id="variantsSection" class="space-y-4 hidden">
 
+                            {{-- Color --}}
+                            <div id="colorSection" class="hidden">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-semibold text-gray-800">
+                                        Color:
+                                        <span id="selectedColorName" class="font-normal text-gray-500 ml-1">Select a color</span>
+                                    </span>
+                                </div>
+                                <div id="colorOptions" class="flex gap-2.5 flex-wrap"></div>
                             </div>
-                            <div id="sizeOptions" class="flex gap-2.5 flex-wrap"></div>
+
+                            {{-- Size --}}
+                            <div id="sizeSection" class="hidden">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-semibold text-gray-800">
+                                        Size:
+                                        <span id="selectedSizeName" class="font-normal text-gray-500 ml-1">Select a size</span>
+                                    </span>
+                                </div>
+                                <div id="sizeOptions" class="flex gap-2 flex-wrap"></div>
+                            </div>
+
+                            {{-- Variant Error --}}
+                            <div id="variantError" class="hidden qv-variant-error">
+                                <i class="fas fa-exclamation-circle mr-1.5"></i>
+                                <span id="variantErrorText">Please select all required options</span>
+                            </div>
                         </div>
 
-                        {{-- Variant Error Message --}}
-                        <div id="variantError"
-                            class="hidden bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
-                            <i class="fas fa-exclamation-circle mr-1"></i>
-                            <span id="variantErrorText">Please select all options</span>
+                        {{-- Quantity --}}
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="text-sm font-semibold text-gray-800 shrink-0">Quantity</span>
+                            <div class="qv-qty-control">
+                                <button onclick="updateQuickViewQuantity(-1)" class="qv-qty-btn" aria-label="Decrease quantity">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <input type="number" id="quickViewQuantity" value="1" min="1" max="999"
+                                    class="qv-qty-input" aria-label="Quantity">
+                                <button onclick="updateQuickViewQuantity(1)" class="qv-qty-btn" aria-label="Increase quantity">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
                         </div>
+
+                        {{-- Short Description --}}
+                        <div id="quickViewDescription" class="text-sm text-gray-500 leading-relaxed border-t border-gray-100 pt-4 hidden"></div>
 
                     </div>
 
-                    {{-- Quantity --}}
-
-                    <div>
-                        <span class="text-sm font-semibold text-gray-900 mb-3 block">Quantity</span>
-                        <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden w-fit">
-                            <button onclick="updateQuickViewQuantity(-1)"
-                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
-                                <i class="fas fa-minus text-sm"></i>
-                            </button>
-                            <input type="number" id="quickViewQuantity" value="1" min="1" max="999"
-                                class="w-12 h-10 text-center text-sm font-semibold border-xl border-gray-200 focus:outline-none">
-                            <button onclick="updateQuickViewQuantity(1)"
-                                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
-                                <i class="fas fa-plus text-sm"></i>
-                            </button>
-
-                        </div>
-                    </div>
-
-                    <div
-                        class="sticky bottom-0 z-50 bg-white border-gray-100 pb-6">
+                    {{-- Sticky Action Buttons --}}
+                    <div class="qv-actions-bar border-t border-gray-100 px-3 md:px-5 py-3 shrink-0">
                         <div class="flex gap-3">
-    
-                            {{-- Add to Cart --}}
-                            <button id="quickViewAddToCart" onclick="addToCartFromQuickView()" class="flex-1 h-12 bg-primary text-white rounded-xl font-semibold text-sm
-                   flex items-center justify-center gap-2
-                   active:scale-[0.98] transition cursor-pointer">
-    
+                            <button id="quickViewAddToCart" onclick="addToCartFromQuickView()"
+                                class="qv-btn-primary flex-1">
                                 <i class="fas fa-shopping-cart text-sm"></i>
                                 <span>Add to Cart</span>
                             </button>
-    
-                            {{-- View Details --}}
-                            <button id="quickViewDetails" class="flex-1 h-12 border-2 border-primary text-primary rounded-xl font-semibold text-sm
-                   flex items-center justify-center gap-2
-                   hover:bg-primary hover:text-white
-                   active:scale-[0.98] transition cursor-pointer">
-    
+                            <button id="quickViewDetails"
+                                class="qv-btn-outline flex-1">
                                 <i class="fas fa-eye text-sm"></i>
                                 <span>View Details</span>
                             </button>
-    
                         </div>
                     </div>
-    
-    
-                    {{-- Short Description --}}
-                    <div id="quickViewDescription" class="text-sm text-gray-600 border-t border-gray-100 hidden"></div>
+
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
 <style>
-    .modal-overlay {
-        animation: fadeIn 0.2s ease-out;
+    /* ============================================================
+       QUICK VIEW MODAL – PROFESSIONAL REDESIGN
+       Primary: #228bcc  |  Font: system stack
+    ============================================================ */
+
+    /* ---------- Overlay ---------- */
+    .qv-overlay {
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        animation: qvFadeIn 0.22s ease-out both;
     }
 
-    .modal-overlay.show {
+    .qv-overlay.show {
         display: flex !important;
     }
 
-    .modal-container {
-        animation: slideUp 0.3s ease-out;
+    /* ---------- Container ---------- */
+    .qv-container {
+        animation: qvSlideUp 0.3s cubic-bezier(0.34, 1.26, 0.64, 1) both;
+        border: 1px solid rgba(255, 255, 255, 0.6);
     }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
+    /* ---------- Keyframes ---------- */
+    @keyframes qvFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    @keyframes qvSlideUp {
+        from { opacity: 0; transform: translateY(28px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0)    scale(1);    }
+    }
+
+    @keyframes qvShimmer {
+        0%   { background-position: -400px 0; }
+        100% { background-position: 400px 0; }
+    }
+
+    /* ---------- Scrollbar ---------- */
+    .qv-scroll::-webkit-scrollbar { width: 4px; }
+    .qv-scroll::-webkit-scrollbar-track { background: transparent; }
+    .qv-scroll::-webkit-scrollbar-thumb { background: #dde3ed; border-radius: 99px; }
+    .qv-scroll { scrollbar-width: thin; scrollbar-color: #dde3ed transparent; }
+
+    .qv-thumb-scroll::-webkit-scrollbar { height: 3px; }
+    .qv-thumb-scroll::-webkit-scrollbar-thumb { background: #dde3ed; border-radius: 99px; }
+    .qv-thumb-scroll { scrollbar-width: thin; scrollbar-color: #dde3ed transparent; }
+
+    /* ---------- Image Panel ---------- */
+    .qv-main-image-wrap {
+        aspect-ratio: 1 / 1;
+        cursor: zoom-in;
+        min-height: 200px;
+    }
+
+    .qv-main-img {
+        max-height: 240px;
+        min-height: 160px;
+    }
+
+    @media (min-width: 768px) {
+        /* On desktop, remove aspect-ratio so it fills full column height */
+        .qv-main-image-wrap {
+            aspect-ratio: unset;
+            flex: 1;
+            min-height: 0;
         }
 
-        to {
-            opacity: 1;
+        .qv-main-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            max-height: none;
+            min-height: 0;
         }
     }
 
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* ---------- Thumbnails ---------- */
+    .qv-thumb {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 10px;
+        border: 2px solid #e5e7eb;
+        cursor: pointer;
+        transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        flex-shrink: 0;
     }
 
-    .hide-scrollbar::-webkit-scrollbar {
-        display: none;
+    .qv-thumb:hover {
+        border-color: #228bcc;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(34, 139, 204, 0.2);
     }
 
-    .hide-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+    .qv-thumb.active {
+        border-color: #228bcc;
+        box-shadow: 0 0 0 3px rgba(34, 139, 204, 0.18);
     }
 
-    @media (max-width: 768px) {
-        .modal-container {
-            max-width: 95vw;
+    /* ---------- Price Block ---------- */
+    .qv-price-block {
+        background: linear-gradient(135deg, #f0f7fd 0%, #e8f4fb 100%);
+        border: 1px solid #d1e9f7;
+    }
+
+    /* ---------- Badge Save ---------- */
+    .qv-badge-save {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 20px;
+        letter-spacing: 0.02em;
+    }
+
+    /* ---------- Stock Badge ---------- */
+    .qv-stock-in    { color: #16a34a; }
+    .qv-stock-low   { color: #ea580c; }
+    .qv-stock-out   { color: #dc2626; }
+
+    .qv-stock-dot {
+        width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    .qv-stock-dot.in  { background: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,.15); }
+    .qv-stock-dot.low { background: #ea580c; box-shadow: 0 0 0 3px rgba(234,88,12,.15); }
+    .qv-stock-dot.out { background: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,.15); }
+
+    /* ---------- Color Swatches ---------- */
+    .qv-color-swatch {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 2px solid #e5e7eb;
+        cursor: pointer;
+        transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .qv-color-swatch:hover {
+        transform: scale(1.12);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    }
+
+    .qv-color-swatch.active {
+        border-color: #228bcc;
+        box-shadow: 0 0 0 3px rgba(34, 139, 204, 0.25);
+        transform: scale(1.08);
+    }
+
+    /* ---------- Size Buttons ---------- */
+    .qv-size-btn {
+        min-width: 44px;
+        height: 36px;
+        padding: 0 14px;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.18s;
+        white-space: nowrap;
+    }
+
+    .qv-size-btn:hover {
+        border-color: #228bcc;
+        color: #228bcc;
+        background: #f0f7fd;
+    }
+
+    .qv-size-btn.active {
+        border-color: #228bcc;
+        background: #228bcc;
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(34, 139, 204, 0.3);
+    }
+
+    .qv-size-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+
+    /* ---------- Variant Error ---------- */
+    .qv-variant-error {
+        display: flex;
+        align-items: center;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: #dc2626;
+    }
+
+    /* ---------- Quantity Control ---------- */
+    .qv-qty-control {
+        display: inline-flex;
+        align-items: center;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .qv-qty-btn {
+        width: 40px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .qv-qty-btn:hover {
+        background: #f0f7fd;
+        color: #228bcc;
+    }
+
+    .qv-qty-btn:active { background: #e8f4fb; }
+
+    .qv-qty-input {
+        width: 52px;
+        height: 42px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        border: none;
+        border-left: 1.5px solid #e5e7eb;
+        border-right: 1.5px solid #e5e7eb;
+        outline: none;
+        background: transparent;
+        -moz-appearance: textfield;
+    }
+
+    .qv-qty-input::-webkit-inner-spin-button,
+    .qv-qty-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+    /* ---------- Action Buttons ---------- */
+    .qv-btn-primary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 48px;
+        background: linear-gradient(135deg, #228bcc 0%, #1b6fa3 100%);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+        box-shadow: 0 4px 14px rgba(34, 139, 204, 0.35);
+        letter-spacing: 0.01em;
+    }
+
+    .qv-btn-primary:hover {
+        filter: brightness(1.08);
+        box-shadow: 0 6px 20px rgba(34, 139, 204, 0.45);
+        transform: translateY(-1px);
+    }
+
+    .qv-btn-primary:active { transform: scale(0.98); }
+
+    .qv-btn-outline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 48px;
+        border: 2px solid #228bcc;
+        color: #228bcc;
+        background: transparent;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.01em;
+    }
+
+    .qv-btn-outline:hover {
+        background: #228bcc;
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(34, 139, 204, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .qv-btn-outline:active { transform: scale(0.98); }
+
+    /* ---------- Skeleton Shimmer ---------- */
+    .qv-skeleton {
+        background: linear-gradient(90deg, #f3f4f6 25%, #e9ebee 37%, #f3f4f6 63%);
+        background-size: 800px 100%;
+        animation: qvShimmer 1.4s infinite linear;
+        border-radius: 8px;
+    }
+
+    /* ---------- Close Button ---------- */
+    .qv-close-btn {
+        transition: background 0.18s, color 0.18s, transform 0.18s;
+    }
+
+    .qv-close-btn:hover { transform: rotate(90deg); }
+
+    /* ============================================================
+       MOBILE  (< 640px) — centred with space around
+    ============================================================ */
+    @media (max-width: 639px) {
+        .qv-container {
+            animation: qvSlideUp 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) both;
         }
+
+        .qv-main-image-wrap { aspect-ratio: 16/9; min-height: 0; border-radius: 0; }
+        .qv-main-img        { max-height: none; min-height: 0; }
+        .qv-image-panel     { padding: 0; }
+        .qv-price-block     { padding: 10px 12px; }
+        .qv-thumb           { width: 44px; height: 44px; border-radius: 8px; }
+        .qv-qty-btn         { width: 36px; height: 36px; }
+        .qv-qty-input       { width: 44px; height: 36px; font-size: 13px; }
+        .qv-btn-primary,
+        .qv-btn-outline     { height: 44px; font-size: 13px; border-radius: 10px; }
+    }
+
+    /* ============================================================
+       TABLET  (640px – 767px)
+    ============================================================ */
+    @media (min-width: 640px) and (max-width: 767px) {
+        .qv-container {
+            animation: qvSlideUp 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+        }
+
+        .qv-main-image-wrap { aspect-ratio: 4/3; min-height: 0; }
+        .qv-main-img        { max-height: none; min-height: 0; }
+        .qv-thumb           { width: 50px; height: 50px; }
+    }
+
+    /* stacked layout on < md */
+    @media (max-width: 767px) {
+        .qv-main-image-wrap { aspect-ratio: 16/9; }
+        #qvMainContent      { overflow-y: auto; }
+    }
+
+    /* ============================================================
+       DESKTOP  (≥ 768px)
+    ============================================================ */
+    @media (min-width: 768px) {
+        .qv-info-panel { overflow: hidden; }
     }
 </style>
 
 {{--
 <script>
+    // NOTE: Script tag is commented-out in original; preserved here.
+    // All IDs and function signatures remain unchanged.
+
     let quickViewProduct = null;
     let quickViewVariants = [];
 
@@ -207,25 +558,72 @@ g               ray-900">Quick View</h3>
         quickViewProduct = product;
         quickViewVariants = variants;
 
-        // Reset UI
         resetQuickViewUI();
 
-        // Set basic info
-        document.getElementById('quickViewName').textContent = product.name ?? '';
-        document.getElementById('quickViewBrand').textContent = product.brand ?? '';
-        document.getElementById('quickViewDescription').innerHTML = decodeHTML(product.short_description ?? '');
+        document.getElementById('quickViewName').textContent        = product.name               ?? '';
+        document.getElementById('quickViewBrand').textContent       = product.brand              ?? '';
+        document.getElementById('quickViewDescription').innerHTML   = decodeHTML(product.short_description ?? '');
 
         // Image
-        document.getElementById('quickViewImage').src = product.thumbnail || '/assets/images/default.png';
+        const img = document.getElementById('quickViewImage');
+        img.src = product.thumbnail || '/assets/images/default.png';
+        img.alt = product.name ?? 'Product image';
+
+        // Thumbnails
+        if (product.images && product.images.length > 1) {
+            const thumbsEl = document.getElementById('quickViewThumbnails');
+            thumbsEl.innerHTML = '';
+            product.images.forEach((imgSrc, i) => {
+                const t = document.createElement('img');
+                t.src       = imgSrc;
+                t.alt       = `${product.name} image ${i + 1}`;
+                t.className = 'qv-thumb' + (i === 0 ? ' active' : '');
+                t.onclick   = () => {
+                    document.getElementById('quickViewImage').src = imgSrc;
+                    document.querySelectorAll('.qv-thumb').forEach(x => x.classList.remove('active'));
+                    t.classList.add('active');
+                };
+                thumbsEl.appendChild(t);
+            });
+        }
+
+        // Badges
+        const badgesEl = document.getElementById('quickViewBadges');
+        badgesEl.innerHTML = '';
+        if (product.is_new_arrival) badgesEl.innerHTML += `<span class="bg-green-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">NEW</span>`;
+        if (product.is_best_seller) badgesEl.innerHTML += `<span class="bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">HOT</span>`;
+        if (product.is_on_sale)     badgesEl.innerHTML += `<span class="bg-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">SALE</span>`;
 
         // Price
         setQuickViewPrice(product.price, product.compare_price);
 
-        // Stock
-        updateQuickViewStock(product.stock_in ?? 0);
+        // Rating
+        if (product.average_rating && product.review_count > 0) {
+            const ratingEl = document.getElementById('quickViewRating');
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= Math.floor(product.average_rating))      stars += '<i class="fas fa-star text-yellow-400 text-xs"></i>';
+                else if (i - 0.5 <= product.average_rating)       stars += '<i class="fas fa-star-half-alt text-yellow-400 text-xs"></i>';
+                else                                               stars += '<i class="far fa-star text-yellow-300 text-xs"></i>';
+            }
+            ratingEl.innerHTML = `<div class="flex gap-0.5">${stars}</div><span class="text-xs text-gray-500 font-medium">${product.average_rating} <span class="text-gray-400">(${product.review_count} reviews)</span></span>`;
+        }
 
-        // Variants
+        // Stock & Variants
+        updateQuickViewStock(product.stock_in ?? 0);
         renderQuickViewVariants(variants);
+
+        // Short description
+        if (product.short_description) {
+            document.getElementById('quickViewDescription').classList.remove('hidden');
+        }
+
+        // View Details link
+        if (product.slug) {
+            document.getElementById('quickViewDetails').onclick = () => {
+                window.location.href = `/products/${product.slug}`;
+            };
+        }
 
         // Show modal
         const modal = document.getElementById('productQuickViewModal');
@@ -240,26 +638,46 @@ g               ray-900">Quick View</h3>
         return txt.value;
     }
 
+    function handleQuickViewOverlayClick(e) {
+        if (e.target === document.getElementById('productQuickViewModal')) {
+            closeQuickView();
+        }
+    }
+
+    function closeQuickView() {
+        const modal = document.getElementById('productQuickViewModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+        quickViewProduct = null;
+        quickViewVariants = [];
+    }
+
     // ==============================
     // RESET UI
     // ==============================
     function resetQuickViewUI() {
-        document.getElementById('quickViewQuantity').value = 1;
-        document.getElementById('selectedColorName').textContent = 'Select';
-        document.getElementById('selectedSizeName').textContent = 'Select';
-
-        document.getElementById('colorOptions').innerHTML = '';
-        document.getElementById('sizeOptions').innerHTML = '';
-
+        document.getElementById('quickViewQuantity').value  = 1;
+        document.getElementById('selectedColorName').textContent = 'Select a color';
+        document.getElementById('selectedSizeName').textContent  = 'Select a size';
+        document.getElementById('colorOptions').innerHTML   = '';
+        document.getElementById('sizeOptions').innerHTML    = '';
+        document.getElementById('quickViewThumbnails').innerHTML = '';
+        document.getElementById('quickViewRating').innerHTML    = '';
+        document.getElementById('quickViewBadges').innerHTML    = '';
+        document.getElementById('quickViewDescription').classList.add('hidden');
         document.getElementById('variantsSection').classList.add('hidden');
+        document.getElementById('colorSection').classList.add('hidden');
+        document.getElementById('sizeSection').classList.add('hidden');
+        document.getElementById('variantError').classList.add('hidden');
     }
 
     // ==============================
-    // PRICE HANDLING
+    // PRICE
     // ==============================
     function setQuickViewPrice(price, comparePrice = 0) {
-        const priceEl = document.getElementById('quickViewPrice');
-        const compareEl = document.getElementById('quickViewComparePrice');
+        const priceEl    = document.getElementById('quickViewPrice');
+        const compareEl  = document.getElementById('quickViewComparePrice');
         const discountEl = document.getElementById('quickViewDiscount');
 
         priceEl.textContent = `৳${Number(price).toLocaleString()}`;
@@ -268,8 +686,8 @@ g               ray-900">Quick View</h3>
             compareEl.textContent = `৳${Number(comparePrice).toLocaleString()}`;
             compareEl.classList.remove('hidden');
 
-            const discount = comparePrice - price;
-            discountEl.textContent = `Save ৳${discount.toLocaleString()}`;
+            const pct = Math.round(((comparePrice - price) / comparePrice) * 100);
+            discountEl.textContent = `${pct}% OFF`;
             discountEl.classList.remove('hidden');
         } else {
             compareEl.classList.add('hidden');
@@ -284,11 +702,19 @@ g               ray-900">Quick View</h3>
         const stockEl = document.getElementById('quickViewStock');
 
         if (stock <= 0) {
-            stockEl.innerHTML = `<span class="text-red-600 font-medium">Out of stock</span>`;
+            stockEl.innerHTML = `
+                <span class="qv-stock-dot out"></span>
+                <span class="qv-stock-out text-sm font-semibold">Out of stock</span>`;
         } else if (stock <= 5) {
-            stockEl.innerHTML = `<span class="text-orange-500 font-medium">Only ${stock} left!</span>`;
+            stockEl.innerHTML = `
+                <span class="qv-stock-dot low"></span>
+                <span class="qv-stock-low text-sm font-semibold">Only ${stock} left!</span>
+                <span class="text-xs text-gray-400">— Order soon</span>`;
         } else {
-            stockEl.innerHTML = `<span class="text-green-600 font-medium">${stock} in stock</span>`;
+            stockEl.innerHTML = `
+                <span class="qv-stock-dot in"></span>
+                <span class="qv-stock-in text-sm font-semibold">In stock</span>
+                <span class="text-xs text-gray-400">(${stock} available)</span>`;
         }
 
         const qty = document.getElementById('quickViewQuantity');
@@ -296,54 +722,41 @@ g               ray-900">Quick View</h3>
     }
 
     // ==============================
-    // RENDER VARIANTS
+    // VARIANTS
     // ==============================
     function renderQuickViewVariants(variants) {
         if (!variants || variants.length === 0) return;
 
         const colorBox = document.getElementById('colorOptions');
-        const sizeBox = document.getElementById('sizeOptions');
+        const sizeBox  = document.getElementById('sizeOptions');
 
-        const colors = [...new Map(
-            variants.filter(v => v.color).map(v => [v.color.id, v.color])
-        ).values()];
+        const colors = [...new Map(variants.filter(v => v.color).map(v => [v.color.id, v.color])).values()];
+        const sizes  = [...new Map(variants.filter(v => v.size).map(v =>  [v.size.id,  v.size])).values()];
 
-        const sizes = [...new Map(
-            variants.filter(v => v.size).map(v => [v.size.id, v.size])
-        ).values()];
-
-        // Show section
         document.getElementById('variantsSection').classList.remove('hidden');
 
-        // COLORS
         if (colors.length > 0) {
             document.getElementById('colorSection').classList.remove('hidden');
-
             colors.forEach(color => {
                 const btn = document.createElement('button');
-                btn.className = "w-10 h-10 rounded-full border border-gray-300 hover:border-primary transition";
+                btn.className           = 'qv-color-swatch';
                 btn.style.backgroundColor = color.hex_code || '#eee';
-                btn.dataset.colorId = color.id;
-                btn.title = color.name;
-
+                btn.dataset.colorId     = color.id;
+                btn.title               = color.name;
+                btn.setAttribute('aria-label', color.name);
                 btn.onclick = () => selectQuickViewColor(btn, color.name);
-
                 colorBox.appendChild(btn);
             });
         }
 
-        // SIZES
         if (sizes.length > 0) {
             document.getElementById('sizeSection').classList.remove('hidden');
-
             sizes.forEach(size => {
                 const btn = document.createElement('button');
-                btn.className = "px-3 py-1 border rounded-md text-sm hover:border-primary";
-                btn.dataset.sizeId = size.id;
-                btn.textContent = size.name;
-
+                btn.className       = 'qv-size-btn';
+                btn.dataset.sizeId  = size.id;
+                btn.textContent     = size.name;
                 btn.onclick = () => selectQuickViewSize(btn, size.name);
-
                 sizeBox.appendChild(btn);
             });
         }
@@ -353,24 +766,16 @@ g               ray-900">Quick View</h3>
     // SELECTIONS
     // ==============================
     function selectQuickViewColor(btn, name) {
-        document.querySelectorAll('#colorOptions button').forEach(b => {
-            b.classList.remove('border-primary');
-        });
-
-        btn.classList.add('border-primary');
+        document.querySelectorAll('#colorOptions .qv-color-swatch').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         document.getElementById('selectedColorName').textContent = name;
-
         updateQuickViewVariant();
     }
 
     function selectQuickViewSize(btn, name) {
-        document.querySelectorAll('#sizeOptions button').forEach(b => {
-            b.classList.remove('border-primary');
-        });
-
-        btn.classList.add('border-primary');
+        document.querySelectorAll('#sizeOptions .qv-size-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         document.getElementById('selectedSizeName').textContent = name;
-
         updateQuickViewVariant();
     }
 
@@ -378,21 +783,19 @@ g               ray-900">Quick View</h3>
     // FIND VARIANT
     // ==============================
     function updateQuickViewVariant() {
-        const selectedColor = document.querySelector('#colorOptions .border-primary');
-        const selectedSize = document.querySelector('#sizeOptions .border-primary');
-
+        const selectedColor = document.querySelector('#colorOptions .qv-color-swatch.active');
+        const selectedSize  = document.querySelector('#sizeOptions .qv-size-btn.active');
         const colorId = selectedColor ? selectedColor.dataset.colorId : null;
-        const sizeId = selectedSize ? selectedSize.dataset.sizeId : null;
+        const sizeId  = selectedSize  ? selectedSize.dataset.sizeId   : null;
 
         const variant = quickViewVariants.find(v => {
-            const colorMatch = !colorId || v.color_id == colorId;
-            const sizeMatch = !sizeId || v.size_id == sizeId;
-            return colorMatch && sizeMatch;
+            return (!colorId || v.color_id == colorId) && (!sizeId || v.size_id == sizeId);
         });
 
         if (variant) {
             setQuickViewPrice(variant.price, variant.compare_price);
             updateQuickViewStock(variant.stock_in - (variant.stock_out ?? 0));
+            document.getElementById('variantError').classList.add('hidden');
         }
     }
 
@@ -402,12 +805,9 @@ g               ray-900">Quick View</h3>
     function updateQuickViewQuantity(change) {
         const input = document.getElementById('quickViewQuantity');
         let val = parseInt(input.value || 1) + change;
-
-        if (val < 1) val = 1;
-
+        if (val < 1)   val = 1;
         const max = parseInt(input.max || 999);
         if (val > max) val = max;
-
         input.value = val;
     }
 
@@ -417,48 +817,52 @@ g               ray-900">Quick View</h3>
     function addToCartFromQuickView() {
         if (!quickViewProduct) return;
 
-        const qty = parseInt(document.getElementById('quickViewQuantity').value || 1);
+        const hasColors = document.getElementById('colorSection') && !document.getElementById('colorSection').classList.contains('hidden');
+        const hasSizes  = document.getElementById('sizeSection')  && !document.getElementById('sizeSection').classList.contains('hidden');
+        const colorSel  = document.querySelector('#colorOptions .qv-color-swatch.active');
+        const sizeSel   = document.querySelector('#sizeOptions .qv-size-btn.active');
 
-        const color = document.querySelector('#colorOptions .border-primary');
-        const size = document.querySelector('#sizeOptions .border-primary');
+        if ((hasColors && !colorSel) || (hasSizes && !sizeSel)) {
+            const errEl = document.getElementById('variantError');
+            const errTxt = document.getElementById('variantErrorText');
+            errTxt.textContent = !colorSel && hasColors ? 'Please select a color' : 'Please select a size';
+            errEl.classList.remove('hidden');
+            errEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            return;
+        }
 
+        const qty     = parseInt(document.getElementById('quickViewQuantity').value || 1);
         const payload = {
             product_id: quickViewProduct.id,
-            variant_id: findQuickViewVariantId(color, size),
-            quantity: qty
+            variant_id: findQuickViewVariantId(colorSel, sizeSel),
+            quantity:   qty
         };
 
         if (window.cartManager) {
-            window.cartManager.addToCart(
-                payload.product_id,
-                payload.variant_id,
-                payload.quantity
-            ).then(success => {
-                if (success && window.openCartDrawer) {
-                    window.openCartDrawer();
-                }
-            });
+            window.cartManager.addToCart(payload.product_id, payload.variant_id, payload.quantity)
+                .then(success => {
+                    if (success) {
+                        closeQuickView();
+                        if (window.openCartDrawer) window.openCartDrawer();
+                    }
+                });
         }
     }
 
     function findQuickViewVariantId(colorEl, sizeEl) {
         const colorId = colorEl ? colorEl.dataset.colorId : null;
-        const sizeId = sizeEl ? sizeEl.dataset.sizeId : null;
-
-        const variant = quickViewVariants.find(v => {
-            return (!colorId || v.color_id == colorId) &&
-                (!sizeId || v.size_id == sizeId);
-        });
-
+        const sizeId  = sizeEl  ? sizeEl.dataset.sizeId   : null;
+        const variant = quickViewVariants.find(v =>
+            (!colorId || v.color_id == colorId) && (!sizeId || v.size_id == sizeId)
+        );
         return variant ? variant.id : null;
     }
 
     // ==============================
-    // CLOSE ON ESC
+    // ESC TO CLOSE
     // ==============================
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            closeQuickView();
-        }
+        if (e.key === 'Escape') closeQuickView();
     });
-</script> --}}
+</script>
+--}}
