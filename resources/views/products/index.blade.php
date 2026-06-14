@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Products')
+@section('title', $activeCategory ? $activeCategory->name . ' Products' : 'Products')
 
 @section('content')
 {{-- Breadcrumb --}}
@@ -9,7 +9,14 @@
         <nav class="flex items-center gap-2 text-sm">
             <a href="{{ url('/') }}" class="text-secondary hover:text-primary transition-colors duration-200">Home</a>
             <i class="fas fa-chevron-right text-[10px] text-secondary-300"></i>
-            <span class="text-primary font-medium">Products</span>
+            <a href="{{ route('products.index') }}" class="text-secondary hover:text-primary transition-colors duration-200">Products</a>
+            @if($activeCategory)
+                <i class="fas fa-chevron-right text-[10px] text-secondary-300"></i>
+                <span class="text-primary font-medium">{{ $activeCategory->name }}</span>
+            @else
+                <i class="fas fa-chevron-right text-[10px] text-secondary-300"></i>
+                <span class="text-primary font-medium">All Products</span>
+            @endif
         </nav>
     </div>
 </div>
@@ -19,7 +26,9 @@
 
         {{-- Mobile Filter Toggle --}}
         <div class="lg:hidden flex items-center justify-between mb-2">
-            <h1 class="text-xl font-bold text-primary">All Products</h1>
+            <h1 class="text-xl font-bold text-primary">
+                {{ $activeCategory ? $activeCategory->name : 'All Products' }}
+            </h1>
             <button onclick="toggleMobileFilter()" class="flex items-center gap-2 bg-white border border-primary-100 rounded-xl px-4 py-2.5 text-sm font-medium text-primary tap-effect shadow-sm">
                 <i class="fas fa-sliders-h"></i>
                 Filters
@@ -37,82 +46,70 @@
                 </div>
 
                 {{-- ============================================================
-                     CATEGORY FILTER — 3 LEVEL TREE (INDEPENDENT SELECTION)
+                     CATEGORY FILTER — TREE TYPE DROPDOWN
                      ============================================================ --}}
-                @php
-                    $selectedCategories = request('categories', []);
-                    if (!is_array($selectedCategories)) {
-                        $selectedCategories = array_filter(explode(',', $selectedCategories));
-                    }
-                    $selectedCategories = array_map('trim', $selectedCategories);
-                @endphp
-
                 <div class="border-b border-primary-100 pb-5 mb-5">
                     <button onclick="toggleFilterSection('categoryFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3 hover:text-secondary transition-colors duration-200">
                         Category
                         <i class="fas fa-chevron-down text-xs text-secondary-300 transition-transform duration-200" id="categoryFilterIcon"></i>
                     </button>
 
-                    <div id="categoryFilter" class="space-y-2 max-h-64 overflow-y-auto pr-1 qv-scroll">
+                    <div id="categoryFilter" class="space-y-1 max-h-80 overflow-y-auto pr-1 qv-scroll">
                         @foreach($categories as $category)
-
                             {{-- LEVEL 1 --}}
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="checkbox"
-                                    class="cat-checkbox w-4 h-4 rounded border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0"
-                                    data-id="cat-{{ $category->id }}"
-                                    name="categories[]"
-                                    value="{{ $category->slug }}"
-                                    {{ in_array($category->slug, $selectedCategories) ? 'checked' : '' }}
-                                    onchange="applyFilters()">
-                                <span class="text-sm text-secondary group-hover:text-primary font-medium transition-colors duration-200">
-                                    {{ $category->name }}
-                                </span>
-                                <span class="ml-auto text-xs text-secondary-300 flex-shrink-0">
-                                    ({{ $categoryCounts[$category->id] ?? 0 }})
-                                </span>
-                            </label>
-
-                            @foreach($category->children as $child)
+                            <div class="category-tree-item">
+                                <div class="flex items-center justify-between group">
+                                    <a href="{{ route('products.index', ['categorySlug' => $category->slug]) }}"
+                                       class="flex-1 text-sm font-medium py-2 px-2 rounded-lg transition-all duration-200 {{ $activeCategorySlug == $category->slug ? 'bg-primary text-white shadow-sm' : 'text-secondary hover:bg-primary-50 hover:text-primary' }}">
+                                        {{ $category->name }}
+                                        <span class="text-xs opacity-70 ml-1">({{ $categoryCounts[$category->id] ?? 0 }})</span>
+                                    </a>
+                                    @if($category->children->count() > 0)
+                                        <button type="button"
+                                                onclick="toggleCategoryTree('cat-{{ $category->id }}', this)"
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-primary-50 text-secondary-300 hover:text-primary transition-all duration-200 ml-1">
+                                            <i class="fas fa-chevron-right text-[10px] transition-transform duration-200" id="cat-icon-{{ $category->id }}"></i>
+                                        </button>
+                                    @endif
+                                </div>
 
                                 {{-- LEVEL 2 --}}
-                                <label class="flex items-center gap-3 cursor-pointer group ml-3">
-                                    <input type="checkbox"
-                                        class="cat-checkbox w-4 h-4 rounded border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0"
-                                        data-id="sub-{{ $child->id }}"
-                                        name="categories[]"
-                                        value="{{ $child->slug }}"
-                                        {{ in_array($child->slug, $selectedCategories) ? 'checked' : '' }}
-                                        onchange="applyFilters()">
-                                    <span class="text-sm text-secondary-400 group-hover:text-primary transition-colors duration-200">
-                                        {{ $child->name }}
-                                    </span>
-                                    <span class="ml-auto text-xs text-secondary-300 flex-shrink-0">
-                                        ({{ $categoryCounts[$child->id] ?? 0 }})
-                                    </span>
-                                </label>
+                                @if($category->children->count() > 0)
+                                    <div id="cat-{{ $category->id }}" class="hidden ml-3 mt-1 space-y-1 border-l-2 border-primary-100 pl-3">
+                                        @foreach($category->children as $child)
+                                            <div class="category-tree-item">
+                                                <div class="flex items-center justify-between group">
+                                                    <a href="{{ route('products.index', ['categorySlug' => $child->slug]) }}"
+                                                       class="flex-1 text-sm py-1.5 px-2 rounded-lg transition-all duration-200 {{ $activeCategorySlug == $child->slug ? 'bg-primary/10 text-primary font-medium' : 'text-secondary-400 hover:bg-primary-50 hover:text-primary' }}">
+                                                        {{ $child->name }}
+                                                        <span class="text-xs opacity-60 ml-1">({{ $categoryCounts[$child->id] ?? 0 }})</span>
+                                                    </a>
+                                                    @if($child->children->count() > 0)
+                                                        <button type="button"
+                                                                onclick="toggleCategoryTree('subcat-{{ $child->id }}', this)"
+                                                                class="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-primary-50 text-secondary-300 hover:text-primary transition-all duration-200 ml-1">
+                                                            <i class="fas fa-chevron-right text-[10px] transition-transform duration-200" id="cat-icon-{{ $child->id }}"></i>
+                                                        </button>
+                                                    @endif
+                                                </div>
 
-                                @foreach($child->children ?? [] as $subChild)
-
-                                    {{-- LEVEL 3 --}}
-                                    <label class="flex items-center gap-3 cursor-pointer group ml-6">
-                                        <input type="checkbox"
-                                            class="cat-checkbox w-4 h-4 rounded border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0"
-                                            data-id="leaf-{{ $subChild->id }}"
-                                            name="categories[]"
-                                            value="{{ $subChild->slug }}"
-                                            {{ in_array($subChild->slug, $selectedCategories) ? 'checked' : '' }}
-                                            onchange="applyFilters()">
-                                        <span class="text-sm text-secondary-300 group-hover:text-primary truncate transition-colors duration-200">
-                                            {{ $subChild->name }}
-                                        </span>
-                                        <span class="ml-auto text-xs text-secondary-300 flex-shrink-0">
-                                            ({{ $categoryCounts[$subChild->id] ?? 0 }})
-                                        </span>
-                                    </label>
-
-                                @endforeach
-                            @endforeach
+                                                {{-- LEVEL 3 --}}
+                                                @if($child->children->count() > 0)
+                                                    <div id="subcat-{{ $child->id }}" class="hidden ml-3 mt-1 space-y-1 border-l-2 border-primary-50 pl-3">
+                                                        @foreach($child->children as $subChild)
+                                                            <a href="{{ route('products.index', ['categorySlug' => $subChild->slug]) }}"
+                                                               class="block text-sm py-1.5 px-2 rounded-lg transition-all duration-200 {{ $activeCategorySlug == $subChild->slug ? 'bg-primary/10 text-primary font-medium' : 'text-secondary-300 hover:bg-primary-50 hover:text-primary' }}">
+                                                                {{ $subChild->name }}
+                                                                <span class="text-xs opacity-50 ml-1">({{ $categoryCounts[$subChild->id] ?? 0 }})</span>
+                                                            </a>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -334,8 +331,8 @@
             <div class="hidden lg:flex items-center justify-between mb-5">
                 <div>
                     <h1 class="text-2xl font-bold text-primary">
-                        @if(request('category'))
-                            {{ ucfirst(request('category')) }} Products
+                        @if($activeCategory)
+                            {{ $activeCategory->name }} Products
                         @elseif(request('search'))
                             Search Results for &ldquo;{{ request('search') }}&rdquo;
                         @else
@@ -376,10 +373,7 @@
                  ACTIVE FILTERS CHIPS
                  ================================================================ --}}
             @php
-                $hasFilters = request()->hasAny(['categories','brands','sizes','colors','min_price','max_price','min_rating']);
-                $selectedCategories = request('categories', []);
-                if (!is_array($selectedCategories)) $selectedCategories = array_filter(explode(',', $selectedCategories));
-
+                $hasFilters = request()->hasAny(['brands','sizes','colors','min_price','max_price','min_rating']) || $activeCategorySlug;
                 $selectedBrands = request('brands', []);
                 if (!is_array($selectedBrands)) $selectedBrands = array_filter(explode(',', $selectedBrands));
 
@@ -394,19 +388,16 @@
             <div class="flex flex-wrap items-center gap-2 mb-5">
                 <span class="text-sm text-secondary font-medium">Active:</span>
 
-                {{-- Category chips --}}
-                @foreach($selectedCategories as $catSlug)
-                    @php $cat = $allCategories->firstWhere('slug', trim($catSlug)); @endphp
-                    @if($cat)
+                {{-- Category chip (if active from URL) --}}
+                @if($activeCategory)
                     <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
-                        <i class="fas fa-tag text-xs opacity-70"></i>
-                        {{ $cat->name }}
-                        <button onclick="removeFilter('categories', '{{ trim($catSlug) }}')" class="hover:text-secondary-200 ml-0.5 transition-colors">
+                        <i class="fas fa-folder text-xs opacity-70"></i>
+                        {{ $activeCategory->name }}
+                        <button onclick="removeCategoryFilter()" class="hover:text-secondary-200 ml-0.5 transition-colors">
                             <i class="fas fa-times text-xs"></i>
                         </button>
                     </span>
-                    @endif
-                @endforeach
+                @endif
 
                 {{-- Brand chips --}}
                 @foreach($selectedBrands as $brandSlug)
@@ -584,11 +575,11 @@ function applyFilters() {
         if (url.searchParams.get(k)) params.set(k, url.searchParams.get(k));
     });
 
-    // Categories (checkboxes) — INDEPENDENT: only get explicitly checked boxes
-    const categories = [...document.querySelectorAll('input[name="categories[]"]:checked')]
-        .map(cb => cb.value.trim())
-        .filter(Boolean);
-    if (categories.length) params.set('categories', categories.join(','));
+    // Preserve category from URL path if present
+    const pathParts = url.pathname.split('/');
+    const lastPart = pathParts[pathParts.length - 1];
+    const isCategorySlug = lastPart && lastPart !== 'products';
+    const basePath = isCategorySlug ? '/products' : url.pathname;
 
     // Brands
     const brands = [...document.querySelectorAll('input[name="brands[]"]:checked')]
@@ -618,14 +609,44 @@ function applyFilters() {
     const rating = document.querySelector('input[name="min_rating"]:checked')?.value;
     if (rating) params.set('min_rating', rating);
 
-    window.location.href = `${url.pathname}?${params.toString()}`;
+    window.location.href = `${basePath}?${params.toString()}`;
+}
+
+// ============================================================
+// CATEGORY TREE TOGGLE
+// ============================================================
+function toggleCategoryTree(elementId, btn) {
+    const element = document.getElementById(elementId);
+    const icon = document.getElementById('cat-icon-' + elementId.replace('cat-', '').replace('subcat-', ''));
+    
+    if (element.classList.contains('hidden')) {
+        element.classList.remove('hidden');
+        if (icon) icon.classList.add('rotate-90');
+        if (btn) btn.classList.add('bg-primary-50', 'text-primary');
+    } else {
+        element.classList.add('hidden');
+        if (icon) icon.classList.remove('rotate-90');
+        if (btn) btn.classList.remove('bg-primary-50', 'text-primary');
+    }
+}
+
+// ============================================================
+// REMOVE CATEGORY FILTER (go back to /products)
+// ============================================================
+function removeCategoryFilter() {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.searchParams);
+
+    // Remove category from path by going to base /products
+    // Keep all other query params
+    params.delete('page');
+    window.location.href = `/products?${params.toString()}`;
 }
 
 // ============================================================
 // PRICE FILTER HELPERS
 // ============================================================
 function applyPriceFilter() {
-    // Uncheck any preset radio
     document.querySelectorAll('.price-preset').forEach(r => r.checked = false);
     applyFilters();
 }
@@ -645,12 +666,10 @@ function toggleSizeColor(btn, name, value) {
     const cb = getOrCreateHiddenCheckbox(name, value);
     cb.checked = !cb.checked;
 
-    // Update visual state of button
     if (name === 'colors[]') {
         if (cb.checked) {
             btn.classList.add('border-primary', 'ring-2', 'ring-primary/30', 'scale-110');
             btn.classList.remove('border-primary-100');
-            // Add checkmark icon if not present
             if (!btn.querySelector('.fa-check')) {
                 const checkIcon = document.createElement('i');
                 checkIcon.className = 'fas fa-check text-xs';
@@ -663,7 +682,6 @@ function toggleSizeColor(btn, name, value) {
         } else {
             btn.classList.remove('border-primary', 'ring-2', 'ring-primary/30', 'scale-110');
             btn.classList.add('border-primary-100');
-            // Remove checkmark icon
             const checkIcon = btn.querySelector('.fa-check');
             if (checkIcon) checkIcon.remove();
         }
@@ -687,7 +705,7 @@ function removeFilter(filterType, value = null) {
     const url = new URL(window.location.href);
     const params = new URLSearchParams(url.searchParams);
 
-    if (['categories', 'brands', 'sizes', 'colors'].includes(filterType)) {
+    if (['brands', 'sizes', 'colors'].includes(filterType)) {
         const current = params.get(filterType);
         if (current) {
             const updated = current.split(',').map(v => v.trim()).filter(v => v !== String(value).trim());
@@ -700,9 +718,7 @@ function removeFilter(filterType, value = null) {
         params.delete(filterType);
     }
 
-    // Reset to page 1 when filters change
     params.delete('page');
-
     window.location.href = `${url.pathname}?${params.toString()}`;
 }
 
@@ -712,11 +728,15 @@ function removeFilter(filterType, value = null) {
 function clearAllFilters() {
     const url = new URL(window.location.href);
     const params = new URLSearchParams();
+    
+    // Preserve sort & search only
     ['sort', 'search'].forEach(k => {
         if (url.searchParams.get(k)) params.set(k, url.searchParams.get(k));
     });
+    
+    // Always go to base /products path (remove category slug)
     const qs = params.toString();
-    window.location.href = qs ? `${url.pathname}?${qs}` : url.pathname;
+    window.location.href = qs ? `/products?${qs}` : '/products';
 }
 
 // ============================================================
@@ -755,13 +775,11 @@ function toggleFilterSection(sectionId) {
 // ON PAGE LOAD — INITIALIZE HIDDEN CHECKBOXES FOR PRE-SELECTED
 // ============================================================
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialise hidden checkboxes for size/color buttons that are pre-selected
     document.querySelectorAll('.size-color-btn').forEach(btn => {
         const name  = btn.dataset.filterType;
         const value = btn.dataset.filterValue;
         if (!name || !value) return;
 
-        // If button already has active classes set by Blade, create a pre-checked hidden checkbox
         const isActive = name === 'colors[]' 
             ? btn.classList.contains('border-primary') && btn.classList.contains('ring-2')
             : btn.classList.contains('border-primary') && btn.classList.contains('bg-primary');
@@ -771,6 +789,31 @@ document.addEventListener('DOMContentLoaded', function () {
             cb.checked = true;
         }
     });
+
+    // Auto-expand category tree if active category is nested
+    @if($activeCategory)
+        @if($activeCategory->parent_id)
+            // Try to expand parent trees
+            const parentIds = [];
+            @php
+                $parent = $activeCategory->parent;
+                while($parent) {
+                    echo "parentIds.push('cat-{$parent->id}');\n";
+                    $parent = $parent->parent;
+                }
+            @endphp
+            
+            parentIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.classList.contains('hidden')) {
+                    el.classList.remove('hidden');
+                    const iconId = 'cat-icon-' + id.replace('cat-', '').replace('subcat-', '');
+                    const icon = document.getElementById(iconId);
+                    if (icon) icon.classList.add('rotate-90');
+                }
+            });
+        @endif
+    @endif
 });
 </script>
 @endpush

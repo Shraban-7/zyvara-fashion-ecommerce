@@ -133,7 +133,7 @@
                         </div>
 
                         {{-- Quantity --}}
-                        <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
                             <span class="text-sm font-semibold text-primary shrink-0">Quantity</span>
                             <div class="qv-qty-control">
                                 <button onclick="updateQuickViewQuantity(-1)" class="qv-qty-btn" aria-label="Decrease quantity">

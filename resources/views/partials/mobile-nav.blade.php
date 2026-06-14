@@ -13,7 +13,7 @@
         {{-- Shop --}}
         <a href="{{ route('products.index') }}" class="mobile-nav-item {{ request()->routeIs('products.index') ? 'mobile-nav-item--active' : '' }}">
             <div class="mobile-nav-icon">
-                <i class="fas fa-th-large"></i>
+                <i class="fas fa-store"></i>
             </div>
             <span class="mobile-nav-label">Shop</span>
         </a>
@@ -34,24 +34,6 @@
             </div>
             <span class="mobile-nav-label">Cart</span>
         </button>
-
-        {{-- Account --}}
-        @auth
-            <a href="{{ route('customer.dashboard') }}" class="mobile-nav-item {{ request()->routeIs('customer.dashboard') ? 'mobile-nav-item--active' : '' }}">
-                <div class="mobile-nav-icon">
-                    <i class="fas fa-user"></i>
-                </div>
-                <span class="mobile-nav-label">Account</span>
-            </a>
-        @else
-            <button onclick="openAuthModal('login')" class="mobile-nav-item">
-                <div class="mobile-nav-icon">
-                    <i class="fas fa-user"></i>
-                </div>
-                <span class="mobile-nav-label">Account</span>
-            </button>
-        @endauth
-
     </div>
 </nav>
 

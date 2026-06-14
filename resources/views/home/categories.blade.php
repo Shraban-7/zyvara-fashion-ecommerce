@@ -15,7 +15,7 @@
 
         <div class="cat-grid">
             @foreach($allMenuCategories as $category)
-            <a href="{{ route('products.index') }}?categories={{ $category->slug }}" class="cat-item group">
+            <a href="{{ route('products.index', $category->slug) }}" class="cat-item group">
                 <div class="cat-card">
                     <div class="cat-img-wrap">
                         <img src="{{ set_image($category->image) }}" alt="{{ $category->name }}"

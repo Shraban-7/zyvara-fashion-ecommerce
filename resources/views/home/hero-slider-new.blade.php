@@ -1,7 +1,7 @@
 <?php
 $sliders = $banners->where('position', \App\Enums\BannerPosition::HERO)->sortBy('sort_order');
 $promos = $banners->where('position', \App\Enums\BannerPosition::PROMOTIONAL)->sortBy('sort_order');
-$promoList = $promos->take(4)->values();
+$promoList = $promos->take(2)->values();
 ?>
 
 <section class="bento-section" aria-label="Featured promotions">
@@ -12,38 +12,36 @@ $promoList = $promos->take(4)->values();
             <div class="bento-main group" role="region" aria-roledescription="carousel" aria-label="Hero banner carousel">
                 <div id="hero-slider" class="relative w-full h-full overflow-hidden rounded-2xl">
                     @foreach ($sliders as $index => $banner)
-                    <div class="hero-slide absolute inset-0 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
-                         role="group"
-                         aria-roledescription="slide"
-                         aria-label="Slide {{ $index + 1 }} of {{ $sliders->count() }}"
-                         aria-hidden="{{ $index !== 0 ? 'true' : 'false' }}">
-                        <a href="{{ $banner->link ?? '#' }}" class="block w-full h-full" tabindex="-1">
-                            <img src="{{ storage_url($banner->image) }}" 
-                                 alt="{{ $banner->title }}"
-                                 loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
-                                 class="w-full h-full object-cover"
-                                 width="800"
-                                 height="600">
-                            @if($banner->title)
-                            <div class="slide-caption">
-                                <h2 class="slide-title">{{ $banner->title }}</h2>
-                                @if($banner->subtitle)
-                                <p class="slide-subtitle">{{ $banner->subtitle }}</p>
+                        <div class="hero-slide absolute inset-0 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
+                            role="group" aria-roledescription="slide"
+                            aria-label="Slide {{ $index + 1 }} of {{ $sliders->count() }}"
+                            aria-hidden="{{ $index !== 0 ? 'true' : 'false' }}">
+                            <a href="{{ $banner->link ?? '#' }}" class="block w-full h-full" tabindex="-1">
+                                <img src="{{ storage_url($banner->image) }}" alt="{{ $banner->title }}"
+                                    loading="{{ $index === 0 ? 'eager' : 'lazy' }}" class="w-full h-full object-cover"
+                                    width="800" height="600">
+                                @if ($banner->title)
+                                    <div class="slide-caption">
+                                        <h2 class="slide-title">{{ $banner->title }}</h2>
+                                        @if ($banner->subtitle)
+                                            <p class="slide-subtitle">{{ $banner->subtitle }}</p>
+                                        @endif
+                                    </div>
                                 @endif
-                            </div>
-                            @endif
-                        </a>
-                    </div>
+                            </a>
+                        </div>
                     @endforeach
 
                     {{-- Nav Arrows --}}
                     <button id="prevBtn" aria-label="Previous slide" class="bento-nav left-3">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </button>
                     <button id="nextBtn" aria-label="Next slide" class="bento-nav right-3">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </button>
@@ -51,16 +49,13 @@ $promoList = $promos->take(4)->values();
                     {{-- Progress Dots --}}
                     <div class="progress-dots" role="tablist" aria-label="Slide indicators">
                         @foreach ($sliders as $index => $banner)
-                        <button class="progress-dot" 
-                                role="tab" 
-                                aria-label="Go to slide {{ $index + 1 }}" 
-                                aria-selected="{{ $index === 0 ? 'true' : 'false' }}"
-                                data-index="{{ $index }}"
+                            <button class="progress-dot" role="tab" aria-label="Go to slide {{ $index + 1 }}"
+                                aria-selected="{{ $index === 0 ? 'true' : 'false' }}" data-index="{{ $index }}"
                                 tabindex="{{ $index === 0 ? '0' : '-1' }}">
-                            <div class="dot-track">
-                                <div class="progress-fill {{ $index === 0 ? 'w-full' : 'w-0' }}"></div>
-                            </div>
-                        </button>
+                                <div class="dot-track">
+                                    <div class="progress-fill {{ $index === 0 ? 'w-full' : 'w-0' }}"></div>
+                                </div>
+                            </button>
                         @endforeach
                     </div>
                 </div>
@@ -68,35 +63,25 @@ $promoList = $promos->take(4)->values();
 
             {{-- Promotional Cards --}}
             @foreach ($promoList as $i => $promo)
-            <div class="bento-card bento-card-{{ $i + 1 }} group">
-                <a href="{{ $promo->link ?? '#' }}" class="block w-full h-full relative overflow-hidden rounded-2xl">
-                    <img src="{{ storage_url($promo->image) }}" 
-                         alt="{{ $promo->title }}"
-                         loading="lazy"
-                         class="bento-img"
-                         width="400"
-                         height="300">
-                    <div class="bento-overlay"></div>
-                    @if($promo->title)
-                    <div class="bento-text">
-                        <span class="bento-label">{{ $promo->title }}</span>
-                        @if($promo->subtitle)
-                        <p class="bento-desc">{{ $promo->subtitle }}</p>
+                <div class="bento-card bento-card-{{ $i + 1 }} group">
+                    <a href="{{ $promo->link ?? '#' }}"
+                        class="block w-full h-full relative overflow-hidden rounded-2xl">
+                        <img src="{{ storage_url($promo->image) }}" alt="{{ $promo->title }}" loading="lazy"
+                            class="bento-img" width="400" height="300">
+                        <div class="bento-overlay"></div>
+                        @if ($promo->title)
+                            <div class="bento-text">
+                                <span class="bento-label">{{ $promo->title }}</span>
+                                @if ($promo->subtitle)
+                                    <p class="bento-desc">{{ $promo->subtitle }}</p>
+                                @endif
+                            </div>
                         @endif
-                    </div>
-                    @endif
-                </a>
-            </div>
+                    </a>
+                </div>
             @endforeach
 
-            {{-- Fallback empty slots --}}
-            @for ($i = $promoList->count(); $i < 4; $i++)
-            <div class="bento-card bento-card-{{ $i + 1 }} bento-empty">
-                <div class="flex items-center justify-center h-full text-gray-400">
-                    <span class="text-sm">Promotion {{ $i + 1 }}</span>
-                </div>
-            </div>
-            @endfor
+
 
         </div>
     </div>
@@ -159,86 +144,62 @@ $promoList = $promos->take(4)->values();
        Card 4: spans full width (large)
     ==================================================== */
     @media (min-width: 1024px) {
-        .bento-section { padding: 24px 0; }
+
+        .bento-section {
+            padding: 24px 0;
+        }
 
         .bento-grid {
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 220px);
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: repeat(2, 220px);
             gap: 20px;
-            height: auto;
         }
 
-        /* Main slider - large top */
-        .bento-main {
-            grid-column: 1 / -1;
-            grid-row: 1;
-            height: 100%;
-        }
-
-        /* Card 1 - small (top right) */
-        .bento-card-1 {
-            grid-column: 1;
-            grid-row: 2;
-            height: 100%;
-        }
-
-        /* Card 2 - small (top right) */
-        .bento-card-2 {
-            grid-column: 2;
-            grid-row: 2;
-            height: 100%;
-        }
-
-        /* Card 3 - large bottom */
-        .bento-card-3 {
-            grid-column: 1 / -1;
-            grid-row: 3;
-            height: 100%;
-        }
-
-        /* Card 4 - hidden or repositioned if needed */
-        .bento-card-4 {
-            display: none;
-        }
-    }
-
-    /* Large screens: 3-column layout with large-small-small-large */
-    @media (min-width: 1280px) {
-        .bento-grid {
-            grid-template-columns: 2fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            height: 520px;
-        }
-
+        /* Main slider */
         .bento-main {
             grid-column: 1;
             grid-row: 1 / 3;
             height: 100%;
         }
 
+        /* Promo 1 */
         .bento-card-1 {
             grid-column: 2;
             grid-row: 1;
-            display: block;
             height: 100%;
+        }
+
+        /* Promo 2 */
+        .bento-card-2 {
+            grid-column: 2;
+            grid-row: 2;
+            height: 100%;
+        }
+    }
+
+    /* Large screens: 3-column layout with large-small-small-large */
+    @media (min-width: 1280px) {
+
+        .bento-grid {
+            grid-template-columns: 2.5fr 1fr;
+            grid-template-rows: repeat(2, 250px);
+            gap: 20px;
+            height: 520px;
+        }
+
+        .bento-main {
+            grid-column: 1;
+            grid-row: 1 / 3;
+        }
+
+        .bento-card-1 {
+            grid-column: 2;
+            grid-row: 1;
         }
 
         .bento-card-2 {
-            grid-column: 3;
-            grid-row: 1;
-            display: block;
-            height: 100%;
-        }
-
-        .bento-card-3 {
-            grid-column: 2 / 4;
+            grid-column: 2;
             grid-row: 2;
-            display: block;
-            height: 100%;
-        }
-
-        .bento-card-4 {
-            display: none;
         }
     }
 
@@ -250,7 +211,7 @@ $promoList = $promos->take(4)->values();
         width: 100%;
         height: 100%;
         background: #e5e7eb;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     }
 
     .hero-slide {
@@ -280,16 +241,16 @@ $promoList = $promos->take(4)->values();
         color: white;
         font-size: 1.75rem;
         font-weight: 700;
-        text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
         line-height: 1.2;
         margin: 0;
     }
 
     .slide-subtitle {
-        color: rgba(255,255,255,0.9);
+        color: rgba(255, 255, 255, 0.9);
         font-size: 0.9375rem;
         margin-top: 8px;
-        text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     }
 
     /* Navigation */
@@ -301,14 +262,14 @@ $promoList = $promos->take(4)->values();
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.92);
+        background: rgba(255, 255, 255, 0.92);
         backdrop-filter: blur(8px);
         border: none;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
         transition: opacity 0.2s, transform 0.18s;
         color: #1f2937;
         opacity: 0;
@@ -362,7 +323,7 @@ $promoList = $promos->take(4)->values();
         width: 24px;
         height: 3px;
         border-radius: 2px;
-        background: rgba(255,255,255,0.3);
+        background: rgba(255, 255, 255, 0.3);
         overflow: hidden;
     }
 
@@ -386,7 +347,7 @@ $promoList = $promos->take(4)->values();
 
     .bento-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     }
 
     .bento-img {
@@ -403,12 +364,12 @@ $promoList = $promos->take(4)->values();
     .bento-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 40%, transparent 70%);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 40%, transparent 70%);
         transition: background 0.3s;
     }
 
     .group:hover .bento-overlay {
-        background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.05) 40%, transparent 70%);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.05) 40%, transparent 70%);
     }
 
     .bento-text {
@@ -423,15 +384,15 @@ $promoList = $promos->take(4)->values();
         color: white;
         font-size: 0.875rem;
         font-weight: 600;
-        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
         display: block;
     }
 
     .bento-desc {
-        color: rgba(255,255,255,0.8);
+        color: rgba(255, 255, 255, 0.8);
         font-size: 0.75rem;
         margin-top: 4px;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
         line-height: 1.4;
     }
 
@@ -444,12 +405,14 @@ $promoList = $promos->take(4)->values();
        REDUCED MOTION
     ==================================================== */
     @media (prefers-reduced-motion: reduce) {
+
         .hero-slide,
         .bento-card,
         .bento-img,
         .progress-fill {
             transition: none !important;
         }
+
         .bento-card:hover {
             transform: none;
         }
@@ -457,7 +420,7 @@ $promoList = $promos->take(4)->values();
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const slides = document.querySelectorAll('.hero-slide');
         const dots = document.querySelectorAll('.progress-dot');
         const fills = document.querySelectorAll('.progress-fill');
@@ -502,32 +465,60 @@ $promoList = $promos->take(4)->values();
             updateAria();
         }
 
-        function next() { showSlide((currentIndex + 1) % slides.length); }
-        function prev() { showSlide((currentIndex - 1 + slides.length) % slides.length); }
+        function next() {
+            showSlide((currentIndex + 1) % slides.length);
+        }
 
-        function startTimer() { clearInterval(timer); timer = setInterval(next, INTERVAL); }
-        function stopTimer() { clearInterval(timer); }
+        function prev() {
+            showSlide((currentIndex - 1 + slides.length) % slides.length);
+        }
 
-        document.getElementById('nextBtn').addEventListener('click', () => { next(); startTimer(); });
-        document.getElementById('prevBtn').addEventListener('click', () => { prev(); startTimer(); });
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(next, INTERVAL);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            next();
+            startTimer();
+        });
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            prev();
+            startTimer();
+        });
 
         dots.forEach((dot, i) => {
-            dot.addEventListener('click', () => { showSlide(i); startTimer(); });
+            dot.addEventListener('click', () => {
+                showSlide(i);
+                startTimer();
+            });
         });
 
         const slider = document.querySelector('.bento-main');
         slider.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') { next(); startTimer(); }
-            if (e.key === 'ArrowLeft') { prev(); startTimer(); }
+            if (e.key === 'ArrowRight') {
+                next();
+                startTimer();
+            }
+            if (e.key === 'ArrowLeft') {
+                prev();
+                startTimer();
+            }
         });
 
         let touchStartX = 0;
         const heroSlider = document.getElementById('hero-slider');
-        
+
         heroSlider.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
             stopTimer();
-        }, { passive: true });
+        }, {
+            passive: true
+        });
 
         heroSlider.addEventListener('touchend', (e) => {
             const diff = touchStartX - e.changedTouches[0].screenX;
@@ -535,7 +526,9 @@ $promoList = $promos->take(4)->values();
                 diff > 0 ? next() : prev();
             }
             startTimer();
-        }, { passive: true });
+        }, {
+            passive: true
+        });
 
         slider.addEventListener('mouseenter', stopTimer);
         slider.addEventListener('mouseleave', startTimer);

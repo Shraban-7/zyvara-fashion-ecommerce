@@ -11,56 +11,25 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $categorySlug = null)
     {
         $query = Product::with('category', 'brand')
             ->where('is_active', true);
 
         /*
         |--------------------------------------------------------------------------
-        | CATEGORY FILTER (3 LEVEL SUPPORT)
+        | CATEGORY FILTER (from URL slug + query param)
         |--------------------------------------------------------------------------
         */
-        if ($request->filled('categories')) {
+        $activeCategorySlug = $categorySlug ?: $request->get('category');
 
-            $categorySlugs = is_array($request->categories)
-                ? $request->categories
-                : explode(',', $request->categories);
-
-            $selectedCategories = Category::whereIn('slug', $categorySlugs)
-                ->get(['id']);
-
-            $categoryIds = [];
-
-            foreach ($selectedCategories as $category) {
-
-                // include selected category
-                $categoryIds[] = $category->id;
-
-                // level 2
-                $children = Category::where('parent_id', $category->id)
-                    ->pluck('id')
-                    ->toArray();
-
-                $categoryIds = array_merge($categoryIds, $children);
-
-                // level 3
-                if (!empty($children)) {
-                    $grandChildren = Category::whereIn('parent_id', $children)
-                        ->pluck('id')
-                        ->toArray();
-
-                    $categoryIds = array_merge($categoryIds, $grandChildren);
-                }
+        if ($activeCategorySlug) {
+            $category = Category::where('slug', $activeCategorySlug)->first();
+            if ($category) {
+                // Include products from this category AND all its descendants
+                $categoryIds = $this->getCategoryAndDescendantIds($category);
+                $query->whereIn('category_id', $categoryIds);
             }
-
-            $categoryIds = array_unique($categoryIds);
-
-            $query->where(function ($q) use ($categoryIds) {
-                $q->whereIn('category_id', $categoryIds)
-                    ->orWhereIn('subcategory_id', $categoryIds)
-                    ->orWhereIn('sub_subcategory_id', $categoryIds);
-            });
         }
 
         /*
@@ -69,7 +38,6 @@ class ProductController extends Controller
         |--------------------------------------------------------------------------
         */
         if ($request->filled('brands')) {
-
             $brandSlugs = is_array($request->brands)
                 ? $request->brands
                 : explode(',', $request->brands);
@@ -102,7 +70,6 @@ class ProductController extends Controller
         |--------------------------------------------------------------------------
         */
         if ($request->filled('sizes')) {
-
             $sizeIds = is_array($request->sizes)
                 ? $request->sizes
                 : explode(',', $request->sizes);
@@ -118,7 +85,6 @@ class ProductController extends Controller
         |--------------------------------------------------------------------------
         */
         if ($request->filled('colors')) {
-
             $colorIds = is_array($request->colors)
                 ? $request->colors
                 : explode(',', $request->colors);
@@ -147,15 +113,12 @@ class ProductController extends Controller
                 case 'new-arrivals':
                     $query->where('is_new_arrival', true);
                     break;
-
                 case 'best-sellers':
                     $query->where('is_best_seller', true);
                     break;
-
                 case 'featured':
                     $query->where('is_featured', true);
                     break;
-
                 case 'on-sale':
                     $query->where('is_on_sale', true);
                     break;
@@ -168,9 +131,7 @@ class ProductController extends Controller
         |--------------------------------------------------------------------------
         */
         if ($request->filled('search')) {
-
             $searchTerm = $request->search;
-
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
                     ->orWhere('description', 'like', "%{$searchTerm}%")
@@ -184,37 +145,29 @@ class ProductController extends Controller
         |--------------------------------------------------------------------------
         */
         switch ($request->get('sort', 'featured')) {
-
             case 'price_asc':
                 $query->orderBy('price', 'asc');
                 break;
-
             case 'price_desc':
                 $query->orderBy('price', 'desc');
                 break;
-
             case 'newest':
                 $query->orderBy('created_at', 'desc');
                 break;
-
             case 'best_selling':
                 $query->where('is_best_seller', true)
                     ->orderBy('review_count', 'desc');
                 break;
-
             case 'top_rated':
                 $query->orderBy('average_rating', 'desc')
                     ->orderBy('review_count', 'desc');
                 break;
-
             case 'name_asc':
                 $query->orderBy('name', 'asc');
                 break;
-
             case 'name_desc':
                 $query->orderBy('name', 'desc');
                 break;
-
             default:
                 $query->orderBy('is_featured', 'desc')
                     ->orderBy('is_new_arrival', 'desc')
@@ -227,14 +180,18 @@ class ProductController extends Controller
         | PAGINATION
         |--------------------------------------------------------------------------
         */
-
         $totalProducts = (clone $query)->count();
         $perPage = $request->get('per_page', 24);
 
         $products = $query->simplePaginate($perPage)
             ->appends($request->query());
 
-        $categories = Category::category()
+        /*
+        |--------------------------------------------------------------------------
+        | FILTER DATA
+        |--------------------------------------------------------------------------
+        */
+        $categories = Category::whereNull('parent_id')
             ->with([
                 'children' => function ($query) {
                     $query->orderBy('sort_order', 'asc')->orderBy('name', 'asc');
@@ -255,6 +212,7 @@ class ProductController extends Controller
             ->withCount('products')
             ->get();
 
+        // Category counts
         $counts = Product::where('is_active', true)
             ->selectRaw('category_id as id, COUNT(*) as total')
             ->groupBy('category_id')
@@ -276,26 +234,27 @@ class ProductController extends Controller
             ->toArray();
 
         $categoryCounts = [];
-
         foreach ($counts as $id => $count) {
             $categoryCounts[$id] = $count;
         }
-
         foreach ($subCounts as $id => $count) {
             $categoryCounts[$id] = $count;
         }
-
         foreach ($subSubCounts as $id => $count) {
             $categoryCounts[$id] = $count;
         }
 
         $brandCounts = [];
-
         foreach ($brands as $brand) {
             $brandCounts[$brand->id] = $brand->products_count;
         }
 
         $allCategories = Category::select('id', 'name', 'slug')->get();
+
+        // Pass active category info for breadcrumb/title
+        $activeCategory = $activeCategorySlug
+            ? Category::where('slug', $activeCategorySlug)->first()
+            : null;
 
         return view('products.index', compact(
             'products',
@@ -306,8 +265,24 @@ class ProductController extends Controller
             'categoryCounts',
             'brandCounts',
             'allCategories',
-            'totalProducts'
+            'totalProducts',
+            'activeCategory',
+            'activeCategorySlug'
         ));
+    }
+
+    /**
+     * Get all descendant category IDs including self
+     */
+    private function getCategoryAndDescendantIds(Category $category): array
+    {
+        $ids = [$category->id];
+
+        foreach ($category->children as $child) {
+            $ids = array_merge($ids, $this->getCategoryAndDescendantIds($child));
+        }
+
+        return $ids;
     }
 
     /**

@@ -186,7 +186,7 @@ Route::prefix('auth')->as('auth.')->group(function () {
 
 
 Route::prefix('products')->as('products.')->group(function () {
-    Route::get('/', [ProductController::class, 'index'])->name('index');
+    Route::get('/{categorySlug?}', [ProductController::class, 'index'])->name('index');
     Route::get('/update-category', [ProductController::class, 'updateCategory'])->name('updateCategory');
     Route::post('/update-category/{product_id}', [ProductController::class, 'setCategory'])->name('setCategory');
     Route::get('search', [ProductController::class, 'search'])->name('search');
