@@ -1,17 +1,10 @@
 <header class="admin-header h-16 flex items-center justify-between px-6 sticky top-0 z-40">
     {{-- Menu Toggle Button (All Screens) --}}
-    <button id="sidebarToggle" class="header-action-btn p-2.5 rounded-xl transition focus:outline-none">
-        <i class="fas fa-bars text-lg"></i>
+    <button id="sidebarToggle" class="group flex items-center justify-center w-10 h-10 rounded-xl text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-200 focus:outline-none">
+        <i data-lucide="align-left" class="w-5 h-5 transition-transform duration-200 group-hover:scale-110"></i>
     </button>
 
-    {{-- Search Bar --}}
-    <div class="flex-1 max-w-xl mx-auto hidden md:block">
-        <div class="relative">
-            <input type="search" placeholder="Search orders, products, customers..."
-                class="search-input w-full h-10 pl-10 pr-4 text-sm rounded-xl focus:outline-none transition">
-            <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        </div>
-    </div>
+
 
     {{-- Header Actions --}}
     <div class="flex items-center gap-2">
