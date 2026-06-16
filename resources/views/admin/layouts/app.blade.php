@@ -26,7 +26,7 @@
     @stack('styles')
 </head>
 
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-slate-50/70 min-h-screen antialiased">
     <div class="flex h-screen overflow-hidden">
         @include('admin.layouts.sidebar')
 
