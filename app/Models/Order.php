@@ -16,6 +16,52 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected static function booted()
+    {
+        static::created(function ($order) {
+            $admins = \App\Models\User::whereIn('role', \App\Enums\UserRole::staffRoles())->get();
+            foreach ($admins as $admin) {
+                \App\Models\Notification::create([
+                    'user_id' => $admin->id,
+                    'title' => 'New Order Received',
+                    'message' => "Order {$order->order_number} has been placed.",
+                    'type' => \App\Enums\SystemNotificationType::ORDER_CREATED,
+                    'action_url' => route('admin.orders.show', $order->order_number),
+                ]);
+            }
+        });
+
+        static::updated(function ($order) {        
+            if ($order->wasChanged('status')) {        
+                $status = $order->status;
+                $notificationType = match ($status) {
+                    \App\Enums\OrderStatus::PENDING =>\App\Enums\SystemNotificationType::ORDER_CREATED,
+                    \App\Enums\OrderStatus::CONFIRMED =>\App\Enums\SystemNotificationType::ORDER_CONFIRMED,
+                    \App\Enums\OrderStatus::SHIPPED => \App\Enums\SystemNotificationType::ORDER_SHIPPED,
+                    \App\Enums\OrderStatus::DELIVERED => \App\Enums\SystemNotificationType::ORDER_DELIVERED,
+                    \App\Enums\OrderStatus::CANCELLED => \App\Enums\SystemNotificationType::ORDER_CANCELLED,        
+                    default => null,
+                };        
+        
+                if (!$notificationType) {
+                    return;
+                }        
+        
+                $admins = \App\Models\User::whereIn('role',\App\Enums\UserRole::staffRoles())->get();
+        
+                foreach ($admins as $admin) {        
+                    \App\Models\Notification::create([
+                        'user_id' => $admin->id,
+                        'title' => 'Order Status Updated',
+                        'message' => "Order {$order->order_number} status changed to {$status->value}.",
+                        'type' => $notificationType,
+                        'action_url' => route('admin.orders.show', $order->order_number),
+                    ]);
+                }        
+            }        
+        });
+    }
+
     protected $guarded = ['id'];
 
     // protected $fillable = [

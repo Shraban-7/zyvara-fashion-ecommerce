@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\SaleReturnController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaticPageController;
+use App\Http\Controllers\Admin\HomeSectionController;
+use App\Http\Controllers\Admin\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
@@ -194,6 +196,36 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('settings')->as('settings.')->group(function () {
         Route::get('/', [SettingController::class, 'index'])->name('index');
         Route::put('/update', [SettingController::class, 'update'])->name('update');
+    });
+
+    // Homepage Sections Routes
+    Route::prefix('home-sections')->as('home-sections.')->group(function () {
+        Route::get('/', [HomeSectionController::class, 'index'])->name('index');
+        Route::get('/create', [HomeSectionController::class, 'create'])->name('create');
+        Route::post('/store', [HomeSectionController::class, 'store'])->name('store');
+        Route::get('/{home_section}/edit', [HomeSectionController::class, 'edit'])->name('edit');
+        Route::put('/{home_section}/update', [HomeSectionController::class, 'update'])->name('update');
+        Route::delete('/{home_section}/delete', [HomeSectionController::class, 'destroy'])->name('destroy');
+        Route::post('/{home_section}/toggle-status', [HomeSectionController::class, 'toggleStatus'])->name('toggle-status');
+
+        // Select2 searches
+        Route::get('/search/products', [HomeSectionController::class, 'searchProducts'])->name('search-products');
+        Route::get('/search/categories', [HomeSectionController::class, 'searchCategories'])->name('search-categories');
+        Route::get('/search/banners', [HomeSectionController::class, 'searchBanners'])->name('search-banners');
+
+        // Dynamic Item Assignment
+        Route::post('/{home_section}/items/add', [HomeSectionController::class, 'addItem'])->name('add-item');
+        Route::delete('/items/{home_section_item}/delete', [HomeSectionController::class, 'removeItem'])->name('remove-item');
+        Route::post('/{home_section}/items/reorder', [HomeSectionController::class, 'reorderItems'])->name('reorder-items');
+    });
+
+    // Notifications Routes
+    Route::prefix('notifications')->as('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::get('/poll', [NotificationController::class, 'pollNotifications'])->name('poll');
+        Route::post('/read-all', [NotificationController::class, 'readAll'])->name('read-all');
+        Route::get('/{notification}/read-redirect', [NotificationController::class, 'readAndRedirect'])->name('read-redirect');
+        Route::post('/{notification}/read', [NotificationController::class, 'markAsRead'])->name('read');
     });
 
     Route::get('/keep-alive', function () {
