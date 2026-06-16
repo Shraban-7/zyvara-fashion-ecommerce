@@ -11,7 +11,7 @@
     <link rel="icon" href="{{ storage_url($settings['site_favicon']) }}" type="image/x-icon">
     @endif
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}?v={{ time() }}">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
 </head>
