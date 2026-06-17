@@ -296,6 +296,32 @@ class DashboardController extends Controller
             ? round(($posOrders / $totalChannelOrders) * 100)
             : 0;
 
+        /*
+        |--------------------------------------------------------------------------
+        | Recent Customers
+        |--------------------------------------------------------------------------
+        */
+
+        $recentCustomers = User::where('role', 'customer')
+            ->withCount(['orders' => function ($query) {
+                $query->whereNot('status', OrderStatus::DRAFT);
+            }])
+            ->withSum(['orders' => function ($query) {
+                $query->whereNot('status', OrderStatus::DRAFT);
+            }], 'total')
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'name'         => $customer->name,
+                    'email'        => $customer->email,
+                    'orders_count' => $customer->orders_count,
+                    'total_spent'  => $customer->orders_sum_total ?? 0,
+                    'joined_at'    => $customer->created_at->diffForHumans(),
+                ];
+            });
+
         $widgets = [
             'totalRevenue' => $totalRevenue,
             'totalRevenuePercentage' => $revenuePercentage,
@@ -329,7 +355,8 @@ class DashboardController extends Controller
             'totalChannelOrders',
             'websitePercentage',
             'posPercentage',
-            'filter'
+            'filter',
+            'recentCustomers'
         ));
     }
 }
