@@ -10,7 +10,8 @@
         "intervention/image-laravel": "^1.5",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8"
+        "laravel/tinker": "^2.8",
+        "steadfast-courier/steadfast-courier-laravel-package": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

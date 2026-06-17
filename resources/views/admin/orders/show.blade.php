@@ -52,7 +52,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                         <select name="status" class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="pending" {{ $order->status->value === 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="confirmed" {{ $order->status->value === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                            <option value="confirmed" {{ $order->status->value === 'confirmed' ? 'selected' : '' }}>Confirmed & Add Steadfast Consignment</option>
                             <option value="shipped" {{ $order->status->value === 'shipped' ? 'selected' : '' }}>Shipped</option>
                             <option value="delivered" {{ $order->status->value === 'delivered' ? 'selected' : '' }}>Delivered</option>
                             <option value="cancelled" {{ $order->status->value === 'cancelled' ? 'selected' : '' }}>Cancelled</option>

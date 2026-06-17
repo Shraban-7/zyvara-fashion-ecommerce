@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use App\Models\SaleReturn;
+use App\Services\SteadfastService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class OrderController extends Controller
 {
@@ -79,24 +81,25 @@ class OrderController extends Controller
             'items.product',
             'coupon',
             'statusHistories'
-        ])->where('order_number',$order_number)->first();
+        ])->where('order_number', $order_number)->first();
 
         $source = $request->source;
 
-        $refunds =SaleReturn::where('sale_id', $order->id)
+        $refunds = SaleReturn::where('sale_id', $order->id)
             ->selectRaw('refund_method, SUM(refund_amount) as total')
             ->groupBy('refund_method')
             ->pluck('total', 'refund_method');
 
         $totalRefund = $refunds->sum();
 
-        return view('admin.orders.show', compact('order', 'source','refunds','totalRefund'));
+        return view('admin.orders.show', compact('order', 'source', 'refunds', 'totalRefund'));
     }
 
     /**
      * Update order status.
      */
-    public function updateStatus(Request $request, $id)
+
+    public function updateStatus(Request $request, $id, SteadfastService $steadfastService)
     {
         $request->validate([
             'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled',
@@ -104,31 +107,53 @@ class OrderController extends Controller
         ]);
 
         $order = Order::findOrFail($id);
+
         $oldStatus = $order->status;
         $newStatus = OrderStatus::from($request->status);
 
-        // Update order status
         $order->update([
             'status' => $newStatus,
         ]);
 
-        // Set timestamps based on status
+        if ($newStatus === OrderStatus::CONFIRMED && is_null($order->courier_tracking_code)) {
+            
+            try {
+                $response = $steadfastService->createConsignment($order);
+
+                if (isset($response['status']) && $response['status'] == 200) {
+                    $order->update([
+                        'courier_name' => 'Steadfast',
+                        'courier_tracking_code' => $response['consignment']['tracking_code'] ?? null,
+                        'courier_consignment_id' => $response['consignment']['consignment_id'] ?? null,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Steadfast Courier Error: ' . $e->getMessage());
+            }
+        }
+
         match ($newStatus) {
-            OrderStatus::CONFIRMED => $order->update(['confirmed_at' => now()]),
-            OrderStatus::SHIPPED => $order->update(['shipped_at' => now()]),
-            OrderStatus::DELIVERED => $order->update(['delivered_at' => now()]),
+            OrderStatus::CONFIRMED => $order->update([
+                'confirmed_at' => now(),
+            ]),
+            OrderStatus::SHIPPED => $order->update([
+                'shipped_at' => now(),
+            ]),
+            OrderStatus::DELIVERED => $order->update([
+                'delivered_at' => now(),
+            ]),
             OrderStatus::CANCELLED => $order->update([
                 'cancelled_at' => now(),
-                'cancellation_reason' => $request->comment
+                'cancellation_reason' => $request->comment,
             ]),
             default => null,
         };
 
-        // Create status history
         OrderStatusHistory::create([
             'order_id' => $order->id,
             'status' => $newStatus,
-            'comment' => $request->comment ?? "Status changed from {$oldStatus->label()} to {$newStatus->label()}",
+            'comment' => $request->comment
+                ?? "Status changed from {$oldStatus->label()} to {$newStatus->label()}",
             'updated_by' => Auth::id(),
         ]);
 
