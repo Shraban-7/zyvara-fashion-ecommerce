@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\StaticPageController;
 use App\Models\Size;
 
@@ -191,7 +192,7 @@ Route::prefix('products')->as('products.')->group(function () {
     Route::post('/update-category/{product_id}', [ProductController::class, 'setCategory'])->name('setCategory');
     Route::get('search', [ProductController::class, 'search'])->name('search');
     Route::get('/suggestions', [ProductController::class, 'suggestions'])->name('suggestions');
-    Route::get('/{slug}', [ProductController::class, 'show'])->name('show');
+    Route::get('/{slug}/show', [ProductController::class, 'show'])->name('show');
     Route::get('/{product}/quickview', [ProductController::class, 'getQuickviewData'])->name('getQuickviewData');
 });
 
@@ -242,6 +243,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribe');
+Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');
 
 Route::prefix('payment')->as('payment.')->group(function () {
     Route::get('/success', [PaymentController::class, 'success'])->name('success');

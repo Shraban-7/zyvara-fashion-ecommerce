@@ -165,12 +165,12 @@
     //         btn.addEventListener('click', function() {
     //             const originalText = this.textContent;
     //             this.textContent = 'Added! ✓';
-    //             this.classList.add('bg-green-500');
+    //             this.classList.add('bg-accent');
     //             this.classList.remove('bg-primary');
 
     //             setTimeout(() => {
     //                 this.textContent = originalText;
-    //                 this.classList.remove('bg-green-500');
+    //                 this.classList.remove('bg-accent');
     //                 this.classList.add('bg-primary');
     //             }, 1500);
     //         });
@@ -186,12 +186,12 @@
     //         if (icon) {
     //             if (icon.classList.contains('far')) {
     //                 // Switch to filled heart
-    //                 icon.classList.remove('far', 'text-gray-600');
-    //                 icon.classList.add('fas', 'text-red-500');
+    //                 icon.classList.remove('far', 'text-secondary-600');
+    //                 icon.classList.add('fas', 'text-danger');
     //             } else {
     //                 // Switch to outline heart
-    //                 icon.classList.remove('fas', 'text-red-500');
-    //                 icon.classList.add('far', 'text-gray-600');
+    //                 icon.classList.remove('fas', 'text-danger');
+    //                 icon.classList.add('far', 'text-secondary-600');
     //             }
     //         }
     //     });
@@ -225,12 +225,12 @@
 
     //         if (input.value) {
     //             btn.textContent = 'Subscribed! ✓';
-    //             btn.classList.add('bg-green-600');
+    //             btn.classList.add('bg-accent-600');
     //             input.value = '';
 
     //             setTimeout(() => {
     //                 btn.textContent = 'Subscribe';
-    //                 btn.classList.remove('bg-green-600');
+    //                 btn.classList.remove('bg-accent-600');
     //             }, 3000);
     //         }
     //     });

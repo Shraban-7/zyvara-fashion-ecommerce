@@ -1,11 +1,12 @@
 @if($bestSelling->isNotEmpty())
+@php $h = isset($section) ? $section->headings() : ['eyebrow' => 'Trending Now', 'title' => 'Best Selling', 'subtitle' => 'Top picks loved by thousands of customers']; @endphp
 <section class="home-section home-section--best">
     <div class="home-wrap">
         <div class="section-head">
             <div class="section-head-text">
-                <span class="section-eyebrow section-eyebrow--hot">Trending Now</span>
-                <h2 class="section-title">Best Selling</h2>
-                <p class="section-sub">Top picks loved by thousands of customers</p>
+                <span class="section-eyebrow section-eyebrow--hot">{{ $h['eyebrow'] }}</span>
+                <h2 class="section-title">{{ $h['title'] }}</h2>
+                <p class="section-sub">{{ $h['subtitle'] }}</p>
             </div>
             <a href="{{ route('products.index', ['filter' => 'best-sellers']) }}" class="section-link">
                 View All
@@ -27,9 +28,9 @@
 
     .home-section--best {
         padding: 48px 0;
-        background: #fff;
+        background: var(--color-surface-elevated);
         width: 100%;
-        border-top: 1px solid #f1f5f9;
+        border-top: 1px solid var(--color-border);
     }
 
     @media (min-width: 768px) {
@@ -65,21 +66,22 @@
         display: inline-block;
         font-size: 11px;
         font-weight: 700;
-        color: #ea580c;
+        color: var(--color-accent-700);
         text-transform: uppercase;
         letter-spacing: 0.12em;
         margin-bottom: 10px;
         padding: 5px 14px;
-        background: #fff7ed;
-        border: 1px solid #fed7aa;
+        background: var(--color-accent-50);
+        border: 1px solid var(--color-accent-200);
         border-radius: 99px;
     }
 
     .home-section--best .section-title {
         font-size: clamp(22px, 4vw, 30px);
-        font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -0.03em;
+        font-weight: 600;
+        font-family: var(--font-heading);
+        color: var(--color-primary);
+        letter-spacing: -0.02em;
         line-height: 1.2;
         margin: 0 0 8px;
         word-wrap: break-word;
@@ -87,7 +89,7 @@
 
     .home-section--best .section-sub {
         font-size: clamp(13px, 2vw, 15px);
-        color: #64748b;
+        color: var(--color-secondary);
         margin: 0;
         line-height: 1.5;
         max-width: 420px;
@@ -99,11 +101,11 @@
         gap: 8px;
         font-size: 13px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-primary);
         text-decoration: none;
         padding: 10px 18px;
-        background: #fff;
-        border: 1.5px solid #e2e8f0;
+        background: var(--color-surface-elevated);
+        border: 1.5px solid var(--color-border);
         border-radius: 12px;
         transition: all 0.25s ease;
         white-space: nowrap;
@@ -111,10 +113,10 @@
     }
 
     .home-section--best .section-link:hover {
-        background: #ea580c;
-        color: #fff;
-        border-color: #ea580c;
-        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
+        background: var(--color-accent);
+        color: var(--color-primary);
+        border-color: var(--color-accent);
+        box-shadow: 0 4px 12px rgba(201, 168, 124, 0.3);
     }
 
     .home-section--best .section-link i {

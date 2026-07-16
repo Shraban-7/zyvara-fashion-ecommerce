@@ -5,7 +5,7 @@
     <div class="space-y-6">
         <!-- Page Header -->
         <div>
-            <h2 class="text-2xl font-bold text-black">My Wishlist</h2>
+            <h2 class="text-2xl font-bold text-primary">My Wishlist</h2>
             <p class="text-secondary-500 mt-1">{{ $wishlists->count() }} items saved for later</p>
         </div>
 
@@ -33,11 +33,11 @@
 
                             <!-- Stock Badge -->
                             @if($wishlist->product->stock_quantity <= 0)
-                                <div class="absolute top-2 left-2 bg-danger-600 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
+                                <div class="absolute top-2 left-2 bg-danger-600 text-surface-elevated px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
                                     Out of Stock
                                 </div>
                             @elseif($wishlist->product->stock_quantity <= 5)
-                                <div class="absolute top-2 left-2 bg-warning-600 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
+                                <div class="absolute top-2 left-2 bg-warning-600 text-surface-elevated px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
                                     Low Stock
                                 </div>
                             @endif
@@ -47,7 +47,7 @@
                         <div class="p-4">
                             <a href="{{ route('products.show', $wishlist->product->slug) }}"
                                 class="block hover:text-primary-500 transition-colors">
-                                <h3 class="font-semibold text-black mb-1 line-clamp-2">
+                                <h3 class="font-semibold text-primary mb-1 line-clamp-2">
                                     {{ $wishlist->product->name }}
                                 </h3>
                             </a>
@@ -61,7 +61,7 @@
                                         ৳{{ number_format($wishlist->product->price, 2) }}
                                     </span>
                                 @else
-                                    <span class="text-lg font-bold text-black">
+                                    <span class="text-lg font-bold text-primary">
                                         ৳{{ number_format($wishlist->product->price, 2) }}
                                     </span>
                                 @endif
@@ -70,7 +70,7 @@
                             <!-- Add to Cart Button -->
                             @if($wishlist->product->stock_quantity > 0)
                                 <button onclick="addToCart({{ $wishlist->product->id }})"
-                                    class="w-full bg-primary text-white px-4 py-2.5 rounded-xl font-medium hover:bg-primary-700 transition text-sm shadow-sm">
+                                    class="w-full bg-primary text-surface-elevated px-4 py-2.5 rounded-xl font-medium hover:bg-primary-700 transition text-sm shadow-sm">
                                     <i class="fas fa-shopping-cart mr-1"></i>
                                     Add to Cart
                                 </button>
@@ -89,10 +89,10 @@
                 <div class="inline-flex items-center justify-center w-20 h-20 bg-light rounded-full mb-4 border border-secondary-100">
                     <i class="fas fa-heart text-secondary-400 text-3xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-black mb-2">Your Wishlist is Empty</h3>
+                <h3 class="text-xl font-bold text-primary mb-2">Your Wishlist is Empty</h3>
                 <p class="text-secondary-500 mb-6">Save your favorite items to buy them later.</p>
                 <a href="{{ route('products.index') }}"
-                    class="inline-block bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
+                    class="inline-block bg-primary text-surface-elevated px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
                     <i class="fas fa-shopping-bag mr-2"></i>
                     Browse Products
                 </a>

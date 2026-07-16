@@ -1,11 +1,12 @@
 @if($featuredProducts->isNotEmpty())
+@php $h = isset($section) ? $section->headings() : ['eyebrow' => "Editor's Pick", 'title' => 'Featured Products', 'subtitle' => 'Handpicked highlights of the season']; @endphp
 <section class="home-section home-section--featured">
     <div class="home-wrap">
         <div class="section-head">
             <div class="section-head-text">
-                <span class="section-eyebrow">Editor's Pick</span>
-                <h2 class="section-title">Featured Products</h2>
-                <p class="section-sub">Handpicked highlights of the season</p>
+                <span class="section-eyebrow">{{ $h['eyebrow'] }}</span>
+                <h2 class="section-title">{{ $h['title'] }}</h2>
+                <p class="section-sub">{{ $h['subtitle'] }}</p>
             </div>
             <a href="{{ route('products.index', ['filter' => 'featured']) }}" class="section-link">
                 View All
@@ -22,14 +23,14 @@
 
 <style>
     /* ====================================================
-       FEATURED SECTION — Charcoal Theme
+       FEATURED SECTION — Curated
     ==================================================== */
 
     .home-section--featured {
         padding: 48px 0;
-        background: #f8fafc;
+        background: var(--color-surface-muted);
         width: 100%;
-        border-top: 1px solid #f1f5f9;
+        border-top: 1px solid var(--color-border);
     }
 
     @media (min-width: 768px) {
@@ -65,21 +66,22 @@
         display: inline-block;
         font-size: 11px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
         margin-bottom: 10px;
         padding: 5px 14px;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--color-surface-elevated);
+        border: 1px solid var(--color-border);
         border-radius: 99px;
     }
 
     .home-section--featured .section-title {
         font-size: clamp(22px, 4vw, 30px);
-        font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -0.03em;
+        font-weight: 600;
+        font-family: var(--font-heading);
+        color: var(--color-primary);
+        letter-spacing: -0.02em;
         line-height: 1.2;
         margin: 0 0 8px;
         word-wrap: break-word;
@@ -87,7 +89,7 @@
 
     .home-section--featured .section-sub {
         font-size: clamp(13px, 2vw, 15px);
-        color: #64748b;
+        color: var(--color-secondary);
         margin: 0;
         line-height: 1.5;
         max-width: 420px;
@@ -99,11 +101,11 @@
         gap: 8px;
         font-size: 13px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-primary);
         text-decoration: none;
         padding: 10px 18px;
-        background: #fff;
-        border: 1.5px solid #e2e8f0;
+        background: var(--color-surface-elevated);
+        border: 1.5px solid var(--color-border);
         border-radius: 12px;
         transition: all 0.25s ease;
         white-space: nowrap;
@@ -111,10 +113,10 @@
     }
 
     .home-section--featured .section-link:hover {
-        background: #0f172a;
-        color: #fff;
-        border-color: #0f172a;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+        background: var(--color-primary);
+        color: var(--color-surface-elevated);
+        border-color: var(--color-primary);
+        box-shadow: 0 4px 12px rgba(26, 26, 26, 0.18);
     }
 
     .home-section--featured .section-link i {

@@ -5,14 +5,14 @@
     <div class="space-y-6">
         <!-- Page Header -->
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">My Reviews</h2>
-            <p class="text-gray-600 mt-1">Your product reviews and ratings</p>
+            <h2 class="text-2xl font-bold text-secondary-800">My Reviews</h2>
+            <p class="text-secondary-600 mt-1">Your product reviews and ratings</p>
         </div>
 
         @if($reviews->count() > 0)
             <div class="space-y-4">
                 @foreach($reviews as $review)
-                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+                    <div class="bg-surface-elevated rounded-lg shadow-md p-6 hover:shadow-lg transition">
                         <div class="flex flex-col md:flex-row gap-6">
                             <!-- Product Image -->
                             <div class="w-full md:w-32 h-32 flex-shrink-0">
@@ -20,8 +20,8 @@
                                     <img src="{{ asset('storage/' . $review->product->images->first()->image_path) }}"
                                         alt="{{ $review->product->name }}" class="w-full h-full object-cover rounded-lg">
                                 @else
-                                    <div class="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-image text-gray-400 text-2xl"></i>
+                                    <div class="w-full h-full bg-secondary-200 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-image text-secondary-400 text-2xl"></i>
                                     </div>
                                 @endif
                             </div>
@@ -31,23 +31,23 @@
                                 <div class="flex items-start justify-between mb-2">
                                     <div>
                                         <a href="{{ route('products.show', $review->product->slug) }}"
-                                            class="font-semibold text-gray-800 hover:text-primary transition">
+                                            class="font-semibold text-secondary-800 hover:text-primary transition">
                                             {{ $review->product->name }}
                                         </a>
-                                        <p class="text-sm text-gray-500 mt-1">
+                                        <p class="text-sm text-secondary-400 mt-1">
                                             Reviewed on {{ $review->created_at->format('F d, Y') }}
                                         </p>
                                     </div>
                                     <div class="flex items-center gap-1">
                                         @for($i = 1; $i <= 5; $i++)
                                             <i
-                                                class="fas fa-star {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                                                class="fas fa-star {{ $i <= $review->rating ? 'text-warning' : 'text-secondary-300' }}"></i>
                                         @endfor
                                     </div>
                                 </div>
 
                                 @if($review->comment)
-                                    <p class="text-gray-700 mb-3">{{ $review->comment }}</p>
+                                    <p class="text-secondary-700 mb-3">{{ $review->comment }}</p>
                                 @endif
 
                                 <!-- Review Images -->
@@ -68,7 +68,7 @@
                                             <i class="fas fa-reply mr-1"></i>
                                             Store Response
                                         </p>
-                                        <p class="text-sm text-gray-700">{{ $review->admin_response }}</p>
+                                        <p class="text-sm text-secondary-700">{{ $review->admin_response }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -82,14 +82,14 @@
                 {{ $reviews->links() }}
             </div>
         @else
-            <div class="bg-white rounded-lg shadow-md p-12 text-center">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
-                    <i class="fas fa-star text-gray-400 text-3xl"></i>
+            <div class="bg-surface-elevated rounded-lg shadow-md p-12 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-secondary-100 rounded-full mb-4">
+                    <i class="fas fa-star text-secondary-400 text-3xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">No Reviews Yet</h3>
-                <p class="text-gray-600 mb-6">Share your experience by reviewing products you've purchased.</p>
+                <h3 class="text-xl font-bold text-secondary-800 mb-2">No Reviews Yet</h3>
+                <p class="text-secondary-600 mb-6">Share your experience by reviewing products you've purchased.</p>
                 <a href="{{ route('orders.index') }}"
-                    class="inline-block bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition">
+                    class="inline-block bg-primary text-surface-elevated px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition">
                     <i class="fas fa-shopping-bag mr-2"></i>
                     View Your Orders
                 </a>
@@ -98,9 +98,9 @@
     </div>
 
     <!-- Image Viewer Modal -->
-    <div id="imageViewerModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center p-4"
+    <div id="imageViewerModal" class="fixed inset-0 bg-primary bg-opacity-90 z-50 hidden flex items-center justify-center p-4"
         onclick="closeImageViewer()">
-        <button class="absolute top-4 right-4 text-white text-3xl hover:text-gray-300">
+        <button class="absolute top-4 right-4 text-surface-elevated text-3xl hover:text-secondary-300">
             <i class="fas fa-times"></i>
         </button>
         <img id="viewerImage" src="" alt="Review image" class="max-w-full max-h-full object-contain">

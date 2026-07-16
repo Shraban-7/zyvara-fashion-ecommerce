@@ -69,6 +69,7 @@ class Product extends Model
         'is_new_arrival' => 'boolean',
         'is_best_seller' => 'boolean',
         'is_on_sale' => 'boolean',
+        'is_trending' => 'boolean',
         'tags' => 'array',
         'fit_type' => FitType::class,
         'pattern' => Pattern::class,
@@ -192,6 +193,11 @@ class Product extends Model
     public function scopeOnSale($query)
     {
         return $query->where('is_on_sale', true);
+    }
+
+    public function scopeTrending($query)
+    {
+        return $query->where('is_trending', true);
     }
 
     public function scopeInStock($query)

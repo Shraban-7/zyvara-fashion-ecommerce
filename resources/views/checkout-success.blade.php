@@ -7,24 +7,24 @@
     <div class="max-w-4xl mx-auto px-4">
         {{-- Success Message --}}
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-500 rounded-full mb-4 shadow-lg shadow-green-500/30 animate-bounce">
-                <i class="fas fa-check text-white text-3xl"></i>
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-accent rounded-full mb-4 shadow-lg shadow-green-500/30 animate-bounce">
+                <i class="fas fa-check text-surface-elevated text-3xl"></i>
             </div>
             <h1 class="text-3xl md:text-4xl font-black text-primary mb-2">Order Confirmed!</h1>
             <p class="text-secondary text-lg">Thank you for your purchase</p>
         </div>
 
         {{-- Order Details Card --}}
-        <div class="bg-white rounded-2xl shadow-lg shadow-primary/5 border border-primary-100 p-6 md:p-8 mb-6">
+        <div class="bg-surface-elevated rounded-2xl shadow-lg shadow-primary/5 border border-primary-100 p-6 md:p-8 mb-6">
             {{-- Order Number & Status --}}
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-primary-100">
                 <div>
                     <p class="text-sm text-secondary mb-1">Order Number</p>
                     <h2 class="text-2xl font-black text-primary">{{ $order->order_number }}</h2>
                 </div>
-                <div class="flex items-center gap-2 bg-yellow-50 px-4 py-2 rounded-full border border-yellow-100">
-                    <div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-                    <span class="text-sm font-bold text-yellow-700">{{ $order->status->label() }}</span>
+                <div class="flex items-center gap-2 bg-warning-50 px-4 py-2 rounded-full border border-warning-100">
+                    <div class="w-2 h-2 bg-warning-500 rounded-full animate-pulse"></div>
+                    <span class="text-sm font-bold text-warning-700">{{ $order->status->label() }}</span>
                 </div>
             </div>
 
@@ -111,7 +111,7 @@
                             </p>
                             <p>
                                 <span class="font-semibold text-primary">Status:</span>
-                                <span class="ml-2 inline-flex items-center gap-1 {{ $order->payment_status->value === 'paid' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-yellow-50 text-yellow-700 border border-yellow-100' }} px-3 py-1 rounded-full text-xs font-bold">
+                                <span class="ml-2 inline-flex items-center gap-1 {{ $order->payment_status->value === 'paid' ? 'bg-accent-50 text-accent-700 border border-accent-100' : 'bg-warning-50 text-warning-700 border border-warning-100' }} px-3 py-1 rounded-full text-xs font-bold">
                                     {{ $order->payment_status->label() }}
                                 </span>
                             </p>
@@ -134,7 +134,7 @@
                                 <span class="font-semibold text-primary">{{ money($order->shipping_cost) }}</span>
                             </div>
                             @if($order->discount_amount > 0)
-                            <div class="flex justify-between text-green-600">
+                            <div class="flex justify-between text-accent-600">
                                 <span class="font-semibold">Discount</span>
                                 <span class="font-bold">-{{ money($order->discount_amount) }}</span>
                             </div>
@@ -162,7 +162,7 @@
         </div>
 
         {{-- What's Next Section --}}
-        <div class="bg-white rounded-2xl shadow-lg shadow-primary/5 border border-primary-100 p-6 md:p-8 mb-6">
+        <div class="bg-surface-elevated rounded-2xl shadow-lg shadow-primary/5 border border-primary-100 p-6 md:p-8 mb-6">
             <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
                 <i class="fas fa-info-circle text-primary"></i>
                 What Happens Next?
@@ -200,12 +200,12 @@
 
         {{-- Action Buttons --}}
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{ route('home') }}" class="flex items-center justify-center gap-2 px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-xl shadow-primary/20">
+            <a href="{{ route('home') }}" class="flex items-center justify-center gap-2 px-8 py-3 bg-primary text-surface-elevated rounded-xl font-bold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-xl shadow-primary/20">
                 <i class="fas fa-home"></i>
                 Continue Shopping
             </a>
             @auth
-            <a href="#" class="flex items-center justify-center gap-2 px-8 py-3 bg-white text-primary border-2 border-primary rounded-xl font-bold hover:bg-primary-50 transition-all duration-200">
+            <a href="#" class="flex items-center justify-center gap-2 px-8 py-3 bg-surface-elevated text-primary border-2 border-primary rounded-xl font-bold hover:bg-primary-50 transition-all duration-200">
                 <i class="fas fa-receipt"></i>
                 View My Orders
             </a>

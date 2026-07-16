@@ -1,11 +1,12 @@
 @if($ourBrands->count())
+@php $h = isset($section) ? $section->headings() : ['eyebrow' => 'Trusted Partners', 'title' => 'Our Brands', 'subtitle' => 'Premium labels, exceptional quality']; @endphp
 <section class="home-section">
     <div class="home-wrap">
         <div class="section-head">
             <div class="section-head-text">
-                <span class="section-eyebrow">Trusted Partners</span>
-                <h2 class="section-title">Our Brands</h2>
-                <p class="section-sub">Premium labels, exceptional quality</p>
+                <span class="section-eyebrow">{{ $h['eyebrow'] }}</span>
+                <h2 class="section-title">{{ $h['title'] }}</h2>
+                <p class="section-sub">{{ $h['subtitle'] }}</p>
             </div>
             <a href="{{ route('products.index') }}" class="section-link">
                 All Brands
@@ -75,18 +76,18 @@
         gap: 8px;
         text-decoration: none;
         padding: 20px 14px;
-        border: 1.5px solid #f1f5f9;
+        border: 1.5px solid var(--color-border);
         border-radius: 16px;
-        background: #fff;
+        background: var(--color-surface-elevated);
         transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
         overflow: hidden;
     }
 
     .brand-card:hover {
-        border-color: #e2e8f0;
+        border-color: var(--color-secondary-200);
         transform: translateY(-4px);
-        box-shadow: 0 16px 40px -12px rgba(15, 23, 42, 0.1);
+        box-shadow: 0 16px 40px -12px rgba(26, 26, 26, 0.12);
     }
 
     @media (min-width: 768px) {
@@ -103,7 +104,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #f8fafc;
+        background: var(--color-surface-muted);
         border-radius: 12px;
         overflow: hidden;
         transition: all 0.3s ease;
@@ -117,7 +118,7 @@
     }
 
     .brand-card:hover .brand-logo-wrap {
-        background: #0f172a;
+        background: var(--color-primary);
     }
 
     .brand-logo {
@@ -137,7 +138,7 @@
     .brand-name {
         font-size: 12px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-primary);
         text-align: center;
         line-height: 1.3;
         transition: color 0.2s;
@@ -149,21 +150,21 @@
     }
 
     .brand-card:hover .brand-name {
-        color: #0f172a;
+        color: var(--color-primary);
     }
 
     /* ── Count ── */
     .brand-count {
         font-size: 11px;
         font-weight: 500;
-        color: #94a3b8;
+        color: var(--color-secondary);
         text-align: center;
         line-height: 1;
         transition: color 0.2s;
     }
 
     .brand-card:hover .brand-count {
-        color: #64748b;
+        color: var(--color-secondary-700);
     }
 
     /* ── Accessibility ── */

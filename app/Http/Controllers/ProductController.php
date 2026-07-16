@@ -122,6 +122,9 @@ class ProductController extends Controller
                 case 'on-sale':
                     $query->where('is_on_sale', true);
                     break;
+                case 'trending':
+                    $query->where('is_trending', true);
+                    break;
             }
         }
 

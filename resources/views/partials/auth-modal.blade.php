@@ -1,7 +1,7 @@
 {{-- Auth Modal (Login/Signup) --}}
 <div id="authModal" class="fixed inset-0 z-[100] hidden">
     {{-- Backdrop --}}
-    <div id="authModalBackdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+    <div id="authModalBackdrop" class="absolute inset-0 bg-primary/60 backdrop-blur-sm transition-opacity"></div>
 
     {{-- Modal Container --}}
     <div class="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto">
@@ -17,14 +17,14 @@
             {{-- Modal Header --}}
             <div class="pt-8 pb-4 px-6 text-center border-b border-secondary-100">
                 <a href="{{ url('/') }}" class="inline-flex items-center gap-1 mb-4">
-                    <span class="text-2xl font-extrabold logo-text tracking-tight text-black">Spinner</span>
+                    <span class="text-2xl font-extrabold logo-text tracking-tight text-primary">Spinner</span>
                     <span class="text-2xl font-extrabold logo-accent tracking-tight text-primary">Fashion</span>
                 </a>
 
                 {{-- Tab Switcher --}}
                 <div class="flex bg-light rounded-xl p-1 mt-4 border border-secondary-100">
                     <button id="loginTab" onclick="switchAuthTab('login')"
-                        class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all bg-white text-primary shadow-sm border border-secondary-100">
+                        class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all bg-surface-elevated text-primary shadow-sm border border-secondary-100">
                         Login
                     </button>
                     <button id="signupTab" onclick="switchAuthTab('signup')"
@@ -50,7 +50,7 @@
                                 <span class="text-sm font-medium">+88</span>
                             </div>
                             <input type="tel" id="login_phone" name="phone" placeholder="01XXXXXXXXX" maxlength="11"
-                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 pl-24 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-black placeholder-secondary-300"
+                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 pl-24 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-primary placeholder-secondary-300"
                                 pattern="[0-9]{11}" inputmode="numeric" required>
                         </div>
                         <p class="mt-1 text-xs text-secondary-400">Enter 11 digit number without +88</p>
@@ -62,7 +62,7 @@
                             class="block text-sm font-medium text-secondary-600 mb-1.5">Password</label>
                         <div class="relative">
                             <input type="password" id="login_password" name="password" placeholder="Enter your password"
-                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 px-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-black placeholder-secondary-300"
+                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 px-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-primary placeholder-secondary-300"
                                 required>
                             <button type="button" onclick="togglePassword('login_password', this)"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 transition-colors">
@@ -83,7 +83,7 @@
 
                     {{-- Submit Button --}}
                     <button type="submit"
-                        class="w-full bg-primary text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-primary-700 transition tap-effect shadow-lg shadow-primary-200/50">
+                        class="w-full bg-primary text-surface-elevated py-3.5 rounded-xl font-semibold text-sm hover:bg-primary-700 transition tap-effect shadow-lg shadow-primary-200/50">
                         Login to Your Account
                     </button>
                 </form>
@@ -107,7 +107,7 @@
                             Name</label>
                         <div class="relative">
                             <input type="text" id="signup_name" name="name" placeholder="Enter your full name"
-                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 px-4 pl-11 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-black placeholder-secondary-300"
+                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 px-4 pl-11 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-primary placeholder-secondary-300"
                                 required>
                             <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-secondary-400"></i>
                         </div>
@@ -124,7 +124,7 @@
                                 <span class="text-sm font-medium">+88</span>
                             </div>
                             <input type="tel" id="signup_phone" name="phone" placeholder="01XXXXXXXXX" maxlength="11"
-                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 pl-24 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-black placeholder-secondary-300"
+                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 pl-24 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-primary placeholder-secondary-300"
                                 pattern="[0-9]{11}" inputmode="numeric" required>
                         </div>
                         <p class="mt-1 text-xs text-secondary-400">Enter 11 digit number without +88 (e.g., 01712345678)</p>
@@ -137,7 +137,7 @@
                         <div class="relative">
                             <input type="password" id="signup_password" name="password"
                                 placeholder="Create a password (min 6 characters)"
-                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 px-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-black placeholder-secondary-300"
+                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 px-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-primary placeholder-secondary-300"
                                 minlength="6" required>
                             <button type="button" onclick="togglePassword('signup_password', this)"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 transition-colors">
@@ -153,7 +153,7 @@
                         <div class="relative">
                             <input type="password" id="signup_password_confirmation" name="password_confirmation"
                                 placeholder="Confirm your password"
-                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 px-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-black placeholder-secondary-300"
+                                class="w-full bg-light border border-secondary-200 rounded-xl py-3 px-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300/50 focus:border-primary-300 focus:bg-surface transition-all text-primary placeholder-secondary-300"
                                 minlength="6" required>
                             <button type="button" onclick="togglePassword('signup_password_confirmation', this)"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 transition-colors">
@@ -174,7 +174,7 @@
 
                     {{-- Submit Button --}}
                     <button type="submit"
-                        class="w-full bg-primary text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-primary-700 transition tap-effect shadow-lg shadow-primary-200/50">
+                        class="w-full bg-primary text-surface-elevated py-3.5 rounded-xl font-semibold text-sm hover:bg-primary-700 transition tap-effect shadow-lg shadow-primary-200/50">
                         Create Account
                     </button>
                 </form>
@@ -228,17 +228,17 @@
         const signupForm = document.getElementById('signupForm');
 
         if (tab === 'login') {
-            loginTab.classList.add('bg-white', 'text-primary', 'shadow-sm', 'border', 'border-secondary-100');
+            loginTab.classList.add('bg-surface-elevated', 'text-primary', 'shadow-sm', 'border', 'border-secondary-100');
             loginTab.classList.remove('text-secondary-500');
-            signupTab.classList.remove('bg-white', 'text-primary', 'shadow-sm', 'border', 'border-secondary-100');
+            signupTab.classList.remove('bg-surface-elevated', 'text-primary', 'shadow-sm', 'border', 'border-secondary-100');
             signupTab.classList.add('text-secondary-500');
 
             loginForm.classList.remove('hidden');
             signupForm.classList.add('hidden');
         } else {
-            signupTab.classList.add('bg-white', 'text-primary', 'shadow-sm', 'border', 'border-secondary-100');
+            signupTab.classList.add('bg-surface-elevated', 'text-primary', 'shadow-sm', 'border', 'border-secondary-100');
             signupTab.classList.remove('text-secondary-500');
-            loginTab.classList.remove('bg-white', 'text-primary', 'shadow-sm', 'border', 'border-secondary-100');
+            loginTab.classList.remove('bg-surface-elevated', 'text-primary', 'shadow-sm', 'border', 'border-secondary-100');
             loginTab.classList.add('text-secondary-500');
 
             signupForm.classList.remove('hidden');

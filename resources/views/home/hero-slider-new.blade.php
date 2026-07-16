@@ -4,307 +4,158 @@ $promos = $banners->where('position', \App\Enums\BannerPosition::PROMOTIONAL)->s
 $promoList = $promos->take(2)->values();
 ?>
 
-<section class="bento-section" aria-label="Featured promotions">
-    <div class="bento-wrap">
-        <div class="bento-grid">
-
-            {{-- Main Slider (Left Large) --}}
-            <div class="bento-main group" role="region" aria-roledescription="carousel" aria-label="Hero banner carousel">
-                <div id="hero-slider" class="relative w-full h-full overflow-hidden rounded-2xl">
-                    @foreach ($sliders as $index => $banner)
-                        <div class="hero-slide absolute inset-0 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
-                            role="group" aria-roledescription="slide"
-                            aria-label="Slide {{ $index + 1 }} of {{ $sliders->count() }}"
-                            aria-hidden="{{ $index !== 0 ? 'true' : 'false' }}">
-                            <a href="{{ $banner->link ?? '#' }}" class="block w-full h-full" tabindex="-1">
-                                <img src="{{ storage_url($banner->image) }}" alt="{{ $banner->title }}"
-                                    loading="{{ $index === 0 ? 'eager' : 'lazy' }}" class="w-full h-full object-cover"
-                                    width="800" height="600">
-                                @if ($banner->title)
-                                    <div class="slide-caption">
-                                        <h2 class="slide-title">{{ $banner->title }}</h2>
-                                        @if ($banner->subtitle)
-                                            <p class="slide-subtitle">{{ $banner->subtitle }}</p>
-                                        @endif
-                                    </div>
-                                @endif
-                            </a>
-                        </div>
-                    @endforeach
-
-                    {{-- Nav Arrows --}}
-                    <button id="prevBtn" aria-label="Previous slide" class="bento-nav left-3">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </button>
-                    <button id="nextBtn" aria-label="Next slide" class="bento-nav right-3">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </button>
-
-                    {{-- Progress Dots --}}
-                    <div class="progress-dots" role="tablist" aria-label="Slide indicators">
-                        @foreach ($sliders as $index => $banner)
-                            <button class="progress-dot" role="tab" aria-label="Go to slide {{ $index + 1 }}"
-                                aria-selected="{{ $index === 0 ? 'true' : 'false' }}" data-index="{{ $index }}"
-                                tabindex="{{ $index === 0 ? '0' : '-1' }}">
-                                <div class="dot-track">
-                                    <div class="progress-fill {{ $index === 0 ? 'w-full' : 'w-0' }}"></div>
-                                </div>
-                            </button>
-                        @endforeach
-                    </div>
-                </div>
+<section class="relative h-[78vh] min-h-[520px] w-full overflow-hidden bg-primary md:h-screen" aria-label="Featured promotions">
+    {{-- Background image grid / editorial image --}}
+    <div id="hero-slider" class="absolute inset-0 h-full w-full" role="region" aria-roledescription="carousel" aria-label="Hero banner carousel">
+        @foreach ($sliders as $index => $banner)
+            <div class="hero-slide absolute inset-0 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
+                role="group" aria-roledescription="slide"
+                aria-label="Slide {{ $index + 1 }} of {{ $sliders->count() }}"
+                aria-hidden="{{ $index !== 0 ? 'true' : 'false' }}">
+                <img src="{{ storage_url($banner->image) }}" alt="{{ $banner->title }}"
+                    loading="{{ $index === 0 ? 'eager' : 'lazy' }}" class="h-full w-full object-cover"
+                    width="1600" height="900">
             </div>
+        @endforeach
 
-            {{-- Promotional Cards --}}
-            @foreach ($promoList as $i => $promo)
-                <div class="bento-card bento-card-{{ $i + 1 }} group">
-                    <a href="{{ $promo->link ?? '#' }}"
-                        class="block w-full h-full relative overflow-hidden rounded-2xl">
-                        <img src="{{ storage_url($promo->image) }}" alt="{{ $promo->title }}" loading="lazy"
-                            class="bento-img" width="400" height="300">
-                        <div class="bento-overlay"></div>
-                        @if ($promo->title)
-                            <div class="bento-text">
-                                <span class="bento-label">{{ $promo->title }}</span>
-                                @if ($promo->subtitle)
-                                    <p class="bento-desc">{{ $promo->subtitle }}</p>
-                                @endif
-                            </div>
-                        @endif
+        {{-- Top gradient behind the (fixed) header for nav legibility --}}
+        <div class="pointer-events-none absolute inset-x-0 top-0 z-20 h-40 bg-gradient-to-b from-primary/70 to-transparent"></div>
+
+        {{-- Subtle dark gradient overlay for text contrast --}}
+        <div class="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-primary/70 via-primary/20 to-primary/30"></div>
+    </div>
+
+    {{-- Hero content --}}
+    <div class="relative z-30 flex h-full w-full items-end">
+        <div class="mx-auto w-full max-w-[1320px] px-5 pb-16 sm:px-8 md:pb-24">
+            @if ($sliders->isNotEmpty() && $sliders->first()->title)
+                <p class="mb-4 font-body text-sm font-medium uppercase tracking-[0.25em] text-accent">
+                    {{ $sliders->first()->subtitle ?? 'New Season' }}
+                </p>
+                <h1 class="max-w-3xl font-heading text-4xl font-semibold leading-[1.1] text-surface-elevated sm:text-6xl md:text-7xl">
+                    {{ $sliders->first()->title }}
+                </h1>
+                <p class="mt-5 max-w-xl font-body text-base text-surface-elevated/85 sm:text-lg">
+                    Timeless essentials, thoughtfully made. Discover the pieces defining our new collection.
+                </p>
+
+                <div class="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+                    <a href="{{ $sliders->first()->link ?? route('products.index') }}"
+                        class="tap-effect inline-flex items-center justify-center rounded-full bg-accent px-9 py-4 font-body text-sm font-semibold tracking-wide text-primary transition-colors duration-300 hover:bg-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary">
+                        Shop Now
+                    </a>
+                    <a href="{{ route('products.index') }}"
+                        class="font-body text-sm font-medium text-secondary transition-colors duration-300 hover:text-surface-elevated focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary">
+                        View Lookbook
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
-            @endforeach
-
-
-
+            @else
+                <h1 class="max-w-3xl font-heading text-4xl font-semibold leading-[1.1] text-surface-elevated sm:text-6xl md:text-7xl">
+                    New Season Arrivals
+                </h1>
+                <p class="mt-5 max-w-xl font-body text-base text-surface-elevated/85 sm:text-lg">
+                    Timeless essentials, thoughtfully made. Discover the pieces defining our new collection.
+                </p>
+                <div class="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+                    <a href="{{ route('products.index') }}"
+                        class="tap-effect inline-flex items-center justify-center rounded-full bg-accent px-9 py-4 font-body text-sm font-semibold tracking-wide text-primary transition-colors duration-300 hover:bg-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary">
+                        Discover the Collection
+                    </a>
+                    <a href="{{ route('products.index') }}"
+                        class="font-body text-sm font-medium text-secondary transition-colors duration-300 hover:text-surface-elevated focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary">
+                        View Lookbook
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
+
+    {{-- Scroll-down indicator --}}
+    <a href="#categories" aria-label="Scroll to categories"
+        class="absolute bottom-6 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center gap-2 text-secondary transition-colors duration-300 hover:text-surface-elevated focus:outline-none focus-visible:ring-2 focus-visible:ring-accent md:flex">
+        <span class="font-body text-[11px] uppercase tracking-[0.3em]">Scroll</span>
+        <i class="fas fa-chevron-down animate-bounce text-xs"></i>
+    </a>
+
+    {{-- Progress Dots --}}
+    @if ($sliders->count() > 1)
+        <div class="progress-dots absolute bottom-6 right-5 z-30 flex gap-2 md:right-8" role="tablist" aria-label="Slide indicators">
+            @foreach ($sliders as $index => $banner)
+                <button class="progress-dot" role="tab" aria-label="Go to slide {{ $index + 1 }}"
+                    aria-selected="{{ $index === 0 ? 'true' : 'false' }}" data-index="{{ $index }}"
+                    tabindex="{{ $index === 0 ? '0' : '-1' }}">
+                    <div class="dot-track">
+                        <div class="progress-fill {{ $index === 0 ? 'w-full' : 'w-0' }}"></div>
+                    </div>
+                </button>
+            @endforeach
+        </div>
+    @endif
+
+    {{-- Nav Arrows --}}
+    @if ($sliders->count() > 1)
+        <button id="prevBtn" aria-label="Previous slide"
+            class="bento-nav absolute left-4 top-1/2 z-30 -translate-y-1/2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5" stroke-linecap="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <button id="nextBtn" aria-label="Next slide"
+            class="bento-nav absolute right-4 top-1/2 z-30 -translate-y-1/2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5" stroke-linecap="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    @endif
 </section>
 
 <style>
-    .bento-section {
-        background: #f8f9fa;
-        padding: 20px 0;
-    }
-
-    .bento-wrap {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 16px;
-    }
-
-    /* ====================================================
-       MOBILE: 2 cards per row, all same size
-    ==================================================== */
-    .bento-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-
-    .bento-main {
-        grid-column: 1 / -1;
-        grid-row: 1;
-        height: 280px;
-    }
-
-    .bento-card {
-        height: 200px;
-    }
-
-    /* ====================================================
-       TABLET: 2 cards per row, main stays full width
-    ==================================================== */
-    @media (min-width: 640px) {
-        .bento-grid {
-            gap: 16px;
-        }
-
-        .bento-main {
-            height: 360px;
-        }
-
-        .bento-card {
-            height: 240px;
-        }
-    }
-
-    /* ====================================================
-       DESKTOP: Large-Small-Small-Large layout
-       Grid: 2 columns, 2 rows
-       Card 1: spans full width (large)
-       Card 2: normal (small)
-       Card 3: normal (small)
-       Card 4: spans full width (large)
-    ==================================================== */
-    @media (min-width: 1024px) {
-
-        .bento-section {
-            padding: 24px 0;
-        }
-
-        .bento-grid {
-            grid-template-columns: 2fr 1fr;
-            grid-template-rows: repeat(2, 220px);
-            gap: 20px;
-        }
-
-        /* Main slider */
-        .bento-main {
-            grid-column: 1;
-            grid-row: 1 / 3;
-            height: 100%;
-        }
-
-        /* Promo 1 */
-        .bento-card-1 {
-            grid-column: 2;
-            grid-row: 1;
-            height: 100%;
-        }
-
-        /* Promo 2 */
-        .bento-card-2 {
-            grid-column: 2;
-            grid-row: 2;
-            height: 100%;
-        }
-    }
-
-    /* Large screens: 3-column layout with large-small-small-large */
-    @media (min-width: 1280px) {
-
-        .bento-grid {
-            grid-template-columns: 2.5fr 1fr;
-            grid-template-rows: repeat(2, 250px);
-            gap: 20px;
-            height: 520px;
-        }
-
-        .bento-main {
-            grid-column: 1;
-            grid-row: 1 / 3;
-        }
-
-        .bento-card-1 {
-            grid-column: 2;
-            grid-row: 1;
-        }
-
-        .bento-card-2 {
-            grid-column: 2;
-            grid-row: 2;
-        }
-    }
-
-    /* ====================================================
-       MAIN SLIDER
-    ==================================================== */
-    .bento-main #hero-slider {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        background: #e5e7eb;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-    }
-
     .hero-slide {
         transition: opacity 700ms ease-in-out;
     }
 
-    .hero-slide:first-child {
-        opacity: 1;
-        z-index: 10;
-    }
-
-    .hero-slide:not(:first-child) {
-        opacity: 0;
-        z-index: 0;
-    }
-
-    .slide-caption {
-        position: absolute;
-        bottom: 56px;
-        left: 24px;
-        z-index: 20;
-        max-width: 400px;
-        pointer-events: none;
-    }
-
-    .slide-title {
-        color: white;
-        font-size: 1.75rem;
-        font-weight: 700;
-        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
-        line-height: 1.2;
-        margin: 0;
-    }
-
-    .slide-subtitle {
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 0.9375rem;
-        margin-top: 8px;
-        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
-    }
-
     /* Navigation */
     .bento-nav {
-        position: absolute;
-        z-index: 30;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.92);
+        width: 40px;
+        height: 40px;
+        border-radius: 9999px;
+        background: rgba(250, 248, 245, 0.9);
         backdrop-filter: blur(8px);
         border: none;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-        transition: opacity 0.2s, transform 0.18s;
-        color: #1f2937;
+        box-shadow: 0 2px 12px rgba(26, 26, 26, 0.18);
+        transition: opacity 0.2s, transform 0.18s, background 0.2s;
+        color: #1A1A1A;
         opacity: 0;
         outline: none;
     }
 
-    .group:hover .bento-nav {
+    section:hover .bento-nav,
+    .bento-nav:focus-visible {
         opacity: 1;
     }
 
     .bento-nav:hover {
-        transform: translateY(-50%) scale(1.1);
-        background: #fff;
+        transform: translateY(-50%) scale(1.08);
+        background: #FAF8F5;
     }
 
     .bento-nav:focus-visible {
-        opacity: 1;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.6);
     }
 
     /* Progress Dots */
-    .progress-dots {
-        position: absolute;
-        z-index: 30;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 6px;
-    }
-
     .progress-dot {
         background: none;
         border: none;
-        padding: 4px;
+        padding: 6px;
         cursor: pointer;
         border-radius: 4px;
         outline: none;
@@ -316,105 +167,28 @@ $promoList = $promos->take(2)->values();
     }
 
     .progress-dot:focus-visible {
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.6);
+        box-shadow: 0 0 0 2px rgba(201, 168, 124, 0.7);
     }
 
     .dot-track {
-        width: 24px;
+        width: 28px;
         height: 3px;
         border-radius: 2px;
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(250, 248, 245, 0.35);
         overflow: hidden;
     }
 
     .progress-fill {
         height: 100%;
-        background: white;
+        background: #C9A87C;
         border-radius: 2px;
         transition: width 0.3s ease;
     }
 
-    /* ====================================================
-       BENTO CARDS
-    ==================================================== */
-    .bento-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 16px;
-        background: #e5e7eb;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .bento-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    }
-
-    .bento-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    .group:hover .bento-img {
-        transform: scale(1.08);
-    }
-
-    .bento-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 40%, transparent 70%);
-        transition: background 0.3s;
-    }
-
-    .group:hover .bento-overlay {
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.05) 40%, transparent 70%);
-    }
-
-    .bento-text {
-        position: absolute;
-        bottom: 16px;
-        left: 16px;
-        right: 16px;
-        z-index: 10;
-    }
-
-    .bento-label {
-        color: white;
-        font-size: 0.875rem;
-        font-weight: 600;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-        display: block;
-    }
-
-    .bento-desc {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 0.75rem;
-        margin-top: 4px;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-        line-height: 1.4;
-    }
-
-    .bento-empty {
-        background: #f1f3f5;
-        border: 2px dashed #d1d5db;
-    }
-
-    /* ====================================================
-       REDUCED MOTION
-    ==================================================== */
     @media (prefers-reduced-motion: reduce) {
-
         .hero-slide,
-        .bento-card,
-        .bento-img,
         .progress-fill {
             transition: none !important;
-        }
-
-        .bento-card:hover {
-            transform: none;
         }
     }
 </style>
@@ -434,7 +208,6 @@ $promoList = $promos->take(2)->values();
             slides.forEach((s, i) => {
                 const active = i === currentIndex;
                 s.setAttribute('aria-hidden', !active);
-                s.setAttribute('tabindex', active ? '0' : '-1');
             });
             dots.forEach((d, i) => {
                 d.setAttribute('aria-selected', i === currentIndex);
@@ -482,11 +255,13 @@ $promoList = $promos->take(2)->values();
             clearInterval(timer);
         }
 
-        document.getElementById('nextBtn').addEventListener('click', () => {
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        if (nextBtn) nextBtn.addEventListener('click', () => {
             next();
             startTimer();
         });
-        document.getElementById('prevBtn').addEventListener('click', () => {
+        if (prevBtn) prevBtn.addEventListener('click', () => {
             prev();
             startTimer();
         });
@@ -498,8 +273,8 @@ $promoList = $promos->take(2)->values();
             });
         });
 
-        const slider = document.querySelector('.bento-main');
-        slider.addEventListener('keydown', (e) => {
+        const heroSection = document.querySelector('section[aria-label="Featured promotions"]');
+        heroSection.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') {
                 next();
                 startTimer();
@@ -512,14 +287,12 @@ $promoList = $promos->take(2)->values();
 
         let touchStartX = 0;
         const heroSlider = document.getElementById('hero-slider');
-
         heroSlider.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
             stopTimer();
         }, {
             passive: true
         });
-
         heroSlider.addEventListener('touchend', (e) => {
             const diff = touchStartX - e.changedTouches[0].screenX;
             if (Math.abs(diff) > 50) {
@@ -530,8 +303,8 @@ $promoList = $promos->take(2)->values();
             passive: true
         });
 
-        slider.addEventListener('mouseenter', stopTimer);
-        slider.addEventListener('mouseleave', startTimer);
+        heroSection.addEventListener('mouseenter', stopTimer);
+        heroSection.addEventListener('mouseleave', startTimer);
 
         document.addEventListener('visibilitychange', () => {
             document.hidden ? stopTimer() : startTimer();

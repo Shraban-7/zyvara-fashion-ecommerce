@@ -3,16 +3,16 @@
     class="qv-overlay fixed inset-0 z-[9999] hidden items-center justify-center p-3 sm:p-4 md:p-6"
     onclick="handleQuickViewOverlayClick(event)">
 
-    <div class="qv-container bg-white w-full sm:max-w-[480px] md:max-w-[720px] max-h-[90vh] sm:max-h-[85vh] md:max-h-[82vh] overflow-hidden shadow-2xl flex flex-col rounded-2xl">
+    <div class="qv-container bg-surface-elevated w-full sm:max-w-[480px] md:max-w-[720px] max-h-[90vh] sm:max-h-[85vh] md:max-h-[82vh] overflow-hidden shadow-2xl flex flex-col rounded-2xl">
 
         {{-- Header --}}
-        <div class="qv-header flex items-center justify-between px-4 py-3 border-b border-primary-100 shrink-0">
+        <div class="qv-header flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)] shrink-0">
             <div class="flex items-center gap-2">
-                <div class="w-1 h-4 bg-primary rounded-full"></div>
-                <h3 class="text-sm font-bold text-primary tracking-tight">Quick View</h3>
+                <div class="w-1 h-4 bg-[var(--color-accent)] rounded-full"></div>
+                <h3 class="text-sm font-bold text-[var(--color-primary)] tracking-tight">Quick View</h3>
             </div>
             <button id="qvCloseBtn" onclick="closeQuickView()" aria-label="Close quick view"
-                class="qv-close-btn w-8 h-8 flex items-center justify-center rounded-full text-secondary-400 hover:text-primary hover:bg-primary-50 transition-all duration-200">
+                class="qv-close-btn w-8 h-8 flex items-center justify-center rounded-full text-[var(--color-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-muted)] transition-all duration-200">
                 <i class="fas fa-times text-xs"></i>
             </button>
         </div>
@@ -49,10 +49,10 @@
             <div id="qvMainContent" class="flex flex-col md:grid md:grid-cols-2 md:flex-1 md:min-h-0">
 
                 {{-- Left: Image Gallery --}}
-                <div class="qv-image-panel flex flex-col border-b md:border-b-0 md:border-r border-primary-100">
+                <div class="qv-image-panel flex flex-col border-b md:border-b-0 md:border-r border-[var(--color-border)]">
 
                     {{-- Mobile: compact image strip --}}
-                    <div class="relative bg-light overflow-hidden group qv-main-image-wrap flex-1">
+                    <div class="relative bg-[var(--color-background)] overflow-hidden group qv-main-image-wrap flex-1">
                         <img id="quickViewImage"
                             src="{{ asset('assets/images/default.png') }}"
                             alt="Product image"
@@ -60,7 +60,7 @@
 
                         {{-- Zoom Icon (desktop only) --}}
                         <div class="hidden md:flex absolute inset-0 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                            <div class="bg-white/80 backdrop-blur-sm rounded-full w-9 h-9 flex items-center justify-center shadow-md">
+                            <div class="bg-surface-elevated/80 backdrop-blur-sm rounded-full w-9 h-9 flex items-center justify-center shadow-md">
                                 <i class="fas fa-search-plus text-secondary text-xs"></i>
                             </div>
                         </div>
@@ -79,8 +79,8 @@
 
                         {{-- Brand & Name --}}
                         <div>
-                            <p id="quickViewBrand" class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1"></p>
-                            <h2 id="quickViewName" class="text-base sm:text-lg md:text-xl font-bold text-primary leading-snug mb-2"></h2>
+                            <p id="quickViewBrand" class="text-[10px] font-bold text-[var(--color-accent)] uppercase tracking-widest mb-1"></p>
+                            <h2 id="quickViewName" class="text-base sm:text-lg md:text-xl font-bold text-[var(--color-primary)] font-[var(--font-heading)] leading-snug mb-2"></h2>
 
                             {{-- Rating --}}
                             <div id="quickViewRating" class="flex items-center gap-1.5"></div>
@@ -89,9 +89,9 @@
                         {{-- Price Block --}}
                         <div class="qv-price-block rounded-xl p-3">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <span id="quickViewPrice" class="text-2xl font-extrabold text-primary leading-none"></span>
+                                <span id="quickViewPrice" class="text-2xl font-extrabold text-[var(--color-primary)] leading-none"></span>
                                 <div class="flex items-center gap-1.5">
-                                    <span id="quickViewComparePrice" class="text-sm text-secondary-400 line-through hidden"></span>
+                                    <span id="quickViewComparePrice" class="text-sm text-[var(--color-secondary)] line-through hidden"></span>
                                     <span id="quickViewDiscount" class="qv-badge-save hidden"></span>
                                 </div>
                             </div>
@@ -106,9 +106,9 @@
                             {{-- Color --}}
                             <div id="colorSection" class="hidden">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm font-semibold text-primary">
+                                    <span class="text-sm font-semibold text-[var(--color-primary)]">
                                         Color:
-                                        <span id="selectedColorName" class="font-normal text-secondary-400 ml-1">Select a color</span>
+                                        <span id="selectedColorName" class="font-normal text-[var(--color-secondary)] ml-1">Select a color</span>
                                     </span>
                                 </div>
                                 <div id="colorOptions" class="flex gap-2.5 flex-wrap"></div>
@@ -117,9 +117,9 @@
                             {{-- Size --}}
                             <div id="sizeSection" class="hidden">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm font-semibold text-primary">
+                                    <span class="text-sm font-semibold text-[var(--color-primary)]">
                                         Size:
-                                        <span id="selectedSizeName" class="font-normal text-secondary-400 ml-1">Select a size</span>
+                                        <span id="selectedSizeName" class="font-normal text-[var(--color-secondary)] ml-1">Select a size</span>
                                     </span>
                                 </div>
                                 <div id="sizeOptions" class="flex gap-2 flex-wrap"></div>
@@ -134,7 +134,7 @@
 
                         {{-- Quantity --}}
                         <div class="flex items-center gap-3">
-                            <span class="text-sm font-semibold text-primary shrink-0">Quantity</span>
+                            <span class="text-sm font-semibold text-[var(--color-primary)] shrink-0">Quantity</span>
                             <div class="qv-qty-control">
                                 <button onclick="updateQuickViewQuantity(-1)" class="qv-qty-btn" aria-label="Decrease quantity">
                                     <i class="fas fa-minus text-xs"></i>
@@ -148,12 +148,12 @@
                         </div>
 
                         {{-- Short Description --}}
-                        <div id="quickViewDescription" class="text-sm text-secondary leading-relaxed border-t border-primary-100 pt-4 hidden"></div>
+                        <div id="quickViewDescription" class="text-sm text-[var(--color-secondary)] leading-relaxed border-t border-[var(--color-border)] pt-4 hidden"></div>
 
                     </div>
 
                     {{-- Sticky Action Buttons --}}
-                    <div class="qv-actions-bar border-t border-primary-100 px-3 md:px-5 py-3 shrink-0">
+                    <div class="qv-actions-bar border-t border-[var(--color-border)] px-3 md:px-5 py-3 shrink-0">
                         <div class="flex gap-3">
                             <button id="quickViewAddToCart" onclick="addToCartFromQuickView()"
                                 class="qv-btn-primary flex-1">
@@ -177,13 +177,13 @@
 
 <style>
     /* ============================================================
-       QUICK VIEW MODAL — CHARCOAL & GRAPHITE THEME
-       Primary: #1c1c1e  |  Secondary: #636366  |  Light: #f5f5f7
-    ============================================================ */
+       QUICK VIEW MODAL — LUXURY THEME
+       Primary #1A1A1A | Accent #C9A87C | Background #FAF8F5
+     ============================================================ */
 
     /* ---------- Overlay ---------- */
     .qv-overlay {
-        background: rgba(0, 0, 0, 0.55);
+        background: rgba(26, 26, 26, 0.55);
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
         animation: qvFadeIn 0.22s ease-out both;
@@ -196,7 +196,8 @@
     /* ---------- Container ---------- */
     .qv-container {
         animation: qvSlideUp 0.3s cubic-bezier(0.34, 1.26, 0.64, 1) both;
-        border: 1px solid rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--color-border);
+        background: var(--color-surface-elevated);
     }
 
     /* ---------- Keyframes ---------- */
@@ -218,18 +219,19 @@
     /* ---------- Scrollbar ---------- */
     .qv-scroll::-webkit-scrollbar { width: 4px; }
     .qv-scroll::-webkit-scrollbar-track { background: transparent; }
-    .qv-scroll::-webkit-scrollbar-thumb { background: #c2c2c2; border-radius: 99px; }
-    .qv-scroll { scrollbar-width: thin; scrollbar-color: #c2c2c2 transparent; }
+    .qv-scroll::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 99px; }
+    .qv-scroll { scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
 
     .qv-thumb-scroll::-webkit-scrollbar { height: 3px; }
-    .qv-thumb-scroll::-webkit-scrollbar-thumb { background: #c2c2c2; border-radius: 99px; }
-    .qv-thumb-scroll { scrollbar-width: thin; scrollbar-color: #c2c2c2 transparent; }
+    .qv-thumb-scroll::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 99px; }
+    .qv-thumb-scroll { scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
 
     /* ---------- Image Panel ---------- */
     .qv-main-image-wrap {
         aspect-ratio: 1 / 1;
         cursor: zoom-in;
         min-height: 200px;
+        background: var(--color-background);
     }
 
     .qv-main-img {
@@ -261,35 +263,35 @@
         object-fit: cover;
         object-position: center;
         border-radius: 10px;
-        border: 2px solid #e0e0e0;
+        border: 2px solid var(--color-border);
         cursor: pointer;
         transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
         flex-shrink: 0;
     }
 
     .qv-thumb:hover {
-        border-color: #1c1c1e;
+        border-color: var(--color-accent);
         transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(28, 28, 30, 0.15);
+        box-shadow: 0 4px 12px rgba(26, 26, 26, 0.12);
     }
 
     .qv-thumb.active {
-        border-color: #1c1c1e;
-        box-shadow: 0 0 0 3px rgba(28, 28, 30, 0.12);
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.25);
     }
 
     /* ---------- Price Block ---------- */
     .qv-price-block {
-        background: linear-gradient(135deg, #f5f5f7 0%, #f0f0f0 100%);
-        border: 1px solid #e0e0e0;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
     }
 
-    /* ---------- Badge Save ---------- */
+    /* ---------- Badge Save (gold) ---------- */
     .qv-badge-save {
         display: inline-flex;
         align-items: center;
-        background: linear-gradient(135deg, #dc2626, #b91c1c);
-        color: #fff;
+        background: var(--color-accent);
+        color: var(--color-primary);
         font-size: 11px;
         font-weight: 700;
         padding: 3px 9px;
@@ -298,24 +300,24 @@
     }
 
     /* ---------- Stock Badge ---------- */
-    .qv-stock-in    { color: #16a34a; }
-    .qv-stock-low   { color: #ea580c; }
-    .qv-stock-out   { color: #dc2626; }
+    .qv-stock-in    { color: #3f8f5b; }
+    .qv-stock-low   { color: #c2853a; }
+    .qv-stock-out   { color: var(--color-danger, #c0392b); }
 
     .qv-stock-dot {
         width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
     }
 
-    .qv-stock-dot.in  { background: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,.15); }
-    .qv-stock-dot.low { background: #ea580c; box-shadow: 0 0 0 3px rgba(234,88,12,.15); }
-    .qv-stock-dot.out { background: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,.15); }
+    .qv-stock-dot.in  { background: #3f8f5b; box-shadow: 0 0 0 3px rgba(63,143,91,.15); }
+    .qv-stock-dot.low { background: #c2853a; box-shadow: 0 0 0 3px rgba(194,133,58,.15); }
+    .qv-stock-dot.out { background: var(--color-danger, #c0392b); box-shadow: 0 0 0 3px rgba(192,57,43,.15); }
 
     /* ---------- Color Swatches ---------- */
     .qv-color-swatch {
         width: 34px;
         height: 34px;
         border-radius: 50%;
-        border: 2px solid #e0e0e0;
+        border: 2px solid var(--color-border);
         cursor: pointer;
         transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
         position: relative;
@@ -328,8 +330,8 @@
     }
 
     .qv-color-swatch.active {
-        border-color: #1c1c1e;
-        box-shadow: 0 0 0 3px rgba(28, 28, 30, 0.18);
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.3);
         transform: scale(1.08);
     }
 
@@ -338,28 +340,28 @@
         min-width: 44px;
         height: 36px;
         padding: 0 14px;
-        border: 1.5px solid #e0e0e0;
+        border: 1.5px solid var(--color-border);
         border-radius: 8px;
         font-size: 13px;
         font-weight: 600;
-        color: #363638;
-        background: #fff;
+        color: var(--color-primary);
+        background: var(--color-surface-elevated);
         cursor: pointer;
         transition: all 0.18s;
         white-space: nowrap;
     }
 
     .qv-size-btn:hover {
-        border-color: #1c1c1e;
-        color: #1c1c1e;
-        background: #f5f5f7;
+        border-color: var(--color-accent);
+        color: var(--color-primary);
+        background: var(--color-background);
     }
 
     .qv-size-btn.active {
-        border-color: #1c1c1e;
-        background: #1c1c1e;
-        color: #fff;
-        box-shadow: 0 3px 10px rgba(28, 28, 30, 0.25);
+        border-color: var(--color-primary);
+        background: var(--color-primary);
+        color: var(--color-surface-elevated);
+        box-shadow: 0 3px 10px rgba(26, 26, 26, 0.22);
     }
 
     .qv-size-btn:disabled {
@@ -372,22 +374,22 @@
     .qv-variant-error {
         display: flex;
         align-items: center;
-        background: #fef2f2;
-        border: 1px solid #fecaca;
+        background: rgba(192, 57, 43, 0.06);
+        border: 1px solid rgba(192, 57, 43, 0.2);
         border-radius: 10px;
         padding: 10px 14px;
         font-size: 13px;
-        color: #dc2626;
+        color: var(--color-danger, #c0392b);
     }
 
     /* ---------- Quantity Control ---------- */
     .qv-qty-control {
         display: inline-flex;
         align-items: center;
-        border: 1.5px solid #e0e0e0;
+        border: 1.5px solid var(--color-border);
         border-radius: 12px;
         overflow: hidden;
-        background: #fff;
+        background: var(--color-surface-elevated);
     }
 
     .qv-qty-btn {
@@ -396,7 +398,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #636366;
+        color: var(--color-secondary);
         background: transparent;
         border: none;
         cursor: pointer;
@@ -404,11 +406,11 @@
     }
 
     .qv-qty-btn:hover {
-        background: #f5f5f7;
-        color: #1c1c1e;
+        background: var(--color-background);
+        color: var(--color-primary);
     }
 
-    .qv-qty-btn:active { background: #f0f0f0; }
+    .qv-qty-btn:active { background: var(--color-border); }
 
     .qv-qty-input {
         width: 52px;
@@ -416,10 +418,10 @@
         text-align: center;
         font-size: 15px;
         font-weight: 700;
-        color: #1c1c1e;
+        color: var(--color-primary);
         border: none;
-        border-left: 1.5px solid #e0e0e0;
-        border-right: 1.5px solid #e0e0e0;
+        border-left: 1.5px solid var(--color-border);
+        border-right: 1.5px solid var(--color-border);
         outline: none;
         background: transparent;
         -moz-appearance: textfield;
@@ -435,21 +437,22 @@
         justify-content: center;
         gap: 8px;
         height: 48px;
-        background: linear-gradient(135deg, #1c1c1e 0%, #111113 100%);
-        color: #fff;
+        background: var(--color-primary);
+        color: var(--color-surface-elevated);
         border: none;
         border-radius: 12px;
         font-size: 14px;
         font-weight: 700;
         cursor: pointer;
-        transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
-        box-shadow: 0 4px 14px rgba(28, 28, 30, 0.3);
+        transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+        box-shadow: 0 4px 14px rgba(26, 26, 26, 0.18);
         letter-spacing: 0.01em;
     }
 
     .qv-btn-primary:hover {
-        filter: brightness(1.15);
-        box-shadow: 0 6px 20px rgba(28, 28, 30, 0.4);
+        background: var(--color-accent);
+        color: var(--color-primary);
+        box-shadow: 0 6px 20px rgba(201, 168, 124, 0.3);
         transform: translateY(-1px);
     }
 
@@ -461,8 +464,8 @@
         justify-content: center;
         gap: 8px;
         height: 48px;
-        border: 2px solid #1c1c1e;
-        color: #1c1c1e;
+        border: 1.5px solid var(--color-primary);
+        color: var(--color-primary);
         background: transparent;
         border-radius: 12px;
         font-size: 14px;
@@ -473,9 +476,9 @@
     }
 
     .qv-btn-outline:hover {
-        background: #1c1c1e;
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(28, 28, 30, 0.25);
+        background: var(--color-primary);
+        color: var(--color-surface-elevated);
+        box-shadow: 0 4px 14px rgba(26, 26, 26, 0.18);
         transform: translateY(-1px);
     }
 
@@ -483,7 +486,7 @@
 
     /* ---------- Skeleton Shimmer ---------- */
     .qv-skeleton {
-        background: linear-gradient(90deg, #f3f4f6 25%, #e9ebee 37%, #f3f4f6 63%);
+        background: linear-gradient(90deg, var(--color-background) 25%, var(--color-border) 37%, var(--color-background) 63%);
         background-size: 800px 100%;
         animation: qvShimmer 1.4s infinite linear;
         border-radius: 8px;
@@ -498,7 +501,7 @@
 
     /* ============================================================
        MOBILE  (< 640px)
-    ============================================================ */
+     ============================================================ */
     @media (max-width: 639px) {
         .qv-container {
             animation: qvSlideUp 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) both;
@@ -517,7 +520,7 @@
 
     /* ============================================================
        TABLET  (640px – 767px)
-    ============================================================ */
+     ============================================================ */
     @media (min-width: 640px) and (max-width: 767px) {
         .qv-container {
             animation: qvSlideUp 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) both;
@@ -536,7 +539,7 @@
 
     /* ============================================================
        DESKTOP  (≥ 768px)
-    ============================================================ */
+     ============================================================ */
     @media (min-width: 768px) {
         .qv-info-panel { overflow: hidden; }
     }

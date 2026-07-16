@@ -5,7 +5,7 @@
         <div class="container mx-auto px-4 max-w-7xl">
             <!-- Dashboard Header -->
             <!-- <div class="mb-6 md:mb-8">
-                <h1 class="text-2xl md:text-3xl font-bold text-black">My Account</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-primary">My Account</h1>
                 <p class="text-secondary-500 mt-1">Welcome back, {{auth()->user()->name }}!</p>
             </div> -->
 
@@ -15,7 +15,7 @@
                     <!-- Mobile Dashboard Menu Toggle -->
                     <button onclick="toggleProfileMobileMenu()"
                         class="lg:hidden w-full bg-surface rounded-xl shadow-lg shadow-secondary-200/50 p-4 mb-4 flex items-center justify-between hover:bg-light transition border border-secondary-100">
-                        <span class="flex items-center gap-2 font-semibold text-black">
+                        <span class="flex items-center gap-2 font-semibold text-primary">
                             <i class="fas fa-bars text-primary-500"></i>
                             Dashboard Menu
                         </span>
@@ -24,10 +24,10 @@
 
                     <!-- Navigation Menu -->
                     <nav id="dashboard-nav" class="hidden lg:block bg-surface rounded-xl shadow-lg shadow-secondary-200/50 overflow-hidden border border-secondary-100">
-                        <div class="p-4 bg-primary text-white">
+                        <div class="p-4 bg-primary text-surface-elevated">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary font-bold text-lg shadow-sm">
+                                    class="w-12 h-12 bg-surface-elevated rounded-full flex items-center justify-center text-primary font-bold text-lg shadow-sm">
                                     {{ substr(Auth::user()->name, 0, 1) }}
                                 </div>
                                 <div class="overflow-hidden">

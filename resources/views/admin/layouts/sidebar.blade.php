@@ -157,9 +157,9 @@ $user = auth()->user();
             <span class="sidebar-section-line"></span>
         </div>
 
-        <div class="sidebar-group {{ request()->routeIs('admin.coupons.*') || request()->routeIs('admin.banners.*') ? 'open' : '' }}">
+        <div class="sidebar-group {{ request()->routeIs('admin.coupons.*') || request()->routeIs('admin.banners.*') || request()->routeIs('admin.home-sections.*') || request()->routeIs('admin.flash-sales.*') || request()->routeIs('admin.testimonials.*') || request()->routeIs('admin.social-posts.*') ? 'open' : '' }}">
             <button type="button"
-                class="sidebar-group-btn {{ request()->routeIs('admin.coupons.*') || request()->routeIs('admin.banners.*') ? 'active' : '' }}"
+                class="sidebar-group-btn {{ request()->routeIs('admin.coupons.*') || request()->routeIs('admin.banners.*') || request()->routeIs('admin.home-sections.*') || request()->routeIs('admin.flash-sales.*') ? 'active' : '' }}"
                 onclick="toggleSidebarGroup(this)"
                 data-tooltip="Promotions">
                 <span class="sidebar-icon"><i data-lucide="megaphone" class="w-[18px] h-[18px]"></i></span>
@@ -176,6 +176,26 @@ $user = auth()->user();
                     class="sidebar-sublink {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
                     <span class="sidebar-sublink-icon"><i data-lucide="image" class="w-3.5 h-3.5"></i></span>
                     <span>Banners</span>
+                </a>
+                <a href="{{ route('admin.flash-sales.index') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.flash-sales.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-icon"><i data-lucide="zap" class="w-3.5 h-3.5"></i></span>
+                    <span>Flash Sales</span>
+                </a>
+                <a href="{{ route('admin.testimonials.index') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-icon"><i data-lucide="message-square-quote" class="w-3.5 h-3.5"></i></span>
+                    <span>Testimonials</span>
+                </a>
+                <a href="{{ route('admin.home-sections.index') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-icon"><i data-lucide="layout-template" class="w-3.5 h-3.5"></i></span>
+                    <span>Homepage Sections</span>
+                </a>
+                <a href="{{ route('admin.social-posts.index') }}"
+                    class="sidebar-sublink {{ request()->routeIs('admin.social-posts.*') ? 'active' : '' }}">
+                    <span class="sidebar-sublink-icon"><i data-lucide="share-2" class="w-3.5 h-3.5"></i></span>
+                    <span>Social Feed</span>
                 </a>
             </div>
         </div>

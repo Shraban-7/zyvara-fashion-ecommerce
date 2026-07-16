@@ -8,6 +8,7 @@ enum BannerPosition: string
     case PROMOTIONAL = 'promotional';
     case CATEGORY = 'category';
     case FESTIVAL = 'festival';
+    case BENTO = 'bento';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum BannerPosition: string
             self::PROMOTIONAL => 'Promotional Banner',
             self::CATEGORY => 'Category Banner',
             self::FESTIVAL => 'Festival Banner',
+            self::BENTO => 'Bento Grid',
         };
     }
 

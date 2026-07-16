@@ -13,7 +13,7 @@
                         </path>
                     </svg>
                 </div>
-                <h1 class="text-3xl font-bold text-black mb-2">Payment Cancelled</h1>
+                <h1 class="text-3xl font-bold text-primary mb-2">Payment Cancelled</h1>
                 <p class="text-secondary-400">You have cancelled the payment process.</p>
             </div>
 
@@ -23,21 +23,21 @@
                     <div class="flex items-start">
                         <i class="fas fa-times-circle text-warning-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Payment was not processed</p>
+                            <p class="text-sm font-medium text-primary">Payment was not processed</p>
                             <p class="text-xs text-secondary-400">No charges were made to your account</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <i class="fas fa-shopping-cart text-warning-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Your cart is still saved</p>
+                            <p class="text-sm font-medium text-primary">Your cart is still saved</p>
                             <p class="text-xs text-secondary-400">You can complete your purchase anytime</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <i class="fas fa-headset text-warning-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Need help?</p>
+                            <p class="text-sm font-medium text-primary">Need help?</p>
                             <p class="text-xs text-secondary-400">Contact our support team for assistance</p>
                         </div>
                     </div>
@@ -70,17 +70,17 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-3">
                 <a href="{{ route('checkout.index') }}"
-                    class="flex-1 bg-primary text-white py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
+                    class="flex-1 bg-primary text-surface-elevated py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
                     <i class="fas fa-redo mr-2"></i>Try Again
                 </a>
                 @auth
                     <a href="{{ route('orders.index') }}"
-                        class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-white transition text-center">
+                        class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-surface-elevated transition text-center">
                         <i class="fas fa-shopping-bag mr-2"></i>View Orders
                     </a>
                 @else
                     <a href="{{ route('home') }}"
-                        class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-white transition text-center">
+                        class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-surface-elevated transition text-center">
                         <i class="fas fa-home mr-2"></i>Go to Home
                     </a>
                 @endauth

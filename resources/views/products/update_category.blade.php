@@ -5,14 +5,14 @@
 
 <div class="max-w-7xl mx-auto p-6">
 
-    <div class="bg-white rounded-xl shadow">
+    <div class="bg-surface-elevated rounded-xl shadow">
 
         <div class="border-b px-6 py-4">
             <h2 class="text-xl font-bold">
                 Products Without Category
             </h2>
 
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-secondary-400">
                 Assign Category → Subcategory → Sub-subcategory
             </p>
         </div>
@@ -20,7 +20,7 @@
         <div class="overflow-x-auto">
 
             <table class="w-full">
-                <thead class="bg-gray-100">
+                <thead class="bg-secondary-100">
                     <tr>
                         <th class="text-left px-4 py-3">Image</th>
                         <th class="text-left px-4 py-3">Product</th>
@@ -40,7 +40,7 @@
                         <td class="px-4 py-3">
                             <button
                                 type="button"
-                                class="openModal bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg"
+                                class="openModal bg-primary hover:bg-primary-700 text-surface-elevated px-4 py-2 rounded-lg"
                                 data-id="{{ $product->id }}"
                                 data-name="{{ $product->name }}">
                                 Set Category
@@ -57,18 +57,18 @@
 {{-- Modal Backdrop --}}
 <div
     id="categoryModal"
-    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-primary/50">
 
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg">
+    <div class="bg-surface-elevated rounded-2xl shadow-xl w-full max-w-lg">
         <form method="POST" id="categoryForm">
             @csrf
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
                     <div>
                         <h3 class="text-lg font-bold">Assign Category</h3>
-                        <p id="productName" class="text-sm text-gray-500"></p>
+                        <p id="productName" class="text-sm text-secondary-400"></p>
                     </div>
-                    <button type="button" id="closeModal" class="text-gray-500 hover:text-red-500 text-xl">✕</button>
+                    <button type="button" id="closeModal" class="text-secondary-400 hover:text-danger text-xl">✕</button>
                 </div>
             </div>
 
@@ -107,7 +107,7 @@
 
             <div class="px-6 py-4 border-t flex justify-end gap-3">
                 <button type="button" id="cancelModal" class="px-4 py-2 border rounded-lg">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">Update Category</button>
+                <button type="submit" class="px-4 py-2 bg-accent-600 hover:bg-accent-700 text-surface-elevated rounded-lg">Update Category</button>
             </div>
         </form>
     </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\BannerPosition;
+use App\Enums\BannerSize;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ class BannerController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'position' => 'required|in:' . implode(',', BannerPosition::values()),
+            'size' => 'nullable|in:' . implode(',', BannerSize::values()),
             'sort_order' => 'required|integer|min:0',
             'is_active' => 'nullable|string',
             'starts_at' => 'nullable|date',
@@ -50,6 +52,7 @@ class BannerController extends Controller
             'image' => $imagePath,
             'mobile_image' => $mobileImagePath,
             'position' => $validated['position'],
+            'size' => $validated['size'] ?? null,
             'sort_order' => $validated['sort_order'],
             'is_active' => $request->has('is_active'),
             'starts_at' => $validated['starts_at'],
@@ -70,6 +73,7 @@ class BannerController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'position' => 'required|in:' . implode(',', BannerPosition::values()),
+            'size' => 'nullable|in:' . implode(',', BannerSize::values()),
             'sort_order' => 'required|integer|min:0',
             'starts_at' => 'nullable|date',
             'expires_at' => 'nullable|date|after_or_equal:starts_at',
@@ -94,6 +98,7 @@ class BannerController extends Controller
             'button_text' => $validated['button_text'],
             'button_link' => $validated['button_link'],
             'position' => $validated['position'],
+            'size' => $validated['size'] ?? null,
             'sort_order' => $validated['sort_order'],
             'is_active' => $request->has('is_active'),
             'starts_at' => $validated['starts_at'],

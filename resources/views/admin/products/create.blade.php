@@ -275,6 +275,12 @@
                             class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                         <span class="ml-2 text-sm text-gray-700">On Sale</span>
                     </label>
+
+                    <label class="flex items-center">
+                        <input type="checkbox" name="is_trending" value="1" {{ old('is_trending') ? 'checked' : '' }}
+                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-700">Trending</span>
+                    </label>
                 </div>
             </div>
 

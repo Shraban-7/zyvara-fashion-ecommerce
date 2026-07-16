@@ -68,15 +68,15 @@ if ($product->compare_price && $product->compare_price > $product->price) {
                 <div class="flex gap-px">
                     @for($i = 1; $i <= 5; $i++)
                         @if($i <= floor($product->average_rating))
-                            <i class="fas fa-star text-[10px] text-yellow-400"></i>
+                            <i class="fas fa-star text-[10px] text-warning"></i>
                         @elseif($i - 0.5 <= $product->average_rating)
-                            <i class="fas fa-star-half-alt text-[10px] text-yellow-400"></i>
+                            <i class="fas fa-star-half-alt text-[10px] text-warning"></i>
                         @else
-                            <i class="far fa-star text-[10px] text-yellow-300"></i>
+                            <i class="far fa-star text-[10px] text-warning-300"></i>
                         @endif
                     @endfor
                 </div>
-                <span class="text-[10px] text-gray-400">({{ $product->review_count }})</span>
+                <span class="text-[10px] text-secondary-400">({{ $product->review_count }})</span>
             </div>
         @endif
 
@@ -287,26 +287,26 @@ if ($product->compare_price && $product->compare_price > $product->price) {
 
 @isset($oldProductCard)
     {{-- Legacy card preserved for backward compatibility --}}
-    <div class="product-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+    <div class="product-card bg-surface-elevated rounded-2xl overflow-hidden shadow-sm border border-secondary-100">
         <div class="relative">
             <a href="{{ route('products.show', $product->slug) }}">
                 <img src="{{ $product->image ? storage_url($product->image) : asset('assets/images/default.png') }}"
                     alt="{{ $product->name }}" class="w-full h-40 sm:h-48 md:h-56 object-cover">
             </a>
             @if($badge)
-                <span class="absolute top-2 left-2 text-white text-[10px] md:text-xs font-semibold px-2 py-1 rounded-full"
+                <span class="absolute top-2 left-2 text-surface-elevated text-[10px] md:text-xs font-semibold px-2 py-1 rounded-full"
                       style="{{ $badgeStyle }}">{{ $badge }}</span>
             @endif
         </div>
         <div class="p-3 md:p-4">
             <a href="{{ route('products.show', $product->slug) }}">
-                <h3 class="text-sm md:text-base font-medium text-black mb-1 line-clamp-2 hover:text-primary transition">
+                <h3 class="text-sm md:text-base font-medium text-primary mb-1 line-clamp-2 hover:text-primary transition">
                     {{ $product->name }}
                 </h3>
             </a>
             @if($product->review_count > 0)
                 <div class="flex items-center gap-1 mb-2">
-                    <div class="flex text-yellow-400">
+                    <div class="flex text-warning">
                         @for($i = 1; $i <= 5; $i++)
                             @if($i <= floor($product->average_rating))
                                 <i class="fas fa-star text-xs md:text-sm"></i>
@@ -317,19 +317,19 @@ if ($product->compare_price && $product->compare_price > $product->price) {
                             @endif
                         @endfor
                     </div>
-                    <span class="text-[10px] md:text-xs text-gray-500">({{ $product->review_count }})</span>
+                    <span class="text-[10px] md:text-xs text-secondary-400">({{ $product->review_count }})</span>
                 </div>
             @endif
             <div class="flex items-center gap-2 mb-3">
                 <span class="text-primary font-bold text-base md:text-lg">৳{{ number_format($product->price, 0) }}</span>
                 @if($product->compare_price && $product->compare_price > $product->price)
-                    <span class="text-gray-400 text-xs line-through">৳{{ number_format($product->compare_price, 0) }}</span>
+                    <span class="text-secondary-400 text-xs line-through">৳{{ number_format($product->compare_price, 0) }}</span>
                     @if($discountPercent > 0)
-                        <span class="text-green-600 text-[10px] md:text-xs font-semibold">-{{ $discountPercent }}%</span>
+                        <span class="text-accent-600 text-[10px] md:text-xs font-semibold">-{{ $discountPercent }}%</span>
                     @endif
                 @endif
             </div>
-            <button class="add-to-cart-btn w-full bg-primary text-white py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm hover:bg-blue-600 transition tap-effect"
+            <button class="add-to-cart-btn w-full bg-primary text-surface-elevated py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm hover:bg-primary transition tap-effect"
                 onclick="handleProductCardAddToCart({{ $product->id }}, {{ $product->variants->count() }})"
                 data-product-id="{{ $product->id }}">
                 <i class="fas fa-shopping-bag mr-1"></i> Add to Cart

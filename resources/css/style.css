@@ -1,5 +1,10 @@
 * {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Headings use the elegant serif (Playfair Display) */
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", serif;
 }
 
 /* Hide scrollbar for category scroll */
@@ -38,17 +43,17 @@ main {
 
 /* Glassmorphism effect */
 .glass {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(250, 248, 245, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
 
 /* Header scroll effect */
 .header-scrolled {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(250, 248, 245, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 30px rgba(26, 26, 26, 0.08);
 }
 
 /* Icon button hover */
@@ -57,20 +62,20 @@ main {
 }
 
 .icon-btn:hover {
-    background: linear-gradient(135deg, rgba(28, 28, 30, 0.08) 0%, rgba(28, 28, 30, 0.15) 100%);
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.06) 0%, rgba(26, 26, 26, 0.12) 100%);
     transform: translateY(-2px);
 }
 
 /* Logo animation */
 .logo-text {
-    background: linear-gradient(135deg, #1c1c1e 0%, #363638 100%);
+    background: linear-gradient(135deg, #1A1A1A 0%, #3d3933 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .logo-accent {
-    background: linear-gradient(135deg, #636366 0%, #48484a 100%);
+    background: linear-gradient(135deg, #C9A87C 0%, #9c7949 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

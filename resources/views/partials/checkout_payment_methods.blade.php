@@ -1,8 +1,8 @@
 <div class="bg-surface rounded-2xl p-5 md:p-6 border border-secondary-100 shadow-sm">
     <div class="flex items-center gap-3 mb-5">
-        <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm">2
+        <div class="w-8 h-8 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-sm font-bold shadow-sm">2
         </div>
-        <h2 class="text-lg font-bold text-black">Payment Method</h2>
+        <h2 class="text-lg font-bold text-primary">Payment Method</h2>
     </div>
 
     <div class="space-y-3">
@@ -16,12 +16,12 @@
                         <i class="fas fa-money-bill-wave text-success-600 text-xl"></i>
                     </div>
                     <div class="flex-1">
-                        <h4 class="font-semibold text-black">Cash on Delivery</h4>
+                        <h4 class="font-semibold text-primary">Cash on Delivery</h4>
                         <p class="text-xs text-secondary-500">Pay when you receive your order</p>
                     </div>
                     <div
                         class="w-5 h-5 border-2 border-secondary-300 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center flex-shrink-0 transition">
-                        <i class="fas fa-check text-white text-xs"></i>
+                        <i class="fas fa-check text-surface-elevated text-xs"></i>
                     </div>
                 </div>
             </div>
@@ -37,12 +37,12 @@
                         <img src="{{ asset('assets/images/bkash.png') }}" alt="bKash" class="h-8">
                     </div>
                     <div class="flex-1">
-                        <h4 class="font-semibold text-black">bKash Payment</h4>
+                        <h4 class="font-semibold text-primary">bKash Payment</h4>
                         <p class="text-xs text-secondary-500">Send money to our bKash merchant number</p>
                     </div>
                     <div
                         class="w-5 h-5 border-2 border-secondary-300 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center flex-shrink-0 transition">
-                        <i class="fas fa-check text-white text-xs"></i>
+                        <i class="fas fa-check text-surface-elevated text-xs"></i>
                     </div>
                 </div>
             </div>
@@ -58,12 +58,12 @@
                         <img src="{{ asset('assets/images/nagad.png') }}" alt="Nagad" class="h-8">
                     </div>
                     <div class="flex-1">
-                        <h4 class="font-semibold text-black">Nagad Payment</h4>
+                        <h4 class="font-semibold text-primary">Nagad Payment</h4>
                         <p class="text-xs text-secondary-500">Send money to our Nagad number</p>
                     </div>
                     <div
                         class="w-5 h-5 border-2 border-secondary-300 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center flex-shrink-0 transition">
-                        <i class="fas fa-check text-white text-xs"></i>
+                        <i class="fas fa-check text-surface-elevated text-xs"></i>
                     </div>
                 </div>
             </div>
@@ -80,17 +80,17 @@
         <ol class="space-y-3 text-sm text-primary-900">
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">1</span>
+                    class="w-6 h-6 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">1</span>
                 <span>Open your <strong>bKash App</strong> or dial <strong>*247#</strong></span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">2</span>
+                    class="w-6 h-6 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">2</span>
                 <span>Select <strong>"Send Money"</strong></span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">3</span>
+                    class="w-6 h-6 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">3</span>
                 <div>
                     <span>Enter our bKash Merchant Number:</span>
                     <div class="mt-2 flex items-center gap-2">
@@ -106,29 +106,29 @@
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">4</span>
+                    class="w-6 h-6 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">4</span>
                 <span>Enter the <strong>Total Amount</strong> shown in order summary</span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">5</span>
+                    class="w-6 h-6 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">5</span>
                 <span>Add <strong>Reference:</strong> Your Phone Number</span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">6</span>
+                    class="w-6 h-6 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">6</span>
                 <span>Enter your bKash <strong>PIN</strong> to confirm</span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">7</span>
+                    class="w-6 h-6 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">7</span>
                 <span>Enter the <strong>Transaction ID (TrxID)</strong> below</span>
             </li>
         </ol>
 
         {{-- Quick Pay Button --}}
         <a href="https://shop.bkash.com/spinner-fashion{{ str_replace('-', '', $bkashNumber) }}/pay" target="_blank"
-            class="mt-4 w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm hover:bg-primary-700 transition flex items-center justify-center gap-2 shadow-lg shadow-primary-200/50">
+            class="mt-4 w-full bg-primary text-surface-elevated py-3 rounded-xl font-semibold text-sm hover:bg-primary-700 transition flex items-center justify-center gap-2 shadow-lg shadow-primary-200/50">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/BKash-bKash-Logo.wine.svg/200px-BKash-bKash-Logo.wine.svg.png"
                 alt="bKash" class="h-5 brightness-0 invert">
             Pay with bKash App
@@ -154,17 +154,17 @@
         <ol class="space-y-3 text-sm text-warning-900">
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-warning text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">1</span>
+                    class="w-6 h-6 bg-warning text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">1</span>
                 <span>Open your <strong>Nagad App</strong> or dial <strong>*167#</strong></span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-warning text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">2</span>
+                    class="w-6 h-6 bg-warning text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">2</span>
                 <span>Select <strong>"Send Money"</strong></span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-warning text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">3</span>
+                    class="w-6 h-6 bg-warning text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">3</span>
                 <div>
                     <span>Enter our Nagad Number:</span>
                     <div class="mt-2 flex items-center gap-2">
@@ -180,22 +180,22 @@
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-warning text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">4</span>
+                    class="w-6 h-6 bg-warning text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">4</span>
                 <span>Enter the <strong>Total Amount</strong> shown in order summary</span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-warning text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">5</span>
+                    class="w-6 h-6 bg-warning text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">5</span>
                 <span>Add <strong>Reference:</strong> Your Phone Number</span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-warning text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">6</span>
+                    class="w-6 h-6 bg-warning text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">6</span>
                 <span>Enter your Nagad <strong>PIN</strong> to confirm</span>
             </li>
             <li class="flex gap-3">
                 <span
-                    class="w-6 h-6 bg-warning text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">7</span>
+                    class="w-6 h-6 bg-warning text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">7</span>
                 <span>Enter the <strong>Transaction ID (TrxID)</strong> below</span>
             </li>
         </ol>

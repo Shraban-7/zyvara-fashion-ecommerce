@@ -19,7 +19,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -52,9 +52,9 @@
     {{-- Floating WhatsApp Button --}}
     @if($settings['whatsapp_number'] ?? false)
         <a href="https://wa.me/{{ $settings['whatsapp_number'] }}" target="_blank"
-            class="fixed bottom-40 md:bottom-24 right-4 md:right-8 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition tap-effect z-40 animate-bounce"
+            class="fixed bottom-40 md:bottom-24 right-4 md:right-8 w-14 h-14 bg-accent rounded-full flex items-center justify-center shadow-lg hover:bg-accent-600 transition tap-effect z-40 animate-bounce"
             style="animation-duration: 2s;">
-            <i class="fab fa-whatsapp text-3xl text-white"></i>
+            <i class="fab fa-whatsapp text-3xl text-surface-elevated"></i>
         </a>
     @endif
 

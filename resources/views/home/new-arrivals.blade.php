@@ -1,7 +1,7 @@
 
 <style>
     .home-wrap {
-        max-width: 1280px;
+        max-width: 1320px;
         margin: 0 auto;
         padding: 0 16px;
     }
@@ -26,28 +26,29 @@
         display: inline-block;
         font-size: 11px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
         margin-bottom: 8px;
         padding: 5px 14px;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--color-surface-elevated);
+        border: 1px solid var(--color-border);
         border-radius: 99px;
     }
 
     .section-title {
         font-size: clamp(20px, 3.5vw, 28px);
-        font-weight: 800;
-        color: #0f172a;
+        font-weight: 600;
+        font-family: var(--font-heading);
+        color: var(--color-primary);
         line-height: 1.2;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.01em;
         margin: 0 0 6px;
     }
 
     .section-sub {
         font-size: clamp(13px, 2vw, 15px);
-        color: #64748b;
+        color: var(--color-secondary);
         margin: 0;
         line-height: 1.5;
         max-width: 420px;
@@ -66,21 +67,21 @@
         gap: 6px;
         font-size: 13px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-primary);
         white-space: nowrap;
         text-decoration: none;
         padding: 10px 18px;
-        background: #fff;
-        border: 1.5px solid #e2e8f0;
+        background: var(--color-surface-elevated);
+        border: 1.5px solid var(--color-border);
         border-radius: 12px;
         transition: all 0.25s ease;
         flex-shrink: 0;
     }
     .section-link:hover {
-        background: #0f172a;
-        color: #fff;
-        border-color: #0f172a;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+        background: var(--color-primary);
+        color: var(--color-surface-elevated);
+        border-color: var(--color-primary);
+        box-shadow: 0 4px 12px rgba(26, 26, 26, 0.18);
     }
     .section-link i {
         font-size: 11px;
@@ -90,8 +91,8 @@
         transform: translateX(3px);
     }
 
-    .home-section       { padding: 48px 0; background: #fff; }
-    .home-section-alt   { padding: 48px 0; background: #f8fafc; }
+    .home-section       { padding: 48px 0; background: var(--color-bg); }
+    .home-section-alt   { padding: 48px 0; background: var(--color-surface-muted); }
     @media (min-width: 768px) {
         .home-section, .home-section-alt { padding: 64px 0; }
     }
@@ -125,13 +126,14 @@
 </style>
 
 @if($newArrivals->isNotEmpty())
+@php $h = isset($section) ? $section->headings() : ['eyebrow' => 'Just Dropped', 'title' => 'New Arrivals', 'subtitle' => 'Fresh styles curated for the season']; @endphp
 <section class="home-section">
     <div class="home-wrap">
         <div class="section-head">
             <div class="section-head-text">
-                <span class="section-eyebrow">Just Dropped</span>
-                <h2 class="section-title">New Arrivals</h2>
-                <p class="section-sub">Fresh styles curated for the season</p>
+                <span class="section-eyebrow">{{ $h['eyebrow'] }}</span>
+                <h2 class="section-title">{{ $h['title'] }}</h2>
+                <p class="section-sub">{{ $h['subtitle'] }}</p>
             </div>
             <a href="{{ route('products.index', ['filter' => 'new-arrivals']) }}" class="section-link">
                 View All

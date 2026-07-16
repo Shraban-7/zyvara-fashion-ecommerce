@@ -71,6 +71,12 @@ class ProductSeeder extends Seeder
         for ($i = 1; $i <= $count; $i++) {
             $productData = $this->generateProductData($category, $i);
 
+            static $trendingCount = 0;
+            if ($trendingCount < 12) {
+                $productData['is_trending'] = true;
+                $trendingCount++;
+            }
+
             $product = Product::create($productData);
 
             // Create variants for the product

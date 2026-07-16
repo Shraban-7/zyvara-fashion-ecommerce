@@ -1,5 +1,5 @@
 {{-- Showroom Section --}}
-<section class="py-8 md:py-12 bg-white">
+<section class="py-8 md:py-12 bg-surface-elevated">
     <div class="max-w-7xl mx-auto px-4">
         {{-- Section Header --}}
         <div class="text-center mb-6 md:mb-8">
@@ -35,7 +35,7 @@
                 <div class="space-y-4">
                     {{-- Address --}}
                     <div class="flex gap-3">
-                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                        <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                             <i class="fas fa-store text-primary text-sm"></i>
                         </div>
                         <div>
@@ -46,7 +46,7 @@
 
                     {{-- Contact --}}
                     <div class="flex gap-3">
-                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                        <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                             <i class="fas fa-phone text-primary text-sm"></i>
                         </div>
                         <div>

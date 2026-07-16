@@ -18,6 +18,9 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\HomeSectionController;
+use App\Http\Controllers\Admin\FlashSaleController;
+use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\SocialPostController;
 use App\Http\Controllers\Admin\NotificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -201,22 +204,41 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     // Homepage Sections Routes
     Route::prefix('home-sections')->as('home-sections.')->group(function () {
         Route::get('/', [HomeSectionController::class, 'index'])->name('index');
-        Route::get('/create', [HomeSectionController::class, 'create'])->name('create');
         Route::post('/store', [HomeSectionController::class, 'store'])->name('store');
-        Route::get('/{home_section}/edit', [HomeSectionController::class, 'edit'])->name('edit');
         Route::put('/{home_section}/update', [HomeSectionController::class, 'update'])->name('update');
         Route::delete('/{home_section}/delete', [HomeSectionController::class, 'destroy'])->name('destroy');
         Route::post('/{home_section}/toggle-status', [HomeSectionController::class, 'toggleStatus'])->name('toggle-status');
+        Route::post('/reorder', [HomeSectionController::class, 'reorder'])->name('reorder');
+    });
 
-        // Select2 searches
-        Route::get('/search/products', [HomeSectionController::class, 'searchProducts'])->name('search-products');
-        Route::get('/search/categories', [HomeSectionController::class, 'searchCategories'])->name('search-categories');
-        Route::get('/search/banners', [HomeSectionController::class, 'searchBanners'])->name('search-banners');
+    // Flash Sales Routes
+    Route::prefix('flash-sales')->as('flash-sales.')->group(function () {
+        Route::get('/', [FlashSaleController::class, 'index'])->name('index');
+        Route::get('/create', [FlashSaleController::class, 'create'])->name('create');
+        Route::post('/store', [FlashSaleController::class, 'store'])->name('store');
+        Route::get('/search-products', [FlashSaleController::class, 'searchProducts'])->name('search-products');
+        Route::get('/{flash_sale}/edit', [FlashSaleController::class, 'edit'])->name('edit');
+        Route::put('/{flash_sale}/update', [FlashSaleController::class, 'update'])->name('update');
+        Route::delete('/{flash_sale}/delete', [FlashSaleController::class, 'destroy'])->name('destroy');
+        Route::post('/{flash_sale}/toggle-status', [FlashSaleController::class, 'toggleStatus'])->name('toggle-status');
+    });
 
-        // Dynamic Item Assignment
-        Route::post('/{home_section}/items/add', [HomeSectionController::class, 'addItem'])->name('add-item');
-        Route::delete('/items/{home_section_item}/delete', [HomeSectionController::class, 'removeItem'])->name('remove-item');
-        Route::post('/{home_section}/items/reorder', [HomeSectionController::class, 'reorderItems'])->name('reorder-items');
+    // Testimonials Routes
+    Route::prefix('testimonials')->as('testimonials.')->group(function () {
+        Route::get('/', [TestimonialController::class, 'index'])->name('index');
+        Route::post('/store', [TestimonialController::class, 'store'])->name('store');
+        Route::put('/{testimonial}/update', [TestimonialController::class, 'update'])->name('update');
+        Route::post('/{testimonial}/approve', [TestimonialController::class, 'approve'])->name('approve');
+        Route::post('/{testimonial}/reject', [TestimonialController::class, 'reject'])->name('reject');
+        Route::delete('/{testimonial}/delete', [TestimonialController::class, 'destroy'])->name('destroy');
+    });
+
+    // Social Posts Routes
+    Route::prefix('social-posts')->as('social-posts.')->group(function () {
+        Route::get('/', [SocialPostController::class, 'index'])->name('index');
+        Route::post('/store', [SocialPostController::class, 'store'])->name('store');
+        Route::put('/{social_post}/update', [SocialPostController::class, 'update'])->name('update');
+        Route::delete('/{social_post}/delete', [SocialPostController::class, 'destroy'])->name('destroy');
     });
 
     // Notifications Routes

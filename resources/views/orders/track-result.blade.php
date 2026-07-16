@@ -14,7 +14,7 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <p class="text-sm text-secondary-400 mb-1">Order Number</p>
-                        <h1 class="text-3xl md:text-4xl font-bold text-black">#{{ $order->order_number }}</h1>
+                        <h1 class="text-3xl md:text-4xl font-bold text-primary">#{{ $order->order_number }}</h1>
                     </div>
                     <div class="flex items-center gap-2 bg-success-100 px-4 py-3 rounded-full">
                         <div class="w-3 h-3 rounded-full animate-pulse bg-success-500"></div>
@@ -29,11 +29,11 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-secondary-200">
                     <div>
                         <p class="text-sm text-secondary-400 mb-1">Order Date</p>
-                        <p class="text-lg font-semibold text-black">{{ $order->created_at->format('F d, Y h:i A') }}</p>
+                        <p class="text-lg font-semibold text-primary">{{ $order->created_at->format('F d, Y h:i A') }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-secondary-400 mb-1">Estimated Delivery</p>
-                        <p class="text-lg font-semibold text-black">
+                        <p class="text-lg font-semibold text-primary">
                             @if($order->status->label() === 'Delivered')
                                 {{ $order->delivered_at ? $order->delivered_at->format('F d, Y') : 'Delivered' }}
                             @else
@@ -45,7 +45,7 @@
 
                 <!-- Delivery Address -->
                 <div class="py-6 border-b border-secondary-200">
-                    <h3 class="text-sm font-bold text-black mb-4 flex items-center gap-2 uppercase tracking-wide">
+                    <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
                         <i class="fas fa-map-marker-alt text-primary-500 text-lg"></i>
                         Delivery Address
                     </h3>
@@ -53,32 +53,32 @@
                         <div class="space-y-3 text-sm">
                             <div>
                                 <p class="text-secondary-400 mb-1">Recipient Name</p>
-                                <p class="font-medium text-black">{{ $order->shipping_name }}</p>
+                                <p class="font-medium text-primary">{{ $order->shipping_name }}</p>
                             </div>
                             <div>
                                 <p class="text-secondary-400 mb-1">Phone Number</p>
-                                <p class="font-medium text-black">{{ $order->shipping_phone }}</p>
+                                <p class="font-medium text-primary">{{ $order->shipping_phone }}</p>
                             </div>
                             @if($order->shipping_email)
                                 <div>
                                     <p class="text-secondary-400 mb-1">Email</p>
-                                    <p class="font-medium text-black">{{ $order->shipping_email }}</p>
+                                    <p class="font-medium text-primary">{{ $order->shipping_email }}</p>
                                 </div>
                             @endif
                         </div>
                         <div class="space-y-3 text-sm">
                             <div>
                                 <p class="text-secondary-400 mb-1">Address</p>
-                                <p class="font-medium text-black">{{ $order->shipping_address }}</p>
+                                <p class="font-medium text-primary">{{ $order->shipping_address }}</p>
                             </div>
                             <div class="flex gap-2">
-                                <span class="font-medium text-black">{{ $order->shipping_city }},</span>
-                                <span class="font-medium text-black">{{ $order->shipping_district }}</span>
+                                <span class="font-medium text-primary">{{ $order->shipping_city }},</span>
+                                <span class="font-medium text-primary">{{ $order->shipping_district }}</span>
                             </div>
                             @if($order->shipping_postal_code)
                                 <div>
                                     <p class="text-secondary-400 mb-1">Postal Code</p>
-                                    <p class="font-medium text-black">{{ $order->shipping_postal_code }}</p>
+                                    <p class="font-medium text-primary">{{ $order->shipping_postal_code }}</p>
                                 </div>
                             @endif
                         </div>
@@ -87,7 +87,7 @@
 
                 <!-- Order Items -->
                 <div class="py-6 border-b border-secondary-200">
-                    <h3 class="text-sm font-bold text-black mb-4 flex items-center gap-2 uppercase tracking-wide">
+                    <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
                         <i class="fas fa-box text-primary-500 text-lg"></i>
                         Order Items ({{ $order->items ? count($order->items) : 0 }})
                     </h3>
@@ -106,7 +106,7 @@
                                         @endif
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <h4 class="font-semibold text-black mb-2">{{ $item->product_name }}</h4>
+                                        <h4 class="font-semibold text-primary mb-2">{{ $item->product_name }}</h4>
                                         <div class="space-y-1 text-xs text-secondary-500 mb-3">
                                             @if($item->size)
                                                 <p><span class="font-medium">Size:</span> {{ $item->size }}</p>
@@ -117,8 +117,8 @@
                                         </div>
                                         <div class="flex items-center justify-between">
                                             <span class="text-sm font-medium text-secondary-500">Qty:
-                                                <strong class="text-black">{{ $item->quantity }}</strong></span>
-                                            <span class="text-lg font-bold text-black">৳{{ number_format($item->subtotal, 2) }}</span>
+                                                <strong class="text-primary">{{ $item->quantity }}</strong></span>
+                                            <span class="text-lg font-bold text-primary">৳{{ number_format($item->subtotal, 2) }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- Payment Info -->
                         <div>
-                            <h3 class="text-sm font-bold text-black mb-4 flex items-center gap-2 uppercase tracking-wide">
+                            <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
                                 <i class="fas fa-credit-card text-primary-500 text-lg"></i>
                                 Payment Information
                             </h3>
@@ -159,13 +159,13 @@
                                 @if($order->tracking_number)
                                     <div>
                                         <p class="text-secondary-400 mb-1">Tracking Number</p>
-                                        <p class="font-mono font-medium text-black">{{ $order->tracking_number }}</p>
+                                        <p class="font-mono font-medium text-primary">{{ $order->tracking_number }}</p>
                                     </div>
                                 @endif
                                 @if($order->courier)
                                     <div>
                                         <p class="text-secondary-400 mb-1">Courier</p>
-                                        <p class="font-medium text-black">{{ $order->courier }}</p>
+                                        <p class="font-medium text-primary">{{ $order->courier }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -173,15 +173,15 @@
 
                         <!-- Price Breakdown -->
                         <div class="bg-primary-50 rounded-xl p-4 border border-primary-100">
-                            <h3 class="text-sm font-bold text-black mb-4">Order Summary</h3>
+                            <h3 class="text-sm font-bold text-primary mb-4">Order Summary</h3>
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between">
                                     <span class="text-secondary-500">Subtotal</span>
-                                    <span class="font-medium text-black">৳{{ number_format($order->subtotal, 2) }}</span>
+                                    <span class="font-medium text-primary">৳{{ number_format($order->subtotal, 2) }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-secondary-500">Shipping</span>
-                                    <span class="font-medium text-black">৳{{ number_format($order->shipping_cost ?? 0, 2) }}</span>
+                                    <span class="font-medium text-primary">৳{{ number_format($order->shipping_cost ?? 0, 2) }}</span>
                                 </div>
                                 @if($order->discount_amount && $order->discount_amount > 0)
                                     <div class="flex justify-between text-success-600">
@@ -192,12 +192,12 @@
                                 @if($order->tax_amount && $order->tax_amount > 0)
                                     <div class="flex justify-between">
                                         <span class="text-secondary-500">Tax</span>
-                                        <span class="font-medium text-black">৳{{ number_format($order->tax_amount, 2) }}</span>
+                                        <span class="font-medium text-primary">৳{{ number_format($order->tax_amount, 2) }}</span>
                                     </div>
                                 @endif
                                 <div class="h-px bg-secondary-200 my-3"></div>
                                 <div class="flex justify-between text-lg">
-                                    <span class="font-bold text-black">Total</span>
+                                    <span class="font-bold text-primary">Total</span>
                                     <span class="font-bold text-primary-500">৳{{ number_format($order->total, 2) }}</span>
                                 </div>
                             </div>
@@ -208,7 +208,7 @@
 
             <!-- Order Timeline -->
             <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-6 md:p-8 mb-6 border border-secondary-100">
-                <h2 class="text-xl font-bold text-black mb-6 flex items-center gap-2">
+                <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
                     <i class="fas fa-clock text-primary-500"></i>
                     Order Timeline
                 </h2>
@@ -220,7 +220,7 @@
                             <div class="w-1 h-12 bg-secondary-200 mt-2"></div>
                         </div>
                         <div class="pb-8">
-                            <p class="font-semibold text-black">Order Placed</p>
+                            <p class="font-semibold text-primary">Order Placed</p>
                             <p class="text-sm text-secondary-400">{{ $order->created_at->format('M d, Y \a\t g:i A') }}</p>
                         </div>
                     </div>
@@ -254,7 +254,7 @@
                                 @endif
                             </div>
                             <div class="{{ !$isLast ? 'pb-8' : '' }}">
-                                <p class="font-semibold {{ $isCompleted || $isCurrent ? 'text-black' : 'text-secondary-400' }}">
+                                <p class="font-semibold {{ $isCompleted || $isCurrent ? 'text-primary' : 'text-secondary-400' }}">
                                     {{ $step['label'] }}
                                     @if($isCurrent)
                                         <span class="ml-2 text-xs bg-warning-100 text-warning-700 px-2 py-1 rounded-full border border-warning-200">In Progress</span>
@@ -294,7 +294,7 @@
             <!-- Notes (if any) -->
             @if($order->notes)
                 <div class="bg-warning-50 border-l-4 border-warning-400 rounded-xl p-6 mb-6 shadow-sm">
-                    <h3 class="font-bold text-black mb-2 flex items-center gap-2">
+                    <h3 class="font-bold text-primary mb-2 flex items-center gap-2">
                         <i class="fas fa-sticky-note text-warning-500"></i>
                         Order Notes
                     </h3>
@@ -305,12 +305,12 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ route('track-order.index') }}"
-                    class="flex items-center justify-center gap-2 px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
+                    class="flex items-center justify-center gap-2 px-8 py-3 bg-primary text-surface-elevated rounded-xl font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
                     <i class="fas fa-search"></i>
                     Track Another Order
                 </a>
                 <a href="{{ route('home') }}"
-                    class="flex items-center justify-center gap-2 px-8 py-3 bg-white text-primary border-2 border-primary rounded-xl font-semibold hover:bg-primary-50 transition">
+                    class="flex items-center justify-center gap-2 px-8 py-3 bg-surface-elevated text-primary border-2 border-primary rounded-xl font-semibold hover:bg-primary-50 transition">
                     <i class="fas fa-shopping-bag"></i>
                     Continue Shopping
                 </a>

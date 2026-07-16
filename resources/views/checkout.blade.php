@@ -4,7 +4,7 @@
 
 @section('content')
 {{-- Breadcrumb --}}
-<div class="bg-white border-b border-primary-100">
+<div class="bg-surface-elevated border-b border-primary-100">
     <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center gap-2 text-sm">
             <a href="{{ url('/') }}" class="text-secondary hover:text-primary transition-colors duration-200">Home</a>
@@ -19,12 +19,12 @@
 <div class="max-w-7xl mx-auto px-4 py-4">
     {{-- Validation Errors --}}
     @if ($errors->any())
-    <div class="bg-red-50 border border-red-100 rounded-xl p-4 mb-6">
+    <div class="bg-danger-50 border border-danger-100 rounded-xl p-4 mb-6">
         <div class="flex items-start gap-3">
-            <i class="fas fa-exclamation-circle text-red-500 text-xl mt-0.5"></i>
+            <i class="fas fa-exclamation-circle text-danger text-xl mt-0.5"></i>
             <div class="flex-1">
-                <h4 class="font-bold text-red-800 mb-2">Please fix the following errors:</h4>
-                <ul class="list-disc list-inside space-y-1 text-sm text-red-700">
+                <h4 class="font-bold text-danger-800 mb-2">Please fix the following errors:</h4>
+                <ul class="list-disc list-inside space-y-1 text-sm text-danger-700">
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                     @endforeach
@@ -40,28 +40,28 @@
         <div class="lg:col-span-2 space-y-6">
 
             {{-- Delivery Address --}}
-            <div class="bg-white rounded-2xl p-5 md:p-6 border border-primary-100 shadow-sm">
+            <div class="bg-surface-elevated rounded-2xl p-5 md:p-6 border border-primary-100 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm">1</div>
+                    <div class="w-8 h-8 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-sm font-bold shadow-sm">1</div>
                     <h2 class="text-lg font-bold text-primary">Delivery Information</h2>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Full Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" required placeholder="Enter your full name" value="{{ old('name', $user?->name) }}" class="w-full h-12 px-4 bg-light border rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 @error('name') border-red-500 @else border-primary-100 @enderror">
+                        <label class="block text-sm font-bold text-primary mb-2">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" required placeholder="Enter your full name" value="{{ old('name', $user?->name) }}" class="w-full h-12 px-4 bg-light border rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 @error('name') border-danger @else border-primary-100 @enderror">
                         @error('name')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-danger mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Phone Number <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-bold text-primary mb-2">Phone Number <span class="text-danger">*</span></label>
                         <div class="flex">
-                            <span class="h-12 px-3 bg-light border border-r-0 rounded-l-xl flex items-center text-sm text-secondary font-semibold @error('phone') border-red-500 @else border-primary-100 @enderror">+88</span>
-                            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" maxlength="11" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 bg-light border rounded-r-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 @error('phone') border-red-500 @else border-primary-100 @enderror">
+                            <span class="h-12 px-3 bg-light border border-r-0 rounded-l-xl flex items-center text-sm text-secondary font-semibold @error('phone') border-danger @else border-primary-100 @enderror">+88</span>
+                            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" maxlength="11" value="{{ old('phone', $user?->phone) }}" class="flex-1 h-12 px-4 bg-light border rounded-r-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 @error('phone') border-danger @else border-primary-100 @enderror">
                         </div>
                         @error('phone')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-danger mt-1">{{ $message }}</p>
                         @else
                         <p class="text-xs text-secondary-300 mt-1">We'll contact you on this number</p>
                         @enderror
@@ -70,7 +70,7 @@
 
                 {{-- Delivery Zone Selection --}}
                 <div class="mb-5 mt-5">
-                    <label class="block text-sm font-bold text-primary mb-3">Select Delivery Zone <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-bold text-primary mb-3">Select Delivery Zone <span class="text-danger">*</span></label>
                     <div class="grid sm:grid-cols-2 gap-3">
                         @foreach($shippingZones as $index => $zone)
                         <label class="delivery-zone-option relative cursor-pointer">
@@ -83,7 +83,7 @@
                                 <p class="text-xs text-secondary">Delivery within {{ $zone->estimated_days }}</p>
                             </div>
                             <div class="absolute top-3 right-3 w-5 h-5 border-2 border-primary-200 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all duration-200">
-                                <i class="fas fa-check text-white text-xs hidden peer-checked:block"></i>
+                                <i class="fas fa-check text-surface-elevated text-xs hidden peer-checked:block"></i>
                             </div>
                         </label>
                         @endforeach
@@ -92,8 +92,8 @@
 
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-bold text-primary mb-2">District <span class="text-red-500">*</span></label>
-                        <select name="district" required class="w-full h-12 px-4 bg-light border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 @error('district') border-red-500 @else border-primary-100 @enderror">
+                        <label class="block text-sm font-bold text-primary mb-2">District <span class="text-danger">*</span></label>
+                        <select name="district" required class="w-full h-12 px-4 bg-light border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 @error('district') border-danger @else border-primary-100 @enderror">
                             <option value="">Select District</option>
                             @foreach($districts as $district)
                             <option value="{{ $district->id }}" {{ old('district') == $district->id ? 'selected' : '' }}>
@@ -102,44 +102,44 @@
                             @endforeach
                         </select>
                         @error('district')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-danger mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-primary mb-2">City/Area <span class="text-red-500">*</span></label>
-                        <input type="text" name="city" required placeholder="e.g., Uttara, Mirpur, Dhanmondi" value="{{ old('city') }}" class="w-full h-12 px-4 bg-light border rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 @error('city') border-red-500 @else border-primary-100 @enderror">
+                        <label class="block text-sm font-bold text-primary mb-2">City/Area <span class="text-danger">*</span></label>
+                        <input type="text" name="city" required placeholder="e.g., Uttara, Mirpur, Dhanmondi" value="{{ old('city') }}" class="w-full h-12 px-4 bg-light border rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 @error('city') border-danger @else border-primary-100 @enderror">
                         @error('city')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-danger mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="block text-sm font-bold text-primary mb-2">Full Address <span class="text-red-500">*</span></label>
-                        <textarea name="address" required rows="3" placeholder="House/Flat No, Road, Block, Area (Be specific for faster delivery)" class="w-full px-4 py-3 bg-light border rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 resize-none @error('address') border-red-500 @else border-primary-100 @enderror">{{ old('address') }}</textarea>
+                        <label class="block text-sm font-bold text-primary mb-2">Full Address <span class="text-danger">*</span></label>
+                        <textarea name="address" required rows="3" placeholder="House/Flat No, Road, Block, Area (Be specific for faster delivery)" class="w-full px-4 py-3 bg-light border rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 resize-none @error('address') border-danger @else border-primary-100 @enderror">{{ old('address') }}</textarea>
                         @error('address')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-danger mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
             {{-- Order Notes --}}
-            <div class="bg-white rounded-2xl p-5 md:p-6 border border-primary-100 shadow-sm">
+            <div class="bg-surface-elevated rounded-2xl p-5 md:p-6 border border-primary-100 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
                     <div class="w-8 h-8 bg-primary-100 text-primary rounded-full flex items-center justify-center text-sm">
                         <i class="fas fa-sticky-note"></i>
                     </div>
                     <h2 class="text-lg font-bold text-primary">Order Notes <span class="text-secondary font-normal text-sm">(Optional)</span></h2>
                 </div>
-                <textarea name="notes" rows="3" placeholder="Any special instructions for your order? e.g., Gift wrapping, specific delivery time, etc." class="w-full px-4 py-3 bg-light border rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 resize-none @error('notes') border-red-500 @else border-primary-100 @enderror">{{ old('notes') }}</textarea>
+                <textarea name="notes" rows="3" placeholder="Any special instructions for your order? e.g., Gift wrapping, specific delivery time, etc." class="w-full px-4 py-3 bg-light border rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 resize-none @error('notes') border-danger @else border-primary-100 @enderror">{{ old('notes') }}</textarea>
                 @error('notes')
-                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                <p class="text-xs text-danger mt-1">{{ $message }}</p>
                 @enderror
             </div>
         </div>
 
         {{-- Right Column - Order Summary --}}
         <div class="lg:col-span-1">
-            <div class="bg-white rounded-2xl p-5 md:p-6 border border-primary-100 shadow-sm sticky top-24">
+            <div class="bg-surface-elevated rounded-2xl p-5 md:p-6 border border-primary-100 shadow-sm sticky top-24">
                 <h2 class="text-lg font-bold text-primary mb-5">Order Summary</h2>
 
                 {{-- Cart Items --}}
@@ -193,7 +193,7 @@
                         <span class="text-secondary">Shipping</span>
                         <span class="font-semibold text-primary" id="shippingCost">{{ money($shippingZones->first()->shipping_cost ?? 0) }}</span>
                     </div>
-                    <div class="flex items-center justify-between text-sm text-green-600 hidden" id="discountRow">
+                    <div class="flex items-center justify-between text-sm text-accent-600 hidden" id="discountRow">
                         <span>Discount</span>
                         <span class="font-semibold" id="discountAmount">-৳0</span>
                     </div>
@@ -205,7 +205,7 @@
                 </div>
 
                 <div class="mb-5 mt-6">
-                    <label class="block text-sm font-bold text-primary mb-3">Payment Method <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-bold text-primary mb-3">Payment Method <span class="text-danger">*</span></label>
                     <div class="grid sm:grid-cols-2 gap-3">
                         <label class="payment-method-option relative cursor-pointer">
                             <input type="radio" name="payment_method" value="cod" class="sr-only peer">
@@ -216,7 +216,7 @@
                                 <p class="text-xs text-secondary">Cash on delivery.</p>
                             </div>
                             <div class="absolute top-3 right-3 w-5 h-5 border-2 border-primary-200 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all duration-200">
-                                <i class="fas fa-check text-white text-xs hidden peer-checked:block"></i>
+                                <i class="fas fa-check text-surface-elevated text-xs hidden peer-checked:block"></i>
                             </div>
                         </label>
                         <label class="payment-method-option relative cursor-pointer">
@@ -228,14 +228,14 @@
                                 <p class="text-xs text-secondary">Payment online.</p>
                             </div>
                             <div class="absolute top-3 right-3 w-5 h-5 border-2 border-primary-200 rounded-full peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all duration-200">
-                                <i class="fas fa-check text-white text-xs hidden peer-checked:block"></i>
+                                <i class="fas fa-check text-surface-elevated text-xs hidden peer-checked:block"></i>
                             </div>
                         </label>
                     </div>
                 </div>
 
                 {{-- Place Order Button --}}
-                <button type="submit" class="w-full mt-6 bg-primary text-white py-4 rounded-xl font-bold text-base hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 tap-effect shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
+                <button type="submit" class="w-full mt-6 bg-primary text-surface-elevated py-4 rounded-xl font-bold text-base hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 tap-effect shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
                     <i class="fas fa-check-circle group-hover:scale-110 transition-transform duration-200"></i>
                     Place Order
                 </button>
@@ -250,7 +250,7 @@
                 {{-- Trust Badges --}}
                 <div class="flex items-center justify-center gap-4 mt-5 pt-5 border-t border-primary-100">
                     <div class="flex items-center gap-2 text-secondary-300">
-                        <i class="fas fa-shield-alt text-green-500"></i>
+                        <i class="fas fa-shield-alt text-accent"></i>
                         <span class="text-xs font-medium">Secure</span>
                     </div>
                     <div class="flex items-center gap-2 text-secondary-300">
@@ -258,7 +258,7 @@
                         <span class="text-xs font-medium">7 Days Return</span>
                     </div>
                     <div class="flex items-center gap-2 text-secondary-300">
-                        <i class="fas fa-truck text-orange-500"></i>
+                        <i class="fas fa-truck text-warning-500"></i>
                         <span class="text-xs font-medium">Fast Delivery</span>
                     </div>
                 </div>
@@ -346,7 +346,7 @@
                 // Change button to "Remove"
                 btn.textContent = 'Remove';
                 btn.classList.remove('bg-light', 'text-secondary', 'hover:bg-primary-50', 'hover:text-primary', 'border-primary-100');
-                btn.classList.add('bg-red-50', 'text-red-600', 'hover:bg-red-100', 'border-red-200');
+                btn.classList.add('bg-danger-50', 'text-danger-600', 'hover:bg-danger-100', 'border-danger-200');
                 btn.onclick = removeCoupon;
 
                 // Disable input
@@ -379,7 +379,7 @@
 
         // Reset button
         btn.textContent = 'Apply';
-        btn.classList.remove('bg-red-50', 'text-red-600', 'hover:bg-red-100', 'border-red-200');
+        btn.classList.remove('bg-danger-50', 'text-danger-600', 'hover:bg-danger-100', 'border-danger-200');
         btn.classList.add('bg-light', 'text-secondary', 'hover:bg-primary-50', 'hover:text-primary', 'border-primary-100');
         btn.onclick = null;
 
@@ -395,8 +395,8 @@
     function showCouponMessage(message, type) {
         const messageDiv = document.getElementById('couponMessage');
         messageDiv.textContent = message;
-        messageDiv.classList.remove('hidden', 'text-green-600', 'text-red-600');
-        messageDiv.classList.add(type === 'success' ? 'text-green-600' : 'text-red-600');
+        messageDiv.classList.remove('hidden', 'text-accent-600', 'text-danger-600');
+        messageDiv.classList.add(type === 'success' ? 'text-accent-600' : 'text-danger-600');
     }
 
     // Copy to clipboard

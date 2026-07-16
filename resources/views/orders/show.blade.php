@@ -15,7 +15,7 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <p class="text-sm text-secondary-400 mb-1">Order Number</p>
-                        <h1 class="text-3xl md:text-4xl font-bold text-black">
+                        <h1 class="text-3xl md:text-4xl font-bold text-primary">
                             #{{ $order->order_number }}
                         </h1>
                     </div>
@@ -31,7 +31,7 @@
 
                         <!-- Download Invoice Button -->
                         <button onclick="printReceipt('{{ route('orders.invoice', $order->order_number) }}')"
-                            class="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-primary text-white hover:bg-primary-700 transition shadow-sm">
+                            class="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-primary text-surface-elevated hover:bg-primary-700 transition shadow-sm">
                             <i class="fas fa-file-download text-sm"></i>
                             <span class="text-sm font-semibold">Invoice</span>
                         </button>
@@ -45,11 +45,11 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-secondary-200">
                     <div>
                         <p class="text-sm text-secondary-400 mb-1">Order Date</p>
-                        <p class="text-lg font-semibold text-black">{{ $order->created_at->format('F d, Y h:i a') }}</p>
+                        <p class="text-lg font-semibold text-primary">{{ $order->created_at->format('F d, Y h:i a') }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-secondary-400 mb-1">Estimated Delivery</p>
-                        <p class="text-lg font-semibold text-black">
+                        <p class="text-lg font-semibold text-primary">
                             {{ $order->updated_at->addDays(5)->format('F d, Y') }}
                         </p>
                     </div>
@@ -58,32 +58,32 @@
                 <!-- Customer & Delivery Info -->
                 <div class="grid md:grid-cols-2 gap-6 py-6 border-b border-secondary-200">
                     <div>
-                        <h3 class="text-sm font-bold text-black mb-4 flex items-center gap-2 uppercase tracking-wide">
+                        <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
                             <i class="fas fa-user text-primary-500 text-lg"></i>
                             Customer Information
                         </h3>
                         <div class="space-y-3 text-sm">
                             <div>
                                 <p class="text-secondary-400 mb-1">Full Name</p>
-                                <p class="font-medium text-black">{{ $order->user->name ?? 'N/A' }}</p>
+                                <p class="font-medium text-primary">{{ $order->user->name ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <p class="text-secondary-400 mb-1">Email</p>
-                                <p class="font-medium text-black">{{ $order->user->email ?? 'N/A' }}</p>
+                                <p class="font-medium text-primary">{{ $order->user->email ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <p class="text-secondary-400 mb-1">Phone</p>
-                                <p class="font-medium text-black">{{ $order->user->phone ?? 'N/A' }}</p>
+                                <p class="font-medium text-primary">{{ $order->user->phone ?? 'N/A' }}</p>
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <h3 class="text-sm font-bold text-black mb-4 flex items-center gap-2 uppercase tracking-wide">
+                        <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
                             <i class="fas fa-map-marker-alt text-primary-500 text-lg"></i>
                             Delivery Address
                         </h3>
-                        <div class="space-y-3 text-sm text-black">
+                        <div class="space-y-3 text-sm text-primary">
                             <div>
                                 <p class="font-medium">
                                     {{ $order->shipping_address ?? $order->user->address->address_line1 ?? 'N/A' }}
@@ -99,7 +99,7 @@
 
                 <!-- Order Items -->
                 <div class="py-6 border-b border-secondary-200">
-                    <h3 class="text-sm font-bold text-black mb-4 flex items-center gap-2 uppercase tracking-wide">
+                    <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
                         <i class="fas fa-box text-primary-500 text-lg"></i>
                         Order Items ({{ $order->items ? count($order->items) : 0 }})
                     </h3>
@@ -115,7 +115,7 @@
                                     @endif
 
                                     <!-- Product Image -->
-                                    <div class="w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-white border border-secondary-100">
+                                    <div class="w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-elevated border border-secondary-100">
                                         <img src="{{ $item->product_image }}" 
                                             alt="{{ $item->product_name }}" 
                                             class="w-full h-full object-cover">
@@ -123,7 +123,7 @@
 
                                     <!-- Product Details -->
                                     <div class="flex-1 min-w-0">
-                                        <h4 class="font-semibold text-sm text-black leading-5 break-words">
+                                        <h4 class="font-semibold text-sm text-primary leading-5 break-words">
                                             {{ $item->product_name }}
                                         </h4>
 
@@ -149,7 +149,7 @@
                                             <div class="mt-3">
                                                 <button type="button"
                                                     onclick="openReviewModal({{ $item->product_id }}, '{{ addslashes($item->product_name) }}')"
-                                                    class="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium bg-primary text-white rounded-lg hover:bg-primary-700 transition shadow-sm">
+                                                    class="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium bg-primary text-surface-elevated rounded-lg hover:bg-primary-700 transition shadow-sm">
                                                     <i class="fas fa-star"></i>
                                                     Write Review
                                                 </button>
@@ -169,7 +169,7 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- Payment Info -->
                         <div>
-                            <h3 class="text-sm font-bold text-black mb-4 flex items-center gap-2 uppercase tracking-wide">
+                            <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
                                 <i class="fas fa-credit-card text-primary-500 text-lg"></i>
                                 Payment Information
                             </h3>
@@ -194,7 +194,7 @@
                                         <form action="{{ route('orders.payNow', $order->order_number) }}" method="POST" class="mt-2">
                                             @csrf
                                             <button type="submit"
-                                                class="inline-block bg-accent text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-accent-600 transition shadow-sm">
+                                                class="inline-block bg-accent text-surface-elevated px-4 py-2 rounded-lg text-xs font-semibold hover:bg-accent-600 transition shadow-sm">
                                                 Pay Now
                                             </button>
                                         </form>
@@ -205,17 +205,17 @@
 
                         <!-- Price Breakdown -->
                         <div class="bg-primary-50 rounded-xl p-4 border border-primary-100">
-                            <h3 class="text-sm font-bold text-black mb-4">Order Summary</h3>
+                            <h3 class="text-sm font-bold text-primary mb-4">Order Summary</h3>
 
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between">
                                     <span class="text-secondary-500">Subtotal</span>
-                                    <span class="font-medium text-black">{{ money($order->subtotal) }}</span>
+                                    <span class="font-medium text-primary">{{ money($order->subtotal) }}</span>
                                 </div>
 
                                 <div class="flex justify-between">
                                     <span class="text-secondary-500">Shipping</span>
-                                    <span class="font-medium text-black">{{ money($order->shipping_cost ?? 0) }}</span>
+                                    <span class="font-medium text-primary">{{ money($order->shipping_cost ?? 0) }}</span>
                                 </div>
 
                                 @if($order->discount_amount && $order->discount_amount > 0)
@@ -246,7 +246,7 @@
                                 <div class="h-px bg-secondary-200 my-3"></div>
 
                                 <div class="flex justify-between text-lg">
-                                    <span class="font-bold text-black">Total</span>
+                                    <span class="font-bold text-primary">Total</span>
                                     <span class="font-bold text-primary-500">{{ money($order->total) }}</span>
                                 </div>
 
@@ -267,7 +267,7 @@
 
             <!-- Order Timeline -->
             <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-6 md:p-8 mb-6 border border-secondary-100">
-                <h2 class="text-xl font-bold text-black mb-6 flex items-center gap-2">
+                <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
                     <i class="fas fa-clock text-primary-500"></i>
                     Order Timeline
                 </h2>
@@ -284,7 +284,7 @@
                             </div>
                             <div class="flex-1 pb-4">
                                 <div class="flex items-start justify-between gap-4 mb-1">
-                                    <span class="font-semibold text-black">{{ $history->status->label() }}</span>
+                                    <span class="font-semibold text-primary">{{ $history->status->label() }}</span>
                                     <span class="text-sm text-secondary-400">{{ $history->created_at->diffForHumans() }}</span>
                                 </div>
                                 @if($history->comment)
@@ -305,12 +305,12 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ route('orders.index') }}"
-                    class="flex items-center justify-center gap-2 px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
+                    class="flex items-center justify-center gap-2 px-8 py-3 bg-primary text-surface-elevated rounded-xl font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
                     <i class="fas fa-arrow-left"></i>
                     Back to Orders
                 </a>
                 <a href="{{ route('home') }}"
-                    class="flex items-center justify-center gap-2 px-8 py-3 bg-white text-primary border-2 border-primary rounded-xl font-semibold hover:bg-primary-50 transition">
+                    class="flex items-center justify-center gap-2 px-8 py-3 bg-surface-elevated text-primary border-2 border-primary rounded-xl font-semibold hover:bg-primary-50 transition">
                     <i class="fas fa-shopping-bag"></i>
                     Continue Shopping
                 </a>
@@ -325,7 +325,7 @@
     </div>
 
     <!-- Review Modal -->
-    <div id="reviewModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div id="reviewModal" class="fixed inset-0 bg-primary/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-surface rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-secondary-100">
 
             {{-- Header --}}
@@ -334,7 +334,7 @@
                     <div class="w-9 h-9 rounded-full bg-warning-50 flex items-center justify-center">
                         <i class="fas fa-pencil text-warning-500 text-sm"></i>
                     </div>
-                    <h3 class="font-medium text-black text-base">Write a review</h3>
+                    <h3 class="font-medium text-primary text-base">Write a review</h3>
                 </div>
                 <button type="button" onclick="closeReviewModal()"
                     class="w-8 h-8 rounded-full border border-secondary-200 flex items-center justify-center text-secondary-400 hover:bg-secondary-50 transition-colors">
@@ -354,7 +354,7 @@
                         <i class="fas fa-box text-primary-400"></i>
                     </div>
                     <div>
-                        <p id="review_product_name" class="text-sm font-medium text-black"></p>
+                        <p id="review_product_name" class="text-sm font-medium text-primary"></p>
                         <p class="text-xs text-secondary-300">Purchased item</p>
                     </div>
                 </div>
@@ -373,11 +373,11 @@
                 {{-- Review text --}}
                 <div class="mb-5">
                     <label class="block text-xs font-medium text-secondary-400 uppercase tracking-wider mb-2">Your review</label>
-                    <textarea name="comment" rows="4" placeholder="Share your experience with this product..." class="w-full border border-secondary-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 resize-none text-black placeholder-secondary-300 bg-surface"></textarea>
+                    <textarea name="comment" rows="4" placeholder="Share your experience with this product..." class="w-full border border-secondary-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 resize-none text-primary placeholder-secondary-300 bg-surface"></textarea>
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-primary text-white py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-700 transition-colors shadow-sm">
+                    class="w-full bg-primary text-surface-elevated py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-700 transition-colors shadow-sm">
                     <i class="fas fa-paper-plane text-xs"></i>
                     Submit review
                 </button>

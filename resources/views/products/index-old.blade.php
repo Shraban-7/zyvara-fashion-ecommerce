@@ -4,12 +4,12 @@
 
 @section('content')
 {{-- Breadcrumb --}}
-<div class="bg-white border-b border-gray-100">
+<div class="bg-surface-elevated border-b border-secondary-100">
     <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center gap-2 text-sm">
-            <a href="{{ url('/') }}" class="text-gray-500 hover:text-primary transition">Home</a>
-            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-            <span class="text-gray-900 font-medium">Products</span>
+            <a href="{{ url('/') }}" class="text-secondary-400 hover:text-primary transition">Home</a>
+            <i class="fas fa-chevron-right text-xs text-secondary-400"></i>
+            <span class="text-primary font-medium">Products</span>
         </nav>
     </div>
 </div>
@@ -19,8 +19,8 @@
 
         {{-- Mobile Filter Toggle --}}
         <div class="lg:hidden flex items-center justify-between mb-2">
-            <h1 class="text-xl font-bold text-black">All Products</h1>
-            <button onclick="toggleMobileFilter()" class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 tap-effect">
+            <h1 class="text-xl font-bold text-primary">All Products</h1>
+            <button onclick="toggleMobileFilter()" class="flex items-center gap-2 bg-surface-elevated border border-secondary-200 rounded-xl px-4 py-2.5 text-sm font-medium text-secondary-700 tap-effect">
                 <i class="fas fa-sliders-h"></i>
                 Filters
             </button>
@@ -28,19 +28,19 @@
 
         {{-- Sidebar Filters --}}
         <aside id="filterSidebar" class="hidden lg:block w-full lg:w-72 flex-shrink-0">
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-28">
+            <div class="bg-surface-elevated rounded-2xl shadow-sm border border-secondary-100 p-5 sticky top-28">
 
                 {{-- Filter Header --}}
                 <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-lg font-bold text-black">Filters</h2>
+                    <h2 class="text-lg font-bold text-primary">Filters</h2>
                     <button onclick="clearAllFilters()" class="text-sm text-primary hover:underline font-medium">Clear All</button>
                 </div>
 
                 {{-- Category Filter --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('categoryFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-secondary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('categoryFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3">
                         Category
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="categoryFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-400 transition-transform" id="categoryFilterIcon"></i>
                     </button>
                     <div id="categoryFilter" class="space-y-2 max-h-64 overflow-y-auto">
                         @foreach($categories as $category)
@@ -56,9 +56,9 @@
                                 value="{{ $category->slug }}"
                                 {{ in_array($category->slug, $selectedCategories) ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
-                            <span class="text-sm text-gray-600 group-hover:text-gray-900">{{ $category->name }}</span>
-                            <span class="ml-auto text-xs text-gray-400">({{ $categoryCounts[$category->id] ?? 0 }})</span>
+                                class="w-4 h-4 rounded border-secondary-300 text-primary focus:ring-primary">
+                            <span class="text-sm text-secondary-600 group-hover:text-primary">{{ $category->name }}</span>
+                            <span class="ml-auto text-xs text-secondary-400">({{ $categoryCounts[$category->id] ?? 0 }})</span>
                         </label>
                         @if($category->children->isNotEmpty())
                         @foreach($category->children as $child)
@@ -68,9 +68,9 @@
                                 value="{{ $child->slug }}"
                                 {{ in_array($child->slug, $selectedCategories) ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
-                            <span class="text-sm text-gray-500 group-hover:text-gray-900">{{ $child->name }}</span>
-                            <span class="ml-auto text-xs text-gray-400">({{ $categoryCounts[$child->id] ?? 0 }})</span>
+                                class="w-4 h-4 rounded border-secondary-300 text-primary focus:ring-primary">
+                            <span class="text-sm text-secondary-400 group-hover:text-primary">{{ $child->name }}</span>
+                            <span class="ml-auto text-xs text-secondary-400">({{ $categoryCounts[$child->id] ?? 0 }})</span>
                         </label>
                         @endforeach
                         @endif
@@ -79,10 +79,10 @@
                 </div>
 
                 {{-- Brand Filter --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('brandFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-secondary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('brandFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3">
                         Brand
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="brandFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-400 transition-transform" id="brandFilterIcon"></i>
                     </button>
 
                     <div id="brandFilter" class="space-y-2 max-h-64 overflow-y-auto">
@@ -101,13 +101,13 @@
                                 value="{{ $brand->slug }}"
                                 {{ in_array($brand->slug, $selectedBrands) ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 rounded border-gray-300 text-primary">
+                                class="w-4 h-4 rounded border-secondary-300 text-primary">
 
-                            <span class="text-sm text-gray-600 group-hover:text-gray-900">
+                            <span class="text-sm text-secondary-600 group-hover:text-primary">
                                 {{ $brand->name }}
                             </span>
 
-                            <span class="ml-auto text-xs text-gray-400">
+                            <span class="ml-auto text-xs text-secondary-400">
                                 ({{ $brandCounts[$brand->id] ?? 0 }})
                             </span>
                         </label>
@@ -117,63 +117,63 @@
                 </div>
 
                 {{-- Price Range Filter --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('priceFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-secondary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('priceFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3">
                         Price Range
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="priceFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-400 transition-transform" id="priceFilterIcon"></i>
                     </button>
                     <div id="priceFilter" class="space-y-3">
                         <div class="flex items-center gap-3">
                             <div class="flex-1">
-                                <label class="text-xs text-gray-500 mb-1 block">Min</label>
+                                <label class="text-xs text-secondary-400 mb-1 block">Min</label>
                                 <input type="number"
                                     name="min_price"
                                     value="{{ request('min_price') }}"
                                     placeholder="৳0"
                                     onchange="applyFilters()"
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                                    class="w-full bg-secondary-50 border border-secondary-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
                             </div>
-                            <span class="text-gray-400 mt-5">-</span>
+                            <span class="text-secondary-400 mt-5">-</span>
                             <div class="flex-1">
-                                <label class="text-xs text-gray-500 mb-1 block">Max</label>
+                                <label class="text-xs text-secondary-400 mb-1 block">Max</label>
                                 <input type="number"
                                     name="max_price"
                                     value="{{ request('max_price') }}"
                                     placeholder="৳10000"
                                     onchange="applyFilters()"
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                                    class="w-full bg-secondary-50 border border-secondary-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
                             </div>
                         </div>
                         <div class="space-y-2">
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900">Under ৳500</span>
+                                <input type="radio" name="price" class="w-4 h-4 border-secondary-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-secondary-600 group-hover:text-primary">Under ৳500</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900">৳500 - ৳1000</span>
+                                <input type="radio" name="price" class="w-4 h-4 border-secondary-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-secondary-600 group-hover:text-primary">৳500 - ৳1000</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900">৳1000 - ৳2000</span>
+                                <input type="radio" name="price" class="w-4 h-4 border-secondary-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-secondary-600 group-hover:text-primary">৳1000 - ৳2000</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900">৳2000 - ৳5000</span>
+                                <input type="radio" name="price" class="w-4 h-4 border-secondary-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-secondary-600 group-hover:text-primary">৳2000 - ৳5000</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="price" class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900">Above ৳5000</span>
+                                <input type="radio" name="price" class="w-4 h-4 border-secondary-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-secondary-600 group-hover:text-primary">Above ৳5000</span>
                             </label>
                         </div>
                     </div>
                 </div>
 
                 {{-- Size Filter --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('sizeFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-secondary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('sizeFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3">
                         Size
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="sizeFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-400 transition-transform" id="sizeFilterIcon"></i>
                     </button>
                     <div id="sizeFilter" class="flex flex-wrap gap-2">
                         @php
@@ -186,7 +186,7 @@
                         <button
                             type="button"
                             onclick="toggleFilter('sizes[]', '{{ $size->id }}')"
-                            class="size-btn px-4 py-2 border {{ in_array($size->id, $selectedSizes) ? 'border-primary bg-primary/5 text-primary' : 'border-gray-200 text-gray-600' }} rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition">
+                            class="size-btn px-4 py-2 border {{ in_array($size->id, $selectedSizes) ? 'border-primary bg-primary/5 text-primary' : 'border-secondary-200 text-secondary-600' }} rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition">
                             {{ $size->name }}
                         </button>
                         @endforeach
@@ -194,10 +194,10 @@
                 </div>
 
                 {{-- Color Filter --}}
-                <div class="border-b border-gray-100 pb-5 mb-5">
-                    <button onclick="toggleFilterSection('colorFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                <div class="border-b border-secondary-100 pb-5 mb-5">
+                    <button onclick="toggleFilterSection('colorFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3">
                         Color
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="colorFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-400 transition-transform" id="colorFilterIcon"></i>
                     </button>
                     <div id="colorFilter" class="flex flex-wrap gap-2">
                         @php
@@ -211,7 +211,7 @@
                             type="button"
                             onclick="toggleFilter('colors[]', '{{ $color->id }}')"
                             title="{{ $color->name }}"
-                            class="w-8 h-8 rounded-full border-2 {{ in_array($color->id, $selectedColors) ? 'border-primary ring-2 ring-primary/30' : 'border-gray-300' }} hover:border-primary transition relative"
+                            class="w-8 h-8 rounded-full border-2 {{ in_array($color->id, $selectedColors) ? 'border-primary ring-2 ring-primary/30' : 'border-secondary-300' }} hover:border-primary transition relative"
                             style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}">
                             @if(in_array($color->id, $selectedColors))
                             <i class="fas fa-check text-xs absolute inset-0 flex items-center justify-center" style="color: {{ $color->code == 'white' || $color->code == 'cream' ? '#000' : '#FFF' }}"></i>
@@ -223,9 +223,9 @@
 
                 {{-- Rating Filter --}}
                 <div class="pb-2">
-                    <button onclick="toggleFilterSection('ratingFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-gray-900 mb-3">
+                    <button onclick="toggleFilterSection('ratingFilter')" class="w-full flex items-center justify-between text-sm font-semibold text-primary mb-3">
                         Rating
-                        <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform" id="ratingFilterIcon"></i>
+                        <i class="fas fa-chevron-down text-xs text-secondary-400 transition-transform" id="ratingFilterIcon"></i>
                     </button>
                     <div id="ratingFilter" class="space-y-2">
                         @foreach([5, 4, 3, 2, 1] as $rating)
@@ -235,20 +235,20 @@
                                 value="{{ $rating }}"
                                 {{ request('min_rating') == $rating ? 'checked' : '' }}
                                 onchange="applyFilters()"
-                                class="w-4 h-4 border-gray-300 text-primary focus:ring-primary">
-                            <div class="flex text-yellow-400">
+                                class="w-4 h-4 border-secondary-300 text-primary focus:ring-primary">
+                            <div class="flex text-warning">
                                 @for($i = 1; $i <= 5; $i++)
-                                    <i class="fas fa-star text-sm {{ $i <= $rating ? '' : 'text-gray-300' }}"></i>
+                                    <i class="fas fa-star text-sm {{ $i <= $rating ? '' : 'text-secondary-300' }}"></i>
                                     @endfor
                             </div>
-                            <span class="text-xs text-gray-400">& up</span>
+                            <span class="text-xs text-secondary-400">& up</span>
                         </label>
                         @endforeach
                     </div>
                 </div>
 
                 {{-- Apply Filter Button (Mobile) --}}
-                <button onclick="toggleMobileFilter()" class="lg:hidden w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm mt-4 tap-effect">
+                <button onclick="toggleMobileFilter()" class="lg:hidden w-full bg-primary text-surface-elevated py-3 rounded-xl font-semibold text-sm mt-4 tap-effect">
                     Apply Filters
                 </button>
 
@@ -261,7 +261,7 @@
             {{-- Products Header --}}
             <div class="hidden lg:flex items-center justify-between mb-5">
                 <div>
-                    <h1 class="text-2xl font-bold text-black">
+                    <h1 class="text-2xl font-bold text-primary">
                         @if(request('category'))
                         {{ ucfirst(request('category')) }} Products
                         @elseif(request('search'))
@@ -275,7 +275,7 @@
 
                     {{-- Sort Dropdown --}}
                     <div class="relative">
-                        <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary cursor-pointer">
+                        <select onchange="window.location.href=this.value" class="appearance-none bg-surface-elevated border border-secondary-200 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-secondary-700 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary cursor-pointer">
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}" {{ request('sort') == 'featured' ? 'selected' : '' }}>Sort by: Featured</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
@@ -283,17 +283,17 @@
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'best_selling']) }}" {{ request('sort') == 'best_selling' ? 'selected' : '' }}>Best Selling</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'top_rated']) }}" {{ request('sort') == 'top_rated' ? 'selected' : '' }}>Top Rated</option>
                         </select>
-                        <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none"></i>
+                        <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-secondary-400 pointer-events-none"></i>
                     </div>
                 </div>
             </div>
 
             {{-- Mobile Sort --}}
             <div class="lg:hidden flex items-center justify-between mb-4">
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-secondary-400">
                     Showing {{ $products->count() }} products
                 </p>
-                <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-gray-200 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <select onchange="window.location.href=this.value" class="appearance-none bg-surface-elevated border border-secondary-200 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-secondary-700 focus:outline-none focus:ring-2 focus:ring-primary/30">
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}" {{ request('sort') == 'featured' ? 'selected' : '' }}>Sort: Featured</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
@@ -324,7 +324,7 @@
 
             @if($hasFilters)
             <div class="flex flex-wrap items-center gap-2 mb-5">
-                <span class="text-sm text-gray-500 font-medium">Active Filters:</span>
+                <span class="text-sm text-secondary-400 font-medium">Active Filters:</span>
 
                 {{-- Category Filters --}}
                 @foreach($selectedCategories as $categorySlug)
@@ -335,7 +335,7 @@
                     @if($category)
                         <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                             {{ $category->name }}
-                            <button onclick="removeFilter('categories', '{{ $categorySlug }}')" class="hover:text-blue-700">
+                            <button onclick="removeFilter('categories', '{{ $categorySlug }}')" class="hover:text-primary">
                                 <i class="fas fa-times text-xs"></i>
                             </button>
                         </span>
@@ -350,7 +350,7 @@
                 @if($brand)
                 <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     {{ $brand->name }}
-                    <button onclick="removeFilter('brands', '{{ $brandSlug }}')" class="hover:text-blue-700">
+                    <button onclick="removeFilter('brands', '{{ $brandSlug }}')" class="hover:text-primary">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
@@ -367,7 +367,7 @@
                 @if($size)
                 <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                     Size: {{ $size->name }}
-                    <button onclick="removeFilter('sizes', '{{ $sizeId }}')" class="hover:text-blue-700">
+                    <button onclick="removeFilter('sizes', '{{ $sizeId }}')" class="hover:text-primary">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
@@ -381,9 +381,9 @@
                 @endphp
                 @if($color)
                 <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
-                    <span class="w-3 h-3 rounded-full border border-gray-300" style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}"></span>
+                    <span class="w-3 h-3 rounded-full border border-secondary-300" style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}"></span>
                     {{ $color->name }}
-                    <button onclick="removeFilter('colors', '{{ $colorId }}')" class="hover:text-blue-700">
+                    <button onclick="removeFilter('colors', '{{ $colorId }}')" class="hover:text-primary">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
@@ -401,7 +401,7 @@
                     @else
                     Below ৳{{ number_format(request('max_price')) }}
                     @endif
-                    <button onclick="removeFilter('price')" class="hover:text-blue-700">
+                    <button onclick="removeFilter('price')" class="hover:text-primary">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
@@ -410,20 +410,20 @@
                 {{-- Rating Filter --}}
                 @if(request('min_rating'))
                 <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
-                    <div class="flex text-yellow-500">
+                    <div class="flex text-warning-500">
                         @for($i = 1; $i <= request('min_rating'); $i++)
                             <i class="fas fa-star text-xs"></i>
                             @endfor
                     </div>
                     & up
-                    <button onclick="removeFilter('min_rating')" class="hover:text-blue-700">
+                    <button onclick="removeFilter('min_rating')" class="hover:text-primary">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </span>
                 @endif
 
                 {{-- Clear All Button --}}
-                <button onclick="clearAllFilters()" class="text-sm text-red-500 hover:text-red-600 hover:underline font-medium ml-2 transition">
+                <button onclick="clearAllFilters()" class="text-sm text-danger hover:text-danger-600 hover:underline font-medium ml-2 transition">
                     Clear All
                 </button>
             </div>
@@ -435,9 +435,9 @@
                 <x-product-card :product="$product" />
                 @empty
                 <div class="col-span-full text-center py-12">
-                    <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
-                    <p class="text-gray-500">Try adjusting your filters or search criteria.</p>
+                    <i class="fas fa-box-open text-6xl text-secondary-300 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-secondary-600 mb-2">No products found</h3>
+                    <p class="text-secondary-400">Try adjusting your filters or search criteria.</p>
                 </div>
                 @endforelse
             </div>
@@ -450,13 +450,13 @@
                     {{-- Previous Button --}}
                     @if($products->onFirstPage())
                         <span
-                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed">
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-400 bg-secondary-100 border border-secondary-200 rounded-xl cursor-not-allowed">
                             <i class="fas fa-arrow-left text-xs"></i>
                             Previous
                         </span>
                     @else
                         <a href="{{ $products->previousPageUrl() }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-700 bg-surface-elevated border border-secondary-200 rounded-xl hover:bg-primary hover:text-surface-elevated hover:border-primary transition-all duration-200 shadow-sm">
                             <i class="fas fa-arrow-left text-xs"></i>
                             Previous
                         </a>
@@ -465,13 +465,13 @@
                     {{-- Next Button --}}
                     @if($products->hasMorePages())
                         <a href="{{ $products->nextPageUrl() }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-700 bg-surface-elevated border border-secondary-200 rounded-xl hover:bg-primary hover:text-surface-elevated hover:border-primary transition-all duration-200 shadow-sm">
                             Next
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
                     @else
                         <span
-                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed">
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-400 bg-secondary-100 border border-secondary-200 rounded-xl cursor-not-allowed">
                             Next
                             <i class="fas fa-arrow-right text-xs"></i>
                         </span>
@@ -485,7 +485,7 @@
 </div>
 
 {{-- Mobile Filter Overlay --}}
-<div id="mobileFilterOverlay" class="fixed inset-0 bg-black/50 z-[60] hidden lg:hidden" onclick="toggleMobileFilter()"></div>
+<div id="mobileFilterOverlay" class="fixed inset-0 bg-primary/50 z-[60] hidden lg:hidden" onclick="toggleMobileFilter()"></div>
 @endsection
 
 @push('scripts')
@@ -619,11 +619,11 @@
         overlay.classList.toggle('hidden');
 
         if (!sidebar.classList.contains('hidden')) {
-            sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-[70]', 'w-80', 'max-w-[85vw]', 'overflow-y-auto', 'bg-white', 'shadow-2xl');
+            sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-[70]', 'w-80', 'max-w-[85vw]', 'overflow-y-auto', 'bg-surface-elevated', 'shadow-2xl');
             sidebar.classList.remove('lg:block');
             document.body.style.overflow = 'hidden';
         } else {
-            sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-[70]', 'w-80', 'max-w-[85vw]', 'overflow-y-auto', 'bg-white', 'shadow-2xl');
+            sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-[70]', 'w-80', 'max-w-[85vw]', 'overflow-y-auto', 'bg-surface-elevated', 'shadow-2xl');
             sidebar.classList.add('lg:block');
             document.body.style.overflow = '';
         }

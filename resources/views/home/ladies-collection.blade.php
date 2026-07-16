@@ -1,11 +1,12 @@
 @if($womensProducts->isNotEmpty())
+@php $h = isset($section) ? $section->headings() : ['eyebrow' => 'Elegant Picks', 'title' => "Ladies' Collection", 'subtitle' => 'Elegant styles for every woman — from casual to formal']; @endphp
 <section class="collection-section collection-section--alt">
     <div class="collection-wrap">
         <div class="section-head">
             <div class="section-head-text">
-                <span class="section-eyebrow">Elegant Picks</span>
-                <h2 class="section-title">Ladies Collection</h2>
-                <p class="section-sub">Elegant styles for every woman — from casual to formal</p>
+                <span class="section-eyebrow">{{ $h['eyebrow'] }}</span>
+                <h2 class="section-title">{{ $h['title'] }}</h2>
+                <p class="section-sub">{{ $h['subtitle'] }}</p>
             </div>
             <div class="section-head-actions">
                 <div class="swiper-nav">
@@ -48,13 +49,13 @@
 
 .collection-section--alt {
     padding: 64px 0 48px;
-    background: #fff;
+    background: var(--color-surface-elevated);
     overflow: hidden;
     width: 100%;
 }
 
 .collection-section--alt .collection-wrap {
-    max-width: 1280px;
+    max-width: 1320px;
     margin: 0 auto;
     padding: 0 16px;
     width: 100%;
@@ -102,21 +103,22 @@
     display: inline-block;
     font-size: 11px;
     font-weight: 700;
-    color: #be185d;
+    color: var(--color-accent-700);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     margin-bottom: 10px;
     padding: 5px 14px;
-    background: #fdf2f8;
-    border: 1px solid #fce7f3;
+    background: var(--color-accent-50);
+    border: 1px solid var(--color-accent-200);
     border-radius: 99px;
 }
 
 .collection-section--alt .section-title {
     font-size: clamp(24px, 4vw, 32px);
-    font-weight: 800;
-    color: #0f172a;
-    letter-spacing: -0.03em;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    letter-spacing: -0.02em;
     line-height: 1.2;
     margin: 0 0 8px;
     word-wrap: break-word;
@@ -124,7 +126,7 @@
 
 .collection-section--alt .section-sub {
     font-size: clamp(14px, 2vw, 16px);
-    color: #64748b;
+    color: var(--color-secondary);
     margin: 0;
     line-height: 1.5;
     max-width: 420px;
@@ -155,10 +157,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
-    border: 1.5px solid #e2e8f0;
+    background: var(--color-surface-elevated);
+    border: 1.5px solid var(--color-border);
     border-radius: 10px;
-    color: #475569;
+    color: var(--color-secondary-700);
     cursor: pointer;
     transition: all 0.25s ease;
     outline: none;
@@ -174,11 +176,11 @@
 }
 
 .collection-section--alt .swiper-btn:hover {
-    background: #be185d;
-    border-color: #be185d;
-    color: #fff;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-primary);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(190, 24, 93, 0.2);
+    box-shadow: 0 4px 12px rgba(201, 168, 124, 0.3);
 }
 
 .collection-section--alt .swiper-btn:active {
@@ -208,11 +210,11 @@
     gap: 8px;
     font-size: 12px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--color-primary);
     text-decoration: none;
     padding: 10px 16px;
-    background: #fff;
-    border: 1.5px solid #e2e8f0;
+    background: var(--color-surface-elevated);
+    border: 1.5px solid var(--color-border);
     border-radius: 10px;
     transition: all 0.25s ease;
     white-space: nowrap;
@@ -228,10 +230,10 @@
 }
 
 .collection-section--alt .section-link:hover {
-    background: #be185d;
-    color: #fff;
-    border-color: #be185d;
-    box-shadow: 0 4px 12px rgba(190, 24, 93, 0.2);
+    background: var(--color-accent);
+    color: var(--color-primary);
+    border-color: var(--color-accent);
+    box-shadow: 0 4px 12px rgba(201, 168, 124, 0.3);
 }
 
 .collection-section--alt .section-link i {
@@ -302,7 +304,7 @@
 .collection-section--alt .swiper-progress {
     margin-top: 28px;
     height: 3px;
-    background: #e2e8f0;
+    background: var(--color-border);
     border-radius: 99px;
     overflow: hidden;
     width: 100%;
@@ -316,7 +318,7 @@
 
 .collection-section--alt .swiper-progress-bar {
     height: 100%;
-    background: #be185d;
+    background: var(--color-accent);
     border-radius: 99px;
     width: 0%;
     transition: width 0.3s ease;

@@ -114,32 +114,32 @@ $hasVariants = $product->variants->count() > 0;
 
 <style>
 /* ====================================================
-   PRODUCT CARD — Minimal Design
+   PRODUCT CARD — Minimal Luxury
    Clean, spacious, single Add to Cart action
-==================================================== */
+=================================================== */
 
 .pc3-card {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: #fff;
+    background: var(--color-surface-elevated);
     border-radius: 14px;
     overflow: hidden;
     position: relative;
-    border: 1px solid #f1f5f9;
+    border: 1px solid var(--color-border);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .pc3-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 28px -8px rgba(26, 26, 26, 0.12);
 }
 
 /* ── Image ── */
 .pc3-img-wrap {
     position: relative;
     overflow: hidden;
-    background: #f8fafc;
+    background: var(--color-surface-muted);
     border-radius: 14px;
     aspect-ratio: 1 / 1;
     flex-shrink: 0;
@@ -179,10 +179,10 @@ $hasVariants = $product->variants->count() > 0;
     text-transform: uppercase;
 }
 
-.pc3-badge--new  { background: #ecfdf5; color: #059669; }
-.pc3-badge--hot  { background: #fef2f2; color: #dc2626; }
-.pc3-badge--sale { background: #dc2626; color: #fff; }
-.pc3-badge--feat { background: #eff6ff; color: #2563eb; }
+.pc3-badge--new  { background: var(--color-accent-50); color: var(--color-accent-700); }
+.pc3-badge--hot  { background: var(--color-accent-100); color: var(--color-accent-700); }
+.pc3-badge--sale { background: var(--color-danger); color: #fff; }
+.pc3-badge--feat { background: var(--color-primary); color: var(--color-surface-elevated); }
 
 /* ── Heart ── */
 .pc3-heart {
@@ -193,13 +193,13 @@ $hasVariants = $product->variants->count() > 0;
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.95);
+    background: rgba(250, 248, 245, 0.95);
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #94a3b8;
+    color: var(--color-secondary);
     transition: all 0.2s ease;
     opacity: 0;
     transform: scale(0.8);
@@ -211,14 +211,14 @@ $hasVariants = $product->variants->count() > 0;
 }
 
 .pc3-heart:hover {
-    background: #fff;
-    color: #ef4444;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: var(--color-surface-elevated);
+    color: var(--color-danger);
+    box-shadow: 0 2px 8px rgba(26, 26, 26, 0.1);
 }
 
 .pc3-heart.active {
-    color: #ef4444;
-    background: #fef2f2;
+    color: var(--color-danger);
+    background: var(--color-danger-50);
 }
 
 .pc3-heart-icon {
@@ -242,7 +242,7 @@ $hasVariants = $product->variants->count() > 0;
 .pc3-brand {
     font-size: 11px;
     font-weight: 600;
-    color: #64748b;
+    color: var(--color-secondary);
     letter-spacing: 0.03em;
     text-transform: uppercase;
     line-height: 1;
@@ -258,7 +258,7 @@ $hasVariants = $product->variants->count() > 0;
 .pc3-name {
     font-size: 14px;
     font-weight: 600;
-    color: #0f172a;
+    color: var(--color-primary);
     line-height: 1.45;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -269,7 +269,7 @@ $hasVariants = $product->variants->count() > 0;
 }
 
 .pc3-name-link:hover .pc3-name {
-    color: #3b82f6;
+    color: var(--color-accent-700);
 }
 
 /* Rating */
@@ -283,18 +283,18 @@ $hasVariants = $product->variants->count() > 0;
 .pc3-stars {
     display: flex;
     gap: 2px;
-    color: #f59e0b;
+    color: var(--color-accent);
 }
 
 .pc3-rating-text {
     font-size: 12px;
     font-weight: 500;
-    color: #475569;
+    color: var(--color-secondary-700);
 }
 
 .pc3-rating-count {
     font-weight: 400;
-    color: #94a3b8;
+    color: var(--color-secondary);
 }
 
 /* Price */
@@ -309,13 +309,13 @@ $hasVariants = $product->variants->count() > 0;
 .pc3-price {
     font-size: 15px;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--color-primary);
     letter-spacing: -0.02em;
 }
 
 .pc3-compare {
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--color-secondary);
     text-decoration: line-through;
     font-weight: 500;
 }
@@ -334,15 +334,16 @@ $hasVariants = $product->variants->count() > 0;
     gap: 8px;
     font-size: 13px;
     font-weight: 600;
-    background: #0f172a;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-surface-elevated);
     transition: all 0.2s ease;
 }
 
 .pc3-cart-btn:hover {
-    background: #1e293b;
+    background: var(--color-accent);
+    color: var(--color-primary);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+    box-shadow: 0 4px 12px rgba(201, 168, 124, 0.3);
 }
 
 .pc3-cart-btn:active {

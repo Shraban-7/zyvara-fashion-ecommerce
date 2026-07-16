@@ -1,11 +1,11 @@
 {{-- Search Overlay --}}
 <div id="searchOverlay" onclick="closeSearch()"
-    class="fixed inset-0 bg-black/50 z-50 opacity-0 invisible transition-opacity duration-300"></div>
+    class="fixed inset-0 bg-primary/50 z-50 opacity-0 invisible transition-opacity duration-300"></div>
 
 {{-- Search Modal --}}
 <div id="searchModal"
     class="fixed top-0 left-0 right-0 z-50 transform -translate-y-full transition-transform duration-300 ease-out">
-    <div class="bg-white shadow-2xl shadow-black/20 max-h-[85vh] overflow-hidden">
+    <div class="bg-surface-elevated shadow-2xl shadow-black/20 max-h-[85vh] overflow-hidden">
         <div class="max-w-4xl mx-auto">
             {{-- Search Header --}}
             <div class="p-4 md:p-5 border-b border-primary-100">
@@ -14,11 +14,11 @@
                         <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-secondary-300"></i>
                         <input type="text" id="searchInput" placeholder="Search for products, categories..."
                             autocomplete="off"
-                            class="w-full h-12 md:h-14 pl-12 pr-12 bg-light rounded-xl text-base text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white focus:border-primary transition-all duration-200 border border-transparent"
+                            class="w-full h-12 md:h-14 pl-12 pr-12 bg-light rounded-xl text-base text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-elevated focus:border-primary transition-all duration-200 border border-transparent"
                             oninput="handleSearchInput(this.value)">
                         <button onclick="clearSearch()" id="clearSearchBtn"
                             class="hidden absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 bg-secondary-200 rounded-full flex items-center justify-center hover:bg-secondary-300 transition-colors duration-200">
-                            <i class="fas fa-times text-white text-xs"></i>
+                            <i class="fas fa-times text-surface-elevated text-xs"></i>
                         </button>
                     </div>
                     <button onclick="closeSearch()"
@@ -53,25 +53,25 @@
                         <h3 class="text-xs font-bold text-secondary-400 uppercase tracking-wider mb-3">Trending Categories</h3>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <a href="{{ route('products.index') }}?categories=men" onclick="closeSearch()" class="group p-4 bg-light rounded-xl hover:bg-primary-50 transition-all duration-200 border border-transparent hover:border-primary-100">
-                                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md transition-shadow">
+                                <div class="w-10 h-10 bg-surface-elevated rounded-lg flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md transition-shadow">
                                     <i class="fas fa-male text-primary text-lg"></i>
                                 </div>
                                 <span class="text-sm font-semibold text-primary group-hover:text-primary transition-colors">Men's Fashion</span>
                             </a>
                             <a href="{{ route('products.index') }}?categories=women" onclick="closeSearch()" class="group p-4 bg-light rounded-xl hover:bg-primary-50 transition-all duration-200 border border-transparent hover:border-primary-100">
-                                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md transition-shadow">
+                                <div class="w-10 h-10 bg-surface-elevated rounded-lg flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md transition-shadow">
                                     <i class="fas fa-female text-primary text-lg"></i>
                                 </div>
                                 <span class="text-sm font-semibold text-primary group-hover:text-primary transition-colors">Women's Fashion</span>
                             </a>
                             <a href="{{ route('products.index') }}?categories=kids" onclick="closeSearch()" class="group p-4 bg-light rounded-xl hover:bg-primary-50 transition-all duration-200 border border-transparent hover:border-primary-100">
-                                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md transition-shadow">
+                                <div class="w-10 h-10 bg-surface-elevated rounded-lg flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md transition-shadow">
                                     <i class="fas fa-child text-primary text-lg"></i>
                                 </div>
                                 <span class="text-sm font-semibold text-primary group-hover:text-primary transition-colors">Kids</span>
                             </a>
                             <a href="{{ route('products.index') }}?categories=accessories" onclick="closeSearch()" class="group p-4 bg-light rounded-xl hover:bg-primary-50 transition-all duration-200 border border-transparent hover:border-primary-100">
-                                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md transition-shadow">
+                                <div class="w-10 h-10 bg-surface-elevated rounded-lg flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md transition-shadow">
                                     <i class="fas fa-gem text-primary text-lg"></i>
                                 </div>
                                 <span class="text-sm font-semibold text-primary group-hover:text-primary transition-colors">Accessories</span>
@@ -339,7 +339,7 @@
         const html = products.slice(0, products.length).map(product => `
                     <a href="${escapeHtml(product.url || `{{ url('/products') }}/${product.slug}`)}"
                     onclick="closeSearch()"
-                    class="flex items-center gap-3 p-3 bg-white rounded-xl border border-primary-100 hover:border-primary hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 group">
+                    class="flex items-center gap-3 p-3 bg-surface-elevated rounded-xl border border-primary-100 hover:border-primary hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 group">
                         <div class="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-lg overflow-hidden bg-light">
                             <img src="${escapeHtml(product.image)}"
                                 alt="${escapeHtml(product.name)}"

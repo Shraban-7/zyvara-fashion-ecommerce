@@ -11,7 +11,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                 </div>
-                <h1 class="text-3xl font-bold text-black mb-2">Payment Successful!</h1>
+                <h1 class="text-3xl font-bold text-primary mb-2">Payment Successful!</h1>
                 <p class="text-secondary-400">Your order has been placed successfully.</p>
             </div>
 
@@ -20,7 +20,7 @@
                 <div class="flex items-center justify-between mb-4 pb-4 border-b border-secondary-200">
                     <div>
                         <p class="text-sm text-secondary-400">Order Number</p>
-                        <p class="text-lg font-semibold text-black">#{{ $order->order_number }}</p>
+                        <p class="text-lg font-semibold text-primary">#{{ $order->order_number }}</p>
                     </div>
                     <div class="bg-success-100 px-3 py-1 rounded-full border border-success-200">
                         <span class="text-sm font-medium text-success-700">Confirmed</span>
@@ -31,21 +31,21 @@
                     <div class="flex items-start">
                         <i class="fas fa-check-circle text-success-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Payment received</p>
+                            <p class="text-sm font-medium text-primary">Payment received</p>
                             <p class="text-xs text-secondary-400">We've received your payment successfully</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <i class="fas fa-envelope text-success-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Confirmation email sent</p>
+                            <p class="text-sm font-medium text-primary">Confirmation email sent</p>
                             <p class="text-xs text-secondary-400">Check your email for order details</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <i class="fas fa-truck text-success-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Order is being processed</p>
+                            <p class="text-sm font-medium text-primary">Order is being processed</p>
                             <p class="text-xs text-secondary-400">We'll notify you when it ships</p>
                         </div>
                     </div>
@@ -66,17 +66,17 @@
             <div class="flex flex-col sm:flex-row gap-3">
                 @auth
                     <a href="{{ route('orders.index') }}"
-                        class="flex-1 bg-primary text-white py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
+                        class="flex-1 bg-primary text-surface-elevated py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
                         <i class="fas fa-shopping-bag mr-2"></i>View Orders
                     </a>
                 @else
                     <a href="{{ route('home') }}"
-                        class="flex-1 bg-primary text-white py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
+                        class="flex-1 bg-primary text-surface-elevated py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
                         <i class="fas fa-home mr-2"></i>Go to Home
                     </a>
                 @endauth
                 <a href="{{ route('products.index') }}"
-                    class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-white transition text-center">
+                    class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-surface-elevated transition text-center">
                     <i class="fas fa-shopping-cart mr-2"></i>Continue Shopping
                 </a>
             </div>

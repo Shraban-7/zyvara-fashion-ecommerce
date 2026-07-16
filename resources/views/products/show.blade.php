@@ -4,7 +4,7 @@
 
 @section('content')
     {{-- Breadcrumb --}}
-    <div class="bg-white border-b border-primary-100 overflow-hidden">
+    <div class="bg-surface-elevated border-b border-primary-100 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 py-3">
             <nav class="flex items-center gap-2 text-sm overflow-x-auto hide-scrollbar whitespace-nowrap">
                 <a href="{{ url('/') }}" class="text-secondary hover:text-primary transition-colors duration-200 flex-shrink-0">Home</a>
@@ -40,7 +40,7 @@
     <div>
         <div class="max-w-7xl mx-auto p-4">
             {{-- Product Main Section --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-primary-100 p-4 md:p-8 mb-8">
+            <div class="bg-surface-elevated rounded-2xl shadow-sm border border-primary-100 p-4 md:p-8 mb-8">
                 <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
 
                     {{-- Product Images --}}
@@ -55,23 +55,23 @@
                             {{-- Badges --}}
                             <div class="absolute top-4 left-4 flex flex-col gap-2">
                                 @if($product->is_new_arrival)
-                                    <span class="bg-green-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide">NEW
+                                    <span class="bg-accent text-surface-elevated text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide">NEW
                                         ARRIVAL</span>
                                 @endif
                                 @if($product->discount_percentage)
                                     <span
-                                        class="bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide">-{{ $product->discount_percentage }}%
+                                        class="bg-danger text-surface-elevated text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide">-{{ $product->discount_percentage }}%
                                         OFF</span>
                                 @endif
                                 @if($product->is_best_seller)
-                                    <span class="bg-yellow-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide">BEST
+                                    <span class="bg-warning-500 text-surface-elevated text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide">BEST
                                         SELLER</span>
                                 @endif
                             </div>
 
                             {{-- Zoom Button --}}
                             <button onclick="openImageModal()"
-                                class="absolute bottom-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all duration-200 tap-effect border border-primary-100">
+                                class="absolute bottom-4 right-4 w-10 h-10 bg-surface-elevated/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-surface-elevated transition-all duration-200 tap-effect border border-primary-100">
                                 <i class="fas fa-search-plus text-primary text-sm"></i>
                             </button>
                         </div>
@@ -102,7 +102,7 @@
 
                             <div class="flex flex-wrap items-center gap-2 sm:gap-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="flex text-yellow-400 text-sm">
+                                    <div class="flex text-warning text-sm">
                                         @for($i = 1; $i <= 5; $i++)
                                             @if($i <= floor($product->average_rating))
                                                 <i class="fas fa-star"></i>
@@ -120,12 +120,12 @@
                                 </div>
                                 <span class="text-secondary-200 hidden sm:inline">|</span>
                                 @if($product->totalStock > 0)
-                                    <span class="text-xs sm:text-sm text-green-600 font-semibold flex items-center gap-1">
-                                        <span class="w-2 h-2 rounded-full bg-green-500"></span>In Stock
+                                    <span class="text-xs sm:text-sm text-accent-600 font-semibold flex items-center gap-1">
+                                        <span class="w-2 h-2 rounded-full bg-accent"></span>In Stock
                                     </span>
                                 @else
-                                    <span class="text-xs sm:text-sm text-red-500 font-semibold flex items-center gap-1">
-                                        <span class="w-2 h-2 rounded-full bg-red-500"></span>Out of Stock
+                                    <span class="text-xs sm:text-sm text-danger font-semibold flex items-center gap-1">
+                                        <span class="w-2 h-2 rounded-full bg-danger"></span>Out of Stock
                                     </span>
                                 @endif
                             </div>
@@ -139,13 +139,13 @@
                                 <span id="productComparePrice" class="text-lg sm:text-xl text-secondary-300 line-through"
                                     data-base-compare="{{ $product->compare_price }}">{{ money($product->compare_price) }}</span>
                                 <span id="productSavings"
-                                    class="bg-red-50 text-red-600 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg border border-red-100">Save
+                                    class="bg-danger-50 text-danger-600 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg border border-danger-100">Save
                                     {{ money($product->compare_price - $product->price) }}</span>
                             @else
                                 <span id="productComparePrice" class="text-lg sm:text-xl text-secondary-300 line-through hidden"
                                     data-base-compare="{{ $product->compare_price ?? 0 }}"></span>
                                 <span id="productSavings"
-                                    class="bg-red-50 text-red-600 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg border border-red-100 hidden"></span>
+                                    class="bg-danger-50 text-danger-600 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg border border-danger-100 hidden"></span>
                             @endif
                         </div>
 
@@ -208,7 +208,7 @@
                         <div>
                             <span class="text-sm font-bold text-primary mb-2.5 block">Quantity</span>
                             <div class="flex flex-wrap items-center gap-3">
-                                <div class="flex items-center border-2 border-primary-100 rounded-xl overflow-hidden w-fit bg-white shadow-sm">
+                                <div class="flex items-center border-2 border-primary-100 rounded-xl overflow-hidden w-fit bg-surface-elevated shadow-sm">
                                     <button onclick="updateQuantity(-1)"
                                         class="w-10 h-10 flex items-center justify-center text-secondary hover:bg-primary-50 hover:text-primary transition-colors duration-200">
                                         <i class="fas fa-minus text-xs"></i>
@@ -227,14 +227,14 @@
                                 @if($product->variants->count() == 0)
                                     @if($product->isLowStock())
                                         <span class="text-sm text-secondary">
-                                            Only <span class="text-orange-500 font-bold">
+                                            Only <span class="text-warning-500 font-bold">
                                                 {{ $product->currentStock }} items
                                             </span> left!
                                         </span>
 
                                     @elseif($product->currentStock > 0)
                                         <span class="text-sm text-secondary">
-                                            <span class="text-green-600 font-bold">
+                                            <span class="text-accent-600 font-bold">
                                                 {{ $product->currentStock }} items
                                             </span>
                                             available
@@ -253,12 +253,12 @@
                         <div class="flex flex-col sm:flex-row gap-3 pt-2 w-full">
                             @if($product->totalStock > 0)
                                 <button id="addToCartBtn"
-                                    class="w-full sm:flex-1 bg-primary text-white py-3.5 rounded-xl font-bold text-base hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 tap-effect shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
+                                    class="w-full sm:flex-1 bg-primary text-surface-elevated py-3.5 rounded-xl font-bold text-base hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 tap-effect shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
                                     <i class="fas fa-shopping-cart text-lg group-hover:scale-110 transition-transform duration-200"></i>
                                     Add to Cart
                                 </button>
                                 <button id="buyNowBtn"
-                                    class="w-full sm:flex-1 bg-primary-800 text-white py-3.5 rounded-xl font-bold text-base hover:bg-black active:bg-primary-900 transition-all duration-200 tap-effect flex items-center justify-center gap-2 group">
+                                    class="w-full sm:flex-1 bg-primary-800 text-surface-elevated py-3.5 rounded-xl font-bold text-base hover:bg-primary active:bg-primary-900 transition-all duration-200 tap-effect flex items-center justify-center gap-2 group">
                                     <i class="fas fa-bolt text-lg group-hover:scale-110 transition-transform duration-200"></i>
                                     Buy Now
                                 </button>
@@ -274,7 +274,7 @@
                         {{-- Delivery Info --}}
                         <div class="bg-light rounded-2xl p-5 space-y-4 border border-primary-100">
                             <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                     <i class="fas fa-truck text-primary text-sm"></i>
                                 </div>
                                 <div>
@@ -283,7 +283,7 @@
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                     <i class="fas fa-undo text-primary text-sm"></i>
                                 </div>
                                 <div>
@@ -292,7 +292,7 @@
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                     <i class="fas fa-shield-alt text-primary text-sm"></i>
                                 </div>
                                 <div>
@@ -307,15 +307,15 @@
                             <span class="text-xs font-bold text-secondary uppercase tracking-wider">Share:</span>
                             <div class="flex gap-2">
                                 <a href="#"
-                                    class="w-8 h-8 bg-[#1877F2] rounded-full flex items-center justify-center text-white hover:opacity-80 transition-opacity duration-200 shadow-sm">
+                                    class="w-8 h-8 bg-[#1877F2] rounded-full flex items-center justify-center text-surface-elevated hover:opacity-80 transition-opacity duration-200 shadow-sm">
                                     <i class="fab fa-facebook-f text-xs"></i>
                                 </a>
                                 <a href="#"
-                                    class="w-8 h-8 bg-[#1DA1F2] rounded-full flex items-center justify-center text-white hover:opacity-80 transition-opacity duration-200 shadow-sm">
+                                    class="w-8 h-8 bg-[#1DA1F2] rounded-full flex items-center justify-center text-surface-elevated hover:opacity-80 transition-opacity duration-200 shadow-sm">
                                     <i class="fab fa-twitter text-xs"></i>
                                 </a>
                                 <a href="#"
-                                    class="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center text-white hover:opacity-80 transition-opacity duration-200 shadow-sm">
+                                    class="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center text-surface-elevated hover:opacity-80 transition-opacity duration-200 shadow-sm">
                                     <i class="fab fa-whatsapp text-xs"></i>
                                 </a>
                                 <button onclick="copyProductLink()"
@@ -329,7 +329,7 @@
             </div>
 
             {{-- Product Details Tabs --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-primary-100 p-4 md:p-8 mb-8">
+            <div class="bg-surface-elevated rounded-2xl shadow-sm border border-primary-100 p-4 md:p-8 mb-8">
                 <div>
                     {{-- Tab Navigation --}}
                     <div class="border-b border-primary-100">
@@ -389,47 +389,47 @@
                                     <tbody>
                                         @if($brandName)
                                             <tr class="border-b border-primary-100">
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white w-1/3">Brand
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated w-1/3">Brand
                                                 </td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">{{ $brandName }}</td>
                                             </tr>
                                         @endif
                                         @if($product->sku)
                                             <tr class="border-b border-primary-100">
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white">SKU</td>
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated">SKU</td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">{{ $product->sku }}</td>
                                             </tr>
                                         @endif
                                         @if($product->material)
                                             <tr class="border-b border-primary-100">
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white">Material
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated">Material
                                                 </td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">{{ $product->material }}</td>
                                             </tr>
                                         @endif
                                         @if($product->fit_type)
                                             <tr class="border-b border-primary-100">
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white">Fit Type
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated">Fit Type
                                                 </td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">{{ $product->fit_type->value }}</td>
                                             </tr>
                                         @endif
                                         @if($product->pattern)
                                             <tr class="border-b border-primary-100">
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white">Pattern</td>
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated">Pattern</td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">{{ $product->pattern->value }}</td>
                                             </tr>
                                         @endif
                                         @if($product->occasion)
                                             <tr class="border-b border-primary-100">
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white">Occasion
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated">Occasion
                                                 </td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">{{ $product->occasion->value }}</td>
                                             </tr>
                                         @endif
                                         @if($availableSizes->count() > 0)
                                             <tr class="border-b border-primary-100">
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white">Available
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated">Available
                                                     Sizes</td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">
                                                     {{ $availableSizes->pluck('name')->join(', ') }}</td>
@@ -437,7 +437,7 @@
                                         @endif
                                         @if($availableColors->count() > 0)
                                             <tr class="border-b border-primary-100">
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white">Available
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated">Available
                                                     Colors</td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">
                                                     {{ $availableColors->pluck('name')->join(', ') }}</td>
@@ -445,7 +445,7 @@
                                         @endif
                                         @if($product->weight)
                                             <tr>
-                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-white">Weight</td>
+                                                <td class="py-4 px-5 text-sm font-bold text-secondary bg-surface-elevated">Weight</td>
                                                 <td class="py-4 px-5 text-sm text-primary font-medium">{{ $product->weight }} kg</td>
                                             </tr>
                                         @endif
@@ -464,7 +464,7 @@
                                         <div class="text-center mb-6">
                                             <div class="text-5xl font-black text-primary mb-2">
                                                 {{ number_format($product->average_rating, 1) }}</div>
-                                            <div class="flex justify-center text-yellow-400 mb-2">
+                                            <div class="flex justify-center text-warning mb-2">
                                                 @for($i = 1; $i <= 5; $i++)
                                                     @if($i <= floor($product->average_rating))
                                                         <i class="fas fa-star"></i>
@@ -487,9 +487,9 @@
                                                     $percentage = $product->review_count > 0 ? ($count / $product->review_count * 100) : 0;
                                                 @endphp
                                                 <div class="flex items-center gap-3">
-                                                    <span class="text-sm text-secondary font-semibold w-8">{{ $rating }} <i class="fas fa-star text-[10px] text-yellow-400"></i></span>
+                                                    <span class="text-sm text-secondary font-semibold w-8">{{ $rating }} <i class="fas fa-star text-[10px] text-warning"></i></span>
                                                     <div class="flex-1 h-2 bg-primary-100 rounded-full overflow-hidden">
-                                                        <div class="h-full bg-yellow-400 rounded-full transition-all duration-500"
+                                                        <div class="h-full bg-warning rounded-full transition-all duration-500"
                                                             style="width: {{ $percentage }}%"></div>
                                                     </div>
                                                     <span class="text-sm text-secondary-300 w-8 text-right">{{ $count }}</span>
@@ -498,7 +498,7 @@
                                         </div>
 
                                         <button
-                                            class="w-full mt-6 bg-primary text-white py-3 rounded-xl font-bold text-sm hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 tap-effect shadow-lg shadow-primary/20">
+                                            class="w-full mt-6 bg-primary text-surface-elevated py-3 rounded-xl font-bold text-sm hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 tap-effect shadow-lg shadow-primary/20">
                                             Write a Review
                                         </button>
                                     </div>
@@ -507,11 +507,11 @@
                                 {{-- Reviews List --}}
                                 <div class="lg:col-span-2 space-y-6">
                                     @forelse($product->approvedReviews->take(10) as $review)
-                                        <div class="bg-white border border-primary-100 rounded-2xl p-5 hover:shadow-md transition-shadow duration-200">
+                                        <div class="bg-surface-elevated border border-primary-100 rounded-2xl p-5 hover:shadow-md transition-shadow duration-200">
                                             <div class="flex items-start justify-between mb-3">
                                                 <div class="flex items-center gap-3">
                                                     <div
-                                                        class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                                        class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-surface-elevated font-bold text-sm">
                                                         {{ strtoupper(substr($review->user->name ?? 'A', 0, 1)) }}
                                                     </div>
                                                     <div>
@@ -521,7 +521,7 @@
                                                             {{ $review->created_at->diffForHumans() }}</p>
                                                     </div>
                                                 </div>
-                                                <div class="flex text-yellow-400">
+                                                <div class="flex text-warning">
                                                     @for($i = 1; $i <= 5; $i++)
                                                         <i
                                                             class="fas fa-star text-sm {{ $i <= $review->rating ? '' : 'text-primary-100' }}"></i>
@@ -573,7 +573,7 @@
                                     <h3 class="text-lg font-bold text-primary mb-4">Shipping Information</h3>
                                     <div class="space-y-4">
                                         <div class="flex items-start gap-4 p-4 bg-light rounded-xl border border-primary-100">
-                                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                            <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                                 <i class="fas fa-truck text-primary text-sm"></i>
                                             </div>
                                             <div>
@@ -583,7 +583,7 @@
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4 p-4 bg-light rounded-xl border border-primary-100">
-                                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                            <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                                 <i class="fas fa-shipping-fast text-primary text-sm"></i>
                                             </div>
                                             <div>
@@ -593,7 +593,7 @@
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4 p-4 bg-light rounded-xl border border-primary-100">
-                                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                            <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                                 <i class="fas fa-store text-primary text-sm"></i>
                                             </div>
                                             <div>
@@ -608,7 +608,7 @@
                                     <h3 class="text-lg font-bold text-primary mb-4">Return Policy</h3>
                                     <div class="space-y-4">
                                         <div class="flex items-start gap-4 p-4 bg-light rounded-xl border border-primary-100">
-                                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                            <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                                 <i class="fas fa-undo text-primary text-sm"></i>
                                             </div>
                                             <div>
@@ -618,7 +618,7 @@
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4 p-4 bg-light rounded-xl border border-primary-100">
-                                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                            <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                                 <i class="fas fa-exchange-alt text-primary text-sm"></i>
                                             </div>
                                             <div>
@@ -628,7 +628,7 @@
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4 p-4 bg-light rounded-xl border border-primary-100">
-                                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
+                                            <div class="w-10 h-10 bg-surface-elevated rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary-100">
                                                 <i class="fas fa-info-circle text-primary text-sm"></i>
                                             </div>
                                             <div>
@@ -667,9 +667,9 @@
 
     {{-- Image Modal --}}
     <div id="imageModal" class="fixed inset-0 z-[100] hidden">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeImageModal()"></div>
+        <div class="absolute inset-0 bg-primary/90 backdrop-blur-sm" onclick="closeImageModal()"></div>
         <button onclick="closeImageModal()"
-            class="absolute top-4 right-4 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white z-10 transition-colors duration-200 backdrop-blur-sm border border-white/10">
+            class="absolute top-4 right-4 w-12 h-12 bg-surface-elevated/10 hover:bg-surface-elevated/20 rounded-full flex items-center justify-center text-surface-elevated z-10 transition-colors duration-200 backdrop-blur-sm border border-surface-elevated/10">
             <i class="fas fa-times text-xl"></i>
         </button>
         <div class="absolute inset-0 flex items-center justify-center p-4">
@@ -756,11 +756,11 @@
         // Select size
         function selectSize(btn, sizeName) {
             document.querySelectorAll('.product-size-btn:not([disabled])').forEach(b => {
-                b.classList.remove('border-primary', 'bg-primary', 'text-white', 'shadow-sm');
+                b.classList.remove('border-primary', 'bg-primary', 'text-surface-elevated', 'shadow-sm');
                 b.classList.add('border-primary-100', 'text-secondary');
             });
             btn.classList.remove('border-primary-100', 'text-secondary');
-            btn.classList.add('border-primary', 'bg-primary', 'text-white', 'shadow-sm');
+            btn.classList.add('border-primary', 'bg-primary', 'text-surface-elevated', 'shadow-sm');
             document.getElementById('selectedSizeName').textContent = sizeName;
             document.getElementById('selectedSizeName').classList.add('text-primary', 'font-semibold');
             updateVariantPrice();
@@ -896,15 +896,15 @@
 
             if (stock <= 0) {
                 stockElement.innerHTML =
-                    `<span class="text-red-500 font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span>Out of stock</span>`;
+                    `<span class="text-danger font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-danger"></span>Out of stock</span>`;
             }
             else if (stock <= 5) {
                 stockElement.innerHTML =
-                    `<span class="text-orange-500 font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500"></span>Only ${stock} left!</span>`;
+                    `<span class="text-warning-500 font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-warning-500"></span>Only ${stock} left!</span>`;
             }
             else {
                 stockElement.innerHTML =
-                    `<span class="text-green-600 font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span>${stock} items available</span>`;
+                    `<span class="text-accent-600 font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent"></span>${stock} items available</span>`;
             }
 
             // Update quantity max limit

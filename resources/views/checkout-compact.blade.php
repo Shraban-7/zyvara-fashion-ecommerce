@@ -5,7 +5,7 @@
 @section('content')
     <div class="bg-light min-h-screen pb-10">
         {{-- Compact Breadcrumb --}}
-        <div class="bg-white border-b border-primary-100 shadow-sm sticky top-0 z-30">
+        <div class="bg-surface-elevated border-b border-primary-100 shadow-sm sticky top-0 z-30">
             <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
                 <nav class="flex items-center gap-2 text-xs font-bold">
                     <a href="{{ url('/') }}" class="text-secondary hover:text-primary transition-colors duration-200">Home</a>
@@ -22,9 +22,9 @@
 
         <div class="max-w-7xl mx-auto px-4 py-6">
             @if ($errors->any())
-                <div class="bg-red-50 border border-red-100 rounded-lg p-3 mb-4 flex items-center gap-3">
-                    <i class="fas fa-exclamation-circle text-red-500"></i>
-                    <span class="text-sm text-red-700 font-bold">Please fix the errors below.</span>
+                <div class="bg-danger-50 border border-danger-100 rounded-lg p-3 mb-4 flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-danger"></i>
+                    <span class="text-sm text-danger-700 font-bold">Please fix the errors below.</span>
                 </div>
             @endif
 
@@ -36,10 +36,10 @@
                 <div class="lg:col-span-8 space-y-4">
 
                     {{-- Section 1: Customer & Address Combined (Dense Grid) --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-primary-100 overflow-hidden">
+                    <div class="bg-surface-elevated rounded-lg shadow-sm border border-primary-100 overflow-hidden">
                         <div class="bg-light px-4 py-2 border-b border-primary-100 flex items-center gap-2">
                             <div
-                                class="w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold shadow-sm">
+                                class="w-5 h-5 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold shadow-sm">
                                 1</div>
                             <h2 class="text-sm font-bold text-primary uppercase tracking-wide">Shipping Information</h2>
                         </div>
@@ -49,15 +49,15 @@
                             <div class="grid sm:grid-cols-3 gap-3">
                                 <div class="sm:col-span-1">
                                     <label class="block text-xs font-bold text-primary mb-1">Full Name <span
-                                            class="text-red-500">*</span></label>
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="name" required value="{{ old('name', $user?->name) }}"
                                         class="w-full h-9 px-3 bg-light border rounded-md text-sm text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 border-primary-100"
                                         placeholder="Full Name">
-                                    @error('name') <p class="text-xs text-red-500 mt-0.5">{{ $message }}</p> @enderror
+                                    @error('name') <p class="text-xs text-danger mt-0.5">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="sm:col-span-1">
                                     <label class="block text-xs font-bold text-primary mb-1">Phone <span
-                                            class="text-red-500">*</span></label>
+                                            class="text-danger">*</span></label>
                                     <div class="flex">
                                         <span
                                             class="h-9 px-2 bg-light border border-r-0 border-primary-100 rounded-l-md flex items-center text-xs text-secondary font-bold">+88</span>
@@ -65,7 +65,7 @@
                                             class="flex-1 h-9 px-3 bg-light border rounded-r-md text-sm text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 border-primary-100"
                                             placeholder="01XXX...">
                                     </div>
-                                    @error('phone') <p class="text-xs text-red-500 mt-0.5">{{ $message }}</p> @enderror
+                                    @error('phone') <p class="text-xs text-danger mt-0.5">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="sm:col-span-1">
                                     <label class="block text-xs font-bold text-primary mb-1">Email <span
@@ -81,7 +81,7 @@
                             {{-- Row 2: Delivery Zone (Horizontal Pills) --}}
                             <div>
                                 <label class="block text-xs font-bold text-primary mb-2">Delivery Zone <span
-                                        class="text-red-500">*</span></label>
+                                        class="text-danger">*</span></label>
                                 <div class="flex flex-wrap gap-2">
                                     @foreach($shippingZones as $index => $zone)
                                         <label class="relative cursor-pointer group flex-1 sm:flex-none">
@@ -95,7 +95,7 @@
                                             </div>
                                             <div
                                                 class="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full items-center justify-center hidden peer-checked:flex shadow-sm">
-                                                <i class="fas fa-check text-white text-[8px]"></i>
+                                                <i class="fas fa-check text-surface-elevated text-[8px]"></i>
                                             </div>
                                         </label>
                                     @endforeach
@@ -106,7 +106,7 @@
                             <div class="grid sm:grid-cols-4 gap-3">
                                 <div class="sm:col-span-1">
                                     <label class="block text-xs font-bold text-primary mb-1">District <span
-                                            class="text-red-500">*</span></label>
+                                            class="text-danger">*</span></label>
                                     <select name="district" required
                                         class="w-full h-9 px-2 bg-light border rounded-md text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 border-primary-100">
                                         <option value="">Select</option>
@@ -117,28 +117,28 @@
                                 </div>
                                 <div class="sm:col-span-1">
                                     <label class="block text-xs font-bold text-primary mb-1">Area/City <span
-                                            class="text-red-500">*</span></label>
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="city" required value="{{ old('city') }}"
                                         class="w-full h-9 px-3 bg-light border rounded-md text-sm text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 border-primary-100"
                                         placeholder="e.g. Uttara">
                                 </div>
                                 <div class="sm:col-span-2">
                                     <label class="block text-xs font-bold text-primary mb-1">Full Address <span
-                                            class="text-red-500">*</span></label>
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="address" required value="{{ old('address') }}"
                                         class="w-full h-9 px-3 bg-light border rounded-md text-sm text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 border-primary-100"
                                         placeholder="House, Road, Block...">
-                                    @error('address') <p class="text-xs text-red-500 mt-0.5">{{ $message }}</p> @enderror
+                                    @error('address') <p class="text-xs text-danger mt-0.5">{{ $message }}</p> @enderror
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {{-- Section 2: Payment & Notes --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-primary-100 overflow-hidden">
+                    <div class="bg-surface-elevated rounded-lg shadow-sm border border-primary-100 overflow-hidden">
                         <div class="bg-light px-4 py-2 border-b border-primary-100 flex items-center gap-2">
                             <div
-                                class="w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold shadow-sm">
+                                class="w-5 h-5 bg-primary text-surface-elevated rounded-full flex items-center justify-center text-xs font-bold shadow-sm">
                                 2</div>
                             <h2 class="text-sm font-bold text-primary uppercase tracking-wide">Payment Method</h2>
                         </div>
@@ -151,8 +151,8 @@
                                     <input type="radio" name="payment_method" value="cod" class="sr-only peer" checked
                                         onchange="togglePaymentDetails('cod')">
                                     <div
-                                        class="h-full flex flex-col items-center justify-center p-3 border border-primary-100 rounded-lg hover:bg-light peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200">
-                                        <i class="fas fa-money-bill-wave text-green-600 text-lg mb-1"></i>
+                                        class="h-full flex flex-col items-center justify-center p-3 border border-primary-100 rounded-lg hover:bg-light peer-checked:border-accent peer-checked:bg-accent-50 transition-all duration-200">
+                                        <i class="fas fa-money-bill-wave text-accent-600 text-lg mb-1"></i>
                                         <span class="text-xs font-bold text-primary">Cash on Delivery</span>
                                     </div>
                                 </label>
@@ -162,7 +162,7 @@
                                     <input type="radio" name="payment_method" value="bkash" class="sr-only peer"
                                         onchange="togglePaymentDetails('bkash')">
                                     <div
-                                        class="h-full flex flex-col items-center justify-center p-3 border border-primary-100 rounded-lg hover:bg-light peer-checked:border-pink-500 peer-checked:bg-pink-50 transition-all duration-200">
+                                        class="h-full flex flex-col items-center justify-center p-3 border border-primary-100 rounded-lg hover:bg-light peer-checked:border-accent-500 peer-checked:bg-accent-50 transition-all duration-200">
                                         <img src="{{ asset('assets/images/bkash.png') }}" alt="bKash"
                                             class="h-5 mb-1 object-contain">
                                         <span class="text-xs font-bold text-primary">bKash</span>
@@ -174,7 +174,7 @@
                                     <input type="radio" name="payment_method" value="nagad" class="sr-only peer"
                                         onchange="togglePaymentDetails('nagad')">
                                     <div
-                                        class="h-full flex flex-col items-center justify-center p-3 border border-primary-100 rounded-lg hover:bg-light peer-checked:border-orange-500 peer-checked:bg-orange-50 transition-all duration-200">
+                                        class="h-full flex flex-col items-center justify-center p-3 border border-primary-100 rounded-lg hover:bg-light peer-checked:border-warning-500 peer-checked:bg-warning-50 transition-all duration-200">
                                         <img src="{{ asset('assets/images/nagad.png') }}" alt="Nagad"
                                             class="h-5 mb-1 object-contain">
                                         <span class="text-xs font-bold text-primary">Nagad</span>
@@ -184,56 +184,56 @@
 
                             {{-- Compact bKash Instructions --}}
                             <div id="bkashInstructions"
-                                class="hidden bg-pink-50 rounded-lg p-4 border border-pink-100 text-sm animate-fade-in-down">
+                                class="hidden bg-accent-50 rounded-lg p-4 border border-accent-100 text-sm animate-fade-in-down">
                                 <div class="flex flex-col sm:flex-row gap-4">
                                     <div class="flex-1 space-y-2">
                                         <div
-                                            class="flex items-center justify-between text-xs text-pink-800 bg-white p-2 rounded border border-pink-200">
+                                            class="flex items-center justify-between text-xs text-accent-800 bg-surface-elevated p-2 rounded border border-accent-200">
                                             <span class="font-bold">Merchant Number:</span>
                                             <div class="flex items-center gap-2">
                                                 <code class="font-mono font-bold text-base">{{ $bkashNumber }}</code>
                                                 <button type="button"
                                                     onclick="copyToClipboard('{{ str_replace('-', '', $bkashNumber) }}')"
-                                                    class="text-pink-500 hover:text-pink-700 transition-colors"><i
+                                                    class="text-accent-500 hover:text-accent-700 transition-colors"><i
                                                         class="far fa-copy"></i></button>
                                             </div>
                                         </div>
-                                        <ol class="list-decimal list-inside text-xs text-pink-800 space-y-1 pl-1">
+                                        <ol class="list-decimal list-inside text-xs text-accent-800 space-y-1 pl-1">
                                             <li>Dial *247# or use App -> <strong>Send Money</strong></li>
                                             <li>Reference: Your Phone Number</li>
                                         </ol>
                                     </div>
                                     <div class="flex-1">
-                                        <label class="block text-xs font-bold text-pink-800 mb-1">Transaction ID (TrxID)
-                                            <span class="text-red-500">*</span></label>
+                                        <label class="block text-xs font-bold text-accent-800 mb-1">Transaction ID (TrxID)
+                                            <span class="text-danger">*</span></label>
                                         <input type="text" name="bkash_trx_id" placeholder="e.g. 8N72KS92JD"
-                                            class="w-full h-9 px-3 border border-pink-300 rounded-md text-sm uppercase focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all duration-200">
+                                            class="w-full h-9 px-3 border border-accent-300 rounded-md text-sm uppercase focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 transition-all duration-200">
                                     </div>
                                 </div>
                             </div>
 
                             {{-- Compact Nagad Instructions --}}
                             <div id="nagadInstructions"
-                                class="hidden bg-orange-50 rounded-lg p-4 border border-orange-100 text-sm animate-fade-in-down">
+                                class="hidden bg-warning-50 rounded-lg p-4 border border-warning-100 text-sm animate-fade-in-down">
                                 <div class="flex flex-col sm:flex-row gap-4">
                                     <div class="flex-1 space-y-2">
                                         <div
-                                            class="flex items-center justify-between text-xs text-orange-800 bg-white p-2 rounded border border-orange-200">
+                                            class="flex items-center justify-between text-xs text-warning-800 bg-surface-elevated p-2 rounded border border-warning-200">
                                             <span class="font-bold">Nagad Number:</span>
                                             <div class="flex items-center gap-2">
                                                 <code class="font-mono font-bold text-base">{{ $nagadNumber }}</code>
                                                 <button type="button"
                                                     onclick="copyToClipboard('{{ str_replace('-', '', $nagadNumber) }}')"
-                                                    class="text-orange-500 hover:text-orange-700 transition-colors"><i
+                                                    class="text-warning-500 hover:text-warning-700 transition-colors"><i
                                                         class="far fa-copy"></i></button>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-1">
-                                        <label class="block text-xs font-bold text-orange-800 mb-1">Transaction ID (TrxID)
-                                            <span class="text-red-500">*</span></label>
+                                        <label class="block text-xs font-bold text-warning-800 mb-1">Transaction ID (TrxID)
+                                            <span class="text-danger">*</span></label>
                                         <input type="text" name="nagad_trx_id" placeholder="e.g. N8K72J92"
-                                            class="w-full h-9 px-3 border border-orange-300 rounded-md text-sm uppercase focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-200">
+                                            class="w-full h-9 px-3 border border-warning-300 rounded-md text-sm uppercase focus:outline-none focus:ring-2 focus:ring-warning-500/20 focus:border-warning-500 transition-all duration-200">
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@
 
                 {{-- Right Column: Summary --}}
                 <div class="lg:col-span-4">
-                    <div class="bg-white rounded-lg shadow-sm border border-primary-100 sticky top-20">
+                    <div class="bg-surface-elevated rounded-lg shadow-sm border border-primary-100 sticky top-20">
                         <div class="p-4 bg-light border-b border-primary-100">
                             <h2 class="text-sm font-bold text-primary uppercase tracking-wide">Order Summary</h2>
                         </div>
@@ -281,9 +281,9 @@
                             {{-- Coupon --}}
                             <div class="flex gap-2 mb-4">
                                 <input type="text" name="coupon" id="couponCode" placeholder="Coupon Code"
-                                    class="flex-1 h-8 px-3 text-xs bg-white border border-primary-100 rounded text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200">
+                                    class="flex-1 h-8 px-3 text-xs bg-surface-elevated border border-primary-100 rounded text-primary placeholder-secondary-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200">
                                 <button type="button" id="applyCouponBtn"
-                                    class="h-8 px-3 bg-primary text-white text-xs rounded font-bold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm">Apply</button>
+                                    class="h-8 px-3 bg-primary text-surface-elevated text-xs rounded font-bold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm">Apply</button>
                             </div>
                             <div id="couponMessage" class="text-xs mb-2 hidden font-medium"></div>
 
@@ -298,7 +298,7 @@
                                     <span class="font-semibold text-primary"
                                         id="shippingCost">{{ money($shippingZones->first()->shipping_cost ?? 0) }}</span>
                                 </div>
-                                <div class="flex justify-between text-green-600 hidden" id="discountRow">
+                                <div class="flex justify-between text-accent-600 hidden" id="discountRow">
                                     <span>Discount</span>
                                     <span class="font-bold" id="discountAmount">-৳0</span>
                                 </div>
@@ -313,7 +313,7 @@
                             </div>
 
                             <button type="submit"
-                                class="w-full bg-primary text-white py-3 rounded-lg font-bold text-sm hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
+                                class="w-full bg-primary text-surface-elevated py-3 rounded-lg font-bold text-sm hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
                                 <i class="fas fa-check-circle group-hover:scale-110 transition-transform duration-200"></i>
                                 Confirm Order
                             </button>
@@ -322,7 +322,7 @@
                                 class="mt-3 flex justify-center gap-3 opacity-40 grayscale hover:grayscale-0 transition-all duration-300">
                                 <i class="fab fa-cc-visa text-xl text-secondary"></i>
                                 <i class="fab fa-cc-mastercard text-xl text-secondary"></i>
-                                <i class="fas fa-shield-alt text-xl text-green-500"></i>
+                                <i class="fas fa-shield-alt text-xl text-accent"></i>
                             </div>
                         </div>
                     </div>
@@ -416,7 +416,7 @@
                     showCouponMessage(data.message, 'success');
                     btn.textContent = 'Remove';
                     btn.classList.remove('bg-primary', 'hover:bg-primary-700');
-                    btn.classList.add('bg-red-50', 'text-red-600', 'hover:bg-red-100', 'border', 'border-red-200');
+                    btn.classList.add('bg-danger-50', 'text-danger-600', 'hover:bg-danger-100', 'border', 'border-danger-200');
                     btn.onclick = removeCoupon;
                     couponInput.disabled = true;
                 } else {
@@ -438,7 +438,7 @@
             document.getElementById('discountAmount').dataset.value = 0;
             updateTotals();
             btn.textContent = 'Apply';
-            btn.classList.remove('bg-red-50', 'text-red-600', 'hover:bg-red-100', 'border', 'border-red-200');
+            btn.classList.remove('bg-danger-50', 'text-danger-600', 'hover:bg-danger-100', 'border', 'border-danger-200');
             btn.classList.add('bg-primary', 'hover:bg-primary-700');
             btn.onclick = null;
             couponInput.disabled = false;
@@ -449,8 +449,8 @@
         function showCouponMessage(message, type) {
             const messageDiv = document.getElementById('couponMessage');
             messageDiv.textContent = message;
-            messageDiv.classList.remove('hidden', 'text-green-600', 'text-red-600');
-            messageDiv.classList.add(type === 'success' ? 'text-green-600' : 'text-red-600');
+            messageDiv.classList.remove('hidden', 'text-accent-600', 'text-danger-600');
+            messageDiv.classList.add(type === 'success' ? 'text-accent-600' : 'text-danger-600');
         }
     </script>
 @endsection

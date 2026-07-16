@@ -1,13 +1,13 @@
 <!-- ==================== MOBILE MENU OVERLAY & DRAWER ==================== -->
-<div id="mobileMenuOverlay" class="fixed inset-0 bg-black/50 z-[200] hidden opacity-0 transition-opacity duration-300"></div>
+<div id="mobileMenuOverlay" class="fixed inset-0 bg-primary/50 z-[200] hidden opacity-0 transition-opacity duration-300"></div>
 
 <div id="mobileMenuDrawer"
     class="fixed top-0 left-0 w-[85%] max-w-[300px] h-full bg-surface z-[210] transform -translate-x-full shadow-2xl flex flex-col transition-transform duration-300">
 
     <!-- Drawer Header -->
-    <div class="p-4 bg-primary text-white flex justify-between items-center">
+    <div class="p-4 bg-primary text-surface-elevated flex justify-between items-center">
         <span class="font-bold text-lg">Categories</span>
-        <button id="closeMobileMenu" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition">
+        <button id="closeMobileMenu" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-elevated/20 transition">
             <i class="fas fa-times"></i>
         </button>
     </div>
@@ -18,7 +18,7 @@
 
             <!-- Home -->
             <li>
-                <a href="#" class="block py-2.5 px-2 text-black font-medium hover:bg-light rounded transition-colors">
+                <a href="#" class="block py-2.5 px-2 text-primary font-medium hover:bg-light rounded transition-colors">
                     Home
                 </a>
             </li>
@@ -28,7 +28,7 @@
             <li>
                 <button type="button"
                     class="mob-acc-btn w-full flex justify-between items-center py-2.5 px-2 
-                               text-black font-medium hover:bg-light rounded transition-colors"
+                               text-primary font-medium hover:bg-light rounded transition-colors"
                     data-target="#mob-{{ $cat->slug }}">
 
                     <span>{{ $cat->name }}</span>
@@ -64,12 +64,12 @@
 
             <!-- Other Static Links -->
             <li>
-                <a href="#" class="block py-2.5 px-2 text-black font-medium hover:bg-light rounded transition-colors">
+                <a href="#" class="block py-2.5 px-2 text-primary font-medium hover:bg-light rounded transition-colors">
                     Shop
                 </a>
             </li>
             <li>
-                <a href="{{ route('track-order.index') }}" class="block py-2.5 px-2 text-black font-medium hover:bg-light rounded transition-colors">
+                <a href="{{ route('track-order.index') }}" class="block py-2.5 px-2 text-primary font-medium hover:bg-light rounded transition-colors">
                     Track Order
                 </a>
             </li>

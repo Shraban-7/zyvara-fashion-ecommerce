@@ -20,24 +20,24 @@
 
     // Solid Variants
     $solidColors = [
-        'primary'   => 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 border-transparent',
-        'secondary' => 'bg-slate-600 text-white hover:bg-slate-700 focus:ring-slate-500 border-transparent',
-        'danger'    => 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 border-transparent',
-        'success'   => 'bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500 border-transparent',
-        'warning'   => 'bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500 border-transparent',
-        'info'      => 'bg-sky-500 text-white hover:bg-sky-600 focus:ring-sky-500 border-transparent',
-        'dark'      => 'bg-gray-900 text-white hover:bg-black focus:ring-gray-900 border-transparent',
+        'primary'   => 'bg-primary text-surface-elevated hover:bg-primary focus:ring-primary border-transparent',
+        'secondary' => 'bg-secondary text-surface-elevated hover:bg-secondary focus:ring-secondary border-transparent',
+        'danger'    => 'bg-danger-600 text-surface-elevated hover:bg-danger-700 focus:ring-danger border-transparent',
+        'success'   => 'bg-success-600 text-surface-elevated hover:bg-success-700 focus:ring-success border-transparent',
+        'warning'   => 'bg-warning-500 text-surface-elevated hover:bg-warning-600 focus:ring-warning border-transparent',
+        'info'      => 'bg-accent-500 text-surface-elevated hover:bg-accent-600 focus:ring-accent border-transparent',
+        'dark'      => 'bg-primary text-surface-elevated hover:bg-primary focus:ring-primary border-transparent',
     ];
 
     // Outline Variants
     $outlineColors = [
-        'primary'   => 'border-blue-600 text-blue-600 hover:bg-blue-50 focus:ring-blue-500',
-        'secondary' => 'border-slate-600 text-slate-600 hover:bg-slate-50 focus:ring-slate-500',
-        'danger'    => 'border-red-600 text-red-600 hover:bg-red-50 focus:ring-red-500',
-        'success'   => 'border-emerald-600 text-emerald-600 hover:bg-emerald-50 focus:ring-emerald-500',
-        'warning'   => 'border-amber-500 text-amber-600 hover:bg-amber-50 focus:ring-amber-500',
-        'info'      => 'border-sky-500 text-sky-600 hover:bg-sky-50 focus:ring-sky-500',
-        'dark'      => 'border-gray-900 text-gray-900 hover:bg-gray-100 focus:ring-gray-900',
+        'primary'   => 'border-primary text-primary hover:bg-primary focus:ring-primary',
+        'secondary' => 'border-secondary text-secondary hover:bg-secondary focus:ring-secondary',
+        'danger'    => 'border-danger-600 text-danger-600 hover:bg-danger-50 focus:ring-danger',
+        'success'   => 'border-success-600 text-success-600 hover:bg-success-50 focus:ring-success',
+        'warning'   => 'border-warning-500 text-warning-600 hover:bg-warning-50 focus:ring-warning',
+        'info'      => 'border-accent-500 text-accent-600 hover:bg-accent-50 focus:ring-accent',
+        'dark'      => 'border-primary text-primary hover:bg-secondary-100 focus:ring-primary',
     ];
 
     // Select the correct style based on the 'outline' prop

@@ -12,7 +12,7 @@
         <div class="space-y-4">
             @if ($orders->isEmpty())
                 <!-- Empty State -->
-                <div class="bg-white rounded-2xl shadow-sm border border-primary-100 p-12 text-center">
+                <div class="bg-surface-elevated rounded-2xl shadow-sm border border-primary-100 p-12 text-center">
                     <div class="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary-100">
                         <svg class="h-8 w-8 text-secondary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -22,12 +22,12 @@
                     <h3 class="text-xl font-bold text-primary mb-2">No Orders Yet</h3>
                     <p class="text-secondary mb-6">Start shopping to see your orders here</p>
                     <a href="/"
-                        class="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">Continue
+                        class="inline-block bg-primary text-surface-elevated px-6 py-3 rounded-xl font-bold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">Continue
                         Shopping</a>
                 </div>
             @else
                 <!-- Orders Grid for Mobile & Table for Desktop -->
-                <div class="hidden lg:block bg-white rounded-2xl shadow-sm border border-primary-100 overflow-hidden">
+                <div class="hidden lg:block bg-surface-elevated rounded-2xl shadow-sm border border-primary-100 overflow-hidden">
                     <table class="w-full">
                         <thead class="bg-light border-b border-primary-100">
                             <tr>
@@ -59,7 +59,7 @@
                                     <td class="px-6 py-4 text-right font-bold text-primary">{{ money($order->total) }}</td>
                                     <td class="px-6 py-4 text-center">
                                         <a href="{{ route('orders.show', $order->order_number) }}"
-                                            class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 text-sm font-bold shadow-sm hover:shadow-md">
+                                            class="inline-flex items-center px-4 py-2 bg-primary text-surface-elevated rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 text-sm font-bold shadow-sm hover:shadow-md">
                                             View Details
                                         </a>
                                     </td>
@@ -72,7 +72,7 @@
                 <!-- Mobile Card View -->
                 <div class="lg:hidden space-y-4">
                     @foreach ($orders as $order)
-                        <div class="bg-white rounded-2xl shadow-sm p-6 border border-primary-100 hover:shadow-md transition-shadow duration-200">
+                        <div class="bg-surface-elevated rounded-2xl shadow-sm p-6 border border-primary-100 hover:shadow-md transition-shadow duration-200">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
                                     <p class="text-xs text-secondary uppercase tracking-wide mb-1 font-bold">Order</p>
@@ -101,7 +101,7 @@
                             </div>
 
                             <a href="{{ route('orders.show', $order->order_number) }}"
-                                class="block w-full bg-primary text-white py-3 rounded-xl font-bold text-center hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">
+                                class="block w-full bg-primary text-surface-elevated py-3 rounded-xl font-bold text-center hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">
                                 View Details
                             </a>
                         </div>

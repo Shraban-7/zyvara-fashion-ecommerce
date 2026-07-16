@@ -26,40 +26,40 @@
 
             <!-- Error Message -->
             <div class="mb-8">
-                <h2 class="text-3xl md:text-4xl font-bold text-black mb-3">Oops! Page Not Found</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-3">Oops! Page Not Found</h2>
                 <p class="text-lg text-secondary-500 mb-2">The page you're looking for doesn't exist or has been moved.</p>
                 <p class="text-sm text-secondary-400">It seems you've wandered off the fashion runway!</p>
             </div>
 
             <!-- Suggestions Card -->
             <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-6 md:p-8 mb-8 border border-secondary-100">
-                <p class="text-sm font-medium text-black mb-4">Here's what you can do:</p>
+                <p class="text-sm font-medium text-primary mb-4">Here's what you can do:</p>
                 <div class="grid md:grid-cols-2 gap-4 text-left">
                     <div class="flex items-start">
                         <i class="fas fa-home text-primary-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Go to Homepage</p>
+                            <p class="text-sm font-medium text-primary">Go to Homepage</p>
                             <p class="text-xs text-secondary-500">Start fresh from the beginning</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <i class="fas fa-search text-primary-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Search Products</p>
+                            <p class="text-sm font-medium text-primary">Search Products</p>
                             <p class="text-xs text-secondary-500">Find what you're looking for</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <i class="fas fa-shopping-bag text-primary-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Browse Collections</p>
+                            <p class="text-sm font-medium text-primary">Browse Collections</p>
                             <p class="text-xs text-secondary-500">Explore our latest products</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <i class="fas fa-headset text-primary-500 mt-1 mr-3 text-sm"></i>
                         <div>
-                            <p class="text-sm font-medium text-black">Contact Support</p>
+                            <p class="text-sm font-medium text-primary">Contact Support</p>
                             <p class="text-xs text-secondary-500">We're here to help you</p>
                         </div>
                     </div>
@@ -69,11 +69,11 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
                 <a href="{{ route('home') }}"
-                    class="inline-flex items-center justify-center bg-primary text-white py-3 px-8 rounded-xl font-medium hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
+                    class="inline-flex items-center justify-center bg-primary text-surface-elevated py-3 px-8 rounded-xl font-medium hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
                     <i class="fas fa-home mr-2"></i>Back to Home
                 </a>
                 <a href="{{ route('products.index') }}"
-                    class="inline-flex items-center justify-center border-2 border-primary text-primary py-3 px-8 rounded-xl font-medium hover:bg-primary hover:text-white transition">
+                    class="inline-flex items-center justify-center border-2 border-primary text-primary py-3 px-8 rounded-xl font-medium hover:bg-primary hover:text-surface-elevated transition">
                     <i class="fas fa-shopping-bag mr-2"></i>Shop Now
                 </a>
             </div>
@@ -83,19 +83,19 @@
                 <p class="text-sm text-secondary-500 mb-4">Or explore popular categories:</p>
                 <div class="flex flex-wrap justify-center gap-2">
                     <a href="{{ route('products.index') }}?category=men"
-                        class="px-4 py-2 bg-light text-secondary-600 rounded-full text-sm font-medium hover:bg-primary hover:text-white transition border border-secondary-200">
+                        class="px-4 py-2 bg-light text-secondary-600 rounded-full text-sm font-medium hover:bg-primary hover:text-surface-elevated transition border border-secondary-200">
                         <i class="fas fa-male mr-1"></i>Men's Fashion
                     </a>
                     <a href="{{ route('products.index') }}?category=women"
-                        class="px-4 py-2 bg-light text-secondary-600 rounded-full text-sm font-medium hover:bg-primary hover:text-white transition border border-secondary-200">
+                        class="px-4 py-2 bg-light text-secondary-600 rounded-full text-sm font-medium hover:bg-primary hover:text-surface-elevated transition border border-secondary-200">
                         <i class="fas fa-female mr-1"></i>Women's Fashion
                     </a>
                     <a href="{{ route('products.index') }}?category=new"
-                        class="px-4 py-2 bg-light text-secondary-600 rounded-full text-sm font-medium hover:bg-primary hover:text-white transition border border-secondary-200">
+                        class="px-4 py-2 bg-light text-secondary-600 rounded-full text-sm font-medium hover:bg-primary hover:text-surface-elevated transition border border-secondary-200">
                         <i class="fas fa-star mr-1"></i>New Arrivals
                     </a>
                     <a href="{{ route('products.index') }}?sale=1"
-                        class="px-4 py-2 bg-light text-secondary-600 rounded-full text-sm font-medium hover:bg-primary hover:text-white transition border border-secondary-200">
+                        class="px-4 py-2 bg-light text-secondary-600 rounded-full text-sm font-medium hover:bg-primary hover:text-surface-elevated transition border border-secondary-200">
                         <i class="fas fa-tag mr-1"></i>Sale Items
                     </a>
                 </div>

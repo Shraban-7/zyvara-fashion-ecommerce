@@ -9,7 +9,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-secondary-400 text-sm font-medium">Total Orders</p>
-                    <h3 class="text-3xl font-bold text-black mt-1">{{ $stats['total_orders'] }}</h3>
+                    <h3 class="text-3xl font-bold text-primary mt-1">{{ $stats['total_orders'] }}</h3>
                 </div>
                 <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center shadow-sm">
                     <i class="fas fa-shopping-bag text-primary-500 text-xl"></i>
@@ -26,7 +26,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-secondary-400 text-sm font-medium">Pending Orders</p>
-                    <h3 class="text-3xl font-bold text-black mt-1">{{ $stats['pending_orders'] }}</h3>
+                    <h3 class="text-3xl font-bold text-primary mt-1">{{ $stats['pending_orders'] }}</h3>
                 </div>
                 <div class="w-12 h-12 bg-warning-100 rounded-full flex items-center justify-center shadow-sm">
                     <i class="fas fa-clock text-warning-600 text-xl"></i>
@@ -42,7 +42,7 @@
     <!-- Recent Orders -->
     <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 overflow-hidden border border-secondary-100">
         <div class="px-6 py-4 border-b border-secondary-200 flex items-center justify-between">
-            <h2 class="text-xl font-bold text-black">Recent Orders</h2>
+            <h2 class="text-xl font-bold text-primary">Recent Orders</h2>
             <a href="{{ route('orders.index') }}" class="text-primary-500 text-sm font-medium hover:text-primary-700 transition-colors">
                 View all orders
             </a>
@@ -76,7 +76,7 @@
                         @foreach($recent_orders as $order)
                             <tr class="hover:bg-light transition-colors">
                                 <td class="px-6 py-4">
-                                    <p class="font-semibold text-black">#{{ $order->order_number }}</p>
+                                    <p class="font-semibold text-primary">#{{ $order->order_number }}</p>
                                     <p class="text-sm text-secondary-400 md:hidden">{{ $order->created_at->format('M d, Y') }}</p>
                                 </td>
                                 <td class="hidden md:table-cell px-6 py-4 text-sm text-secondary-500">
@@ -97,7 +97,7 @@
                                         {{ ucfirst($order->status->value) }}
                                     </span>
                                 </td>
-                                <td class="hidden sm:table-cell px-6 py-4 text-sm font-semibold text-black">
+                                <td class="hidden sm:table-cell px-6 py-4 text-sm font-semibold text-primary">
                                     ৳{{ number_format($order->total_amount, 2) }}
                                 </td>
                                 <td class="px-6 py-4 text-right">
@@ -116,10 +116,10 @@
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-light rounded-full mb-4 border border-secondary-100">
                     <i class="fas fa-shopping-bag text-secondary-400 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-black mb-2">No Orders Yet</h3>
+                <h3 class="text-lg font-semibold text-primary mb-2">No Orders Yet</h3>
                 <p class="text-secondary-500 mb-6">Start shopping and your orders will appear here.</p>
                 <a href="{{ route('products.index') }}"
-                    class="inline-block bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
+                    class="inline-block bg-primary text-surface-elevated px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
                     Browse Products
                 </a>
             </div>

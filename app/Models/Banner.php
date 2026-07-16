@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BannerPosition;
+use App\Enums\BannerSize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,7 @@ class Banner extends Model
         'image',
         'mobile_image',
         'position',
+        'size',
         'sort_order',
         'is_active',
         'starts_at',
@@ -31,6 +33,7 @@ class Banner extends Model
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
         'position' => BannerPosition::class,
+        'size' => BannerSize::class,
     ];
 
     // Scopes
@@ -58,6 +61,11 @@ class Banner extends Model
     public function scopeCategory($query)
     {
         return $query->where('position', BannerPosition::CATEGORY);
+    }
+
+    public function scopeBento($query)
+    {
+        return $query->where('position', BannerPosition::BENTO);
     }
 
     public function scopeOrdered($query)

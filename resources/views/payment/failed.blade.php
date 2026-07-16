@@ -12,7 +12,7 @@
                         </path>
                     </svg>
                 </div>
-                <h1 class="text-3xl font-bold text-black mb-2">Payment Failed</h1>
+                <h1 class="text-3xl font-bold text-primary mb-2">Payment Failed</h1>
                 <p class="text-secondary-400">We couldn't process your payment.</p>
             </div>
 
@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="space-y-3">
-                    <p class="text-sm font-medium text-black mb-2">Common reasons for payment failure:</p>
+                    <p class="text-sm font-medium text-primary mb-2">Common reasons for payment failure:</p>
                     <div class="flex items-start">
                         <i class="fas fa-circle text-danger-500 text-xs mt-1.5 mr-3"></i>
                         <p class="text-sm text-secondary-600">Insufficient funds in account</p>
@@ -55,7 +55,7 @@
 
             <!-- What to do next -->
             <div class="bg-primary-50 rounded-xl p-4 mb-6 border border-primary-100">
-                <p class="text-sm font-medium text-black mb-3">
+                <p class="text-sm font-medium text-primary mb-3">
                     <i class="fas fa-question-circle text-primary-500 mr-2"></i>What should you do?
                 </p>
                 <div class="space-y-2 text-xs text-secondary-500">
@@ -79,17 +79,17 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-3">
                 <a href="{{ route('checkout.index') }}"
-                    class="flex-1 bg-primary text-white py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
+                    class="flex-1 bg-primary text-surface-elevated py-3 px-6 rounded-xl font-medium hover:bg-primary-700 transition text-center shadow-lg shadow-primary-200/50">
                     <i class="fas fa-redo mr-2"></i>Try Again
                 </a>
                 @auth
                     <a href="{{ route('orders.index') }}"
-                        class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-white transition text-center">
+                        class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-surface-elevated transition text-center">
                         <i class="fas fa-shopping-bag mr-2"></i>View Orders
                     </a>
                 @else
                     <a href="{{ route('home') }}"
-                        class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-white transition text-center">
+                        class="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-xl font-medium hover:bg-primary hover:text-surface-elevated transition text-center">
                         <i class="fas fa-home mr-2"></i>Go to Home
                     </a>
                 @endauth

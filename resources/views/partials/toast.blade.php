@@ -81,7 +81,7 @@
                     <i class="${config.icon} ${config.iconColor}"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h4 class="font-semibold text-black text-sm mb-1">${config.title}</h4>
+                    <h4 class="font-semibold text-primary text-sm mb-1">${config.title}</h4>
                     <p class="text-sm text-secondary-500 break-words">${message}</p>
                 </div>
                 <button onclick="window.toastManager.remove(${id})" class="flex-shrink-0 text-secondary-400 hover:text-secondary-600 transition-colors">

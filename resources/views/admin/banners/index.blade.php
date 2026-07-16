@@ -69,7 +69,7 @@
                         <td class="px-6 py-4 text-right whitespace-nowrap">
                             <div class="flex justify-end items-center gap-1">
                                 <button type="button"
-                                    onclick="openEditModal({{ $banner->id }}, '{{ addslashes($banner->title) }}', '{{ addslashes($banner->subtitle) }}', '{{ addslashes($banner->description) }}', '{{ addslashes($banner->button_text) }}', '{{ addslashes($banner->button_link) }}', '{{ $banner->image }}', '{{ $banner->mobile_image }}', '{{ $banner->position->value }}', {{ $banner->sort_order }}, {{ $banner->is_active ? 'true' : 'false' }}, '{{ $banner->starts_at?->format('Y-m-d') }}', '{{ $banner->expires_at?->format('Y-m-d') }}')"
+                                    onclick="openEditModal({{ $banner->id }}, '{{ addslashes($banner->title) }}', '{{ addslashes($banner->subtitle) }}', '{{ addslashes($banner->description) }}', '{{ addslashes($banner->button_text) }}', '{{ addslashes($banner->button_link) }}', '{{ $banner->image }}', '{{ $banner->mobile_image }}', '{{ $banner->position->value }}', {{ $banner->sort_order }}, {{ $banner->is_active ? 'true' : 'false' }}, '{{ $banner->starts_at?->format('Y-m-d') }}', '{{ $banner->expires_at?->format('Y-m-d') }}', '{{ $banner->size?->value }}')"
                                     class="w-8 h-8 flex items-center justify-center text-indigo-600 hover:bg-indigo-50 rounded-md transition-all"
                                     title="Edit Banner">
                                     <i class="fa-solid fa-pen-to-square text-base"></i>
@@ -169,6 +169,19 @@
                                     <option value="promotional">Promotional Banner</option>
                                     <option value="category">Category Banner</option>
                                     <option value="festival">Festival Banner</option>
+                                    <option value="bento">Bento Grid</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bento Size</label>
+                                <select name="size"
+                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                                    <option value="">— (only for Bento)</option>
+                                    <option value="small">Small (1x1)</option>
+                                    <option value="wide">Wide (2x1)</option>
+                                    <option value="tall">Tall (1x2)</option>
+                                    <option value="large">Large (2x2)</option>
                                 </select>
                             </div>
 
@@ -282,6 +295,19 @@
                                     <option value="promotional">Promotional Banner</option>
                                     <option value="category">Category Banner</option>
                                     <option value="festival">Festival Banner</option>
+                                    <option value="bento">Bento Grid</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bento Size</label>
+                                <select name="size" id="edit_size"
+                                    class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                                    <option value="">— (only for Bento)</option>
+                                    <option value="small">Small (1x1)</option>
+                                    <option value="wide">Wide (2x1)</option>
+                                    <option value="tall">Tall (1x2)</option>
+                                    <option value="large">Large (2x2)</option>
                                 </select>
                             </div>
 
@@ -333,7 +359,7 @@
         document.getElementById('createModal').classList.add('hidden');
     }
 
-    function openEditModal(id, title, subtitle, description, buttonText, buttonLink, image, mobileImage, position, sortOrder, isActive, startsAt, expiresAt) {
+    function openEditModal(id, title, subtitle, description, buttonText, buttonLink, image, mobileImage, position, sortOrder, isActive, startsAt, expiresAt, size) {
         document.getElementById('editForm').action = '{{ route("admin.banners.index") }}/' + id + '/update';
         document.getElementById('edit_title').value = title;
         document.getElementById('edit_subtitle').value = subtitle || '';
@@ -341,6 +367,7 @@
         document.getElementById('edit_button_text').value = buttonText || '';
         document.getElementById('edit_button_link').value = buttonLink || '';
         document.getElementById('edit_position').value = position;
+        document.getElementById('edit_size').value = size || '';
         document.getElementById('edit_sort_order').value = sortOrder;
         document.getElementById('edit_is_active').checked = isActive;
         document.getElementById('edit_starts_at').value = startsAt || '';

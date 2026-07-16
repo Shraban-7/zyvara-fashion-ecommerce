@@ -8,9 +8,9 @@
             <!-- Header -->
             <div class="text-center mb-6">
                 <div class="inline-flex items-center justify-center w-14 h-14 bg-primary rounded-full mb-3 shadow-lg shadow-primary-200/50">
-                    <i class="fas fa-map-marked-alt text-white text-xl"></i>
+                    <i class="fas fa-map-marked-alt text-surface-elevated text-xl"></i>
                 </div>
-                <h1 class="text-2xl md:text-3xl font-bold text-black mb-2">Track Your Order</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">Track Your Order</h1>
                 <p class="text-sm md:text-base text-secondary-400">Enter your order number or phone to check status</p>
             </div>
 
@@ -26,7 +26,7 @@
                             <input type="text" name="order_number" id="order_number"
                                 value="{{ old('order_number') ?? request()->get('order_number') }}"
                                 placeholder="e.g., SF240221001"
-                                class="w-full px-3 py-2 border border-secondary-200 rounded-lg focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition text-sm bg-surface text-black placeholder-secondary-300">
+                                class="w-full px-3 py-2 border border-secondary-200 rounded-lg focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition text-sm bg-surface text-primary placeholder-secondary-300">
                             @error('order_number')
                                 <p class="mt-1 text-xs text-danger-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}
                                 </p>
@@ -40,7 +40,7 @@
                             </label>
                             <input type="text" name="phone" id="phone" value="{{ old('phone') ?? request()->get('phone') }}"
                                 placeholder="e.g., 017XXXXXXXX"
-                                class="w-full px-3 py-2 border border-secondary-200 rounded-lg focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition text-sm bg-surface text-black placeholder-secondary-300">
+                                class="w-full px-3 py-2 border border-secondary-200 rounded-lg focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition text-sm bg-surface text-primary placeholder-secondary-300">
                             @error('phone')
                                 <p class="mt-1 text-xs text-danger-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}
                                 </p>
@@ -50,7 +50,7 @@
                         <!-- Submit Button -->
                         <div class="flex items-end">
                             <button type="submit"
-                                class="w-full bg-primary text-white py-2 px-4 rounded-xl font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200/50 flex items-center justify-center gap-2">
+                                class="w-full bg-primary text-surface-elevated py-2 px-4 rounded-xl font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200/50 flex items-center justify-center gap-2">
                                 <i class="fas fa-search"></i>
                                 Track Order
                             </button>
@@ -83,7 +83,7 @@
 
                             <div>
                                 <p class="text-xs text-secondary-400 mb-1">Order Number</p>
-                                <h2 class="text-xl md:text-2xl font-bold text-black">
+                                <h2 class="text-xl md:text-2xl font-bold text-primary">
                                     #{{ $order->order_number }}
                                 </h2>
                                 <p class="text-xs text-secondary-400 mt-1">
@@ -137,22 +137,22 @@
                         <div class="lg:col-span-2 space-y-4">
                             <!-- Shipping Address -->
                             <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-4 md:p-5 border border-secondary-100">
-                                <h3 class="text-sm font-bold text-black mb-3 flex items-center gap-2">
+                                <h3 class="text-sm font-bold text-primary mb-3 flex items-center gap-2">
                                     <i class="fas fa-map-marker-alt text-primary-500"></i>
                                     Shipping Address
                                 </h3>
                                 <div class="grid sm:grid-cols-2 gap-3 text-sm">
                                     <div>
                                         <p class="text-xs text-secondary-400">Name</p>
-                                        <p class="font-medium text-black">{{ $order->shipping_name }}</p>
+                                        <p class="font-medium text-primary">{{ $order->shipping_name }}</p>
                                     </div>
                                     <div>
                                         <p class="text-xs text-secondary-400">Phone</p>
-                                        <p class="font-medium text-black">{{ $order->shipping_phone }}</p>
+                                        <p class="font-medium text-primary">{{ $order->shipping_phone }}</p>
                                     </div>
                                     <div class="sm:col-span-2">
                                         <p class="text-xs text-secondary-400">Address</p>
-                                        <p class="font-medium text-black">{{ $order->shipping_address }},
+                                        <p class="font-medium text-primary">{{ $order->shipping_address }},
                                             {{ $order->shipping_city }}, {{ $order?->district?->name}}
                                         </p>
                                     </div>
@@ -161,7 +161,7 @@
 
                             <!-- Order Items -->
                             <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-4 md:p-5 border border-secondary-100">
-                                <h3 class="text-sm font-bold text-black mb-3 flex items-center gap-2">
+                                <h3 class="text-sm font-bold text-primary mb-3 flex items-center gap-2">
                                     <i class="fas fa-box text-primary-500"></i>
                                     Order Items ({{ $order->items->count() }})
                                 </h3>
@@ -185,7 +185,7 @@
                                             <!-- Product Details -->
                                             <div class="flex-1 min-w-0">
 
-                                                <h4 class="font-semibold text-sm text-black leading-5 break-words">
+                                                <h4 class="font-semibold text-sm text-primary leading-5 break-words">
                                                     {{ $item->product_name }}
                                                 </h4>
 
@@ -224,15 +224,15 @@
                         <div class="space-y-4">
                             <!-- Order Summary -->
                             <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-4 md:p-5 border border-secondary-100">
-                                <h3 class="text-sm font-bold text-black mb-3">Order Summary</h3>
+                                <h3 class="text-sm font-bold text-primary mb-3">Order Summary</h3>
                                 <div class="space-y-2 text-sm">
                                     <div class="flex justify-between">
                                         <span class="text-secondary-500">Subtotal</span>
-                                        <span class="font-medium text-black">৳{{ number_format($order->subtotal, 2) }}</span>
+                                        <span class="font-medium text-primary">৳{{ number_format($order->subtotal, 2) }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-secondary-500">Shipping</span>
-                                        <span class="font-medium text-black">৳{{ number_format($order->shipping_cost ?? 0, 2) }}</span>
+                                        <span class="font-medium text-primary">৳{{ number_format($order->shipping_cost ?? 0, 2) }}</span>
                                     </div>
                                     @if($order->discount_amount > 0)
                                         <div class="flex justify-between text-success-600">
@@ -242,7 +242,7 @@
                                     @endif
                                     <div class="h-px bg-secondary-200 my-2"></div>
                                     <div class="flex justify-between text-base">
-                                        <span class="font-bold text-black">Total</span>
+                                        <span class="font-bold text-primary">Total</span>
                                         <span class="font-bold text-primary-500">৳{{ number_format($order->total, 2) }}</span>
                                     </div>
                                 </div>
@@ -250,7 +250,7 @@
                                     <div class="text-xs space-y-1">
                                         <div class="flex justify-between">
                                             <span class="text-secondary-400">Payment</span>
-                                            <span class="font-medium text-black">{{ $order->payment_method->label() }}</span>
+                                            <span class="font-medium text-primary">{{ $order->payment_method->label() }}</span>
                                         </div>
                                         <div class="flex justify-between">
                                             <span class="text-secondary-400">Status</span>
@@ -264,7 +264,7 @@
 
                             <!-- Order Timeline -->
                             <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-4 md:p-5 border border-secondary-100">
-                                <h3 class="text-sm font-bold text-black mb-3 flex items-center gap-2">
+                                <h3 class="text-sm font-bold text-primary mb-3 flex items-center gap-2">
                                     <i class="fas fa-clock text-primary-500"></i>
                                     Order Timeline
                                 </h3>
@@ -281,7 +281,7 @@
                                             </div>
                                             <div class="flex-1 pb-4">
                                                 <div class="flex items-start justify-between gap-4 mb-1">
-                                                    <span class="font-semibold text-black">{{ $history->status->label() }}</span>
+                                                    <span class="font-semibold text-primary">{{ $history->status->label() }}</span>
                                                     <span class="text-sm text-secondary-400">{{ $history->created_at->diffForHumans() }}</span>
                                                 </div>
                                                 @if($history->comment)
@@ -302,14 +302,14 @@
 
                             @if($order->tracking_number || $order->courier)
                                 <div class="bg-primary-50 border border-primary-200 rounded-xl p-3 text-sm">
-                                    <p class="font-semibold text-black mb-1">Tracking Info</p>
+                                    <p class="font-semibold text-primary mb-1">Tracking Info</p>
                                     @if($order->courier)
-                                        <p class="text-xs text-secondary-500">Courier: <span class="font-medium text-black">{{ $order->courier }}</span>
+                                        <p class="text-xs text-secondary-500">Courier: <span class="font-medium text-primary">{{ $order->courier }}</span>
                                         </p>
                                     @endif
                                     @if($order->tracking_number)
                                         <p class="text-xs text-secondary-500">Tracking: <span
-                                                class="font-mono font-medium text-black">{{ $order->tracking_number }}</span></p>
+                                                class="font-mono font-medium text-primary">{{ $order->tracking_number }}</span></p>
                                     @endif
                                 </div>
                             @endif
@@ -319,12 +319,12 @@
                     <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                         <a href="{{ route('home') }}"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white text-primary border-2 border-primary rounded-xl font-semibold hover:bg-primary-50 transition text-sm">
+                            class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-surface-elevated text-primary border-2 border-primary rounded-xl font-semibold hover:bg-primary-50 transition text-sm">
                             <i class="fas fa-shopping-bag"></i>
                             Continue Shopping
                         </a>
                         <a href="mailto:support@spinnerfashion.com"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white text-secondary-600 border border-secondary-200 rounded-xl font-semibold hover:bg-light transition text-sm">
+                            class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-surface-elevated text-secondary-600 border border-secondary-200 rounded-xl font-semibold hover:bg-light transition text-sm">
                             <i class="fas fa-envelope"></i>
                             Contact Support
                         </a>
@@ -336,7 +336,7 @@
                     <div class="w-20 h-20 bg-light rounded-full flex items-center justify-center mx-auto mb-4 border border-secondary-100">
                         <i class="fas fa-search text-secondary-400 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-black mb-2">Search for Your Order</h3>
+                    <h3 class="text-xl font-bold text-primary mb-2">Search for Your Order</h3>
                     <p class="text-secondary-400 mb-6">Enter your order number or phone number above to track your order</p>
 
                     <!-- Features -->
@@ -345,19 +345,19 @@
                             <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-2">
                                 <i class="fas fa-shield-alt text-primary-500"></i>
                             </div>
-                            <p class="text-xs font-semibold text-black">Secure</p>
+                            <p class="text-xs font-semibold text-primary">Secure</p>
                         </div>
                         <div class="p-4">
                             <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-2">
                                 <i class="fas fa-bolt text-primary-500"></i>
                             </div>
-                            <p class="text-xs font-semibold text-black">Real-time</p>
+                            <p class="text-xs font-semibold text-primary">Real-time</p>
                         </div>
                         <div class="p-4">
                             <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-2">
                                 <i class="fas fa-headset text-primary-500"></i>
                             </div>
-                            <p class="text-xs font-semibold text-black">24/7 Support</p>
+                            <p class="text-xs font-semibold text-primary">24/7 Support</p>
                         </div>
                     </div>
                 </div>

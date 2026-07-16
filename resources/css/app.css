@@ -3,115 +3,124 @@
 
 @theme {
   /* ═══════════════════════════════════════════════════════════════
-     PRIMARY — Deep Navy
+     PRIMARY — Near-Black (text & base UI)
      ═══════════════════════════════════════════════════════════════ */
-  --color-primary: #1a1f2e;
-  --color-primary-50: #f4f5f7;
-  --color-primary-100: #e3e6eb;
-  --color-primary-200: #c7cdd7;
-  --color-primary-300: #9aa4b3;
-  --color-primary-400: #6b778a;
-  --color-primary-500: #1a1f2e;
-  --color-primary-600: #151925;
-  --color-primary-700: #0f131c;
-  --color-primary-800: #0a0d13;
-  --color-primary-900: #05070a;
+  --color-primary: #1A1A1A;
+  --color-primary-50: #f2efea;
+  --color-primary-100: #e5e0d8;
+  --color-primary-200: #cfc8bd;
+  --color-primary-300: #a89f92;
+  --color-primary-400: #6f6a62;
+  --color-primary-500: #1A1A1A;
+  --color-primary-600: #161616;
+  --color-primary-700: #121212;
+  --color-primary-800: #0d0d0d;
+  --color-primary-900: #080808;
 
   /* ═══════════════════════════════════════════════════════════════
-     SECONDARY — Warm Slate
+     SECONDARY — Soft Gray (muted/secondary text)
      ═══════════════════════════════════════════════════════════════ */
-  --color-secondary: #5e6572;
-  --color-secondary-50: #f9fafb;
-  --color-secondary-100: #f0f1f3;
-  --color-secondary-200: #d9dce1;
-  --color-secondary-300: #b8bdc6;
-  --color-secondary-400: #8a919d;
-  --color-secondary-500: #5e6572;
-  --color-secondary-600: #4a505a;
-  --color-secondary-700: #363b44;
-  --color-secondary-800: #23262d;
-  --color-secondary-900: #111317;
+  --color-secondary: #8A8A8A;
+  --color-secondary-50: #faf9f8;
+  --color-secondary-100: #f1efec;
+  --color-secondary-200: #e5e0d8;
+  --color-secondary-300: #b8b3ab;
+  --color-secondary-400: #8A8A8A;
+  --color-secondary-500: #8A8A8A;
+  --color-secondary-600: #6f6a62;
+  --color-secondary-700: #555049;
+  --color-secondary-800: #3d3933;
+  --color-secondary-900: #262320;
 
   /* ═══════════════════════════════════════════════════════════════
-     ACCENT — Teal
+     ACCENT — Muted Gold (CTA & hover)
      ═══════════════════════════════════════════════════════════════ */
-  --color-accent: #0d9488;
-  --color-accent-50: #f0fdfa;
-  --color-accent-100: #ccfbf1;
-  --color-accent-200: #99f6e4;
-  --color-accent-300: #5eead4;
-  --color-accent-400: #2dd4bf;
-  --color-accent-500: #0d9488;
-  --color-accent-600: #0f766e;
-  --color-accent-700: #115e59;
-  --color-accent-800: #134e4a;
-  --color-accent-900: #042f2e;
+  --color-accent: #C9A87C;
+  --color-accent-50: #faf5ec;
+  --color-accent-100: #f3e7d3;
+  --color-accent-200: #e8d2b4;
+  --color-accent-300: #dabd95;
+  --color-accent-400: #C9A87C;
+  --color-accent-500: #b8925f;
+  --color-accent-600: #9c7949;
+  --color-accent-700: #7d6038;
+  --color-accent-800: #5f4829;
+  --color-accent-900: #3f3019;
 
   /* ═══════════════════════════════════════════════════════════════
-     SUCCESS — Emerald
+     SUCCESS — Emerald (kept for stock/status semantics)
      ═══════════════════════════════════════════════════════════════ */
-  --color-success: #059669;
-  --color-success-50: #ecfdf5;
-  --color-success-100: #d1fae5;
-  --color-success-200: #a7f3d0;
-  --color-success-300: #6ee7b7;
-  --color-success-400: #34d399;
-  --color-success-500: #059669;
-  --color-success-600: #047857;
-  --color-success-700: #065f46;
-  --color-success-800: #064e3b;
-  --color-success-900: #022c22;
+  --color-success: #2f7d52;
+  --color-success-50: #ecf5ef;
+  --color-success-100: #d3e8db;
+  --color-success-200: #a7d1b6;
+  --color-success-300: #6eb88c;
+  --color-success-400: #4a9a6b;
+  --color-success-500: #2f7d52;
+  --color-success-600: #256543;
+  --color-success-700: #1c4d33;
+  --color-success-800: #143524;
+  --color-success-900: #0c1f15;
 
   /* ═══════════════════════════════════════════════════════════════
-     WARNING — Amber
+     WARNING — Amber (kept for stars/status semantics)
      ═══════════════════════════════════════════════════════════════ */
-  --color-warning: #d97706;
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-200: #fde68a;
-  --color-warning-300: #fcd34d;
-  --color-warning-400: #fbbf24;
-  --color-warning-500: #d97706;
-  --color-warning-600: #b45309;
-  --color-warning-700: #92400e;
-  --color-warning-800: #78350f;
-  --color-warning-900: #451a03;
+  --color-warning: #c08a2d;
+  --color-warning-50: #fbf4e6;
+  --color-warning-100: #f4e6c8;
+  --color-warning-200: #e9cf90;
+  --color-warning-300: #dcb85f;
+  --color-warning-400: #cfa340;
+  --color-warning-500: #c08a2d;
+  --color-warning-600: #9c6e22;
+  --color-warning-700: #78541a;
+  --color-warning-800: #543b12;
+  --color-warning-900: #30210a;
 
   /* ═══════════════════════════════════════════════════════════════
-     DANGER — Rose Red
+     DANGER — Rose Red (kept for errors/validation)
      ═══════════════════════════════════════════════════════════════ */
-  --color-danger: #dc2626;
-  --color-danger-50: #fef2f2;
-  --color-danger-100: #fee2e2;
-  --color-danger-200: #fecaca;
-  --color-danger-300: #fca5a5;
-  --color-danger-400: #f87171;
-  --color-danger-500: #dc2626;
-  --color-danger-600: #b91c1c;
-  --color-danger-700: #991b1b;
-  --color-danger-800: #7f1d1d;
-  --color-danger-900: #450a0a;
+  --color-danger: #c0392b;
+  --color-danger-50: #fbeeec;
+  --color-danger-100: #f6d4d0;
+  --color-danger-200: #eeaaa3;
+  --color-danger-300: #e07d74;
+  --color-danger-400: #cf564b;
+  --color-danger-500: #c0392b;
+  --color-danger-600: #a22f23;
+  --color-danger-700: #7e241b;
+  --color-danger-800: #591912;
+  --color-danger-900: #350e0a;
 
   /* ═══════════════════════════════════════════════════════════════
      NEUTRAL COLORS
      ═══════════════════════════════════════════════════════════════ */
-  --color-black: #0f172a;
+  --color-black: #1A1A1A;
   --color-white: #ffffff;
-  --color-light: #f8fafc;
-  --color-dark: #1e293b;
+  --color-light: #FAF8F5;
+  --color-dark: #1A1A1A;
+
+  /* ═══════════════════════════════════════════════════════════════
+     LUXURY PALETTE HELPERS
+     ═══════════════════════════════════════════════════════════════ */
+  --color-bg: #FAF8F5;
+  --color-muted: #8A8A8A;
+  --color-border: #E5E0D8;
 
   /* ═══════════════════════════════════════════════════════════════
      SURFACE COLORS
      ═══════════════════════════════════════════════════════════════ */
-  --color-surface: #ffffff;
+  --color-surface: #FAF8F5;
   --color-surface-elevated: #ffffff;
-  --color-surface-muted: #f1f5f9;
+  --color-surface-muted: #E5E0D8;
 
   /* ═══════════════════════════════════════════════════════════════
      TYPOGRAPHY
      ═══════════════════════════════════════════════════════════════ */
-  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-inter: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   /* ═══════════════════════════════════════════════════════════════
      EXTENDED SPACING

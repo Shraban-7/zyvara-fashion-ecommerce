@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
             CouponSeeder::class,
             BannerSeeder::class,
             BrandSeeder::class,
+            HomeSectionSeeder::class,
+            TestimonialSeeder::class,
+            SocialPostSeeder::class,
 
             StaticPageSeeder::class,
         ]);
@@ -30,6 +33,7 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 ProductSeeder::class,
                 EmployeeSeeder::class,
+                FlashSaleSeeder::class,
             ]);
         }
     }

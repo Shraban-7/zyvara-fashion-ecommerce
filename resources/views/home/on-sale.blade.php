@@ -1,11 +1,12 @@
 @if($onSaleProducts->isNotEmpty())
+@php $h = isset($section) ? $section->headings() : ['eyebrow' => 'Limited Time', 'title' => 'On Sale', 'subtitle' => 'Flash deals — grab them before they are gone']; @endphp
 <section class="home-section home-section--sale">
     <div class="home-wrap">
         <div class="section-head">
             <div class="section-head-text">
-                <span class="section-eyebrow">Limited Time</span>
-                <h2 class="section-title">On Sale</h2>
-                <p class="section-sub">Flash deals — grab them before they're gone</p>
+                <span class="section-eyebrow">{{ $h['eyebrow'] }}</span>
+                <h2 class="section-title">{{ $h['title'] }}</h2>
+                <p class="section-sub">{{ $h['subtitle'] }}</p>
             </div>
             <a href="{{ route('products.index', ['filter' => 'on-sale']) }}" class="section-link">
                 View All
@@ -46,10 +47,10 @@
 
     .home-section--sale {
         padding: 48px 0;
-        background: #f8fafc;
+        background: var(--color-surface-muted);
         width: 100%;
-        border-top: 1px solid #f1f5f9;
-        border-bottom: 1px solid #f1f5f9;
+        border-top: 1px solid var(--color-border);
+        border-bottom: 1px solid var(--color-border);
     }
 
     @media (min-width: 768px) {
@@ -85,21 +86,22 @@
         display: inline-block;
         font-size: 11px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
         margin-bottom: 10px;
         padding: 5px 14px;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--color-surface-elevated);
+        border: 1px solid var(--color-border);
         border-radius: 99px;
     }
 
     .home-section--sale .section-title {
         font-size: clamp(22px, 4vw, 30px);
-        font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -0.03em;
+        font-weight: 600;
+        font-family: var(--font-heading);
+        color: var(--color-primary);
+        letter-spacing: -0.02em;
         line-height: 1.2;
         margin: 0 0 8px;
         word-wrap: break-word;
@@ -107,7 +109,7 @@
 
     .home-section--sale .section-sub {
         font-size: clamp(13px, 2vw, 15px);
-        color: #64748b;
+        color: var(--color-secondary);
         margin: 0;
         line-height: 1.5;
         max-width: 420px;
@@ -119,11 +121,11 @@
         gap: 8px;
         font-size: 13px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-primary);
         text-decoration: none;
         padding: 10px 18px;
-        background: #fff;
-        border: 1.5px solid #e2e8f0;
+        background: var(--color-surface-elevated);
+        border: 1.5px solid var(--color-border);
         border-radius: 12px;
         transition: all 0.25s ease;
         white-space: nowrap;
@@ -131,10 +133,10 @@
     }
 
     .home-section--sale .section-link:hover {
-        background: #0f172a;
-        color: #fff;
-        border-color: #0f172a;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+        background: var(--color-primary);
+        color: var(--color-surface-elevated);
+        border-color: var(--color-primary);
+        box-shadow: 0 4px 12px rgba(26, 26, 26, 0.18);
     }
 
     .home-section--sale .section-link i {
@@ -146,16 +148,16 @@
         transform: translateX(3px);
     }
 
-    /* ── Sale Strip ── */
+    /* ── Sale Strip (distinct dark band) ── */
     .sale-strip {
         display: flex;
         align-items: center;
         gap: 12px;
-        background: #0f172a;
+        background: var(--color-primary);
         border-radius: 14px;
         padding: 14px 18px;
         margin-bottom: 32px;
-        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15);
+        box-shadow: 0 4px 16px rgba(26, 26, 26, 0.18);
         flex-wrap: wrap;
     }
 
@@ -173,14 +175,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(250, 248, 245, 0.1);
         border-radius: 10px;
         flex-shrink: 0;
     }
 
     .sale-strip-icon i {
         font-size: 16px;
-        color: #fbbf24;
+        color: var(--color-accent);
     }
 
     .sale-strip-text {
@@ -193,7 +195,7 @@
     .sale-strip-label {
         font-size: 11px;
         font-weight: 800;
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(250, 248, 245, 0.6);
         text-transform: uppercase;
         letter-spacing: 0.08em;
         line-height: 1;
@@ -202,12 +204,12 @@
     .sale-strip-value {
         font-size: 14px;
         font-weight: 700;
-        color: #fff;
+        color: var(--color-surface-elevated);
         line-height: 1.3;
     }
 
     .sale-strip-value strong {
-        color: #fbbf24;
+        color: var(--color-accent);
         font-weight: 900;
     }
 
@@ -216,7 +218,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(250, 248, 245, 0.08);
         padding: 8px 14px;
         border-radius: 10px;
         flex-shrink: 0;
@@ -233,7 +235,7 @@
     .timer-num {
         font-size: 18px;
         font-weight: 900;
-        color: #fff;
+        color: var(--color-surface-elevated);
         line-height: 1;
         font-variant-numeric: tabular-nums;
     }
@@ -241,7 +243,7 @@
     .timer-label {
         font-size: 9px;
         font-weight: 600;
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(250, 248, 245, 0.5);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         line-height: 1;
@@ -250,7 +252,7 @@
     .timer-sep {
         font-size: 16px;
         font-weight: 700;
-        color: rgba(255, 255, 255, 0.3);
+        color: rgba(250, 248, 245, 0.3);
         line-height: 1;
         margin-top: -8px;
     }

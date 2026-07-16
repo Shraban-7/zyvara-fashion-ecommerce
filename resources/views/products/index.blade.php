@@ -4,7 +4,7 @@
 
 @section('content')
 {{-- Breadcrumb --}}
-<div class="bg-white border-b border-primary-100">
+<div class="bg-surface-elevated border-b border-primary-100">
     <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center gap-2 text-sm">
             <a href="{{ url('/') }}" class="text-secondary hover:text-primary transition-colors duration-200">Home</a>
@@ -29,7 +29,7 @@
             <h1 class="text-xl font-bold text-primary">
                 {{ $activeCategory ? $activeCategory->name : 'All Products' }}
             </h1>
-            <button onclick="toggleMobileFilter()" class="flex items-center gap-2 bg-white border border-primary-100 rounded-xl px-4 py-2.5 text-sm font-medium text-primary tap-effect shadow-sm">
+            <button onclick="toggleMobileFilter()" class="flex items-center gap-2 bg-surface-elevated border border-primary-100 rounded-xl px-4 py-2.5 text-sm font-medium text-primary tap-effect shadow-sm">
                 <i class="fas fa-sliders-h"></i>
                 Filters
             </button>
@@ -37,7 +37,7 @@
 
         {{-- Sidebar Filters --}}
         <aside id="filterSidebar" class="hidden lg:block w-full lg:w-72 flex-shrink-0">
-            <div class="bg-white rounded-2xl shadow-sm border border-primary-100 p-5 sticky top-28">
+            <div class="bg-surface-elevated rounded-2xl shadow-sm border border-primary-100 p-5 sticky top-28">
 
                 {{-- Filter Header --}}
                 <div class="flex items-center justify-between mb-5">
@@ -60,7 +60,7 @@
                             <div class="category-tree-item">
                                 <div class="flex items-center justify-between group">
                                     <a href="{{ route('products.index', ['categorySlug' => $category->slug]) }}"
-                                       class="flex-1 text-sm font-medium py-2 px-2 rounded-lg transition-all duration-200 {{ $activeCategorySlug == $category->slug ? 'bg-primary text-white shadow-sm' : 'text-secondary hover:bg-primary-50 hover:text-primary' }}">
+                                       class="flex-1 text-sm font-medium py-2 px-2 rounded-lg transition-all duration-200 {{ $activeCategorySlug == $category->slug ? 'bg-primary text-surface-elevated shadow-sm' : 'text-secondary hover:bg-primary-50 hover:text-primary' }}">
                                         {{ $category->name }}
                                         <span class="text-xs opacity-70 ml-1">({{ $categoryCounts[$category->id] ?? 0 }})</span>
                                     </a>
@@ -184,7 +184,7 @@
                         </div>
 
                         {{-- Apply price button --}}
-                        <button onclick="applyPriceFilter()" class="w-full bg-primary text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm hover:shadow-md">
+                        <button onclick="applyPriceFilter()" class="w-full bg-primary text-surface-elevated text-sm font-semibold py-2.5 rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm hover:shadow-md">
                             Apply Price
                         </button>
 
@@ -243,7 +243,7 @@
                             data-filter-type="sizes[]"
                             data-filter-value="{{ $size->id }}"
                             onclick="toggleSizeColor(this, 'sizes[]', '{{ $size->id }}')"
-                            class="size-color-btn px-4 py-2 border {{ in_array((string)$size->id, array_map('strval', $selectedSizes)) ? 'border-primary bg-primary text-white shadow-sm' : 'border-primary-100 text-secondary hover:border-primary hover:text-primary' }} rounded-lg text-sm font-medium transition-all duration-200">
+                            class="size-color-btn px-4 py-2 border {{ in_array((string)$size->id, array_map('strval', $selectedSizes)) ? 'border-primary bg-primary text-surface-elevated shadow-sm' : 'border-primary-100 text-secondary hover:border-primary hover:text-primary' }} rounded-lg text-sm font-medium transition-all duration-200">
                             {{ $size->name }}
                         </button>
                         @endforeach
@@ -303,7 +303,7 @@
                                 {{ request('min_rating') == $rating ? 'checked' : '' }}
                                 onchange="applyFilters()"
                                 class="w-4 h-4 border-secondary-200 text-primary focus:ring-primary/30 focus:ring-offset-0">
-                            <div class="flex text-yellow-400">
+                            <div class="flex text-warning">
                                 @for($i = 1; $i <= 5; $i++)
                                     <i class="fas fa-star text-sm {{ $i <= $rating ? '' : 'text-primary-100' }}"></i>
                                 @endfor
@@ -315,7 +315,7 @@
                 </div>
 
                 {{-- Apply Filter Button (Mobile) --}}
-                <button onclick="toggleMobileFilter()" class="lg:hidden w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm mt-4 tap-effect shadow-lg shadow-primary/20">
+                <button onclick="toggleMobileFilter()" class="lg:hidden w-full bg-primary text-surface-elevated py-3 rounded-xl font-semibold text-sm mt-4 tap-effect shadow-lg shadow-primary/20">
                     Apply Filters
                 </button>
 
@@ -345,7 +345,7 @@
                 <div class="flex items-center gap-3">
                     {{-- Sort Dropdown --}}
                     <div class="relative">
-                        <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-primary-100 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer transition-all duration-200 shadow-sm">
+                        <select onchange="window.location.href=this.value" class="appearance-none bg-surface-elevated border border-primary-100 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer transition-all duration-200 shadow-sm">
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}"    {{ request('sort','featured') == 'featured'     ? 'selected' : '' }}>Sort by: Featured</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}"  {{ request('sort') == 'price_asc'   ? 'selected' : '' }}>Price: Low to High</option>
                             <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" {{ request('sort') == 'price_desc'  ? 'selected' : '' }}>Price: High to Low</option>
@@ -361,7 +361,7 @@
             {{-- Mobile Sort --}}
             <div class="lg:hidden flex items-center justify-between mb-4">
                 <p class="text-sm text-secondary">Showing {{ $products->count() }} products</p>
-                <select onchange="window.location.href=this.value" class="appearance-none bg-white border border-primary-100 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
+                <select onchange="window.location.href=this.value" class="appearance-none bg-surface-elevated border border-primary-100 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'featured']) }}"    {{ request('sort','featured') == 'featured'  ? 'selected' : '' }}>Sort: Featured</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}"  {{ request('sort') == 'price_asc'  ? 'selected' : '' }}>Price: Low to High</option>
                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
@@ -390,7 +390,7 @@
 
                 {{-- Category chip (if active from URL) --}}
                 @if($activeCategory)
-                    <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
+                    <span class="inline-flex items-center gap-1.5 bg-primary text-surface-elevated px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
                         <i class="fas fa-folder text-xs opacity-70"></i>
                         {{ $activeCategory->name }}
                         <button onclick="removeCategoryFilter()" class="hover:text-secondary-200 ml-0.5 transition-colors">
@@ -403,7 +403,7 @@
                 @foreach($selectedBrands as $brandSlug)
                     @php $brand = $brands->firstWhere('slug', trim($brandSlug)); @endphp
                     @if($brand)
-                    <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
+                    <span class="inline-flex items-center gap-1.5 bg-primary text-surface-elevated px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
                         {{ $brand->name }}
                         <button onclick="removeFilter('brands', '{{ trim($brandSlug) }}')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                             <i class="fas fa-times text-xs"></i>
@@ -416,7 +416,7 @@
                 @foreach($selectedSizes as $sizeId)
                     @php $size = $sizes->firstWhere('id', $sizeId); @endphp
                     @if($size)
-                    <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
+                    <span class="inline-flex items-center gap-1.5 bg-primary text-surface-elevated px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
                         Size: {{ $size->name }}
                         <button onclick="removeFilter('sizes', '{{ $sizeId }}')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                             <i class="fas fa-times text-xs"></i>
@@ -429,8 +429,8 @@
                 @foreach($selectedColors as $colorId)
                     @php $color = $colors->firstWhere('id', $colorId); @endphp
                     @if($color)
-                    <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
-                        <span class="w-3 h-3 rounded-full border border-white/30 flex-shrink-0" style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}"></span>
+                    <span class="inline-flex items-center gap-1.5 bg-primary text-surface-elevated px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
+                        <span class="w-3 h-3 rounded-full border border-surface-elevated/30 flex-shrink-0" style="background-color: {{ $color->hex_code ?? '#CCCCCC' }}"></span>
                         {{ $color->name }}
                         <button onclick="removeFilter('colors', '{{ $colorId }}')" class="hover:text-secondary-200 ml-0.5 transition-colors">
                             <i class="fas fa-times text-xs"></i>
@@ -441,7 +441,7 @@
 
                 {{-- Price chip --}}
                 @if(request('min_price') || request('max_price'))
-                <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
+                <span class="inline-flex items-center gap-1.5 bg-primary text-surface-elevated px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
                     Price:
                     @if(request('min_price') && request('max_price'))
                         ৳{{ number_format(request('min_price')) }} – ৳{{ number_format(request('max_price')) }}
@@ -458,8 +458,8 @@
 
                 {{-- Rating chip --}}
                 @if(request('min_rating'))
-                <span class="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
-                    <span class="flex text-yellow-400">
+                <span class="inline-flex items-center gap-1.5 bg-primary text-surface-elevated px-3 py-1.5 rounded-full text-sm font-medium shadow-sm">
+                    <span class="flex text-warning">
                         @for($i = 1; $i <= (int)request('min_rating'); $i++)
                             <i class="fas fa-star text-xs"></i>
                         @endfor
@@ -471,7 +471,7 @@
                 </span>
                 @endif
 
-                <button onclick="clearAllFilters()" class="text-sm text-red-500 hover:text-red-600 font-medium ml-2 transition-colors">
+                <button onclick="clearAllFilters()" class="text-sm text-danger hover:text-danger-600 font-medium ml-2 transition-colors">
                     Clear All
                 </button>
             </div>
@@ -490,7 +490,7 @@
                         </div>
                         <h3 class="text-xl font-bold text-primary mb-2">No products found</h3>
                         <p class="text-secondary mb-6">Try adjusting your filters or search criteria.</p>
-                        <button onclick="clearAllFilters()" class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">
+                        <button onclick="clearAllFilters()" class="px-6 py-2.5 bg-primary text-surface-elevated rounded-xl text-sm font-semibold hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-lg shadow-primary/20">
                             Clear Filters
                         </button>
                     </div>
@@ -508,7 +508,7 @@
                         <i class="fas fa-arrow-left text-xs"></i> Previous
                     </span>
                 @else
-                    <a href="{{ $products->previousPageUrl() }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-primary bg-white border border-primary-100 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
+                    <a href="{{ $products->previousPageUrl() }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-primary bg-surface-elevated border border-primary-100 rounded-xl hover:bg-primary hover:text-surface-elevated hover:border-primary transition-all duration-200 shadow-sm">
                         <i class="fas fa-arrow-left text-xs"></i> Previous
                     </a>
                 @endif
@@ -518,7 +518,7 @@
                 </span>
 
                 @if($products->hasMorePages())
-                    <a href="{{ $products->nextPageUrl() }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-primary bg-white border border-primary-100 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
+                    <a href="{{ $products->nextPageUrl() }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-primary bg-surface-elevated border border-primary-100 rounded-xl hover:bg-primary hover:text-surface-elevated hover:border-primary transition-all duration-200 shadow-sm">
                         Next <i class="fas fa-arrow-right text-xs"></i>
                     </a>
                 @else
@@ -535,7 +535,7 @@
 </div>
 
 {{-- Mobile Filter Overlay --}}
-<div id="mobileFilterOverlay" class="fixed inset-0 bg-black/50 z-[60] hidden lg:hidden backdrop-blur-sm" onclick="toggleMobileFilter()"></div>
+<div id="mobileFilterOverlay" class="fixed inset-0 bg-primary/50 z-[60] hidden lg:hidden backdrop-blur-sm" onclick="toggleMobileFilter()"></div>
 
 @endsection
 
@@ -688,9 +688,9 @@ function toggleSizeColor(btn, name, value) {
     } else {
         if (cb.checked) {
             btn.classList.remove('border-primary-100', 'text-secondary', 'hover:border-primary', 'hover:text-primary');
-            btn.classList.add('border-primary', 'bg-primary', 'text-white', 'shadow-sm');
+            btn.classList.add('border-primary', 'bg-primary', 'text-surface-elevated', 'shadow-sm');
         } else {
-            btn.classList.remove('border-primary', 'bg-primary', 'text-white', 'shadow-sm');
+            btn.classList.remove('border-primary', 'bg-primary', 'text-surface-elevated', 'shadow-sm');
             btn.classList.add('border-primary-100', 'text-secondary', 'hover:border-primary', 'hover:text-primary');
         }
     }
@@ -751,11 +751,11 @@ function toggleMobileFilter() {
 
     const isOpen = !sidebar.classList.contains('hidden');
     if (isOpen) {
-        sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-[70]', 'w-80', 'max-w-[85vw]', 'overflow-y-auto', 'bg-white', 'shadow-2xl');
+        sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-[70]', 'w-80', 'max-w-[85vw]', 'overflow-y-auto', 'bg-surface-elevated', 'shadow-2xl');
         sidebar.classList.remove('lg:block');
         document.body.style.overflow = 'hidden';
     } else {
-        sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-[70]', 'w-80', 'max-w-[85vw]', 'overflow-y-auto', 'bg-white', 'shadow-2xl');
+        sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-[70]', 'w-80', 'max-w-[85vw]', 'overflow-y-auto', 'bg-surface-elevated', 'shadow-2xl');
         sidebar.classList.add('lg:block');
         document.body.style.overflow = '';
     }

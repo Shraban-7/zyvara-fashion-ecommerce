@@ -36,7 +36,7 @@ $banner = $banners->where('position', \App\Enums\BannerPosition::FESTIVAL)->sort
 
     .home-section--festival {
         padding: 48px 0;
-        background: #fff;
+        background: var(--color-surface-elevated);
         width: 100%;
     }
 
@@ -72,12 +72,12 @@ $banner = $banners->where('position', \App\Enums\BannerPosition::FESTIVAL)->sort
         border-radius: 20px;
         overflow: hidden;
         min-height: 320px;
-        box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+        box-shadow: 0 8px 32px rgba(26, 26, 26, 0.12);
         transition: box-shadow 0.3s ease;
     }
 
     .fb-card:hover {
-        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
+        box-shadow: 0 12px 40px rgba(26, 26, 26, 0.18);
     }
 
     @media (min-width: 640px) {
@@ -119,9 +119,9 @@ $banner = $banners->where('position', \App\Enums\BannerPosition::FESTIVAL)->sort
         inset: 0;
         background: linear-gradient(
             105deg,
-            rgba(15, 23, 42, 0.85) 0%,
-            rgba(15, 23, 42, 0.5) 50%,
-            rgba(15, 23, 42, 0.2) 100%
+            rgba(26, 26, 26, 0.85) 0%,
+            rgba(26, 26, 26, 0.5) 50%,
+            rgba(26, 26, 26, 0.2) 100%
         );
     }
 
@@ -165,13 +165,13 @@ $banner = $banners->where('position', \App\Enums\BannerPosition::FESTIVAL)->sort
     .fb-eyebrow {
         display: inline-block;
         font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.12em;
-        color: #0f172a;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        color: var(--color-primary);
         text-transform: uppercase;
         margin-bottom: 12px;
         padding: 6px 14px;
-        background: #fff;
+        background: var(--color-accent);
         border-radius: 99px;
         width: fit-content;
     }
@@ -179,8 +179,9 @@ $banner = $banners->where('position', \App\Enums\BannerPosition::FESTIVAL)->sort
     /* ── Title ── */
     .fb-title {
         font-size: clamp(28px, 5vw, 48px);
-        font-weight: 900;
-        color: #fff;
+        font-weight: 600;
+        font-family: var(--font-heading);
+        color: var(--color-surface-elevated);
         line-height: 1.1;
         margin: 0 0 12px;
         letter-spacing: -0.03em;
@@ -221,9 +222,9 @@ $banner = $banners->where('position', \App\Enums\BannerPosition::FESTIVAL)->sort
         align-items: center;
         gap: 8px;
         padding: 12px 28px;
-        background: #fff;
-        color: #0f172a;
-        font-weight: 800;
+        background: var(--color-accent);
+        color: var(--color-primary);
+        font-weight: 700;
         font-size: 13px;
         border-radius: 12px;
         text-decoration: none;
@@ -234,8 +235,8 @@ $banner = $banners->where('position', \App\Enums\BannerPosition::FESTIVAL)->sort
     }
 
     .fb-btn-primary:hover {
-        background: #0f172a;
-        color: #fff;
+        background: var(--color-surface-elevated);
+        color: var(--color-primary);
         transform: translateY(-2px);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }

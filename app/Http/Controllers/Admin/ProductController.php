@@ -223,6 +223,7 @@ class ProductController extends Controller
             $validated['is_new_arrival'] = $request->has('is_new_arrival');
             $validated['is_best_seller'] = $request->has('is_best_seller');
             $validated['is_on_sale'] = $request->has('is_on_sale');
+            $validated['is_trending'] = $request->has('is_trending');
 
             if ($request->hasFile('image')) {
                 $validated['image'] = $imageService->uploadAndOptimize($request->file('image'), 'products/thumbnails');
@@ -386,6 +387,7 @@ class ProductController extends Controller
             $validated['is_new_arrival'] = $request->has('is_new_arrival');
             $validated['is_best_seller'] = $request->has('is_best_seller');
             $validated['is_on_sale'] = $request->has('is_on_sale');
+            $validated['is_trending'] = $request->has('is_trending');
 
             if ($request->hasFile('image')) {
                 if ($product->image) {

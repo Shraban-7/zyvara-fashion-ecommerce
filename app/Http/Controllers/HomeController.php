@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\HomeSection;
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -50,6 +52,15 @@ class HomeController extends Controller
             ->orderBy('review_count', 'desc')
             ->take($productLimit)
             ->get();
+
+        $trendingProducts = Cache::remember('trending_products', now()->addHours(6), function () {
+            return Product::where('is_active', true)
+                ->where('is_trending', true)
+                ->with('category')
+                ->orderBy('review_count', 'desc')
+                ->take(10)
+                ->get();
+        });
 
         // Fetch men's products
         $menCategoryIds = Category::where('slug', 'like', '%men%')->pluck('id')->toArray();
@@ -97,6 +108,10 @@ class HomeController extends Controller
             ->limit(5)
             ->get();
 
+        $homeSections = Cache::remember('home_sections_visible', now()->addHours(6), function () {
+            return HomeSection::visible()->ordered()->get();
+        });
+
         return view('home', compact(
             'newArrivals',
             'bestSelling',
@@ -106,7 +121,8 @@ class HomeController extends Controller
             'banners',
             'ourBrands',
             'featuredProducts',
-            'onSaleProducts'
+            'onSaleProducts',
+            'trendingProducts'
         ));
     }
 }

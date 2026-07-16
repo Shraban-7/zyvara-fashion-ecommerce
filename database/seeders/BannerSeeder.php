@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Banner;
 use App\Enums\BannerPosition;
+use App\Enums\BannerSize;
 use Illuminate\Database\Seeder;
 
 class BannerSeeder extends Seeder
@@ -56,5 +57,27 @@ class BannerSeeder extends Seeder
             'sort_order' => 1,
             'is_active'  => true,
         ]);
+
+        // Bento grid banners
+        $bento = [
+            ['title' => 'New Season', 'subtitle' => 'Autumn / Winter', 'image' => 'banners/left1.png', 'size' => BannerSize::LARGE, 'button_text' => 'Explore', 'button_link' => '/products', 'order' => 1],
+            ['title' => 'Accessories', 'subtitle' => 'Complete the look', 'image' => 'banners/right1.png', 'size' => BannerSize::SMALL, 'button_text' => 'Shop', 'button_link' => '/products', 'order' => 2],
+            ['title' => 'Footwear', 'subtitle' => 'Step out', 'image' => 'banners/right2.png', 'size' => BannerSize::SMALL, 'button_text' => 'Shop', 'button_link' => '/products', 'order' => 3],
+            ['title' => 'The Edit', 'subtitle' => 'Curated picks', 'image' => 'banners/left2.png', 'size' => BannerSize::WIDE, 'button_text' => 'Discover', 'button_link' => '/products', 'order' => 4],
+        ];
+
+        foreach ($bento as $item) {
+            Banner::create([
+                'title' => $item['title'],
+                'subtitle' => $item['subtitle'],
+                'image' => $item['image'],
+                'button_text' => $item['button_text'],
+                'button_link' => $item['button_link'],
+                'position' => BannerPosition::BENTO->value,
+                'size' => $item['size']->value,
+                'sort_order' => $item['order'],
+                'is_active' => true,
+            ]);
+        }
     }
 }

@@ -1,20 +1,20 @@
 {{-- Floating Cart Button --}}
-<button onclick="openCartDrawer()" id="floatingCartBtn" class="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 w-14 h-14 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 group backdrop-blur-sm">
+<button onclick="openCartDrawer()" id="floatingCartBtn" class="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 w-14 h-14 bg-primary text-surface-elevated rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 group backdrop-blur-sm">
     <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
     </svg>
     {{-- Cart Count Badge --}}
-    <span id="cartCountBadge" class="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 bg-red-500 text-white text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm transition-colors duration-300">3</span>
+    <span id="cartCountBadge" class="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 bg-danger text-surface-elevated text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-surface-elevated shadow-sm transition-colors duration-300">3</span>
 </button>
 
 {{-- Cart Drawer Overlay --}}
-<div id="cartOverlay" onclick="closeCartDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 opacity-0 invisible transition-all duration-400"></div>
+<div id="cartOverlay" onclick="closeCartDrawer()" class="fixed inset-0 bg-primary/60 backdrop-blur-sm z-50 opacity-0 invisible transition-all duration-400"></div>
 
 {{-- Cart Drawer --}}
-<div id="cartDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[440px] bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col">
+<div id="cartDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[440px] bg-surface-elevated z-50 shadow-2xl transform translate-x-full transition-transform duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col">
 
     {{-- Cart Header --}}
-    <div class="flex items-center justify-between px-6 py-5 border-b border-primary-100 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-primary-100 bg-surface-elevated/80 backdrop-blur-md sticky top-0 z-10">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
                 <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -60,7 +60,7 @@
         </div>
         <h3 class="text-lg font-semibold text-primary mb-1.5">Your cart is empty</h3>
         <p class="text-sm text-secondary-400 text-center mb-8 max-w-[240px] leading-relaxed">Looks like you haven't added anything to your cart yet.</p>
-        <a href="{{ route('products.index') }}" onclick="closeCartDrawer()" class="bg-primary text-white px-8 py-3 rounded-xl font-semibold text-sm hover:bg-primary-700 transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5">
+        <a href="{{ route('products.index') }}" onclick="closeCartDrawer()" class="bg-primary text-surface-elevated px-8 py-3 rounded-xl font-semibold text-sm hover:bg-primary-700 transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5">
             Start Shopping
         </a>
     </div>
@@ -69,19 +69,19 @@
     <div class="px-6 py-4 border-t border-primary-100 bg-light/50" id="couponSection">
         <div class="flex gap-2">
             <div class="flex-1 relative">
-                <input type="text" placeholder="Enter coupon code" class="w-full h-11 px-4 pr-10 bg-white border border-primary-100 rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200">
+                <input type="text" placeholder="Enter coupon code" class="w-full h-11 px-4 pr-10 bg-surface-elevated border border-primary-100 rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200">
                 <svg class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                 </svg>
             </div>
-            <button class="h-11 px-5 bg-primary text-white rounded-xl font-semibold text-sm hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm hover:shadow-md">
+            <button class="h-11 px-5 bg-primary text-surface-elevated rounded-xl font-semibold text-sm hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm hover:shadow-md">
                 Apply
             </button>
         </div>
     </div>
 
     {{-- Cart Footer --}}
-    <div class="px-6 py-5 border-t border-primary-100 bg-white" id="cartFooter">
+    <div class="px-6 py-5 border-t border-primary-100 bg-surface-elevated" id="cartFooter">
         {{-- Price Summary --}}
         <div class="space-y-2.5 mb-5">
             <div class="flex items-center justify-between text-sm">
@@ -104,7 +104,7 @@
         </div>
 
         {{-- Checkout Button --}}
-        <a href="{{ route('checkout.index') }}" class="w-full bg-primary text-white py-4 rounded-xl font-bold text-center hover:bg-primary-700 active:bg-primary-800 transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 flex items-center justify-center gap-2 mb-3 group">
+        <a href="{{ route('checkout.index') }}" class="w-full bg-primary text-surface-elevated py-4 rounded-xl font-bold text-center hover:bg-primary-700 active:bg-primary-800 transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 flex items-center justify-center gap-2 mb-3 group">
             <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
             </svg>

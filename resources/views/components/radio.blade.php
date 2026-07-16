@@ -7,9 +7,9 @@
         type="radio" 
         value="{{ $value }}"
         {{ $value == $selected ? 'checked' : '' }}
-        {{ $attributes->merge(['class' => 'h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500 transition duration-150']) }}
+        {{ $attributes->merge(['class' => 'h-4 w-4 text-primary border-secondary-300 focus:ring-primary transition duration-150']) }}
     >
-    <label for="radio_{{ $name . '_' . $value }}" class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer">
+    <label for="radio_{{ $name . '_' . $value }}" class="ml-3 block text-sm font-medium text-secondary-700 cursor-pointer">
         {{ $label }}
     </label>
 </div>
