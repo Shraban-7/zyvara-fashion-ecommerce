@@ -101,7 +101,7 @@ $rightPages = \App\Models\StaticPage::active()->where('footer_position', 2)->ord
         {{-- Payment Methods --}}
         <div class="border-t border-surface-elevated/10 pt-8 mb-8">
             <div class="flex flex-wrap items-center justify-center">
-                <img src="{{ asset('assets/sslcommerz.png') }}" alt="SSLCommerz" class="w-20 h-auto object-contain">
+                <img src="{{ asset('assets/images/sslcommerz.png') }}" alt="SSLCommerz" class="w-20 h-auto object-contain">
             </div>
         </div>
 
