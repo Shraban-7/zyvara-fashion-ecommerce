@@ -1,388 +1,182 @@
-@extends('layouts.app')
+@extends('customer.layout')
+@section('title', 'Order #' . ($order->order_number ?? ''))
 
-@section('title', 'Order Details')
+@php
+    $statusKey = property_exists($order->status, 'value') ? $order->status->value : (string) $order->status;
+    $statusLabel = method_exists($order->status, 'label') ? $order->status->label() : ucfirst($statusKey);
 
-@section('content')
-    <div class="min-h-screen bg-light py-8 md:py-12">
-        <div class="max-w-4xl mx-auto px-4">
-            <!-- Back Button & Header -->
-            <div class="mb-8">
-                <a href="{{ route('orders.index') }}"
-                    class="inline-flex items-center gap-2 text-primary-500 hover:text-primary-700 font-medium mb-4 transition-colors">
-                    <i class="fas fa-arrow-left"></i> Back to Orders
-                </a>
+    $statusBadge = [
+        'pending'    => 'bg-amber-50 text-amber-700 border-amber-200',
+        'processing' => 'bg-blue-50 text-blue-700 border-blue-200',
+        'shipped'    => 'bg-purple-50 text-purple-700 border-purple-200',
+        'out_for_delivery' => 'bg-purple-50 text-purple-700 border-purple-200',
+        'delivered'  => 'bg-success-50 text-success-700 border-success-200',
+        'cancelled'  => 'bg-danger-50 text-danger-700 border-danger-200',
+    ][$statusKey] ?? 'bg-secondary-100 text-secondary-700 border-secondary-200';
+@endphp
 
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <p class="text-sm text-secondary-400 mb-1">Order Number</p>
-                        <h1 class="text-3xl md:text-4xl font-bold text-primary">
-                            #{{ $order->order_number }}
-                        </h1>
-                    </div>
+@section('dashboard-content')
+    <div class="space-y-6">
+        <a href="{{ route('orders.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-secondary-500 hover:text-primary transition">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
 
-                    <div class="flex items-center gap-3">
-                        <!-- Status -->
-                        <div class="flex items-center gap-2 bg-success-100 px-4 py-3 rounded-full">
-                            <div class="w-3 h-3 rounded-full animate-pulse bg-success-500"></div>
-                            <span class="text-sm font-bold text-success-700">
-                                {{ $order->status->label() }}
-                            </span>
-                        </div>
-
-                        <!-- Download Invoice Button -->
-                        <button onclick="printReceipt('{{ route('orders.invoice', $order->order_number) }}')"
-                            class="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-primary text-surface-elevated hover:bg-primary-700 transition shadow-sm">
-                            <i class="fas fa-file-download text-sm"></i>
-                            <span class="text-sm font-semibold">Invoice</span>
-                        </button>
-                    </div>
+        {{-- Header --}}
+        <div class="bg-surface-elevated rounded-2xl border border-secondary-100 shadow-sm p-5 md:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <p class="text-xs text-secondary-400">Order Number</p>
+                    <h1 class="font-heading text-2xl md:text-3xl font-semibold text-primary">#{{ $order->order_number }}</h1>
+                    <p class="text-sm text-secondary-500 mt-1">Placed on {{ $order->created_at->format('F d, Y \a\t h:i A') }}</p>
                 </div>
-            </div>
-
-            <!-- Order Details Card -->
-            <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-6 md:p-8 mb-6 border border-secondary-100">
-                <!-- Order Date & Info -->
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-secondary-200">
-                    <div>
-                        <p class="text-sm text-secondary-400 mb-1">Order Date</p>
-                        <p class="text-lg font-semibold text-primary">{{ $order->created_at->format('F d, Y h:i a') }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-secondary-400 mb-1">Estimated Delivery</p>
-                        <p class="text-lg font-semibold text-primary">
-                            {{ $order->updated_at->addDays(5)->format('F d, Y') }}
-                        </p>
-                    </div>
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-semibold {{ $statusBadge }}">
+                        <span class="w-2 h-2 rounded-full bg-current opacity-70"></span>{{ $statusLabel }}
+                    </span>
+                    <button onclick="printReceipt('{{ route('orders.invoice', $order->order_number) }}')"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-surface-elevated text-sm font-semibold hover:bg-primary-700 transition">
+                        <i class="fas fa-file-download"></i> Invoice
+                    </button>
                 </div>
-
-                <!-- Customer & Delivery Info -->
-                <div class="grid md:grid-cols-2 gap-6 py-6 border-b border-secondary-200">
-                    <div>
-                        <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
-                            <i class="fas fa-user text-primary-500 text-lg"></i>
-                            Customer Information
-                        </h3>
-                        <div class="space-y-3 text-sm">
-                            <div>
-                                <p class="text-secondary-400 mb-1">Full Name</p>
-                                <p class="font-medium text-primary">{{ $order->user->name ?? 'N/A' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-secondary-400 mb-1">Email</p>
-                                <p class="font-medium text-primary">{{ $order->user->email ?? 'N/A' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-secondary-400 mb-1">Phone</p>
-                                <p class="font-medium text-primary">{{ $order->user->phone ?? 'N/A' }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
-                            <i class="fas fa-map-marker-alt text-primary-500 text-lg"></i>
-                            Delivery Address
-                        </h3>
-                        <div class="space-y-3 text-sm text-primary">
-                            <div>
-                                <p class="font-medium">
-                                    {{ $order->shipping_address ?? $order->user->address->address_line1 ?? 'N/A' }}
-                                </p>
-                            </div>
-                            <div class="flex gap-2">
-                                <span class="font-medium">{{ $order->shipping_city ?? $order->user->address->city ?? 'N/A' }},</span>
-                                <span class="font-medium">{{ $order?->district?->name ?? $order->user->address->district ?? 'N/A' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Order Items -->
-                <div class="py-6 border-b border-secondary-200">
-                    <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
-                        <i class="fas fa-box text-primary-500 text-lg"></i>
-                        Order Items ({{ $order->items ? count($order->items) : 0 }})
-                    </h3>
-                    <div class="space-y-4">
-                        @if($order->items && count($order->items) > 0)
-                            @foreach($order->items as $item)
-                                <div class="flex gap-3 p-3 bg-light rounded-lg relative border border-secondary-100">
-                                    <!-- Refund Badge -->
-                                    @if(!empty($item->return_item_id))
-                                        <span class="absolute top-2 right-2 text-[10px] font-semibold px-2 py-1 rounded-full bg-danger-100 text-danger-600 border border-danger-200">
-                                            Returned
-                                        </span>
-                                    @endif
-
-                                    <!-- Product Image -->
-                                    <div class="w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-elevated border border-secondary-100">
-                                        <img src="{{ $item->product_image }}" 
-                                            alt="{{ $item->product_name }}" 
-                                            class="w-full h-full object-cover">
-                                    </div>
-
-                                    <!-- Product Details -->
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="font-semibold text-sm text-primary leading-5 break-words">
-                                            {{ $item->product_name }}
-                                        </h4>
-
-                                        @if($item->size_name || $item->color_name)
-                                            <p class="text-sm text-secondary-400 mb-2">
-                                                @if($item->size_name)Size: {{ $item->size_name }}@endif
-                                                @if($item->size_name && $item->color_name) | @endif
-                                                @if($item->color_name)Color: {{ $item->color_name }}@endif
-                                            </p>
-                                        @endif
-
-                                        <!-- Qty & Price -->
-                                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mt-2">
-                                            <span class="text-sm text-secondary-500">
-                                                Qty: {{ $item->quantity }} × {{ money($item->unit_price) }}
-                                            </span>
-                                            <span class="text-sm font-bold text-primary-500">
-                                                {{ money($item->total) }}
-                                            </span>
-                                        </div>
-
-                                        @if($order->status->value === 'delivered')
-                                            <div class="mt-3">
-                                                <button type="button"
-                                                    onclick="openReviewModal({{ $item->product_id }}, '{{ addslashes($item->product_name) }}')"
-                                                    class="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium bg-primary text-surface-elevated rounded-lg hover:bg-primary-700 transition shadow-sm">
-                                                    <i class="fas fa-star"></i>
-                                                    Write Review
-                                                </button>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <p class="text-secondary-400 text-center py-4">No items found for this order</p>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Payment & Price Summary -->
-                <div class="py-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- Payment Info -->
-                        <div>
-                            <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2 uppercase tracking-wide">
-                                <i class="fas fa-credit-card text-primary-500 text-lg"></i>
-                                Payment Information
-                            </h3>
-                            <div class="space-y-3 text-sm">
-                                <div>
-                                    <p class="text-secondary-400 mb-1">Payment Method</p>
-                                    <span class="inline-block bg-light text-secondary-600 px-3 py-1 rounded-lg text-xs font-semibold border border-secondary-200">
-                                        {{ $order->payment_method->label() }}
-                                    </span>
-                                </div>
-                                <div>
-                                    <p class="text-secondary-400 mb-1">Payment Status</p>
-                                    @php
-                                        $paymentStatusColor = $order->payment_status->isPending() 
-                                            ? 'bg-warning-100 text-warning-700 border-warning-200' 
-                                            : 'bg-success-100 text-success-700 border-success-200';
-                                    @endphp
-                                    <span class="inline-block {{ $paymentStatusColor }} px-3 py-1 rounded-lg text-xs font-semibold border">
-                                        {{ $order->payment_status->label() }}
-                                    </span>
-                                    @if($order->payment_status->isPending() && $order->payment_method->isOnline())
-                                        <form action="{{ route('orders.payNow', $order->order_number) }}" method="POST" class="mt-2">
-                                            @csrf
-                                            <button type="submit"
-                                                class="inline-block bg-accent text-surface-elevated px-4 py-2 rounded-lg text-xs font-semibold hover:bg-accent-600 transition shadow-sm">
-                                                Pay Now
-                                            </button>
-                                        </form>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Price Breakdown -->
-                        <div class="bg-primary-50 rounded-xl p-4 border border-primary-100">
-                            <h3 class="text-sm font-bold text-primary mb-4">Order Summary</h3>
-
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between">
-                                    <span class="text-secondary-500">Subtotal</span>
-                                    <span class="font-medium text-primary">{{ money($order->subtotal) }}</span>
-                                </div>
-
-                                <div class="flex justify-between">
-                                    <span class="text-secondary-500">Shipping</span>
-                                    <span class="font-medium text-primary">{{ money($order->shipping_cost ?? 0) }}</span>
-                                </div>
-
-                                @if($order->discount_amount && $order->discount_amount > 0)
-                                    <div class="flex justify-between text-success-600">
-                                        <span>Discount</span>
-                                        <span class="font-medium">{{ money($order->discount_amount) }}</span>
-                                    </div>
-                                @endif
-
-                                {{-- Refund Summary --}}
-                                @if($totalRefund > 0)
-                                    <div class="flex justify-between text-danger-600">
-                                        <span>Total Refund</span>
-                                        <span class="font-medium">-{{ money($totalRefund) }}</span>
-                                    </div>
-
-                                    {{-- Method-wise breakdown --}}
-                                    <div class="pt-1 space-y-1">
-                                        @foreach($refunds as $method => $amount)
-                                            <div class="flex justify-between text-xs text-secondary-400 pl-2">
-                                                <span class="capitalize">{{ $method }}</span>
-                                                <span>-{{ money($amount) }}</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-
-                                <div class="h-px bg-secondary-200 my-3"></div>
-
-                                <div class="flex justify-between text-lg">
-                                    <span class="font-bold text-primary">Total</span>
-                                    <span class="font-bold text-primary-500">{{ money($order->total) }}</span>
-                                </div>
-
-                                {{-- Net Paid --}}
-                                @if($totalRefund > 0)
-                                    <div class="flex justify-between text-sm text-secondary-600 mt-2">
-                                        <span>Net Paid</span>
-                                        <span class="font-semibold">
-                                            {{ money($order->total - $totalRefund) }}
-                                        </span>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Order Timeline -->
-            <div class="bg-surface rounded-2xl shadow-lg shadow-secondary-200/50 p-6 md:p-8 mb-6 border border-secondary-100">
-                <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
-                    <i class="fas fa-clock text-primary-500"></i>
-                    Order Timeline
-                </h2>
-                <div class="space-y-4">
-                    @forelse($order->statusHistories as $history)
-                        <div class="flex gap-4">
-                            <div class="flex flex-col items-center">
-                                <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center shrink-0">
-                                    <i class="fas fa-circle text-primary-500 text-xs"></i>
-                                </div>
-                                @if(!$loop->last)
-                                    <div class="flex-1 w-0.5 bg-secondary-200 my-1"></div>
-                                @endif
-                            </div>
-                            <div class="flex-1 pb-4">
-                                <div class="flex items-start justify-between gap-4 mb-1">
-                                    <span class="font-semibold text-primary">{{ $history->status->label() }}</span>
-                                    <span class="text-sm text-secondary-400">{{ $history->created_at->diffForHumans() }}</span>
-                                </div>
-                                @if($history->comment)
-                                    <p class="text-sm text-secondary-500 mb-1">{{ $history->comment }}</p>
-                                @endif
-                                @if($history->updater)
-                                    <p class="text-xs text-secondary-400">By: {{ $history->updater->name }}</p>
-                                @endif
-                                <p class="text-xs text-secondary-300">{{ $history->created_at->format('M d, Y \a\t h:i A') }}</p>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-sm text-secondary-400 text-center py-4">No status history available</p>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('orders.index') }}"
-                    class="flex items-center justify-center gap-2 px-8 py-3 bg-primary text-surface-elevated rounded-xl font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200/50">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Orders
-                </a>
-                <a href="{{ route('home') }}"
-                    class="flex items-center justify-center gap-2 px-8 py-3 bg-surface-elevated text-primary border-2 border-primary rounded-xl font-semibold hover:bg-primary-50 transition">
-                    <i class="fas fa-shopping-bag"></i>
-                    Continue Shopping
-                </a>
-            </div>
-
-            <!-- Support Section -->
-            <div class="text-center mt-8 text-sm bg-primary-50 rounded-xl p-4 border border-primary-100">
-                <p class="text-secondary-500 mb-2">Have questions about your order?</p>
-                <a href="mailto:support@example.com" class="text-primary-500 hover:text-primary-700 hover:underline font-semibold transition-colors">Contact our support team</a>
             </div>
         </div>
+
+        {{-- Contextual action buttons --}}
+        <div class="flex flex-wrap gap-3">
+            @if(in_array($statusKey, ['shipped', 'out_for_delivery', 'processing']))
+                <a href="{{ route('orders.track', $order->order_number) }}"
+                    class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-accent text-primary font-semibold text-sm hover:bg-accent-600 transition shadow-sm">
+                    <i class="fas fa-truck-fast"></i> Track Order
+                </a>
+            @endif
+            @if(in_array($statusKey, ['pending', 'processing']))
+                <button onclick="openCancelModal()"
+                    class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-danger-200 text-danger-600 font-semibold text-sm hover:bg-danger-50 transition">
+                    <i class="fas fa-xmark"></i> Cancel Order
+                </button>
+            @endif
+            @if($statusKey === 'delivered')
+                <button onclick="reorderItems()"  {{-- wire to a reorder route later --}}
+                    class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-primary text-primary font-semibold text-sm hover:bg-primary-50 transition">
+                    <i class="fas fa-rotate-left"></i> Reorder
+                </button>
+                <button onclick="window.location.href='{{ route('orders.returns.create') }}?order={{ $order->order_number }}'"
+                    class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-secondary-200 text-secondary-600 font-semibold text-sm hover:bg-light transition">
+                    <i class="fas fa-rotate"></i> Return / Exchange
+                </button>
+            @endif
+        </div>
+
+        {{-- Items --}}
+        <section class="bg-surface-elevated rounded-2xl border border-secondary-100 shadow-sm p-5 md:p-6">
+            <h2 class="font-heading text-lg font-semibold text-primary mb-4 flex items-center gap-2">
+                <i class="fas fa-box text-accent-600"></i> Items ({{ $order->items ? count($order->items) : 0 }})
+            </h2>
+            <div class="space-y-3">
+                @foreach($order->items ?? [] as $item)
+                    <div class="flex gap-3 p-3 bg-light rounded-xl border border-secondary-100 relative">
+                        @if(!empty($item->return_item_id))
+                            <span class="absolute top-2 right-2 text-[10px] font-semibold px-2 py-1 rounded-full bg-danger-100 text-danger-600 border border-danger-200">Returned</span>
+                        @endif
+                        <div class="w-20 h-24 rounded-lg overflow-hidden bg-surface-elevated border border-secondary-100 shrink-0">
+                            <img src="{{ $item->product_image }}" alt="{{ $item->product_name }}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-medium text-sm text-primary leading-snug">{{ $item->product_name }}</h4>
+                            @if($item->size_name || $item->color_name)
+                                <p class="text-xs text-secondary-400 mt-1">
+                                    @if($item->size_name)Size: {{ $item->size_name }}@endif
+                                    @if($item->size_name && $item->color_name) · @endif
+                                    @if($item->color_name)Color: {{ $item->color_name }}@endif
+                                </p>
+                            @endif
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-sm text-secondary-500">Qty: {{ $item->quantity }} × {{ money($item->unit_price) }}</span>
+                                <span class="text-sm font-semibold text-primary-500">{{ money($item->total) }}</span>
+                            </div>
+
+                            @if($statusKey === 'delivered')
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <button type="button" onclick="openReviewModal({{ $item->product_id }}, '{{ addslashes($item->product_name) }}')"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-surface-elevated rounded-lg hover:bg-primary-700 transition">
+                                        <i class="fas fa-star"></i> Write Review
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        {{-- Addresses (two columns) --}}
+        <section class="grid md:grid-cols-2 gap-4">
+            <div class="bg-surface-elevated rounded-2xl border border-secondary-100 shadow-sm p-5">
+                <h3 class="text-sm font-bold text-primary uppercase tracking-wide mb-3 flex items-center gap-2">
+                    <i class="fas fa-location-dot text-accent-600"></i> Shipping Address
+                </h3>
+                <p class="font-medium text-primary">{{ $order->shipping_name ?? $order->user->name ?? 'N/A' }}</p>
+                <p class="text-sm text-secondary-500 mt-1">{{ $order->shipping_address ?? 'N/A' }}</p>
+                <p class="text-sm text-secondary-500">{{ $order->shipping_city ?? '' }}{{ $order->shipping_city && $order?->district?->name ? ', ' : '' }}{{ $order?->district?->name ?? '' }}</p>
+                <p class="text-sm text-secondary-500 mt-1">{{ $order->shipping_phone ?? $order->user->phone ?? '' }}</p>
+            </div>
+            <div class="bg-surface-elevated rounded-2xl border border-secondary-100 shadow-sm p-5">
+                <h3 class="text-sm font-bold text-primary uppercase tracking-wide mb-3 flex items-center gap-2">
+                    <i class="fas fa-file-invoice text-accent-600"></i> Billing & Payment
+                </h3>
+                <p class="text-sm text-secondary-500">Payment Method</p>
+                <p class="font-medium text-primary mb-2">{{ $order->payment_method->label() ?? 'N/A' }}</p>
+                <p class="text-sm text-secondary-500">Billing Address</p>
+                <p class="text-sm text-primary">{{ $order->billing_address ?? $order->shipping_address ?? 'Same as shipping' }}</p>
+            </div>
+        </section>
+
+        {{-- Summary --}}
+        <section class="bg-surface-elevated rounded-2xl border border-secondary-100 shadow-sm p-5 md:p-6">
+            <h2 class="font-heading text-lg font-semibold text-primary mb-4">Order Summary</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span class="text-secondary-500">Subtotal</span><span class="font-medium text-primary">{{ money($order->subtotal) }}</span></div>
+                    <div class="flex justify-between"><span class="text-secondary-500">Shipping</span><span class="font-medium text-primary">{{ money($order->shipping_cost ?? 0) }}</span></div>
+                    @if($order->discount_amount && $order->discount_amount > 0)
+                        <div class="flex justify-between text-success-600">
+                            <span>Discount @if($order->coupon_code)<span class="text-xs">({{ $order->coupon_code }})</span>@endif</span>
+                            <span class="font-medium">-{{ money($order->discount_amount) }}</span>
+                        </div>
+                    @endif
+                    <div class="h-px bg-secondary-100 my-2"></div>
+                    <div class="flex justify-between text-lg"><span class="font-bold text-primary">Total</span><span class="font-bold text-primary-500">{{ money($order->total) }}</span></div>
+                </div>
+                <div class="bg-primary-50 rounded-xl p-4 border border-primary-100 text-sm space-y-2">
+                    <div class="flex justify-between"><span class="text-secondary-500">Payment Status</span>
+                        <span class="font-semibold {{ $order->payment_status->isPending() ? 'text-amber-600' : 'text-success-600' }}">{{ $order->payment_status->label() }}</span></div>
+                    @if($order->payment_status->isPending() && $order->payment_method->isOnline())
+                        <form action="{{ route('orders.payNow', $order->order_number) }}" method="POST" class="mt-1">
+                            @csrf
+                            <button class="inline-flex items-center gap-1.5 bg-accent text-primary px-4 py-2 rounded-lg text-xs font-semibold hover:bg-accent-600 transition">Pay Now</button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+        </section>
     </div>
 
-    <!-- Review Modal -->
-    <div id="reviewModal" class="fixed inset-0 bg-primary/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-surface rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-secondary-100">
+    {{-- ===== Modals (kept from original) ===== --}}
+    @include('partials._review-modal', ['order' => $order])
+    @include('partials._return-modal', ['order' => $order])
 
-            {{-- Header --}}
-            <div class="flex items-center justify-between px-5 py-4 border-b border-secondary-100">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full bg-warning-50 flex items-center justify-center">
-                        <i class="fas fa-pencil text-warning-500 text-sm"></i>
-                    </div>
-                    <h3 class="font-medium text-primary text-base">Write a review</h3>
-                </div>
-                <button type="button" onclick="closeReviewModal()"
-                    class="w-8 h-8 rounded-full border border-secondary-200 flex items-center justify-center text-secondary-400 hover:bg-secondary-50 transition-colors">
-                    <i class="fas fa-times text-sm"></i>
-                </button>
+    {{-- Cancel confirm modal (lightweight) --}}
+    <div id="cancelModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-primary/50 p-4 backdrop-blur-sm">
+        <div class="bg-surface-elevated rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-danger-50 flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-xmark text-danger-500"></i>
             </div>
-
-            <form action="{{ route('review.store') }}" method="POST" class="p-5">
+            <h3 class="font-heading text-lg font-semibold text-primary mb-1">Cancel this order?</h3>
+            <p class="text-sm text-secondary-500 mb-5">This action can't be undone. You can also contact support.</p>
+            <form action="#" method="POST" class="flex gap-3">
                 @csrf
-                <input type="hidden" name="product_id" id="review_product_id">
-                <input type="hidden" name="order_id" value="{{ $order->id }}">
-                <input type="hidden" name="rating" id="ratingVal" value="0">
-
-                {{-- Product pill --}}
-                <div class="flex items-center gap-3 p-3 bg-light rounded-xl border border-secondary-100 mb-5">
-                    <div class="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
-                        <i class="fas fa-box text-primary-400"></i>
-                    </div>
-                    <div>
-                        <p id="review_product_name" class="text-sm font-medium text-primary"></p>
-                        <p class="text-xs text-secondary-300">Purchased item</p>
-                    </div>
-                </div>
-
-                {{-- Star rating --}}
-                <div class="mb-5">
-                    <label class="block text-xs font-medium text-secondary-400 uppercase tracking-wider mb-3">Your rating</label>
-                    <div class="flex items-center gap-1.5" id="starGroup">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <span data-val="{{ $i }}" class="star text-4xl cursor-pointer select-none text-secondary-200 transition-transform hover:scale-110">☆</span>
-                        @endfor
-                        <span id="ratingLabel" class="text-xs text-secondary-400 ml-2"></span>
-                    </div>
-                </div>
-
-                {{-- Review text --}}
-                <div class="mb-5">
-                    <label class="block text-xs font-medium text-secondary-400 uppercase tracking-wider mb-2">Your review</label>
-                    <textarea name="comment" rows="4" placeholder="Share your experience with this product..." class="w-full border border-secondary-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 resize-none text-primary placeholder-secondary-300 bg-surface"></textarea>
-                </div>
-
-                <button type="submit"
-                    class="w-full bg-primary text-surface-elevated py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-700 transition-colors shadow-sm">
-                    <i class="fas fa-paper-plane text-xs"></i>
-                    Submit review
-                </button>
-
-                <p class="text-center text-xs text-secondary-300 mt-3">Your review helps other shoppers make better decisions.</p>
+                <button type="button" onclick="closeCancelModal()" class="flex-1 bg-secondary-100 text-secondary-700 py-2.5 rounded-xl font-medium hover:bg-secondary-200 transition">Keep Order</button>
+                <button type="submit" class="flex-1 bg-danger-600 text-surface-elevated py-2.5 rounded-xl font-medium hover:bg-danger-700 transition">Cancel Order</button>
             </form>
         </div>
     </div>
@@ -390,50 +184,46 @@
     @push('scripts')
         <script>
             function printReceipt(url) {
-                let printWindow = window.open(url, '_blank', 'width=800,height=600');
-                printWindow.onload = function () {
-                    printWindow.focus();
-                    printWindow.print();
-                    printWindow.onafterprint = function () {
-                        printWindow.close();
-                    };
-                };
+                let w = window.open(url, '_blank', 'width=800,height=600');
+                w.onload = function () { w.focus(); w.print(); w.onafterprint = () => w.close(); };
             }
+            function openCancelModal() { document.getElementById('cancelModal').classList.replace('hidden', 'flex'); document.body.style.overflow = 'hidden'; }
+            function closeCancelModal() { document.getElementById('cancelModal').classList.replace('flex', 'hidden'); document.body.style.overflow = 'auto'; }
+            function reorderItems() { alert('Reorder will be wired to a controller endpoint.'); }
 
             const labels = ['', 'Terrible', 'Poor', 'Okay', 'Good', 'Excellent'];
-            const stars = document.querySelectorAll('#starGroup .star');
-            let selected = 0;
-
+            let selectedRating = 0;
             function paintStars(upTo) {
-                stars.forEach((s, i) => {
+                document.querySelectorAll('#starGroup .star').forEach((s, i) => {
                     s.textContent = i < upTo ? '★' : '☆';
-                    s.classList.toggle('text-warning-400', i < upTo);
+                    s.classList.toggle('text-accent', i < upTo);
                     s.classList.toggle('text-secondary-200', i >= upTo);
                 });
-                document.getElementById('ratingLabel').textContent = labels[upTo] ?? '';
+                const lbl = document.getElementById('ratingLabel');
+                if (lbl) lbl.textContent = labels[upTo] ?? '';
             }
-
-            stars.forEach(s => {
+            document.querySelectorAll('#starGroup .star').forEach(s => {
                 s.addEventListener('mouseenter', () => paintStars(+s.dataset.val));
-                s.addEventListener('mouseleave', () => paintStars(selected));
-                s.addEventListener('click', () => {
-                    selected = +s.dataset.val;
-                    document.getElementById('ratingVal').value = selected;
-                    paintStars(selected);
-                });
+                s.addEventListener('mouseleave', () => paintStars(selectedRating));
+                s.addEventListener('click', () => { selectedRating = +s.dataset.val; document.getElementById('ratingVal').value = selectedRating; paintStars(selectedRating); });
             });
-
             function openReviewModal(productId, productName) {
                 document.getElementById('review_product_id').value = productId;
                 document.getElementById('review_product_name').textContent = productName;
-                selected = 0;
-                paintStars(0);
+                selectedRating = 0; paintStars(0);
                 document.getElementById('reviewModal').classList.replace('hidden', 'flex');
+                document.body.style.overflow = 'hidden';
             }
+            function closeReviewModal() { document.getElementById('reviewModal').classList.replace('flex', 'hidden'); document.body.style.overflow = 'auto'; }
 
-            function closeReviewModal() {
-                document.getElementById('reviewModal').classList.replace('flex', 'hidden');
+            const returnModal = document.getElementById('returnModal');
+            function openReturnModal(itemId) {
+                document.getElementById('return_order_item_id').value = itemId;
+                returnModal.classList.replace('hidden', 'flex');
+                document.body.style.overflow = 'hidden';
             }
+            function closeReturnModal() { returnModal.classList.replace('flex', 'hidden'); document.body.style.overflow = 'auto'; }
+            function money(a){ try { return new Intl.NumberFormat(undefined,{style:'currency',currency:'{{ config('app.currency','USD') }}'}).format(a); } catch(e){ return '$'+a; } }
         </script>
     @endpush
 @endsection
