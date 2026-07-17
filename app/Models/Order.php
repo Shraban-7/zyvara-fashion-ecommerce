@@ -111,6 +111,7 @@ class Order extends Model
         'status' => OrderStatus::class,
         'payment_method' => PaymentMethod::class,
         'payment_status' => PaymentStatus::class,
+        'payment_response' => 'array',
         'delivery_zone' => DeliveryZone::class,
     ];
 
