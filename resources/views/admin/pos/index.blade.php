@@ -5,12 +5,12 @@
 @section('content')
     <div class="pos-container h-screen flex flex-col" id="posSystem">
         {{-- Header --}}
-        <div class="bg-white border-b border-gray-200 px-4 py-3 shrink-0">
+        <div class="bg-white border-b border-secondary-200 px-4 py-3 shrink-0">
             <div class="flex items-center justify-between gap-4">
 
                 <!-- LEFT TITLE -->
-                <h1 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <i class="fas fa-cash-register text-blue-600"></i>
+                <h1 class="text-xl font-bold text-primary flex items-center gap-2">
+                    <i class="fas fa-cash-register text-primary"></i>
                     Point of Sale
                 </h1>
 
@@ -36,8 +36,8 @@
                             onclick="document.getElementById('closeRegisterModal').classList.remove('hidden')"
                             class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition
                                 {{ $isClosed 
-                                    ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border border-yellow-300' 
-                                    : 'bg-red-100 text-red-800 hover:bg-red-200 border border-red-300' }}">
+                                    ? 'bg-warning-100 text-warning hover:bg-warning-200 border border-warning-300' 
+                                    : 'bg-danger-100 text-danger hover:bg-danger-200 border border-danger-300' }}">
 
                             @if($isClosed)
                                 Reopen ({{ money($cashRegister->closing_amount) }})
@@ -47,26 +47,26 @@
 
                         </button>
                     @else
-                        <div class="px-3 py-2 bg-yellow-50 border border-yellow-200 rounded-lg text-xs text-yellow-700 font-medium">
+                        <div class="px-3 py-2 bg-warning-50 border border-warning-200 rounded-lg text-xs text-warning font-medium">
                             Register Not Open
                         </div>
                     @endif
 
                     <!-- CLEAR CART -->
                     <button id="clearCartBtn"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                        class="px-4 py-2 text-sm font-medium text-secondary-700 bg-secondary-100 hover:bg-gray-200 rounded-lg transition">
                         <i class="fas fa-refresh mr-2"></i>Clear Cart
                     </button>
 
                     <!-- DRAFT -->
                     <button id="draftOrdersBtn"
-                        class="px-4 py-2 text-sm font-medium text-yellow-700 bg-yellow-100 hover:bg-yellow-200 rounded-lg transition">
+                        class="px-4 py-2 text-sm font-medium text-warning bg-warning-100 hover:bg-warning-200 rounded-lg transition">
                         <i class="fas fa-file-alt mr-2"></i>Draft
                     </button>
 
                     <!-- TODAY SALES -->
                     <button id="salesOrdersBtn"
-                        class="px-4 py-2 text-sm font-medium text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition">
+                        class="px-4 py-2 text-sm font-medium text-success bg-success-100 hover:bg-success-200 rounded-lg transition">
                         <i class="fas fa-history mr-2"></i>Today Sales
                     </button>
 
@@ -74,14 +74,14 @@
             </div>
         </div>
 
-        <div id="ordersModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div id="ordersModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
 
             <div class="bg-white w-full max-w-2xl h-[80vh] rounded-xl shadow-lg flex flex-col">
 
                 <!-- Header (fixed) -->
                 <div class="flex justify-between items-center p-4 border-b">
                     <h2 id="ordersModalTitle" class="text-lg font-semibold">Orders</h2>
-                    <button id="closeOrdersModal" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+                    <button id="closeOrdersModal" class="text-secondary-500 hover:text-secondary-700 text-xl">&times;</button>
                 </div>
 
                 <!-- Body (SCROLLABLE) -->
@@ -91,7 +91,7 @@
 
                 <!-- Footer (optional fixed) -->
                 <div class="p-3 border-t text-right">
-                    <button onclick="closeModal()" class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg">
+                    <button onclick="closeModal()" class="px-4 py-2 text-sm bg-secondary-100 hover:bg-gray-200 rounded-lg">
                         Close
                     </button>
                 </div>
@@ -103,28 +103,28 @@
         {{-- Main Content --}}
         <div class="flex-1 flex overflow-hidden">
             {{-- Products Section --}}
-            <div class="flex-1 flex flex-col overflow-hidden bg-gray-50">
+            <div class="flex-1 flex flex-col overflow-hidden bg-secondary-50">
                 {{-- Search and Filters --}}
-                <div class="bg-white border-b border-gray-200 p-4 shrink-0">
+                <div class="bg-white border-b border-secondary-200 p-4 shrink-0">
                     <div class="flex flex-col sm:flex-row gap-3">
 
                         <!-- SEARCH (NAME ONLY) -->
                         <div class="flex-1 relative">
-                            <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary-400"></i>
                             <input type="text" id="searchInput" placeholder="Search products by name..."
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full pl-10 pr-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
                         <!-- SKU SCANNER FIELD (NEW) -->
                         <div class="flex-1 relative">
-                            <i class="fas fa-barcode absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <i class="fas fa-barcode absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary-400"></i>
                             <input type="text" id="skuInput" placeholder="Scan or enter SKU..."
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full pl-10 pr-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
                         <!-- CATEGORY FILTER -->
                         <select id="categoryFilter"
-                            class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             <option value="">All Categories</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -144,18 +144,18 @@
 
                     {{-- No Products Found --}}
                     <div id="noProducts" class="hidden flex-col items-center justify-center py-16">
-                        <i class="fas fa-box-open text-gray-300 text-6xl mb-4"></i>
-                        <p class="text-gray-500 text-lg">No products found</p>
+                        <i class="fas fa-box-open text-secondary-300 text-6xl mb-4"></i>
+                        <p class="text-secondary-500 text-lg">No products found</p>
                     </div>
                 </div>
             </div>
 
             {{-- Cart Sidebar --}}
-            <div class="w-full sm:w-96 lg:w-105 bg-white border-l border-gray-200 flex flex-col">
+            <div class="w-full sm:w-96 lg:w-105 bg-white border-l border-secondary-200 flex flex-col">
                 {{-- Customer Info --}}
-                <div class="p-4 border-b border-gray-200 bg-gray-50 relative">
+                <div class="p-4 border-b border-secondary-200 bg-secondary-50 relative">
 
-                    <label class="block text-xs font-semibold text-gray-700 mb-2">
+                    <label class="block text-xs font-semibold text-secondary-700 mb-2">
                         Customer
                     </label>
 
@@ -166,10 +166,10 @@
                             <input type="text" id="customerName" name="customer_name"
                                 value="{{ request()->order_number ? $order->customer?->name : '' }}"
                                 placeholder="Customer Name" autocomplete="off"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 py-2 text-sm border border-secondary-300 rounded-lg 
+                                                                                                                                   focus:ring-2 focus:ring-primary focus:border-transparent">
                             <div id="customerNameDropdown"
-                                class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
+                                class="absolute left-0 right-0 mt-1 bg-white border border-secondary-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
                         </div>
 
@@ -178,10 +178,10 @@
                             <input type="text" id="customerPhone" name="customer_phone"
                                 value="{{ request()->order_number ? $order->customer?->phone : '' }}"
                                 placeholder="Phone Number" autocomplete="off"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                                                                                                                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 py-2 text-sm border border-secondary-300 rounded-lg 
+                                                                                                                                   focus:ring-2 focus:ring-primary focus:border-transparent">
                             <div id="customerPhoneDropdown"
-                                class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
+                                class="absolute left-0 right-0 mt-1 bg-white border border-secondary-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                             </div>
                         </div>
 
@@ -190,15 +190,15 @@
 
                 {{-- Cart Items --}}
                 <div class="flex-1 overflow-y-auto p-4">
-                    <h3 class="text-sm font-semibold text-gray-700">
+                    <h3 class="text-sm font-semibold text-secondary-700">
                         Cart Items (<span id="cartItemCount">0</span>)
                     </h3>
 
                     <!-- EMPTY STATE -->
                     <div id="emptyCart" class="flex flex-col items-center justify-center py-16 text-center">
-                        <i class="fas fa-shopping-cart text-gray-300 text-5xl mb-3"></i>
-                        <p class="text-gray-500">Cart is empty</p>
-                        <p class="text-gray-400 text-sm mt-1">Add products to continue</p>
+                        <i class="fas fa-shopping-cart text-secondary-300 text-5xl mb-3"></i>
+                        <p class="text-secondary-500">Cart is empty</p>
+                        <p class="text-secondary-400 text-sm mt-1">Add products to continue</p>
                     </div>
 
                     <!-- DYNAMIC ITEMS -->
@@ -207,14 +207,14 @@
                 </div>
 
                 {{-- Cart Summary --}}
-                <div class="border-t border-gray-200 p-4 bg-gray-50">
+                <div class="border-t border-secondary-200 p-4 bg-secondary-50">
                     {{-- Discount Section --}}
                     <div class="mb-4">
                         <div class="flex gap-2 mb-3">
 
                             <!-- Discount Type -->
                             <select id="discountType"
-                                class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                                class="px-3 py-2 border border-secondary-300 rounded-lg text-sm focus:ring-2 focus:ring-primary">
 
                                 <option value="fixed" {{ isset($order) && $order->discount_type == 'fixed' ? 'selected' : '' }}>
                                     ৳ Fixed
@@ -229,12 +229,12 @@
                             <!-- Discount Input -->
                             <input type="number" id="discountInput" placeholder="Enter discount"
                                 value="{{ isset($order) ? $order->discount_amount : '' }}"
-                                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                                class="flex-1 px-3 py-2 border border-secondary-300 rounded-lg text-sm focus:ring-2 focus:ring-primary">
 
                         </div>
 
                         <!-- Applied Info -->
-                        <div id="discountApplied" class="hidden flex items-center justify-between text-sm text-green-600">
+                        <div id="discountApplied" class="hidden flex items-center justify-between text-sm text-success">
                             <span><i class="fas fa-tag mr-1"></i>Discount Applied</span>
                             <span class="font-semibold">-৳<span id="discountAmount">0.00</span></span>
                         </div>
@@ -242,17 +242,17 @@
 
                     {{-- Totals --}}
                     <div class="space-y-2 mb-4">
-                        <div class="flex justify-between text-sm text-gray-600">
+                        <div class="flex justify-between text-sm text-secondary-600">
                             <span>Subtotal</span>
                             <span class="font-semibold">৳<span id="subtotalAmount">0.00</span></span>
                         </div>
-                        <div id="discountRow" class="hidden flex justify-between text-sm text-green-600">
+                        <div id="discountRow" class="hidden flex justify-between text-sm text-success">
                             <span>Discount</span>
                             <span class="font-semibold">-৳<span id="discountDisplay">0.00</span></span>
                         </div>
-                        <div class="border-t border-gray-300 pt-2 flex justify-between items-center">
-                            <span class="text-lg font-bold text-gray-900">Total</span>
-                            <span class="text-2xl font-bold text-blue-600">৳<span id="totalAmount">0.00</span></span>
+                        <div class="border-t border-secondary-300 pt-2 flex justify-between items-center">
+                            <span class="text-lg font-bold text-primary">Total</span>
+                            <span class="text-2xl font-bold text-primary">৳<span id="totalAmount">0.00</span></span>
                         </div>
                     </div>
 
@@ -261,11 +261,11 @@
                         <!-- PAID -->
                         <div class="flex-1">
                             <div class="flex justify-between">
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                <label class="block text-xs font-medium text-secondary-600 mb-1">
                                     Due
                                 </label>
 
-                                <div class="text-xs font-bold text-red-600">
+                                <div class="text-xs font-bold text-danger">
                                     ৳<span id="dueAmount">{{ isset($order) ? $order->due : 0 }}</span>
                                 </div>
                             </div>
@@ -280,7 +280,7 @@
 
                                 <!-- FULL PAID BUTTON -->
                                 <button type="button" id="fullPaidBtn"
-                                    class="bg-green-600 text-white px-2 py-2 rounded text-xs hover:bg-green-700 whitespace-nowrap">
+                                    class="bg-success text-white px-2 py-2 rounded text-xs hover:bg-success-700 whitespace-nowrap">
                                     Full Paid
                                 </button>
 
@@ -292,7 +292,7 @@
 
                         <!-- CASH RECEIVED -->
                         <div class="mt-3 w-full">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-secondary-700 mb-1">
                                 Cash Received
                             </label>
 
@@ -304,12 +304,12 @@
 
                         <!-- CASH RETURNED -->
                         <div class="mt-3 w-full">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-secondary-700 mb-1">
                                 Cash Returned
                             </label>
 
                             <input type="number" id="cash_returned" name="cash_returned" value="{{ isset($order) ? $order->cash_returned : 0 }}" readonly                               
-                                class="w-full border rounded px-3 py-2 text-sm bg-gray-100" />
+                                class="w-full border rounded px-3 py-2 text-sm bg-secondary-100" />
                         </div>
 
                     </div>
@@ -317,7 +317,7 @@
                     <div class="space-y-2 mb-4">
                         <div class="relative">
                             <select id="employeeId" name="employee_id"
-                                class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                                class="block w-full px-3 py-2 border border-secondary-300 rounded-lg text-sm focus:ring-2 focus:ring-primary">
 
                                 <option value="" disabled {{ empty($order->employee_id) ? 'selected' : '' }}>
                                     Choose an employee...
@@ -356,8 +356,8 @@
                                     {{ !$order || (isset($order) && $order->payment_method->value==='none') ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                            border-gray-300 text-gray-500 text-xs
-                                            peer-checked:border-gray-600 peer-checked:bg-gray-100 peer-checked:text-gray-700 transition">
+                                            border-secondary-300 text-secondary-500 text-xs
+                                            peer-checked:border-gray-600 peer-checked:bg-secondary-100 peer-checked:text-secondary-700 transition">
                                     None
                                 </div>
                             </label>
@@ -371,8 +371,8 @@
                                     {{ isset($order) && $order->payment_method->value === 'cash' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                            border-gray-300 text-gray-600 text-xs
-                                            peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition">
+                                            border-secondary-300 text-secondary-600 text-xs
+                                            peer-checked:border-primary peer-checked:bg-primary-50 peer-checked:text-primary transition">
                                     Cash
                                 </div>
                             </label>
@@ -386,8 +386,8 @@
                                     {{ isset($order) && $order->payment_method->value === 'card' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                            border-gray-300 text-gray-600 text-xs
-                                            peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition">
+                                            border-secondary-300 text-secondary-600 text-xs
+                                            peer-checked:border-primary peer-checked:bg-primary-50 peer-checked:text-primary transition">
                                     Card
                                 </div>
                             </label>
@@ -401,8 +401,8 @@
                                     {{ isset($order) && $order->payment_method->value === 'bkash' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                            border-gray-300 text-gray-600 text-xs
-                                            peer-checked:border-pink-600 peer-checked:bg-pink-50 peer-checked:text-pink-600 transition">
+                                            border-secondary-300 text-secondary-600 text-xs
+                                            peer-checked:border-accent peer-checked:bg-accent-50 peer-checked:text-accent transition">
                                     <span class="font-semibold text-xs">bKash</span>
                                 </div>
                             </label>
@@ -416,7 +416,7 @@
                                     {{ isset($order) && $order->payment_method->value === 'nagad' ? 'checked' : '' }}>
 
                                 <div class="flex flex-col items-center justify-center py-2 rounded-lg border 
-                                            border-gray-300 text-gray-600 text-xs
+                                            border-secondary-300 text-secondary-600 text-xs
                                             peer-checked:border-orange-600 peer-checked:bg-orange-50 peer-checked:text-orange-600 transition">
                                     Nagad
                                 </div>
@@ -428,20 +428,20 @@
                     {{-- Action Buttons --}}
                     <!-- UPDATE BUTTON -->
                         <button id="updateOrderBtn"
-                            class="{{ isset($order) ?  '' : 'hidden' }} px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition w-full">
+                            class="{{ isset($order) ?  '' : 'hidden' }} px-4 py-3 bg-primary hover:bg-primary-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition w-full">
                             <i class="fas fa-edit mr-2"></i>Update
                         </button>
 
                         <div class="grid grid-cols-2 gap-2 {{ isset($order) ? 'hidden' : '' }}">
                             <!-- HOLD -->
                             <button id="holdOrderBtn" disabled
-                                class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition">
+                                class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-secondary-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <i class="fas fa-pause mr-2"></i>Hold
                             </button>
                             
                             <!-- COMPLETE -->
                             <button id="completeOrderBtn" disabled
-                                class="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition">
+                                class="px-4 py-3 bg-success hover:bg-success-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <i class="fas fa-check mr-2"></i>Complete
                             </button>
                         </div>                          
@@ -451,15 +451,15 @@
 
         {{-- Variant Selection Modal --}}
         <div id="variantModal"
-            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-xl">
-                <div class="p-6 border-b border-gray-200">
+                <div class="p-6 border-b border-secondary-200">
                     <div class="flex items-start justify-between">
                         <div>
-                            <h2 id="modalProductName" class="text-xl font-bold text-gray-900"></h2>
-                            <p class="text-gray-500 text-sm mt-1">Select size and color</p>
+                            <h2 id="modalProductName" class="text-xl font-bold text-primary"></h2>
+                            <p class="text-secondary-500 text-sm mt-1">Select size and color</p>
                         </div>
-                        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600">
+                        <button id="closeModalBtn" class="text-secondary-400 hover:text-secondary-600">
                             <i class="fas fa-times text-xl"></i>
                         </button>
                     </div>
@@ -474,15 +474,15 @@
 
                         {{-- Variants List --}}
                         <div class="space-y-3">
-                            <h3 class="font-semibold text-gray-900 mb-3">Available Variants</h3>
+                            <h3 class="font-semibold text-primary mb-3">Available Variants</h3>
                             <div id="variantsList" class="grid gap-2">
                                 {{-- Variants will be rendered here --}}
                             </div>
 
                             <div id="noVariantsMessage" class="hidden text-center py-8">
-                                <p class="text-gray-500">No variants available for this product</p>
+                                <p class="text-secondary-500">No variants available for this product</p>
                                 <button id="addWithoutVariantBtn"
-                                    class="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">
+                                    class="mt-4 px-6 py-3 bg-primary hover:bg-primary-700 text-white rounded-lg font-semibold">
                                     Add to Cart - ৳<span id="noVariantPrice">0.00</span>
                                 </button>
                             </div>
@@ -735,22 +735,22 @@
                         product.variants.forEach(function (variant) {
 
                             var disabled = variant.stock <= 0 ? 'disabled' : '';
-                            var borderClass = variant.stock > 0 ? 'border-gray-200' : 'border-red-200 bg-red-50';
+                            var borderClass = variant.stock > 0 ? 'border-secondary-200' : 'border-danger-200 bg-danger-50';
                             var stockText = variant.stock > 0 ? `Stock: ${variant.stock}` : 'Out of Stock';
-                            var stockClass = variant.stock > 0 ? 'text-green-600' : 'text-red-600';
+                            var stockClass = variant.stock > 0 ? 'text-success' : 'text-danger';
 
                             var btn = `
-                                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
+                                <button class="variant-btn flex items-center justify-between p-4 border-2 rounded-lg hover:border-primary transition disabled:opacity-50 disabled:cursor-not-allowed ${borderClass}" 
                                     data-variant-id="${variant.id}" ${disabled}>
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded border-2 border-gray-300" style="background-color: ${variant.hex_code}"></div>
+                                        <div class="w-10 h-10 rounded border-2 border-secondary-300" style="background-color: ${variant.hex_code}"></div>
                                             <div class="text-left">
-                                                <p class="font-semibold text-gray-900">${variant.size_name} - ${variant.color_name}</p>
-                                                <p class="text-sm text-gray-500">SKU: ${variant.sku}</p>
+                                                <p class="font-semibold text-primary">${variant.size_name} - ${variant.color_name}</p>
+                                                <p class="text-sm text-secondary-500">SKU: ${variant.sku}</p>
                                             </div>
                                         </div>
                                         <div class="text-right">
-                                            <p class="text-lg font-bold text-blue-600">৳${parseFloat(variant.price).toFixed(2)}</p>
+                                            <p class="text-lg font-bold text-primary">৳${parseFloat(variant.price).toFixed(2)}</p>
                                             <p class="text-xs ${stockClass}">${stockText}</p>
                                         </div>
                                 </button>                                                                                                   
@@ -834,7 +834,7 @@
                             let html = '';
 
                             if (res.data.length === 0) {
-                                html = '<p class="text-center text-gray-500">No orders found</p>';
+                                html = '<p class="text-center text-secondary-500">No orders found</p>';
                             } else {
                                 let orderUrlTemplate = "{{ route('admin.pos.sales.show', ':id') }}";
                                 let posUrlTemplate = "{{ route('admin.pos.index') }}";
@@ -849,20 +849,20 @@
                                     }
 
                                     html += `
-                                        <div class="border-b py-3 flex justify-between hover:bg-gray-50 px-2 rounded">
+                                        <div class="border-b py-3 flex justify-between hover:bg-secondary-50 px-2 rounded">
                                             <div>
                                                 <p class="font-semibold">
                                                     <a href="${url}" 
-                                                    class="text-blue-600 hover:underline">
+                                                    class="text-primary hover:underline">
                                                         #${order.order_number}
                                                     </a>
                                                 </p>
-                                                <p class="text-sm text-gray-500">${order.customer_name}</p>
+                                                <p class="text-sm text-secondary-500">${order.customer_name}</p>
                                             </div>
 
                                             <div class="text-right">
                                                 <p class="font-semibold">${order.total}</p>
-                                                <p class="text-xs text-gray-500">${order.status}</p>
+                                                <p class="text-xs text-secondary-500">${order.status}</p>
                                             </div>
 
                                         </div>
@@ -934,11 +934,11 @@
                 // =========================
                 $('.payment-method-btn').on('click', function () {
                     $('.payment-method-btn')
-                        .removeClass('bg-blue-600 text-white')
+                        .removeClass('bg-primary text-white')
                         .addClass('bg-gray-200');
 
                     $(this)
-                        .addClass('bg-blue-600 text-white');
+                        .addClass('bg-primary text-white');
 
                     paymentMethod = $(this).data('payment');
                 });
@@ -1129,7 +1129,7 @@
 
                                         html += `
                                             <button type="button"
-                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-gray-100 w-100" data-index="${i}">
+                                                class="dropdown-item text-start px-3 py-2 text-sm hover:bg-secondary-100 w-100" data-index="${i}">
                                                 ${text}
                                             </button>                                                                                       
                                             `;
@@ -1184,8 +1184,8 @@
                             if (selectedIndex >= items.length) selectedIndex = 0;
                             if (selectedIndex < 0) selectedIndex = items.length - 1;
 
-                            items.removeClass('bg-gray-100');
-                            items.eq(selectedIndex).addClass('bg-gray-100');
+                            items.removeClass('bg-secondary-100');
+                            items.eq(selectedIndex).addClass('bg-secondary-100');
                         });
                     }
 

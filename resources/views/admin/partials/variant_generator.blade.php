@@ -243,9 +243,9 @@
         <!-- Header -->
         <div class="px-6 py-5">
             <div class="flex items-center justify-between">
-                <h2 class="text-lg font-bold text-gray-900">Product Variant Generator</h2>
+                <h2 class="text-lg font-bold text-primary">Product Variant Generator</h2>
                 <button type="button" onclick="addVariant()"
-                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                    class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-700 transition">
                     <i class="fas fa-plus mr-2"></i>Add Variant Row
                 </button>
             </div>
@@ -334,7 +334,7 @@
 
                 <div class="flex items-end mb-1">
                     <button type="button" id="generateVariantsBtn"
-                        class="w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                        class="w-full px-4 py-2.5 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-700 transition">
                         <i class="fas fa-layer-group mr-2"></i>
                         Generate Variants
                     </button>
@@ -349,7 +349,7 @@
 
                     @foreach($product->variants as $i => $variant)
 
-                        <div class="variant-card p-3 border border-gray-200 rounded-2xl bg-gray-50"
+                        <div class="variant-card p-3 border border-secondary-200 rounded-2xl bg-secondary-50"
                             data-id="{{ $variant->id }}">
 
                             <input type="hidden" name="variants[{{ $i }}][id]" value="{{ $variant->id }}">
@@ -358,10 +358,10 @@
                             <div class="grid grid-cols-12 gap-2 items-end">
                                 <!-- Size (3 columns) -->
                                 <div class="col-span-3 sm:col-span-3">
-                                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
+                                    <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Size</label>
 
                                     <select name="variants[{{ $i }}][size_id]"
-                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+                                        class="w-full px-2 py-1.5 text-xs border border-secondary-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none">
                                         <option value="">Select Size</option>
                                         @foreach($sizes as $size)
                                             <option value="{{ $size->id }}" {{ $variant->size_id == $size->id ? 'selected' : '' }}>
@@ -374,10 +374,10 @@
 
                                 <!-- Color (3 columns) -->
                                 <div class="col-span-3 sm:col-span-3">
-                                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
+                                    <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Color</label>
 
                                     <select name="variants[{{ $i }}][color_id]"
-                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+                                        class="w-full px-2 py-1.5 text-xs border border-secondary-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none">
                                         <option value="">Select Color</option>
                                         @foreach($colors as $color)
                                             <option value="{{ $color->id }}" {{ $variant->color_id == $color->id ? 'selected' : '' }}>
@@ -390,22 +390,22 @@
 
                                 <!-- Price (3 columns) -->
                                 <div class="col-span-3 sm:col-span-2">
-                                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Price</label>
+                                    <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Price</label>
                                     <input type="text" name="variants[{{ $i }}][price]" value="{{ $variant->price }}"
-                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+                                        class="w-full px-2 py-1.5 text-xs border border-secondary-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none">
                                 </div>
 
                                 <!-- SKU (2 columns) -->
                                 <div class="col-span-2 sm:col-span-3">
-                                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">SKU</label>
+                                    <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">SKU</label>
                                     <input type="text" name="variants[{{ $i }}][sku]" value="{{ $variant->sku }}"
-                                        class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+                                        class="w-full px-2 py-1.5 text-xs border border-secondary-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none">
                                 </div>
 
                                 <!-- Delete Button (1 column - No Extra Space) -->
                                 <div class="col-span-1 flex justify-end">
                                     <button type="button"
-                                        class="removeVariantBtn inline-flex items-center justify-center w-8 h-8 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 active:bg-red-200 transition-colors duration-150">
+                                        class="removeVariantBtn inline-flex items-center justify-center w-8 h-8 text-danger bg-danger-50 rounded-lg hover:bg-danger-100 active:bg-danger-200 transition-colors duration-150">
                                         <i class="fas fa-trash text-sm"></i>
                                     </button>
                                 </div>
@@ -419,7 +419,7 @@
                 @else
 
                     <div id="empty-variant"
-                        class="text-sm text-gray-500 text-center py-10 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+                        class="text-sm text-secondary-500 text-center py-10 border-2 border-dashed border-secondary-200 rounded-2xl bg-secondary-50">
                         Click "Generate Variants" to create combinations.
                     </div>
 
@@ -578,7 +578,7 @@
         function variantTemplate({ index, size, color, price, allSizes, allColors }) {
 
             return `
-                <div class="variant-card p-3 border border-gray-200 rounded-2xl bg-gray-50">
+                <div class="variant-card p-3 border border-secondary-200 rounded-2xl bg-secondary-50">
 
                     <input type="hidden" name="variants[${index}][size_id]" value="${size.id}">
                     <input type="hidden" name="variants[${index}][color_id]" value="${color.id}">
@@ -587,7 +587,7 @@
 
                         <!-- SIZE DROPDOWN (ALL SIZES) -->
                         <div class="col-span-3">
-                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
+                            <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Size</label>
                             <select name="variants[${index}][size_id]"
                                 class="w-full px-2 py-1.5 text-xs border rounded-lg">
                                 <option value="">Select Size</option>
@@ -602,7 +602,7 @@
 
                         <!-- COLOR DROPDOWN (ALL COLORS) -->
                         <div class="col-span-3">
-                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
+                            <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Color</label>
                             <select name="variants[${index}][color_id]"
                                 class="w-full px-2 py-1.5 text-xs border rounded-lg">
                                 <option value="">Select Color</option>
@@ -617,7 +617,7 @@
 
                         <!-- PRICE -->
                         <div class="col-span-3">
-                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Price</label>
+                            <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Price</label>
                             <input type="text"
                                 name="variants[${index}][price]"
                                 value="${productPrice}"
@@ -626,7 +626,7 @@
 
                         <!-- SKU -->
                         <div class="col-span-2">
-                            <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">SKU</label>
+                            <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">SKU</label>
                             <input type="text"
                                 name="variants[${index}][sku]"
                                 class="w-full px-2 py-1.5 text-xs border rounded-lg">
@@ -635,7 +635,7 @@
                         <!-- DELETE -->
                         <div class="col-span-1 flex justify-end">
                             <button type="button"
-                                class="removeVariantBtn w-8 h-8 text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
+                                class="removeVariantBtn w-8 h-8 text-danger bg-danger-50 rounded-lg hover:bg-danger-100">
                                 <i class="fas fa-trash text-sm"></i>
                             </button>
                         </div>
@@ -773,13 +773,13 @@
         const index = document.querySelectorAll('.variant-card').length;
 
         const html = `
-        <div class="variant-card p-3 border border-gray-200 rounded-2xl bg-gray-50">
+        <div class="variant-card p-3 border border-secondary-200 rounded-2xl bg-secondary-50">
 
             <div class="grid grid-cols-12 gap-2 items-end">
 
                 <!-- SIZE -->
                 <div class="col-span-3">
-                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Size</label>
+                    <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Size</label>
                     <select name="variants[${index}][size_id]"
                         class="w-full px-2 py-1.5 text-xs border rounded-lg">
 
@@ -794,7 +794,7 @@
 
                 <!-- COLOR -->
                 <div class="col-span-3">
-                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Color</label>
+                    <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Color</label>
                     <select name="variants[${index}][color_id]"
                         class="w-full px-2 py-1.5 text-xs border rounded-lg">
 
@@ -809,7 +809,7 @@
 
                 <!-- PRICE -->
                 <div class="col-span-3">
-                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Price</label>
+                    <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">Price</label>
                     <input type="text"
                         name="variants[${index}][price]"
                         value="${price}"
@@ -818,7 +818,7 @@
 
                 <!-- SKU -->
                 <div class="col-span-2">
-                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">SKU</label>
+                    <label class="block text-[11px] font-semibold text-secondary-600 mb-0.5">SKU</label>
                     <input type="text"
                         name="variants[${index}][sku]"
                         class="w-full px-2 py-1.5 text-xs border rounded-lg">
@@ -827,7 +827,7 @@
                 <!-- DELETE -->
                 <div class="col-span-1 flex justify-end">
                     <button type="button"
-                        class="removeVariantBtn w-8 h-8 text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
+                        class="removeVariantBtn w-8 h-8 text-danger bg-danger-50 rounded-lg hover:bg-danger-100">
                         <i class="fas fa-trash text-sm"></i>
                     </button>
                 </div>

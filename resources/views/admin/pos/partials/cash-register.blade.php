@@ -14,7 +14,7 @@
             </label>
 
             <div class="flex">
-                <span class="px-3 flex items-center bg-gray-100 border border-r-0 rounded-l-lg">
+                <span class="px-3 flex items-center bg-secondary-100 border border-r-0 rounded-l-lg">
                     {{ currency('symbol') }}
                 </span>
 
@@ -22,7 +22,7 @@
                     class="w-full border rounded-r-lg px-3 py-2" placeholder="Enter opening cash">
             </div>
 
-            <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg">
+            <button class="w-full mt-4 bg-primary text-white py-2 rounded-lg">
                 Save
             </button>
         </form>
@@ -40,8 +40,8 @@
                 <div>
                     <h2 class="font-semibold">Close Cash Register</h2>
 
-                    <div class="text-xs text-gray-500 mt-1 flex gap-2">
-                        <span class="px-2 py-0.5 bg-gray-100 rounded">
+                    <div class="text-xs text-secondary-500 mt-1 flex gap-2">
+                        <span class="px-2 py-0.5 bg-secondary-100 rounded">
                             #{{ $cashRegister->id }}
                         </span>
 
@@ -49,13 +49,13 @@
                             Opened: {{ $cashRegister->created_at->format('h:i A') }}
                         </span>
 
-                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded">
+                        <span class="px-2 py-0.5 bg-success-100 text-success rounded">
                             Active
                         </span>
                     </div>
                 </div>
 
-                <button type="button" id="closeCloseBtn" class="text-gray-500 hover:text-red-500 text-lg">
+                <button type="button" id="closeCloseBtn" class="text-secondary-500 hover:text-danger text-lg">
                     ✕
                 </button>
 
@@ -68,24 +68,24 @@
 
                 <div class="p-5 space-y-4">
 
-                    <div class="bg-gray-50 rounded-xl p-4 text-sm space-y-2">
+                    <div class="bg-secondary-50 rounded-xl p-4 text-sm space-y-2">
 
                         <div class="flex justify-between">
                             <span>Opening Cash</span>
                             <strong>{{ money($cashRegisterData['opening_amount']) }}</strong>
                         </div>
 
-                        <div class="flex justify-between text-green-600">
+                        <div class="flex justify-between text-success">
                             <span>Sales</span>
                             <strong>+ {{ money($cashRegisterData['sales_amount']) }}</strong>
                         </div>
 
-                        <div class="flex justify-between text-red-500">
+                        <div class="flex justify-between text-danger">
                             <span>Expenses</span>
                             <strong>- {{ money($cashRegisterData['expense']) }}</strong>
                         </div>
 
-                        <div class="flex justify-between text-red-500">
+                        <div class="flex justify-between text-danger">
                             <span>Sales Returns</span>
                             <strong>- {{ money($cashRegisterData['sales_returns']) }}</strong>
                         </div>
@@ -101,7 +101,7 @@
 
                         <div class="flex justify-between font-semibold">
                             <span>Expected Cash</span>
-                            <span class="text-blue-600">
+                            <span class="text-primary">
                                 {{ money($expected) }}
                             </span>
                         </div>
@@ -116,7 +116,7 @@
                         </label>
 
                         <div class="flex">
-                            <span class="px-3 flex items-center bg-gray-100 border border-r-0 rounded-l-lg">
+                            <span class="px-3 flex items-center bg-secondary-100 border border-r-0 rounded-l-lg">
                                 {{ currency('symbol') }}
                             </span>
 
@@ -139,8 +139,8 @@
                     {{-- ✅ CONDITION BUTTON --}}
                     <button class="px-4 py-2 rounded-lg text-white
                 {{ $cashRegister->closed_at
-            ? 'bg-yellow-600 hover:bg-yellow-700'
-            : 'bg-blue-600 hover:bg-blue-700' }}">
+            ? 'bg-warning hover:bg-warning-600'
+            : 'bg-primary hover:bg-primary-700' }}">
 
                         {{ $cashRegister->closed_at ? 'Reopen Register' : 'Close Register' }}
 
