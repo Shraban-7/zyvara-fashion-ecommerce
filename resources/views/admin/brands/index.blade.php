@@ -7,10 +7,10 @@
 
         {{-- Header --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <h3 class="text-2xl font-bold text-gray-800">Brands</h3>
+            <h3 class="text-2xl font-bold text-secondary-800">Brands</h3>
 
             <button onclick="openCreateModal()"
-                class="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg">
+                class="px-4 py-2.5 bg-gradient-to-r from-primary to-primary-700 text-white font-medium rounded-lg">
                 <i class="fas fa-plus mr-2"></i> Add Brand
             </button>
         </div>
@@ -25,27 +25,27 @@
                             <img src="{{ asset('storage/' . $brand->logo) }}" class="w-12 h-12 rounded-lg object-cover border">
                         @else
                             <div class="w-12 h-12 bg-gray-200 flex items-center justify-center rounded-lg">
-                                <i class="fas fa-image text-gray-400"></i>
+                                <i class="fas fa-image text-secondary-400"></i>
                             </div>
                         @endif
 
                         <div>
-                            <h4 class="font-semibold text-gray-800">{{ $brand->name }}</h4>
+                            <h4 class="font-semibold text-secondary-800">{{ $brand->name }}</h4>
 
                             <div class="flex flex-wrap items-center gap-2 mt-1">
 
                                 @if($brand->own_brand)
-                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-purple-100 text-purple-700">
+                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-100 text-accent">
                                         Own Brand
                                     </span>
                                 @endif
 
                                 @if($brand->is_active)
-                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700">
+                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-success-100 text-success">
                                         Active
                                     </span>
                                 @else
-                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-700">
+                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-danger-100 text-danger">
                                         Inactive
                                     </span>
                                 @endif
@@ -61,7 +61,7 @@
                                         '{{ $brand->logo }}',
                                         {{ $brand->own_brand ? 'true' : 'false' }},
                                         {{ $brand->is_active ? 'true' : 'false' }}
-                                    )" class="text-blue-500 text-sm hover:underline">
+                                    )" class="text-primary text-sm hover:underline">
                             Edit
                         </button>
 
@@ -69,7 +69,7 @@
                             onsubmit="return confirm('Delete this brand?')">
                             @csrf
                             @method('DELETE')
-                            <button class="text-red-500 text-sm hover:underline">Delete</button>
+                            <button class="text-danger text-sm hover:underline">Delete</button>
                         </form>
                     </div>
 
@@ -117,7 +117,7 @@
                     <div class="mt-6 flex justify-end gap-3">
                         <button type="button" onclick="closeCreateModal()"
                             class="px-4 py-2 bg-gray-200 rounded-lg">Cancel</button>
-                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">Save</button>
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg">Save</button>
                     </div>
 
                 </form>
@@ -166,7 +166,7 @@
                     <div class="mt-6 flex justify-end gap-3">
                         <button type="button" onclick="closeEditModal()"
                             class="px-4 py-2 bg-gray-200 rounded-lg">Cancel</button>
-                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">Update</button>
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg">Update</button>
                     </div>
 
                 </form>

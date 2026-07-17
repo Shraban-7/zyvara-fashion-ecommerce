@@ -5,8 +5,8 @@
 @section('content')
     {{-- Page Header --}}
     <div class="mb-8">
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-        <p class="text-gray-500">Manage your store settings and preferences</p>
+        <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">Settings</h1>
+        <p class="text-secondary-500">Manage your store settings and preferences</p>
     </div>
 
     {{-- Settings Form --}}
@@ -17,50 +17,50 @@
             @method('PUT')
 
             {{-- Tabs Navigation --}}
-            <div class="border-b border-gray-200 bg-white">
+            <div class="border-b border-secondary-200 bg-white">
                 <div class="flex overflow-x-auto">
                     <button type="button" @click="activeTab = 'general'"
-                        :class="activeTab === 'general' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'general' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-cog mr-2"></i>General
                     </button>
                     <button type="button" @click="activeTab = 'contact'"
-                        :class="activeTab === 'contact' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'contact' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-phone mr-2"></i>Contact
                     </button>
                     <button type="button" @click="activeTab = 'social'"
-                        :class="activeTab === 'social' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'social' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-share-alt mr-2"></i>Social Media
                     </button>
                     <button type="button" @click="activeTab = 'shipping'"
-                        :class="activeTab === 'shipping' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'shipping' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-truck mr-2"></i>Shipping
                     </button>
                     <button type="button" @click="activeTab = 'payment'"
-                        :class="activeTab === 'payment' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'payment' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-credit-card mr-2"></i>Payment
                     </button>
                     <button type="button" @click="activeTab = 'order'"
-                        :class="activeTab === 'order' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'order' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-shopping-cart mr-2"></i>Orders
                     </button>
                     <button type="button" @click="activeTab = 'sms'"
-                        :class="activeTab === 'sms' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'sms' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-sms mr-2"></i>SMS
                     </button>
                     <button type="button" @click="activeTab = 'seo'"
-                        :class="activeTab === 'seo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'seo' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-search mr-2"></i>SEO
                     </button>
                     <button type="button" @click="activeTab = 'policy'"
-                        :class="activeTab === 'policy' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :class="activeTab === 'policy' ? 'border-primary text-primary' : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'"
                         class="px-6 py-4 text-sm font-semibold border-b-2 transition whitespace-nowrap">
                         <i class="fas fa-file-alt mr-2"></i>Policies
                     </button>
@@ -71,7 +71,7 @@
             <div class="p-6 md:p-8">
                 {{-- General Settings --}}
                 <div x-show="activeTab === 'general'" x-transition>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">General Settings</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">General Settings</h2>
                     <div class="space-y-6 max-w-2xl">
                         <div>
                             <x-input name="site_name" type="text"
@@ -116,7 +116,7 @@
 
                         <div>
                             <x-file-input name="site_logo" label="Site Logo" accept="image/*" />
-                            <p class="text-xs text-gray-500 mt-1">Upload your logo image</p>
+                            <p class="text-xs text-secondary-500 mt-1">Upload your logo image</p>
                             @if($all_settings['general']['site_logo']['value'] ?? false)
                                 <img src="{{ storage_url($all_settings['general']['site_logo']['value']) }}" alt="Site Logo"
                                     class="mt-2 h-12">
@@ -125,7 +125,7 @@
 
                         <div>
                             <x-file-input name="site_favicon" label="Site Favicon" accept="image/*" />
-                            <p class="text-xs text-gray-500 mt-1">Upload your favicon image</p>
+                            <p class="text-xs text-secondary-500 mt-1">Upload your favicon image</p>
                             @if($all_settings['general']['site_favicon']['value'] ?? false)
                                 <img src="{{ storage_url($all_settings['general']['site_favicon']['value']) }}"
                                     alt="Site Favicon" class="mt-2 h-12">
@@ -136,7 +136,7 @@
 
                 {{-- Contact Settings --}}
                 <div x-show="activeTab === 'contact'" x-transition x-cloak>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Contact Information</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">Contact Information</h2>
                     <div class="space-y-6 max-w-2xl">
                         <div>
                             <x-input type="email" name="contact_email" label="Contact Email" placeholder="info@example.com"
@@ -151,7 +151,7 @@
                         <div>
                             <x-input type="text" name="whatsapp_number" label="WhatsApp Number" placeholder="+8801700000000"
                                 value="{{ old('whatsapp_number', $all_settings['contact']['whatsapp_number']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Without spaces or dashes</p>
+                            <p class="text-xs text-secondary-500 mt-1">Without spaces or dashes</p>
                         </div>
 
                         <div>
@@ -164,52 +164,52 @@
                             <x-textarea name="google_maps_embed" label="Google Maps Embed Code" rows="3"
                                 placeholder="Paste Google Maps embed code">{{ old('google_maps_embed', $all_settings['contact']['google_maps_embed']['value'] ?? '') }}
                             </x-textarea>
-                            <p class="text-xs text-gray-500 mt-1">Paste the entire iframe embed code from Google Maps</p>
+                            <p class="text-xs text-secondary-500 mt-1">Paste the entire iframe embed code from Google Maps</p>
                         </div>
                     </div>
                 </div>
 
                 {{-- Social Media Settings --}}
                 <div x-show="activeTab === 'social'" x-transition x-cloak>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Social Media Links</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">Social Media Links</h2>
                     <div class="space-y-6 max-w-2xl">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fab fa-facebook text-blue-600"></i> Facebook URL
+                            <label class="block text-sm font-semibold text-secondary-700 mb-2">
+                                <i class="fab fa-facebook text-primary"></i> Facebook URL
                             </label>
                             <input type="url" name="facebook_url"
                                 value="{{ old('facebook_url', $all_settings['social']['facebook_url']['value'] ?? '') }}"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                class="w-full px-4 py-2.5 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition"
                                 placeholder="https://facebook.com/yourpage">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fab fa-instagram text-pink-600"></i> Instagram URL
+                            <label class="block text-sm font-semibold text-secondary-700 mb-2">
+                                <i class="fab fa-instagram text-accent"></i> Instagram URL
                             </label>
                             <input type="url" name="instagram_url"
                                 value="{{ old('instagram_url', $all_settings['social']['instagram_url']['value'] ?? '') }}"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                class="w-full px-4 py-2.5 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition"
                                 placeholder="https://instagram.com/yourpage">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fab fa-youtube text-red-600"></i> YouTube URL
+                            <label class="block text-sm font-semibold text-secondary-700 mb-2">
+                                <i class="fab fa-youtube text-danger"></i> YouTube URL
                             </label>
                             <input type="url" name="youtube_url"
                                 value="{{ old('youtube_url', $all_settings['social']['youtube_url']['value'] ?? '') }}"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                class="w-full px-4 py-2.5 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition"
                                 placeholder="https://youtube.com/yourchannel">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fab fa-tiktok text-gray-800"></i> TikTok URL
+                            <label class="block text-sm font-semibold text-secondary-700 mb-2">
+                                <i class="fab fa-tiktok text-secondary-800"></i> TikTok URL
                             </label>
                             <input type="url" name="tiktok_url"
                                 value="{{ old('tiktok_url', $all_settings['social']['tiktok_url']['value'] ?? '') }}"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                class="w-full px-4 py-2.5 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition"
                                 placeholder="https://tiktok.com/@yourpage">
                         </div>
                     </div>
@@ -217,7 +217,7 @@
 
                 {{-- Shipping Settings --}}
                 <div x-show="activeTab === 'shipping'" x-transition x-cloak>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Shipping Settings</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">Shipping Settings</h2>
                     <div class="space-y-6 max-w-2xl">
                         <div class="grid md:grid-cols-2 gap-6">
                             <x-input type="number" name="shipping_inside_dhaka" label="Shipping Inside Dhaka (৳)"
@@ -233,14 +233,14 @@
                                 <x-input type="number" name="free_shipping_threshold_dhaka"
                                     label="Free Shipping Threshold - Dhaka (৳)" placeholder="2000"
                                     value="{{ old('free_shipping_threshold_dhaka', $all_settings['shipping']['free_shipping_threshold_dhaka']['value'] ?? '') }}" />
-                                <p class="text-xs text-gray-500 mt-1">Minimum order for free shipping</p>
+                                <p class="text-xs text-secondary-500 mt-1">Minimum order for free shipping</p>
                             </div>
 
                             <div>
                                 <x-input type="number" name="free_shipping_threshold_outside"
                                     label="Free Shipping Threshold - Outside (৳)" placeholder="3000"
                                     value="{{ old('free_shipping_threshold_outside', $all_settings['shipping']['free_shipping_threshold_outside']['value'] ?? '') }}" />
-                                <p class="text-xs text-gray-500 mt-1">Minimum order for free shipping</p>
+                                <p class="text-xs text-secondary-500 mt-1">Minimum order for free shipping</p>
                             </div>
                         </div>
 
@@ -259,15 +259,15 @@
 
                 {{-- Payment Settings --}}
                 <div x-show="activeTab === 'payment'" x-transition x-cloak>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Payment Settings</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">Payment Settings</h2>
                     <div class="space-y-6 max-w-2xl">
-                        <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                        <div class="bg-secondary-50 rounded-xl p-6 border border-secondary-200">
                             <label class="flex items-center gap-3 cursor-pointer">
                                 <input type="checkbox" name="cod_enabled" value="true" {{ old('cod_enabled', $all_settings['payment']['cod_enabled']['value'] ?? '') == 'true' ? 'checked' : '' }}
-                                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    class="w-5 h-5 text-primary border-secondary-300 rounded focus:ring-primary">
                                 <div class="flex-1">
-                                    <span class="text-sm font-semibold text-gray-900">Enable Cash on Delivery (COD)</span>
-                                    <p class="text-xs text-gray-500 mt-1">Allow customers to pay with cash on delivery</p>
+                                    <span class="text-sm font-semibold text-primary">Enable Cash on Delivery (COD)</span>
+                                    <p class="text-xs text-secondary-500 mt-1">Allow customers to pay with cash on delivery</p>
                                 </div>
                             </label>
                         </div>
@@ -276,12 +276,12 @@
 
                 {{-- Order Settings --}}
                 <div x-show="activeTab === 'order'" x-transition x-cloak>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Order Settings</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">Order Settings</h2>
                     <div class="space-y-6 max-w-2xl">
                         <div>
                             <x-input type="text" name="order_prefix" label="Order Prefix" placeholder="SF"
                                 value="{{ old('order_prefix', $all_settings['order']['order_prefix']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Orders will be numbered as: PREFIX-001, PREFIX-002, etc.
+                            <p class="text-xs text-secondary-500 mt-1">Orders will be numbered as: PREFIX-001, PREFIX-002, etc.
                             </p>
                         </div>
 
@@ -289,35 +289,35 @@
                             <x-input type="number" name="min_order_amount" label="Minimum Order Amount (৳)"
                                 placeholder="500"
                                 value="{{ old('min_order_amount', $all_settings['order']['min_order_amount']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Minimum amount required to place an order</p>
+                            <p class="text-xs text-secondary-500 mt-1">Minimum amount required to place an order</p>
                         </div>
 
                         <div>
                             <x-input type="number" name="max_order_quantity" label="Maximum Order Quantity" placeholder="10"
                                 value="{{ old('max_order_quantity', $all_settings['order']['max_order_quantity']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Maximum quantity per product in a single order</p>
+                            <p class="text-xs text-secondary-500 mt-1">Maximum quantity per product in a single order</p>
                         </div>
 
                         <div>
                             <x-input type="number" name="order_cancellation_hours" label="Order Cancellation Window (Hours)"
                                 placeholder="24"
                                 value="{{ old('order_cancellation_hours', $all_settings['order']['order_cancellation_hours']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Hours within which customers can cancel orders</p>
+                            <p class="text-xs text-secondary-500 mt-1">Hours within which customers can cancel orders</p>
                         </div>
                     </div>
                 </div>
 
                 {{-- SMS Settings --}}
                 <div x-show="activeTab === 'sms'" x-transition x-cloak>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">SMS Notification Settings</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">SMS Notification Settings</h2>
                     <div class="space-y-6 max-w-2xl">
-                        <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                        <div class="bg-secondary-50 rounded-xl p-6 border border-secondary-200">
                             <label class="flex items-center gap-3 cursor-pointer">
                                 <input type="checkbox" name="sms_enabled" value="true" {{ old('sms_enabled', $all_settings['sms']['sms_enabled']['value'] ?? '') == 'true' ? 'checked' : '' }}
-                                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    class="w-5 h-5 text-primary border-secondary-300 rounded focus:ring-primary">
                                 <div class="flex-1">
-                                    <span class="text-sm font-semibold text-gray-900">Enable SMS Notifications</span>
-                                    <p class="text-xs text-gray-500 mt-1">Send SMS notifications to customers</p>
+                                    <span class="text-sm font-semibold text-primary">Enable SMS Notifications</span>
+                                    <p class="text-xs text-secondary-500 mt-1">Send SMS notifications to customers</p>
                                 </div>
                             </label>
                         </div>
@@ -325,7 +325,7 @@
                         <div>
                             <x-input type="text" name="sms_provider" label="SMS Provider" placeholder="ssl_wireless"
                                 value="{{ old('sms_provider', $all_settings['sms']['sms_provider']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">e.g., ssl_wireless, twilio, etc.</p>
+                            <p class="text-xs text-secondary-500 mt-1">e.g., ssl_wireless, twilio, etc.</p>
                         </div>
 
                         <div>
@@ -336,58 +336,58 @@
                         <div>
                             <x-input type="text" name="sms_sender_id" label="SMS Sender ID"
                                 value="{{ old('sms_sender_id', $all_settings['sms']['sms_sender_id']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Name that appears as sender in SMS</p>
+                            <p class="text-xs text-secondary-500 mt-1">Name that appears as sender in SMS</p>
                         </div>
                     </div>
                 </div>
 
                 {{-- SEO Settings --}}
                 <div x-show="activeTab === 'seo'" x-transition x-cloak>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">SEO & Analytics Settings</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">SEO & Analytics Settings</h2>
                     <div class="space-y-6 max-w-2xl">
                         <div>
                             <x-input name="meta_title" label="Meta Title" placeholder="Your site title for SEO"
                                 value="{{ old('meta_title', $all_settings['seo']['meta_title']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Appears in search engine results (50-60 characters)</p>
+                            <p class="text-xs text-secondary-500 mt-1">Appears in search engine results (50-60 characters)</p>
                         </div>
 
                         <div>
                             <x-textarea name="meta_description" label="Meta Description" rows="3"
                                 placeholder="Brief description of your site">{{ old('meta_description', $all_settings['seo']['meta_description']['value'] ?? '') }}
                             </x-textarea>
-                            <p class="text-xs text-gray-500 mt-1">Brief description for search engines (150-160 characters)
+                            <p class="text-xs text-secondary-500 mt-1">Brief description for search engines (150-160 characters)
                             </p>
                         </div>
 
                         <div>
                             <x-input name="meta_keywords" label="Meta Keywords" placeholder="keyword1, keyword2, keyword3"
                                 value="{{ old('meta_keywords', $all_settings['seo']['meta_keywords']['value'] ?? '') }}" />
-                            <p class="text-xs text-gray-500 mt-1">Comma-separated keywords</p>
+                            <p class="text-xs text-secondary-500 mt-1">Comma-separated keywords</p>
                         </div>
 
                         <div>
                              <x-textarea name="head_scripts" label="Head Scripts" rows="4"
                                 placeholder="Enter your head scripts">{{ old('head_scripts', $all_settings['seo']['head_scripts']['value'] ?? '') }}</x-textarea>
-                            <p class="text-xs text-gray-500 mt-1">Scripts to be included in the head section of your site</p>
+                            <p class="text-xs text-secondary-500 mt-1">Scripts to be included in the head section of your site</p>
                         </div>
 
                         <div>
                             <x-textarea name="body_start_scripts" label="Body Start Scripts" rows="4"
                                 placeholder="Enter your body start scripts">{{ old('body_start_scripts', $all_settings['seo']['body_start_scripts']['value'] ?? '') }}</x-textarea>
-                            <p class="text-xs text-gray-500 mt-1">Scripts to be included at the start of the body section of your site</p>
+                            <p class="text-xs text-secondary-500 mt-1">Scripts to be included at the start of the body section of your site</p>
                         </div>
 
                         <div>
                             <x-textarea name="body_end_scripts" label="Body End Scripts" rows="4"
                                 placeholder="Enter your body end scripts">{{ old('body_end_scripts', $all_settings['seo']['body_end_scripts']['value'] ?? '') }}</x-textarea>
-                            <p class="text-xs text-gray-500 mt-1">Scripts to be included at the end of the body section of your site</p>
+                            <p class="text-xs text-secondary-500 mt-1">Scripts to be included at the end of the body section of your site</p>
                         </div>
                     </div>
                 </div>
 
                 {{-- Policy Settings --}}
                 <div x-show="activeTab === 'policy'" x-transition x-cloak>
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Store Policies</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">Store Policies</h2>
                     <div class="space-y-6 max-w-2xl">
                         <div>
                             <x-textarea name="return_policy" label="Return Policy" rows="4"
@@ -408,14 +408,14 @@
             </div>
 
             {{-- Form Actions --}}
-            <div class="flex items-center justify-end gap-4 px-6 md:px-8 py-6 bg-gray-50 border-t border-gray-200">
+            <div class="flex items-center justify-end gap-4 px-6 md:px-8 py-6 bg-secondary-50 border-t border-secondary-200">
                 <a href="{{ route('admin.dashboard') }}"
-                    class="px-6 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition">
+                    class="px-6 py-2.5 text-sm font-semibold text-secondary-700 bg-white border border-secondary-300 rounded-xl hover:bg-secondary-50 transition">
                     Cancel
                 </a>
                 <button type="submit" class="px-6 py-2.5 text-sm font-semibold text-white 
-               bg-gradient-to-r from-blue-500 to-blue-600 
-               hover:from-blue-600 hover:to-blue-700 
+               bg-gradient-to-r from-primary to-primary-700 
+               hover:from-primary-700 hover:to-primary-800 
                rounded-xl shadow-sm hover:shadow-md transition">
 
                     <i class="fas fa-save mr-2"></i>Save Settings

@@ -6,15 +6,15 @@
     {{-- Header --}}
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h3 class="text-2xl font-bold text-gray-800">Notifications</h3>
-            <p class="mt-1 text-sm text-gray-500">View and manage system activities and alerts.</p>
+            <h3 class="text-2xl font-bold text-secondary-800">Notifications</h3>
+            <p class="mt-1 text-sm text-secondary-500">View and manage system activities and alerts.</p>
         </div>
         
         <div class="flex items-center gap-2.5">
             @if($notifications->whereNull('read_at')->count() > 0)
                 <form action="{{ route('admin.notifications.read-all') }}" method="POST">
                     @csrf
-                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-blue-50 border border-blue-200 px-4 py-2.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition shadow-sm">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-primary-50 border border-primary-200 px-4 py-2.5 text-xs font-semibold text-primary hover:bg-primary-100 transition shadow-sm">
                         <i class="fas fa-check-double mr-1.5"></i> Mark all as read
                     </button>
                 </form>
@@ -23,7 +23,7 @@
     </div>
 
     {{-- Notification List Card --}}
-    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+    <div class="bg-white rounded-2xl border border-secondary-200 overflow-hidden shadow-sm">
         <div class="divide-y divide-gray-100">
             @forelse($notifications as $notification)
                 @php
@@ -33,10 +33,10 @@
                     $color = $notification->type->color();
                     $icon = $notification->type->icon();
                 @endphp
-                <div class="relative p-5 transition hover:bg-gray-50/50 flex gap-4 {{ $isUnread ? 'bg-blue-50/20' : '' }}">
+                <div class="relative p-5 transition hover:bg-secondary-50/50 flex gap-4 {{ $isUnread ? 'bg-primary-50/20' : '' }}">
                     @if($isUnread)
                         {{-- Unread blue dot indicator --}}
-                        <div class="absolute left-1.5 top-1/2 -translate-y-1/2 w-2 h-2 bg-blue-600 rounded-full"></div>
+                        <div class="absolute left-1.5 top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full"></div>
                     @endif
 
                     {{-- Icon container --}}
@@ -47,28 +47,28 @@
                     {{-- Content --}}
                     <div class="flex-1 min-w-0">
                         <div class="flex flex-wrap items-baseline justify-between gap-x-2">
-                            <h4 class="text-sm font-bold text-gray-900 {{ $isUnread ? 'font-extrabold' : '' }}">
+                            <h4 class="text-sm font-bold text-primary {{ $isUnread ? 'font-extrabold' : '' }}">
                                 {{ $notification->title }}
                             </h4>
-                            <span class="text-xs text-gray-400 font-medium">
+                            <span class="text-xs text-secondary-400 font-medium">
                                 {{ $notification->created_at->diffForHumans() }}
                             </span>
                         </div>
-                        <p class="text-sm text-gray-600 mt-1 {{ $isUnread ? 'font-medium text-gray-800' : '' }}">
+                        <p class="text-sm text-secondary-600 mt-1 {{ $isUnread ? 'font-medium text-secondary-800' : '' }}">
                             {{ $notification->message }}
                         </p>
                         
                         @if($notification->action_url)
                             <div class="mt-2.5">
                                 <a href="{{ route('admin.notifications.read-redirect', $notification->id) }}" 
-                                   class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 transition">
+                                   class="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary transition">
                                     <span>View target details</span>
                                     <i class="fas fa-arrow-right text-[10px]"></i>
                                 </a>
                             </div>
                         @else
                             @if($isUnread)
-                                <button type="button" data-id="{{ $notification->id }}" class="mt-2 text-xs font-semibold text-gray-500 hover:text-gray-700 transition quick-read-btn">
+                                <button type="button" data-id="{{ $notification->id }}" class="mt-2 text-xs font-semibold text-secondary-500 hover:text-secondary-700 transition quick-read-btn">
                                     Mark as read
                                 </button>
                             @endif
@@ -77,17 +77,17 @@
                 </div>
             @empty
                 <div class="p-16 text-center">
-                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-50 text-gray-400 border border-gray-100">
+                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary-50 text-secondary-400 border border-gray-100">
                         <i class="fas fa-bell text-xl"></i>
                     </div>
-                    <p class="font-bold text-gray-700 text-base">All caught up!</p>
-                    <p class="mt-1 text-xs text-gray-400">No new notifications available.</p>
+                    <p class="font-bold text-secondary-700 text-base">All caught up!</p>
+                    <p class="mt-1 text-xs text-secondary-400">No new notifications available.</p>
                 </div>
             @endforelse
         </div>
 
         @if($notifications->hasPages())
-            <div class="border-t border-gray-100 px-5 py-4 bg-gray-50/50">
+            <div class="border-t border-gray-100 px-5 py-4 bg-secondary-50/50">
                 {{ $notifications->links() }}
             </div>
         @endif

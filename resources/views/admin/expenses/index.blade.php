@@ -7,12 +7,12 @@
     {{-- Header --}}
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Expenses</h1>
-            <p class="text-sm text-gray-500 mt-1">Track and manage all business expenses</p>
+            <h1 class="text-2xl font-bold text-primary">Expenses</h1>
+            <p class="text-sm text-secondary-500 mt-1">Track and manage all business expenses</p>
         </div>
         <div class="flex items-center gap-3">
             <button onclick="openAddModal()"
-                class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2">
+                class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-700 transition flex items-center gap-2">
                 <i class="fas fa-plus"></i>
                 <span class="hidden sm:inline">Add Expense</span>
             </button>
@@ -21,48 +21,48 @@
 
     {{-- Summary Cards --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white rounded-2xl border border-gray-200 p-5 flex items-center gap-4">
-            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
-                <i class="fas fa-receipt text-blue-600 text-lg"></i>
+        <div class="bg-white rounded-2xl border border-secondary-200 p-5 flex items-center gap-4">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fas fa-receipt text-primary text-lg"></i>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Total Expenses</p>
-                <p class="text-xl font-bold text-gray-900">{{ money($totalExpense) }}</p>
+                <p class="text-sm text-secondary-500">Total Expenses</p>
+                <p class="text-xl font-bold text-primary">{{ money($totalExpense) }}</p>
             </div>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-200 p-5 flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center shrink-0">
-                <i class="fas fa-calendar-alt text-purple-600 text-lg"></i>
+        <div class="bg-white rounded-2xl border border-secondary-200 p-5 flex items-center gap-4">
+            <div class="w-12 h-12 bg-accent-100 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fas fa-calendar-alt text-accent text-lg"></i>
             </div>
             <div>
-                <p class="text-sm text-gray-500">This Month</p>
-                <p class="text-xl font-bold text-gray-900">{{ money($monthlyExpense) }}</p>
+                <p class="text-sm text-secondary-500">This Month</p>
+                <p class="text-xl font-bold text-primary">{{ money($monthlyExpense) }}</p>
             </div>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-200 p-5 flex items-center gap-4">
+        <div class="bg-white rounded-2xl border border-secondary-200 p-5 flex items-center gap-4">
             <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center shrink-0">
                 <i class="fas fa-tags text-orange-600 text-lg"></i>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Total Records</p>
-                <p class="text-xl font-bold text-gray-900">{{ $expenses->total() }}</p>
+                <p class="text-sm text-secondary-500">Total Records</p>
+                <p class="text-xl font-bold text-primary">{{ $expenses->total() }}</p>
             </div>
         </div>
     </div>
 
     {{-- Filters --}}
-    <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+    <div class="bg-white rounded-2xl border border-secondary-200 p-6 mb-6">
         <form method="GET" action="{{ route('admin.expenses.index') }}">
 
             <div class="grid md:grid-cols-4 gap-4">
 
                 <!-- Category -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">
+                    <label class="block text-xs font-semibold text-secondary-600 mb-1">
                         Category
                     </label>
                     <select name="category_id"
-                        class="w-full h-11 px-4 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        class="w-full h-11 px-4 border border-secondary-300 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-primary">
                         <option value="">All Categories</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -74,27 +74,27 @@
 
                 <!-- From Date -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">From Date</label>
+                    <label class="block text-xs font-semibold text-secondary-600 mb-1">From Date</label>
                     <input type="date" name="from_date" value="{{ request('from_date') }}"
-                        class="w-full h-11 px-4 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        class="w-full h-11 px-4 border border-secondary-300 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-primary">
                 </div>
 
                 <!-- To Date -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">To Date</label>
+                    <label class="block text-xs font-semibold text-secondary-600 mb-1">To Date</label>
                     <input type="date" name="to_date" value="{{ request('to_date') }}"
-                        class="w-full h-11 px-4 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        class="w-full h-11 px-4 border border-secondary-300 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-primary">
                 </div>
 
                 <!-- Buttons -->
                 <div class="flex items-end gap-2">
                     <button type="submit"
-                        class="flex-1 h-11 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium text-sm">
+                        class="flex-1 h-11 bg-primary text-white rounded-xl hover:bg-primary-700 transition font-medium text-sm">
                         <i class="fas fa-filter mr-2"></i>Filter
                     </button>
 
                     <a href="{{ route('admin.expenses.index') }}"
-                        class="h-11 px-4 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 flex items-center justify-center">
+                        class="h-11 px-4 border border-secondary-300 text-secondary-700 rounded-xl hover:bg-secondary-50 flex items-center justify-center">
                         <i class="fas fa-times"></i>
                     </a>
                 </div>
@@ -103,50 +103,50 @@
     </div>
 
     {{-- Table --}}
-    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-2xl border border-secondary-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 border-b border-gray-200">
+                <thead class="bg-secondary-50 border-b border-secondary-200">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase tracking-wider">#</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase tracking-wider">
                             Category</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase tracking-wider">
                             Description</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase tracking-wider">Amount
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Expense
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase tracking-wider">Expense
                             Date</th>
-                        <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-6 py-4 text-right text-xs font-semibold text-secondary-600 uppercase tracking-wider">
                             Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200" id="expenseTableBody">
                     @forelse($expenses as $expense)
-                        <tr class="hover:bg-gray-50 transition" id="expense-row-{{ $expense->id }}">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loop->iteration }}</td>
+                        <tr class="hover:bg-secondary-50 transition" id="expense-row-{{ $expense->id }}">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($expense->category)
                                     <span
-                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-accent-100 text-accent">
                                         <i class="fas fa-tag text-xs"></i>
                                         {{ $expense->category->name }}
                                     </span>
                                 @else
                                     <span
-                                        class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500">
+                                        class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-secondary-100 text-secondary-500">
                                         Uncategorized
                                     </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                <p class="text-sm text-gray-700 max-w-xs truncate">{{ $expense->description ?? '—' }}</p>
+                                <p class="text-sm text-secondary-700 max-w-xs truncate">{{ $expense->description ?? '—' }}</p>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-base font-bold text-gray-900">{{ money($expense->amount) }}</span>
+                                <span class="text-base font-bold text-primary">{{ money($expense->amount) }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <p class="text-sm font-medium text-gray-900">
+                                <p class="text-sm font-medium text-primary">
                                     {{ $expense->expense_date->format('M d, Y') }}
                                 </p>
                             </td>
@@ -154,12 +154,12 @@
                                 <div class="flex items-center justify-end gap-2">
                                     <button
                                         onclick="openEditModal({{ $expense->id }}, {{ $expense->category_id ?? 'null' }}, '{{ addslashes($expense->category->name ?? '') }}', '{{ $expense->amount }}', '{{ $expense->expense_date }}', '{{ addslashes($expense->description ?? '') }}')"
-                                        class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                        class="w-8 h-8 flex items-center justify-center text-primary hover:bg-primary-50 rounded-lg transition"
                                         title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button onclick="openDeleteModal({{ $expense->id }})"
-                                        class="w-8 h-8 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition"
+                                        class="w-8 h-8 flex items-center justify-center text-danger hover:bg-danger-50 rounded-lg transition"
                                         title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -170,13 +170,13 @@
                         <tr id="emptyRow">
                             <td colspan="7" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center gap-3">
-                                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-receipt text-gray-400 text-2xl"></i>
+                                    <div class="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-receipt text-secondary-400 text-2xl"></i>
                                     </div>
-                                    <p class="text-lg font-semibold text-gray-900">No expenses found</p>
-                                    <p class="text-sm text-gray-500">Try adjusting your filters or add a new expense</p>
+                                    <p class="text-lg font-semibold text-primary">No expenses found</p>
+                                    <p class="text-sm text-secondary-500">Try adjusting your filters or add a new expense</p>
                                     <button onclick="openAddModal()"
-                                        class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition text-sm font-medium">
+                                        class="mt-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-700 transition text-sm font-medium">
                                         <i class="fas fa-plus mr-2"></i>Add Expense
                                     </button>
                                 </div>
@@ -187,7 +187,7 @@
             </table>
         </div>
         @if($expenses->hasPages())
-            <div class="border-t border-gray-200 px-6 py-4">
+            <div class="border-t border-secondary-200 px-6 py-4">
                 {{ $expenses->links() }}
             </div>
         @endif
@@ -200,18 +200,18 @@
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
 
-                <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+                <div class="flex items-center justify-between px-6 py-5 border-b border-secondary-200">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 bg-blue-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-plus text-blue-600 text-sm"></i>
+                        <div class="w-9 h-9 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-plus text-primary text-sm"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-gray-900">Add Expense</h2>
-                            <p class="text-xs text-gray-500">Fill in the details below</p>
+                            <h2 class="text-lg font-bold text-primary">Add Expense</h2>
+                            <p class="text-xs text-secondary-500">Fill in the details below</p>
                         </div>
                     </div>
                     <button onclick="closeAddModal()"
-                        class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                        class="w-8 h-8 flex items-center justify-center text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 rounded-lg transition">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -220,13 +220,13 @@
 
                     {{-- Category: select2 style --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-                            Category <span class="text-red-500">*</span>
+                        <label class="block text-sm font-semibold text-secondary-700 mb-1.5">
+                            Category <span class="text-danger">*</span>
                         </label>
-                        <p class="text-xs text-gray-400 mb-2">Select an existing category or type a new name to create one.
+                        <p class="text-xs text-secondary-400 mb-2">Select an existing category or type a new name to create one.
                         </p>
                         <select id="addCategoryId" name="category_id"
-                            class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm select2-category">
+                            class="w-full h-11 px-4 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm select2-category">
                             <option value="">— Select or type to create —</option>
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -238,47 +238,47 @@
 
                     {{-- Amount --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-                            Amount <span class="text-red-500">*</span>
+                        <label class="block text-sm font-semibold text-secondary-700 mb-1.5">
+                            Amount <span class="text-danger">*</span>
                         </label>
                         <div class="relative">
                             <span
-                                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold text-sm">৳</span>
+                                class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-500 font-semibold text-sm">৳</span>
                             <input type="number" id="addAmount" step="0.01" min="0" placeholder="0.00"
-                                class="w-full h-11 pl-8 pr-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                class="w-full h-11 pl-8 pr-4 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm">
                         </div>
-                        <p class="text-xs text-red-500 mt-1 hidden" id="addAmountErr">Amount is required.</p>
+                        <p class="text-xs text-danger mt-1 hidden" id="addAmountErr">Amount is required.</p>
                     </div>
 
                     {{-- Expense Date --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-                            Expense Date <span class="text-red-500">*</span>
+                        <label class="block text-sm font-semibold text-secondary-700 mb-1.5">
+                            Expense Date <span class="text-danger">*</span>
                         </label>
                         <input type="date" id="addExpenseDate" value="{{ date('Y-m-d') }}"
-                            class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                        <p class="text-xs text-red-500 mt-1 hidden" id="addDateErr">Date is required.</p>
+                            class="w-full h-11 px-4 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+                        <p class="text-xs text-danger mt-1 hidden" id="addDateErr">Date is required.</p>
                     </div>
 
                     {{-- Description --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Description</label>
+                        <label class="block text-sm font-semibold text-secondary-700 mb-1.5">Description</label>
                         <textarea id="addDescription" rows="3" placeholder="Optional notes about this expense..."
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"></textarea>
+                            class="w-full px-4 py-3 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm resize-none"></textarea>
                     </div>
 
                     {{-- Global error --}}
                     <div id="addErrorBox"
-                        class="hidden bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3"></div>
+                        class="hidden bg-danger-50 border border-danger-200 text-danger text-sm rounded-xl px-4 py-3"></div>
                 </div>
 
-                <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3">
+                <div class="px-6 py-4 border-t border-secondary-200 flex items-center justify-end gap-3">
                     <button onclick="closeAddModal()"
-                        class="h-11 px-6 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium text-sm">
+                        class="h-11 px-6 border border-secondary-300 text-secondary-700 rounded-xl hover:bg-secondary-50 transition font-medium text-sm">
                         Cancel
                     </button>
                     <button onclick="submitAdd()" id="addSubmitBtn"
-                        class="h-11 px-6 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium text-sm flex items-center gap-2">
+                        class="h-11 px-6 bg-primary text-white rounded-xl hover:bg-primary-700 transition font-medium text-sm flex items-center gap-2">
                         <i class="fas fa-save"></i>
                         <span>Save Expense</span>
                     </button>
@@ -294,18 +294,18 @@
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
 
-                <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+                <div class="flex items-center justify-between px-6 py-5 border-b border-secondary-200">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 bg-orange-100 rounded-xl flex items-center justify-center">
                             <i class="fas fa-edit text-orange-600 text-sm"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-gray-900">Edit Expense</h2>
-                            <p class="text-xs text-gray-500">Update the expense details</p>
+                            <h2 class="text-lg font-bold text-primary">Edit Expense</h2>
+                            <p class="text-xs text-secondary-500">Update the expense details</p>
                         </div>
                     </div>
                     <button onclick="closeEditModal()"
-                        class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                        class="w-8 h-8 flex items-center justify-center text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 rounded-lg transition">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -315,13 +315,13 @@
 
                     {{-- Category --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-                            Category <span class="text-red-500">*</span>
+                        <label class="block text-sm font-semibold text-secondary-700 mb-1.5">
+                            Category <span class="text-danger">*</span>
                         </label>
-                        <p class="text-xs text-gray-400 mb-2">Select an existing category or type a new name to create one.
+                        <p class="text-xs text-secondary-400 mb-2">Select an existing category or type a new name to create one.
                         </p>
                         <select id="editCategoryId"
-                            class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm select2-category-edit">
+                            class="w-full h-11 px-4 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm select2-category-edit">
                             <option value="">— Select or type to create —</option>
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -331,42 +331,42 @@
 
                     {{-- Amount --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-                            Amount <span class="text-red-500">*</span>
+                        <label class="block text-sm font-semibold text-secondary-700 mb-1.5">
+                            Amount <span class="text-danger">*</span>
                         </label>
                         <div class="relative">
                             <span
-                                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold text-sm">৳</span>
+                                class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-500 font-semibold text-sm">৳</span>
                             <input type="number" id="editAmount" step="0.01" min="0" placeholder="0.00"
-                                class="w-full h-11 pl-8 pr-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                class="w-full h-11 pl-8 pr-4 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm">
                         </div>
-                        <p class="text-xs text-red-500 mt-1 hidden" id="editAmountErr">Amount is required.</p>
+                        <p class="text-xs text-danger mt-1 hidden" id="editAmountErr">Amount is required.</p>
                     </div>
 
                     {{-- Expense Date --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-                            Expense Date <span class="text-red-500">*</span>
+                        <label class="block text-sm font-semibold text-secondary-700 mb-1.5">
+                            Expense Date <span class="text-danger">*</span>
                         </label>
                         <input type="date" id="editExpenseDate"
-                            class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                        <p class="text-xs text-red-500 mt-1 hidden" id="editDateErr">Date is required.</p>
+                            class="w-full h-11 px-4 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+                        <p class="text-xs text-danger mt-1 hidden" id="editDateErr">Date is required.</p>
                     </div>
 
                     {{-- Description --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Description</label>
+                        <label class="block text-sm font-semibold text-secondary-700 mb-1.5">Description</label>
                         <textarea id="editDescription" rows="3" placeholder="Optional notes..."
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"></textarea>
+                            class="w-full px-4 py-3 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm resize-none"></textarea>
                     </div>
 
                     <div id="editErrorBox"
-                        class="hidden bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3"></div>
+                        class="hidden bg-danger-50 border border-danger-200 text-danger text-sm rounded-xl px-4 py-3"></div>
                 </div>
 
-                <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3">
+                <div class="px-6 py-4 border-t border-secondary-200 flex items-center justify-end gap-3">
                     <button onclick="closeEditModal()"
-                        class="h-11 px-6 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium text-sm">
+                        class="h-11 px-6 border border-secondary-300 text-secondary-700 rounded-xl hover:bg-secondary-50 transition font-medium text-sm">
                         Cancel
                     </button>
                     <button onclick="submitEdit()" id="editSubmitBtn"
@@ -385,26 +385,26 @@
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
-                <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-trash text-red-500 text-xl"></i>
+                <div class="w-14 h-14 bg-danger-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-trash text-danger text-xl"></i>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Delete Expense?</h3>
-                <p class="text-sm text-gray-500 mb-6">This action cannot be undone. The record will be permanently removed.
+                <h3 class="text-lg font-bold text-primary mb-2">Delete Expense?</h3>
+                <p class="text-sm text-secondary-500 mb-6">This action cannot be undone. The record will be permanently removed.
                 </p>
                 <input type="hidden" id="deleteExpenseId">
                 <div class="flex gap-3">
                     <button onclick="closeDeleteModal()"
-                        class="flex-1 h-11 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium text-sm">
+                        class="flex-1 h-11 border border-secondary-300 text-secondary-700 rounded-xl hover:bg-secondary-50 transition font-medium text-sm">
                         Cancel
                     </button>
                     <button onclick="submitDelete()" id="deleteSubmitBtn"
-                        class="flex-1 h-11 bg-red-600 text-white rounded-xl hover:bg-red-700 transition font-medium text-sm flex items-center justify-center gap-2">
+                        class="flex-1 h-11 bg-danger text-white rounded-xl hover:bg-danger-700 transition font-medium text-sm flex items-center justify-center gap-2">
                         <i class="fas fa-trash"></i>
                         <span>Yes, Delete</span>
                     </button>
                 </div>
                 <div id="deleteErrorBox"
-                    class="hidden mt-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3"></div>
+                    class="hidden mt-3 bg-danger-50 border border-danger-200 text-danger text-sm rounded-xl px-4 py-3"></div>
             </div>
         </div>
     </div>

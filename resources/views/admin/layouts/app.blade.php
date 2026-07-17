@@ -26,7 +26,7 @@
     @stack('styles')
 </head>
 
-<body class="bg-slate-50/70 min-h-screen antialiased">
+<body class="bg-secondary-50/70 min-h-screen antialiased">
     <div class="flex h-screen overflow-hidden">
         @include('admin.layouts.sidebar')
 
@@ -42,7 +42,7 @@
     </div>
 
     {{-- Overlay for mobile sidebar --}}
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden"></div>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

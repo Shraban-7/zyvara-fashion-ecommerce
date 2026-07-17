@@ -5,188 +5,102 @@
     <main class="space-y-6 p-1">
 
         {{-- Page Header --}}
-        <section class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h1 class="text-xl font-bold text-slate-900">Welcome back, {{ auth()->user()->name }}!</h1>
-                <p class="text-sm text-slate-500 mt-0.5">Here's what's happening with your store today.</p>
-            </div>
-            <form method="GET">
-                <div class="relative">
-                    <select name="filter" onchange="this.form.submit()"
-                        class="appearance-none rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-10 text-sm font-medium text-slate-700 shadow-sm transition focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100">
-                        <option value="today" {{ request('filter', 'today') === 'today' ? 'selected' : '' }}>Today
-                        </option>
-                        <option value="this_week" {{ request('filter') === 'this_week' ? 'selected' : '' }}>This
-                            Week</option>
-                        <option value="this_month" {{ request('filter') === 'this_month' ? 'selected' : '' }}>This
-                            Month</option>
-                    </select>
-                    <i data-lucide="calendar-days"
-                        class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none"></i>
-                    <i data-lucide="chevron-down"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none"></i>
-                </div>
-            </form>
+        <section class="flex flex-col gap-1">
+            <h1 class="text-xl font-bold text-primary sm:text-2xl">Welcome back, {{ auth()->user()->name }}!</h1>
+            <p class="text-sm text-secondary-500">Here's what's happening with your store today.</p>
         </section>
 
-        {{-- Stat Cards --}}
-        @php
-            $vsLabel = match ($filter) {
-                'today' => 'vs yesterday',
-                'this_week' => 'vs last week',
-                default => 'vs last month',
-            };
-        @endphp
-
-        <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-
-            @php
-                $stats = [
-                    [
-                        'label' => 'Total Revenue',
-                        'value' => money($widgets['totalRevenue']),
-                        'pct' => $widgets['totalRevenuePercentage'],
-                        'icon' => 'banknote',
-                        'icon_color' => 'text-emerald-600',
-                        'icon_bg' => 'bg-emerald-50',
-                    ],
-                    [
-                        'label' => 'Total Orders',
-                        'value' => number_format($widgets['totalOrders']),
-                        'pct' => $widgets['totalOrdersPercentage'],
-                        'icon' => 'shopping-cart',
-                        'icon_color' => 'text-blue-600',
-                        'icon_bg' => 'bg-blue-50',
-                    ],
-                    [
-                        'label' => 'Customers',
-                        'value' => number_format($widgets['totalCustomers']),
-                        'pct' => $widgets['totalCustomersPercentage'],
-                        'icon' => 'users',
-                        'icon_color' => 'text-violet-600',
-                        'icon_bg' => 'bg-violet-50',
-                    ],
-                    [
-                        'label' => 'Refunds',
-                        'value' => money($widgets['totalRefund']),
-                        'pct' => $widgets['totalRefundPercentage'],
-                        'icon' => 'credit-card',
-                        'icon_color' => 'text-rose-600',
-                        'icon_bg' => 'bg-rose-50',
-                    ],
-                ];
-            @endphp
-
+        {{-- Stat Cards (4) --}}
+        <section class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($stats as $s)
                 <article
-                    class="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                    class="rounded-2xl border border-secondary-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md{{ isset($s['link']) ? ' hover:border-accent/40' : '' }}">
+                    @if (isset($s['link']))
+                        <a href="{{ $s['link'] }}" class="block">
+                    @endif
                     <div class="flex items-start justify-between gap-4">
-                        <div>
-                            <p class="text-sm font-medium text-slate-500">{{ $s['label'] }}</p>
-                            <h2 class="mt-2 text-2xl font-bold text-slate-900">{{ $s['value'] }}</h2>
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-secondary-500 truncate">{{ $s['label'] }}</p>
+                            <h2 class="mt-2 text-2xl font-bold text-primary truncate">{{ $s['value'] }}</h2>
                         </div>
-                        <div class="rounded-xl {{ $s['icon_bg'] }} {{ $s['icon_color'] }} p-3">
+                        <div class="rounded-xl {{ $s['icon_bg'] }} {{ $s['icon_color'] }} p-3 shrink-0">
                             <i data-lucide="{{ $s['icon'] }}" class="h-5 w-5"></i>
                         </div>
                     </div>
                     <div class="mt-4 flex items-center justify-between">
-                        @if ($s['pct'] >= 0)
-                            <span
-                                class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-                                <i data-lucide="arrow-up-right" class="h-3 w-3"></i>{{ $s['pct'] }}%
-                            </span>
+                        @if (! is_null($s['pct']))
+                            @if ($s['pct'] >= 0)
+                                <span
+                                    class="inline-flex items-center gap-1 rounded-full bg-success-50 px-2.5 py-1 text-xs font-semibold text-success">
+                                    <i data-lucide="arrow-up-right" class="h-3 w-3"></i>{{ $s['pct'] }}%
+                                </span>
+                            @else
+                                <span
+                                    class="inline-flex items-center gap-1 rounded-full bg-danger-50 px-2.5 py-1 text-xs font-semibold text-danger">
+                                    <i data-lucide="arrow-down-right" class="h-3 w-3"></i>{{ abs($s['pct']) }}%
+                                </span>
+                            @endif
                         @else
-                            <span
-                                class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700">
-                                <i data-lucide="arrow-down-right" class="h-3 w-3"></i>{{ abs($s['pct']) }}%
-                            </span>
+                            <span></span>
                         @endif
-                        <span class="text-xs text-slate-400">{{ $vsLabel }}</span>
+                        <span class="text-xs text-secondary-400">{{ $s['sub'] }}</span>
                     </div>
+                    @if (isset($s['link']))
+                        </a>
+                    @endif
                 </article>
             @endforeach
         </section>
 
-        {{-- Revenue Chart + Sales Channels --}}
-        <section class="grid gap-6 xl:grid-cols-3">
-
-            {{-- Revenue Chart --}}
-            <article class="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm xl:col-span-2">
-                <div class="mb-5 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        {{-- Revenue Chart + Category Donut --}}
+        <section class="grid gap-6 lg:grid-cols-3">
+            <article class="rounded-2xl border border-secondary-200 bg-white p-5 shadow-sm lg:col-span-2">
+                <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h2 class="text-base font-bold text-slate-900">Revenue Overview</h2>
-                        <p class="text-sm text-slate-500">Monthly revenue &amp; order performance</p>
+                        <h2 class="text-base font-bold text-primary">Revenue Overview</h2>
+                        <p class="text-sm text-secondary-500">Daily revenue performance</p>
+                    </div>
+                    <div class="inline-flex rounded-xl bg-secondary-100 p-1" role="tablist" aria-label="Chart range">
+                        <button id="range7" onclick="setChartRange(7)"
+                            class="px-3 py-1.5 text-xs font-semibold rounded-lg transition text-secondary-600">7 Days</button>
+                        <button id="range30" onclick="setChartRange(30)"
+                            class="px-3 py-1.5 text-xs font-semibold rounded-lg transition text-secondary-600">30 Days</button>
                     </div>
                 </div>
-                <div class="relative h-60">
+                <div class="relative h-64 sm:h-72">
                     <canvas id="revenueChart"></canvas>
                 </div>
             </article>
 
-            {{-- Sales Channels --}}
-            <article class="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-                <div class="mb-4 flex items-center justify-between">
-                    <div>
-                        <h2 class="text-base font-bold text-slate-900">Sales Channels</h2>
-                        <p class="text-sm text-slate-500">Orders by platform</p>
-                    </div>
-                    <button class="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
-                        <i data-lucide="more-horizontal" class="h-4 w-4"></i>
-                    </button>
+            <article class="rounded-2xl border border-secondary-200 bg-white p-5 shadow-sm">
+                <div class="mb-4">
+                    <h2 class="text-base font-bold text-primary">Products by Category</h2>
+                    <p class="text-sm text-secondary-500">Distribution across top categories</p>
                 </div>
-
-                <div class="flex justify-center my-4">
-                    <div class="relative grid h-36 w-36 place-items-center rounded-full"
-                        style="background:conic-gradient(#10b981 0 {{ $websitePercentage }}%,#f59e0b {{ $websitePercentage }}% 100%)">
-                        <div class="grid h-24 w-24 place-items-center rounded-full bg-white">
-                            <div class="text-center">
-                                <p class="text-xl font-bold text-slate-900">{{ number_format($totalChannelOrders) }}</p>
-                                <p class="text-xs text-slate-500">Orders</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    @foreach ([['label' => 'Website', 'pct' => $websitePercentage, 'orders' => $websiteOrders, 'color' => 'bg-emerald-500', 'dot' => 'bg-emerald-500'], ['label' => 'POS', 'pct' => $posPercentage, 'orders' => $posOrders, 'color' => 'bg-amber-500', 'dot' => 'bg-amber-500']] as $ch)
-                        <div>
-                            <div class="mb-1.5 flex items-center justify-between text-sm">
-                                <span class="flex items-center gap-2 font-medium text-slate-700">
-                                    <span class="h-2 w-2 rounded-full {{ $ch['dot'] }}"></span>{{ $ch['label'] }}
-                                </span>
-                                <span class="font-semibold text-slate-900">{{ $ch['pct'] }}%</span>
-                            </div>
-                            <div class="h-1.5 rounded-full bg-slate-100">
-                                <div class="h-1.5 rounded-full {{ $ch['color'] }} transition-all duration-500"
-                                    style="width:{{ $ch['pct'] }}%"></div>
-                            </div>
-                            <p class="mt-1 text-xs text-slate-400">{{ number_format($ch['orders']) }} orders</p>
-                        </div>
-                    @endforeach
+                <div class="relative h-56 flex items-center justify-center">
+                    <canvas id="categoryChart"></canvas>
                 </div>
             </article>
         </section>
 
         {{-- Recent Orders + Top Products --}}
-        <section class="grid gap-6 xl:grid-cols-3">
-
-            {{-- Recent Orders --}}
-            <article class="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm xl:col-span-2">
+        <section class="grid gap-6 lg:grid-cols-3">
+            <article class="overflow-hidden rounded-2xl border border-secondary-200 bg-white shadow-sm lg:col-span-2">
                 <div
-                    class="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                    class="flex flex-col gap-3 border-b border-secondary-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h2 class="text-base font-bold text-slate-900">Recent Orders</h2>
-                        <p class="text-sm text-slate-500">Latest customer purchases</p>
+                        <h2 class="text-base font-bold text-primary">Recent Orders</h2>
+                        <p class="text-sm text-secondary-500">Latest customer purchases</p>
                     </div>
                     <a href="{{ route('admin.orders.index') }}"
-                        class="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+                        class="inline-flex items-center gap-2 rounded-xl border border-secondary-200 px-4 py-1.5 text-sm font-semibold text-secondary-700 transition hover:bg-secondary-50 hover:text-primary">
                         <i data-lucide="external-link" class="h-3.5 w-3.5"></i>View All
                     </a>
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full min-w-[640px] text-left">
-                        <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    <table class="w-full min-w-[640px] text-left admin-table">
+                        <thead>
                             <tr>
                                 <th class="px-5 py-3">Order</th>
                                 <th class="px-5 py-3">Customer</th>
@@ -196,55 +110,38 @@
                                 <th class="px-5 py-3"></th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-50">
+                        <tbody class="divide-y divide-secondary-50">
                             @forelse($recentOrders as $order)
-                                @php
-                                    $sc =
-                                        [
-                                            'pending' => 'bg-amber-50 text-amber-700',
-                                            'processing' => 'bg-blue-50 text-blue-700',
-                                            'completed' => 'bg-emerald-50 text-emerald-700',
-                                            'delivered' => 'bg-emerald-50 text-emerald-700',
-                                            'cancelled' => 'bg-rose-50 text-rose-700',
-                                            'shipped' => 'bg-indigo-50 text-indigo-700',
-                                        ][$order['status']] ?? 'bg-slate-100 text-slate-600';
-
-                                    $initials = collect(explode(' ', $order['customer_name']))
-                                        ->map(fn($w) => strtoupper(substr($w, 0, 1)))
-                                        ->take(2)
-                                        ->implode('');
-                                @endphp
-                                <tr class="transition hover:bg-slate-50/60">
-                                    <td class="px-5 py-3.5 text-sm font-semibold text-slate-900">
+                                <tr class="transition hover:bg-secondary-50">
+                                    <td class="px-5 py-3.5 text-sm font-semibold text-primary">
                                         #{{ $order['order_number'] }}</td>
                                     <td class="px-5 py-3.5">
                                         <div class="flex items-center gap-3">
                                             <div
-                                                class="grid h-8 w-8 place-items-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600">
-                                                {{ $initials }}</div>
-                                            <div>
-                                                <p class="text-sm font-semibold text-slate-800">
-                                                    {{ $order['customer_name'] }}</p>
+                                                class="grid h-8 w-8 place-items-center rounded-full bg-accent-100 text-xs font-bold text-primary">
+                                                {{ collect(explode(' ', $order['customer_name']))->map(fn($w)=>strtoupper(substr($w,0,1)))->take(2)->implode('') }}
                                             </div>
+                                            <p class="text-sm font-semibold text-secondary-800 truncate max-w-[160px]">
+                                                {{ $order['customer_name'] }}</p>
                                         </div>
                                     </td>
-                                    <td class="px-5 py-3.5 text-sm text-slate-500">{{ $order['created_at'] }}</td>
-                                    <td class="px-5 py-3.5 text-sm font-semibold text-slate-900">
+                                    <td class="px-5 py-3.5 text-sm text-secondary-500">{{ $order['created_at'] }}</td>
+                                    <td class="px-5 py-3.5 text-sm font-semibold text-primary">
                                         ৳{{ number_format($order['total'], 2) }}</td>
                                     <td class="px-5 py-3.5">
                                         <span
-                                            class="rounded-full px-2.5 py-1 text-xs font-semibold capitalize {{ $sc }}">{{ $order['status'] }}</span>
+                                            class="status-badge {{ $statusBadgeMap[$order['status']] ?? 'pending' }}">{{ $order['status_label'] }}</span>
                                     </td>
                                     <td class="px-5 py-3.5">
                                         <a href="{{ route('admin.orders.show', $order['id']) }}"
-                                            class="text-slate-400 transition hover:text-indigo-600">
+                                            class="text-secondary-400 transition hover:text-primary" title="View">
                                             <i data-lucide="eye" class="h-4 w-4"></i>
                                         </a>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-5 py-10 text-center text-sm text-slate-500">No recent
+                                    <td colspan="6" class="px-5 py-10 text-center text-sm text-secondary-500">No recent
                                         orders found.</td>
                                 </tr>
                             @endforelse
@@ -253,179 +150,155 @@
                 </div>
             </article>
 
-            {{-- Top Products --}}
-            <article class="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+            <article class="rounded-2xl border border-secondary-200 bg-white p-5 shadow-sm">
                 <div class="mb-5 flex items-center justify-between">
                     <div>
-                        <h2 class="text-base font-bold text-slate-900">Top Products</h2>
-                        <p class="text-sm text-slate-500">Best selling items</p>
+                        <h2 class="text-base font-bold text-primary">Top Products</h2>
+                        <p class="text-sm text-secondary-500">Best sellers this month</p>
                     </div>
                     <a href="{{ route('admin.products.index') }}"
-                        class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition">View All</a>
+                        class="text-sm font-semibold text-accent hover:text-primary transition">View All</a>
                 </div>
                 <div class="space-y-3">
-                    @forelse($topProducts as $product)
-                        <div
-                            class="flex items-center gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-slate-50">
+                    @forelse($topProducts as $index => $product)
+                        <div class="flex items-center gap-3 rounded-xl border border-secondary-100 p-3 transition hover:bg-secondary-50">
+                            <span class="text-xs font-bold text-secondary-300 w-4 shrink-0">{{ $index + 1 }}</span>
                             <div
-                                class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-100">
+                                class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-secondary-100">
                                 @if ($product['image'])
-                                    <img src="{{ asset($product['image']) }}" alt="{{ $product['name'] }}"
+                                    <img src="{{ storage_url($product['image']) }}" alt="{{ $product['name'] }}"
                                         class="h-full w-full object-cover">
                                 @else
-                                    <i data-lucide="package" class="h-5 w-5 text-slate-400"></i>
+                                    <i data-lucide="package" class="h-5 w-5 text-secondary-400"></i>
                                 @endif
                             </div>
                             <div class="min-w-0 flex-1">
-                                <p class="truncate text-sm font-semibold text-slate-900">{{ $product['name'] }}</p>
-                                <p class="mt-0.5 text-xs text-slate-400">{{ number_format($product['sales']) }} sold</p>
+                                <p class="truncate text-sm font-semibold text-primary">{{ $product['name'] }}</p>
+                                <p class="mt-0.5 text-xs text-secondary-400">{{ number_format($product['units']) }} sold</p>
                             </div>
-                            <div class="text-right">
-                                <p class="text-sm font-bold text-slate-900">৳{{ number_format($product['revenue'], 0) }}
-                                </p>
-                                <p class="text-xs text-slate-400">revenue</p>
+                            <div class="text-right shrink-0">
+                                <p class="text-sm font-bold text-primary">৳{{ number_format($product['revenue'], 0) }}</p>
+                                <p class="text-xs text-secondary-400">revenue</p>
                             </div>
                         </div>
                     @empty
-                        <div class="py-8 text-center text-sm text-slate-500">No top products found.</div>
+                        <div class="py-8 text-center text-sm text-secondary-500">No sales yet this month.</div>
                     @endforelse
                 </div>
             </article>
         </section>
 
-        {{-- Inventory Alerts + Recent Customers --}}
+        {{-- Low Stock + Flash Sale Performance --}}
         <section class="grid gap-6 lg:grid-cols-2">
 
-            {{-- Inventory Alerts --}}
-            <article class="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+            {{-- Low Stock Alert --}}
+            <article class="rounded-2xl border border-secondary-200 bg-white p-5 shadow-sm">
                 <div class="mb-5 flex items-center justify-between">
                     <div>
-                        <h2 class="text-base font-bold text-slate-900">Inventory Alerts</h2>
-                        <p class="text-sm text-slate-500">Products requiring attention</p>
+                        <h2 class="text-base font-bold text-primary">Low Stock Alert</h2>
+                        <p class="text-sm text-secondary-500">Products below 10 units</p>
                     </div>
-                    <div class="rounded-xl bg-amber-50 p-2.5 text-amber-600">
+                    <div class="rounded-xl bg-warning-50 p-2.5 text-warning">
                         <i data-lucide="boxes" class="h-4 w-4"></i>
                     </div>
                 </div>
                 <div class="space-y-3">
-                    @forelse($lowStockProducts as $product)
-                        @php
-                            if ($product->stock_in <= 5) {
-                                $cardCls = 'border-rose-100 bg-rose-50/70';
-                                $iconCls = 'text-rose-600';
-                                $badgeCls = 'bg-rose-100 text-rose-700';
-                                $status = 'Critical';
-                                $icon = 'package-x';
-                                $desc = 'Only ' . $product->stock_in . ' units left in stock';
-                            } elseif ($product->stock_in <= 10) {
-                                $cardCls = 'border-amber-100 bg-amber-50/70';
-                                $iconCls = 'text-amber-600';
-                                $badgeCls = 'bg-amber-100 text-amber-700';
-                                $status = 'Low';
-                                $icon = 'alert-triangle';
-                                $desc = $product->stock_in . ' units remaining, reorder soon';
-                            } else {
-                                $cardCls = 'border-blue-100 bg-blue-50/70';
-                                $iconCls = 'text-blue-600';
-                                $badgeCls = 'bg-blue-100 text-blue-700';
-                                $status = 'Medium';
-                                $icon = 'package';
-                                $desc = $product->stock_in . ' units available';
-                            }
-                        @endphp
-                        <div class="flex items-center gap-3 rounded-xl border p-3.5 {{ $cardCls }}">
-                            <div class="rounded-lg bg-white p-2 {{ $iconCls }}">
-                                <i data-lucide="{{ $icon }}" class="h-4 w-4"></i>
+                    @forelse($lowStock as $product)
+                        <div class="flex items-center gap-3 rounded-xl border border-secondary-100 p-3">
+                            <div class="rounded-lg bg-secondary-50 p-2 text-secondary-400">
+                                <i data-lucide="package" class="h-4 w-4"></i>
                             </div>
                             <div class="min-w-0 flex-1">
-                                <p class="font-semibold text-slate-900 text-sm">{{ $product->name }}</p>
-                                <p class="text-xs text-slate-500 mt-0.5">{{ $desc }}</p>
+                                <p class="font-semibold text-primary text-sm truncate">{{ $product->name }}</p>
+                                <p class="text-xs text-secondary-500 mt-0.5">
+                                    {{ $product->stock_in }} units left
+                                    @if($product->sku)· {{ $product->sku }}@endif
+                                </p>
                             </div>
-                            <span
-                                class="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold {{ $badgeCls }}">{{ $status }}</span>
+                            <a href="{{ route('admin.products.manage-stock', $product->id) }}"
+                                class="shrink-0 inline-flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-primary-700">
+                                <i data-lucide="plus" class="h-3 w-3"></i>Restock
+                            </a>
                         </div>
                     @empty
-                        <div class="rounded-xl border border-emerald-100 bg-emerald-50/60 p-6 text-center">
+                        <div class="rounded-xl border border-success-100 bg-success-50/60 p-6 text-center">
                             <div
-                                class="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-white text-emerald-600">
+                                class="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-white text-success">
                                 <i data-lucide="check-circle" class="h-5 w-5"></i>
                             </div>
-                            <h3 class="mt-3 text-sm font-semibold text-slate-900">Inventory Healthy</h3>
-                            <p class="mt-1 text-xs text-slate-500">No low stock products found.</p>
+                            <h3 class="mt-3 text-sm font-semibold text-primary">Inventory Healthy</h3>
+                            <p class="mt-1 text-xs text-secondary-500">No low stock products found.</p>
                         </div>
                     @endforelse
                 </div>
             </article>
 
-            {{-- Recent Customers --}}
-            <article class="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-                <div class="mb-5 flex items-center justify-between">
-                    <div>
-                        <h2 class="text-base font-bold text-slate-900">Recent Customers</h2>
-                        <p class="text-sm text-slate-500">Newly registered users</p>
+            {{-- Flash Sale Performance --}}
+            <article class="rounded-2xl border border-secondary-200 bg-white p-5 shadow-sm">
+                @if($flashSale)
+                    <div class="mb-5 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-base font-bold text-primary">{{ $flashSale['name'] }}</h2>
+                            <p class="text-sm text-secondary-500">Live flash sale performance</p>
+                        </div>
+                        <span
+                            class="inline-flex items-center gap-1.5 rounded-full bg-danger-50 px-3 py-1 text-xs font-semibold text-danger">
+                            <span class="h-1.5 w-1.5 rounded-full bg-danger animate-pulse"></span>
+                            <span id="flashCountdown" data-ends="{{ $flashSale['ends_at'] }}">--:--:--</span>
+                        </span>
                     </div>
-                    <a href="{{ route('admin.customers.index') }}"
-                        class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition">View All</a>
-                </div>
-                <div class="space-y-0">
-                    @forelse($recentCustomers as $customer)
-                        @php
-                            $initials = collect(explode(' ', $customer['name']))
-                                ->map(fn($w) => strtoupper(substr($w, 0, 1)))
-                                ->take(2)
-                                ->implode('');
 
-                            $ordersCount = $customer['orders_count'] ?? 0;
-                            $totalSpent = $customer['total_spent'] ?? 0;
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="rounded-xl bg-secondary-50 p-3">
+                            <p class="text-xs text-secondary-500">Products</p>
+                            <p class="text-lg font-bold text-primary">{{ $flashSale['products_count'] }}</p>
+                        </div>
+                        <div class="rounded-xl bg-secondary-50 p-3">
+                            <p class="text-xs text-secondary-500">Avg. Discount</p>
+                            <p class="text-lg font-bold text-accent">{{ $flashSale['avg_discount'] }}%</p>
+                        </div>
+                    </div>
 
-                            if ($ordersCount >= 5) {
-                                $badgeCls = 'bg-amber-50 text-amber-700';
-                                $badgeLabel = 'VIP';
-                            } elseif ($ordersCount >= 1) {
-                                $badgeCls = 'bg-emerald-50 text-emerald-700';
-                                $badgeLabel = 'Active';
-                            } else {
-                                $badgeCls = 'bg-slate-100 text-slate-600';
-                                $badgeLabel = 'New';
-                            }
-                        @endphp
-                        <div class="relative flex gap-3 {{ !$loop->last ? 'pb-4 mb-4 border-b border-slate-100' : '' }}">
-                            <div
-                                class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600">
-                                {{ $initials }}
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center justify-between">
-                                    <p class="text-sm font-semibold text-slate-900 truncate">{{ $customer['name'] }}</p>
-                                    <span class="shrink-0 ml-2 rounded-full px-2 py-0.5 text-[10px] font-bold {{ $badgeCls }}">
-                                        {{ $badgeLabel }}
-                                    </span>
+                    <div class="space-y-2.5">
+                        @foreach($flashSale['products'] as $fp)
+                            <div class="flex items-center gap-3 rounded-xl border border-secondary-100 p-2.5">
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-secondary-100">
+                                    @if($fp['image'])
+                                        <img src="{{ storage_url($fp['image']) }}" alt="{{ $fp['name'] }}"
+                                            class="h-full w-full object-cover">
+                                    @else
+                                        <i data-lucide="package" class="h-4 w-4 text-secondary-400"></i>
+                                    @endif
                                 </div>
-                                <p class="text-xs text-slate-500 mt-0.5">{{ $customer['email'] }}</p>
-                                <div class="flex items-center gap-3 mt-1.5">
-                                    <span class="text-xs text-slate-400">
-                                        <i data-lucide="shopping-bag" class="h-3 w-3 inline mr-0.5 -mt-0.5"></i>
-                                        {{ $ordersCount }} orders
-                                    </span>
-                                    <span class="text-xs text-slate-400">
-                                        <i data-lucide="wallet" class="h-3 w-3 inline mr-0.5 -mt-0.5"></i>
-                                        ৳{{ number_format($totalSpent, 0) }}
-                                    </span>
-                                    <span class="text-xs text-slate-400 ml-auto">
-                                        {{ $customer['joined_at'] }}
-                                    </span>
+                                <div class="min-w-0 flex-1">
+                                    <p class="truncate text-sm font-semibold text-primary">{{ $fp['name'] }}</p>
+                                    <p class="text-xs text-secondary-400 line-through">৳{{ number_format($fp['price'], 2) }}</p>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <p class="text-sm font-bold text-danger">৳{{ number_format($fp['sale_price'], 2) }}</p>
+                                    <p class="text-[10px] font-semibold text-accent">-{{ $fp['discount'] }}%</p>
                                 </div>
                             </div>
+                        @endforeach
+                    </div>
+
+                    <a href="{{ route('admin.flash-sales.index') }}"
+                        class="mt-4 block text-center text-sm font-semibold text-accent hover:text-primary transition">Manage Flash Sale</a>
+                @else
+                    <div class="flex h-full flex-col items-center justify-center py-8 text-center">
+                        <div
+                            class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-50 text-accent">
+                            <i data-lucide="zap" class="h-6 w-6"></i>
                         </div>
-                    @empty
-                        <div class="py-8 text-center">
-                            <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
-                                <i data-lucide="users" class="h-5 w-5"></i>
-                            </div>
-                            <p class="mt-3 text-sm text-slate-500">No new customers yet.</p>
-                        </div>
-                    @endforelse
-                </div>
+                        <h3 class="mt-4 text-base font-bold text-primary">No Active Flash Sale</h3>
+                        <p class="mt-1 max-w-xs text-sm text-secondary-500">Boost sales by launching a limited-time
+                            discount event.</p>
+                        <a href="{{ route('admin.flash-sales.create') }}"
+                            class="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-700">
+                            <i data-lucide="plus" class="h-4 w-4"></i>Create Flash Sale
+                        </a>
+                    </div>
+                @endif
             </article>
         </section>
 
@@ -435,43 +308,54 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('revenueChart');
-        if (ctx) {
-            new Chart(ctx, {
+        const dashboardData = {
+            '7': { labels: @json($revenue['today']['labels']), data: @json($revenue['today']['data']) },
+            '30': { labels: @json($revenue['month']['labels']), data: @json($revenue['month']['data']) },
+        };
+
+        let revenueChart;
+
+        function renderRevenueChart(range) {
+            const el = document.getElementById('revenueChart');
+            if (!el) return;
+            const series = dashboardData[range];
+
+            const ctx = el.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 280);
+            grad.addColorStop(0, 'rgba(201,168,124,0.25)');
+            grad.addColorStop(1, 'rgba(201,168,124,0.02)');
+
+            const config = {
                 type: 'line',
                 data: {
-                    labels: @json($chartLabels),
+                    labels: series.labels,
                     datasets: [{
                         label: 'Revenue',
-                        data: @json($chartData),
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99,102,241,0.07)',
+                        data: series.data,
+                        borderColor: '#C9A87C',
+                        backgroundColor: grad,
                         tension: 0.4,
                         fill: true,
-                        pointRadius: 4,
+                        pointRadius: 3,
                         pointHoverRadius: 6,
-                        pointBackgroundColor: '#6366f1',
+                        pointBackgroundColor: '#C9A87C',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
+                        borderWidth: 2,
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: {
-                            display: false
-                        },
+                        legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#0f172a',
+                            backgroundColor: '#1A1A1A',
                             padding: 12,
-                            titleColor: '#f1f5f9',
-                            bodyColor: '#94a3b8',
-                            borderColor: '#1e293b',
+                            titleColor: '#E5E0D8',
+                            bodyColor: '#b3aca1',
+                            borderColor: '#C9A87C',
                             borderWidth: 1,
                             displayColors: false,
                             callbacks: {
@@ -482,29 +366,100 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0,0,0,0.04)'
-                            },
-                            ticks: {
-                                font: {
-                                    size: 11
-                                },
-                                callback: v => '৳' + (v / 1000).toFixed(0) + 'k'
-                            }
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { font: { size: 11 }, callback: v => '৳' + (v / 1000).toFixed(0) + 'k' }
                         },
                         x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                font: {
-                                    size: 11
-                                }
-                            }
+                            grid: { display: false },
+                            ticks: { font: { size: 11 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }
+                        }
+                    }
+                }
+            };
+
+            if (revenueChart) {
+                revenueChart.data = config.data;
+                revenueChart.update();
+            } else {
+                revenueChart = new Chart(ctx, config);
+            }
+        }
+
+        function setChartRange(range) {
+            renderRevenueChart(range);
+            document.getElementById('range7').classList.toggle('bg-white', range === 7);
+            document.getElementById('range7').classList.toggle('shadow-sm', range === 7);
+            document.getElementById('range7').classList.toggle('text-primary', range === 7);
+            document.getElementById('range30').classList.toggle('bg-white', range === 30);
+            document.getElementById('range30').classList.toggle('shadow-sm', range === 30);
+            document.getElementById('range30').classList.toggle('text-primary', range === 30);
+        }
+
+        // Category donut
+        function renderCategoryChart() {
+            const el = document.getElementById('categoryChart');
+            if (!el) return;
+            const labels = @json($categories['labels']);
+            const data = @json($categories['data']);
+            const palette = ['#1A1A1A', '#C9A87C', '#8A8A8A', '#3d3933', '#b8925f', '#cfc8bd'];
+
+            new Chart(el.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: palette,
+                        borderColor: '#ffffff',
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { size: 11 }, boxWidth: 10, padding: 12, color: '#6f6a62' }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1A1A1A',
+                            padding: 10,
+                            titleColor: '#E5E0D8',
+                            bodyColor: '#b3aca1',
+                            displayColors: false,
+                            callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed} products` }
                         }
                     }
                 }
             });
         }
+
+        function startFlashCountdown() {
+            const el = document.getElementById('flashCountdown');
+            if (!el) return;
+            const ends = parseInt(el.dataset.ends, 10) * 1000;
+
+            function tick() {
+                const diff = ends - Date.now();
+                if (diff <= 0) { el.textContent = 'Ended'; return; }
+                const h = Math.floor(diff / 3.6e6);
+                const m = Math.floor((diff % 3.6e6) / 6e4);
+                const s = Math.floor((diff % 6e4) / 1000);
+                el.textContent =
+                    String(h).padStart(2, '0') + ':' +
+                    String(m).padStart(2, '0') + ':' +
+                    String(s).padStart(2, '0');
+            }
+            tick();
+            setInterval(tick, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            setChartRange(7);
+            renderCategoryChart();
+            startFlashCountdown();
+        });
     </script>
 @endpush

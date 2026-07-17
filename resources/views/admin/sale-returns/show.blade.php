@@ -8,10 +8,10 @@
 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
 
     <div>
-        <h1 class="text-2xl font-bold text-gray-900">
+        <h1 class="text-2xl font-bold text-primary">
             Return #{{ $return->return_number }}
         </h1>
-        <p class="text-sm text-gray-500 mt-1">
+        <p class="text-sm text-secondary-500 mt-1">
             Order: {{ $return->order->order_number ?? 'N/A' }}
         </p>
     </div>
@@ -30,22 +30,22 @@
 <div class="grid md:grid-cols-3 gap-4 mb-6">
 
     <div class="bg-white border rounded-2xl p-4">
-        <p class="text-sm text-gray-500">Refund Amount</p>
-        <p class="text-xl font-bold text-green-600">
+        <p class="text-sm text-secondary-500">Refund Amount</p>
+        <p class="text-xl font-bold text-success">
             {{ money($return->refund_amount) }}
         </p>
     </div>
 
     <div class="bg-white border rounded-2xl p-4">
-        <p class="text-sm text-gray-500">Refund Method</p>
-        <p class="text-xl font-bold text-gray-900">
+        <p class="text-sm text-secondary-500">Refund Method</p>
+        <p class="text-xl font-bold text-primary">
             {{ ucfirst($return->refund_method) }}
         </p>
     </div>
 
     <div class="bg-white border rounded-2xl p-4">
-        <p class="text-sm text-gray-500">Items Returned</p>
-        <p class="text-xl font-bold text-gray-900">
+        <p class="text-sm text-secondary-500">Items Returned</p>
+        <p class="text-xl font-bold text-primary">
             {{ $return->items->count() }}
         </p>
     </div>
@@ -60,17 +60,17 @@
     <div class="grid md:grid-cols-3 gap-4">
 
         <div>
-            <p class="text-sm text-gray-500">Name</p>
+            <p class="text-sm text-secondary-500">Name</p>
             <p class="font-medium">{{ $return->customer_name }}</p>
         </div>
 
         <div>
-            <p class="text-sm text-gray-500">Phone</p>
+            <p class="text-sm text-secondary-500">Phone</p>
             <p class="font-medium">{{ $return->customer_phone }}</p>
         </div>
 
         <div>
-            <p class="text-sm text-gray-500">Created At</p>
+            <p class="text-sm text-secondary-500">Created At</p>
             <p class="font-medium">
                 {{ $return->created_at->format('M d, Y h:i A') }}
             </p>
@@ -91,27 +91,27 @@
 
         <table class="w-full">
 
-            <thead class="bg-gray-50 border-b">
+            <thead class="bg-secondary-50 border-b">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Product</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Qty</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Unit Price</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Total</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-secondary-600 uppercase">Product</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-secondary-600 uppercase">Qty</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-secondary-600 uppercase">Unit Price</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-secondary-600 uppercase">Total</th>
                 </tr>
             </thead>
 
             <tbody class="divide-y">
 
                 @foreach($return->items as $item)
-                <tr class="hover:bg-gray-50">
+                <tr class="hover:bg-secondary-50">
 
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden">
+                            <div class="w-10 h-10 bg-secondary-100 rounded-lg overflow-hidden">
                                 <img src="{{ $item->product_image }}" class="w-full h-full object-cover">
                             </div>
                             <div>
-                                <p class="font-medium text-gray-900">
+                                <p class="font-medium text-primary">
                                     {{ $item->product_name }}
                                 </p>
                             </div>
@@ -145,7 +145,7 @@
 @if($return->remarks)
 <div class="bg-white border rounded-2xl p-6 mt-6">
     <h2 class="text-lg font-semibold mb-2">Remarks</h2>
-    <p class="text-gray-600">{{ $return->remarks }}</p>
+    <p class="text-secondary-600">{{ $return->remarks }}</p>
 </div>
 @endif
 

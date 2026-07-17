@@ -3,7 +3,7 @@
 <?php
 $stockBadge = '';
 if (($product->stock_in ?? 0) <= 0) {
-    $stockBadge = '<div class="absolute inset-0 bg-primary bg-opacity-60 flex items-center justify-center rounded"><span class="bg-danger text-surface-elevated px-2 py-0.5 rounded text-[10px] font-semibold">Out of Stock</span></div>';
+    $stockBadge = '<div class="absolute inset-0 bg-primary/60 flex items-center justify-center rounded"><span class="bg-danger text-surface-elevated px-2 py-0.5 rounded text-[10px] font-semibold">Out of Stock</span></div>';
 }
 
 $imageSrc = $product->image ? asset('storage/' . $product->image) : asset('assets/images/default.png');
@@ -48,7 +48,7 @@ $productData = [
         <img src="{{ $imageSrc }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition">
 
         @if($stock <= 0)
-            <div class="absolute inset-0 bg-primary bg-opacity-60 flex items-center justify-center rounded">
+            <div class="absolute inset-0 bg-primary/60 flex items-center justify-center rounded">
             <span class="bg-danger text-surface-elevated px-2 py-0.5 rounded text-[10px] font-semibold">Out of Stock</span>
     </div>
     @endif

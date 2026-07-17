@@ -8,11 +8,11 @@
     <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">
                     Print Barcode
                 </h1>
 
-                <p class="text-gray-500">
+                <p class="text-secondary-500">
                     Generate and print barcode labels for products
                 </p>
             </div>
@@ -25,7 +25,7 @@
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden h-fit">
 
             <div class="px-6 py-5 border-b border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-900">
+                <h2 class="text-lg font-semibold text-primary">
                     Product Information
                 </h2>
             </div>
@@ -36,7 +36,7 @@
 
                     {{-- Product Select --}}
                     <div>
-                        <label for="product" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="product" class="block text-sm font-semibold text-secondary-700 mb-2">
                             Select Product
                         </label>
 
@@ -89,42 +89,42 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label class="block text-sm font-semibold text-secondary-700 mb-2">
                                 Product Name
                             </label>
 
                             <input type="text" id="name"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 text-gray-700"
+                                class="w-full px-4 py-3 border border-secondary-300 rounded-xl bg-secondary-50 text-secondary-700"
                                 readonly>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label class="block text-sm font-semibold text-secondary-700 mb-2">
                                 Variant
                             </label>
 
                             <input type="text" id="variant"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 text-gray-700"
+                                class="w-full px-4 py-3 border border-secondary-300 rounded-xl bg-secondary-50 text-secondary-700"
                                 readonly>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label class="block text-sm font-semibold text-secondary-700 mb-2">
                                 SKU
                             </label>
 
                             <input type="text" id="sku"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 text-gray-700"
+                                class="w-full px-4 py-3 border border-secondary-300 rounded-xl bg-secondary-50 text-secondary-700"
                                 readonly>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label class="block text-sm font-semibold text-secondary-700 mb-2">
                                 Price
                             </label>
 
                             <input type="text" id="price"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 text-gray-700"
+                                class="w-full px-4 py-3 border border-secondary-300 rounded-xl bg-secondary-50 text-secondary-700"
                                 readonly>
                         </div>
 
@@ -132,19 +132,19 @@
 
                     {{-- Quantity --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label class="block text-sm font-semibold text-secondary-700 mb-2">
                             Number of Labels
                         </label>
 
                         <input type="number" id="qty" name="quantity" min="1" value="1" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition">
+                            class="w-full px-4 py-3 border border-secondary-300 rounded-xl focus:ring-4 focus:ring-primary-100 focus:border-primary transition">
                     </div>
 
                     {{-- Buttons --}}
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
 
                         <button type="button" id="generate"
-                            class="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition">
+                            class="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap px-5 py-3 bg-primary hover:bg-primary-700 text-white font-semibold rounded-xl transition">
 
                             <i class="fas fa-eye text-sm"></i>
 
@@ -178,23 +178,23 @@
 
             {{-- Header --}}
             <div class="px-6 py-5 border-b border-gray-100 shrink-0">
-                <h2 class="text-lg font-semibold text-gray-900">
+                <h2 class="text-lg font-semibold text-primary">
                     Barcode Preview
                 </h2>
             </div>
 
             {{-- Scrollable Preview Area --}}
-            <div id="labelsContainer" class="flex-1 overflow-y-auto p-5 bg-gray-50/50">
+            <div id="labelsContainer" class="flex-1 overflow-y-auto p-5 bg-secondary-50/50">
 
                 <div class="flex flex-col items-center justify-center h-full text-center">
 
-                    <i class="fas fa-barcode text-5xl text-gray-300 mb-4"></i>
+                    <i class="fas fa-barcode text-5xl text-secondary-300 mb-4"></i>
 
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2">
+                    <h3 class="text-lg font-semibold text-secondary-700 mb-2">
                         No Preview Generated
                     </h3>
 
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-secondary-500">
                         Select a product and generate barcode labels.
                     </p>
 
@@ -381,17 +381,17 @@
 
                     const wrap = document.createElement('div');
 
-                    wrap.className = 'label-preview bg-white border border-gray-200 p-4 text-center mb-4 shadow-sm';
+                    wrap.className = 'label-preview bg-white border border-secondary-200 p-4 text-center mb-4 shadow-sm';
 
                     wrap.innerHTML = `
-                                        <div class="text-xs font-bold text-gray-900 mb-1">
+                                        <div class="text-xs font-bold text-primary mb-1">
                                             ${siteName}
                                         </div>
-                                        <div class="text-[13px] font-bold text-gray-900 truncate">
+                                        <div class="text-[13px] font-bold text-primary truncate">
                                             ${name}
                                         </div>
 
-                                        <div class="text-[10px] text-gray-500 mb-2 truncate">
+                                        <div class="text-[10px] text-secondary-500 mb-2 truncate">
                                             ${variant || 'Standard Variant'}
                                         </div>
 
@@ -406,16 +406,16 @@
                                         </div>
 
                                         <div class="flex justify-between items-center mt-2 text-[11px]">
-                                            <span class="text-gray-500">
+                                            <span class="text-secondary-500">
                                                 SKU
                                             </span>
 
-                                            <span class="font-semibold text-gray-800">
+                                            <span class="font-semibold text-secondary-800">
                                                 ${sku}
                                             </span>
                                         </div>
 
-                                        <div class="mt-2 text-sm font-bold text-blue-600">
+                                        <div class="mt-2 text-sm font-bold text-primary">
                                             ৳ ${price}
                                         </div>
 
@@ -458,13 +458,13 @@
 
                                     <div class="flex flex-col items-center justify-center py-20 text-center">
 
-                                        <i class="fas fa-barcode text-5xl text-gray-300 mb-4"></i>
+                                        <i class="fas fa-barcode text-5xl text-secondary-300 mb-4"></i>
 
-                                        <h3 class="text-lg font-semibold text-gray-700 mb-2">
+                                        <h3 class="text-lg font-semibold text-secondary-700 mb-2">
                                             No Preview Generated
                                         </h3>
 
-                                        <p class="text-sm text-gray-500">
+                                        <p class="text-sm text-secondary-500">
                                             Select a product and generate barcode labels.
                                         </p>
 

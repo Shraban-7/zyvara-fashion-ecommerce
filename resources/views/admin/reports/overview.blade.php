@@ -10,14 +10,14 @@
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
 
             <div>
-                <h2 class="text-2xl font-bold text-slate-800">
+                <h2 class="text-2xl font-bold text-secondary-800">
                     Business Overview
                 </h2>
 
-                <nav class="flex items-center gap-2 text-sm text-slate-500 mt-1">
+                <nav class="flex items-center gap-2 text-sm text-secondary-500 mt-1">
                     <span>Reports</span>
                     <span>/</span>
-                    <span class="font-semibold text-slate-700">
+                    <span class="font-semibold text-secondary-700">
                         Business Overview
                     </span>
                 </nav>
@@ -28,7 +28,7 @@
 
                 <div class="w-full sm:w-44">
                     <select name="range" onchange="toggleCustomDates(this.value)"
-                        class="w-full h-11 px-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        class="w-full h-11 px-3 rounded-xl border border-secondary-300 focus:ring-2 focus:ring-primary focus:border-primary">
                         <option value="daily" {{ request('range') == 'daily' ? 'selected' : '' }}>
                             Daily
                         </option>
@@ -55,14 +55,14 @@
                     class="{{ request('range') == 'custom' ? 'flex' : 'hidden' }} flex-col sm:flex-row gap-2">
 
                     <input type="date" name="date_from" value="{{ request('date_from') }}"
-                        class="h-11 px-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500">
+                        class="h-11 px-3 rounded-xl border border-secondary-300 focus:ring-2 focus:ring-primary">
 
                     <input type="date" name="date_to" value="{{ request('date_to') }}"
-                        class="h-11 px-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500">
+                        class="h-11 px-3 rounded-xl border border-secondary-300 focus:ring-2 focus:ring-primary">
                 </div>
 
                 <button type="submit"
-                    class="h-11 px-5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium flex items-center justify-center whitespace-nowrap">
+                    class="h-11 px-5 bg-primary text-white rounded-xl hover:bg-primary-700 transition font-medium flex items-center justify-center whitespace-nowrap">
                     <i class="fas fa-filter mr-2"></i>
                     Filter
                 </button>
@@ -73,18 +73,18 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
 
             {{-- Sales --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-blue-500 p-4 hover:shadow-md transition">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-primary p-4 hover:shadow-md transition">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                        <i class="fas fa-shopping-bag text-blue-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center">
+                        <i class="fas fa-shopping-bag text-primary text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">
+                        <p class="text-xs text-secondary-500 font-medium">
                             Total Sales
                         </p>
 
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($calculateMetrics['totalSales']) }}
                         </p>
                     </div>
@@ -92,28 +92,28 @@
 
                 <div class="mt-2 flex items-center text-xs">
                     <span
-                        class="{{ $calculateMetrics['salesGrowth'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        class="{{ $calculateMetrics['salesGrowth'] >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i
                             class="fas {{ $calculateMetrics['salesGrowth'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($calculateMetrics['salesGrowth']), 2) }}%
                     </span>
-                    <span class="text-gray-400 ml-1">vs last {{ request('range') }}</span>
+                    <span class="text-secondary-400 ml-1">vs last {{ request('range') }}</span>
                 </div>
             </div>
 
             {{-- Orders --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-cyan-500 p-4 hover:shadow-md transition">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-accent p-4 hover:shadow-md transition">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center">
-                        <i class="fas fa-clipboard-list text-cyan-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-accent-50 flex items-center justify-center">
+                        <i class="fas fa-clipboard-list text-accent text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">
+                        <p class="text-xs text-secondary-500 font-medium">
                             Orders
                         </p>
 
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ $calculateMetrics['totalOrders'] }}
                         </p>
                     </div>
@@ -121,28 +121,28 @@
 
                 <div class="mt-2 flex items-center text-xs">
                     <span
-                        class="{{ $calculateMetrics['ordersGrowth'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        class="{{ $calculateMetrics['ordersGrowth'] >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i
                             class="fas {{ $calculateMetrics['ordersGrowth'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($calculateMetrics['ordersGrowth']), 2) }}%
                     </span>
-                    <span class="text-gray-400 ml-1">vs last {{ request('range') }}</span>
+                    <span class="text-secondary-400 ml-1">vs last {{ request('range') }}</span>
                 </div>
             </div>
 
             {{-- Net Profit --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-green-500 p-4 hover:shadow-md transition">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-success p-4 hover:shadow-md transition">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
-                        <i class="fas fa-dollar-sign text-green-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-success-50 flex items-center justify-center">
+                        <i class="fas fa-dollar-sign text-success text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">
+                        <p class="text-xs text-secondary-500 font-medium">
                             Net Profit
                         </p>
 
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($calculateMetrics['netProfit']) }}
                         </p>
                     </div>
@@ -150,28 +150,28 @@
 
                 <div class="mt-2 flex items-center text-xs">
                     <span
-                        class="{{ $calculateMetrics['profitGrowth'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                        class="{{ $calculateMetrics['profitGrowth'] >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i
                             class="fas {{ $calculateMetrics['profitGrowth'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($calculateMetrics['profitGrowth']), 2) }}%
                     </span>
-                    <span class="text-gray-400 ml-1">vs last {{ request('range') }}</span>
+                    <span class="text-secondary-400 ml-1">vs last {{ request('range') }}</span>
                 </div>
             </div>
 
             {{-- Returning Customers --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-amber-500 p-4 hover:shadow-md transition">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-warning p-4 hover:shadow-md transition">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
-                        <i class="fas fa-users text-amber-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-warning-50 flex items-center justify-center">
+                        <i class="fas fa-users text-warning text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">
+                        <p class="text-xs text-secondary-500 font-medium">
                             Ret. Customers
                         </p>
 
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ number_format($quickFacts['returningCustomersPercent'], 2) }}%
                         </p>
                     </div>
@@ -179,18 +179,18 @@
             </div>
 
             {{-- AOV --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-violet-500 p-4 hover:shadow-md transition">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-accent p-4 hover:shadow-md transition">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center">
-                        <i class="fas fa-basket-shopping text-violet-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-accent-50 flex items-center justify-center">
+                        <i class="fas fa-basket-shopping text-accent text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">
+                        <p class="text-xs text-secondary-500 font-medium">
                             AOV
                         </p>
 
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($calculateMetrics['aov']) }}
                         </p>
                     </div>
@@ -200,16 +200,16 @@
             {{-- Stock --}}
             <div class="bg-white rounded-xl shadow-sm border-l-4 border-gray-500 p-4 hover:shadow-md transition">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center">
-                        <i class="fas fa-boxes-stacked text-gray-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-secondary-50 flex items-center justify-center">
+                        <i class="fas fa-boxes-stacked text-secondary-600 text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">
+                        <p class="text-xs text-secondary-500 font-medium">
                             Total Stock
                         </p>
 
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ $calculateMetrics['totalStock'] }}
                         </p>
                     </div>
@@ -221,32 +221,32 @@
         {{-- Charts --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-            <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-                <h3 class="text-lg font-bold text-slate-800 mb-5">Revenue & Order Trends</h3>
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-secondary-200 shadow-sm p-5">
+                <h3 class="text-lg font-bold text-secondary-800 mb-5">Revenue & Order Trends</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                     <!-- Revenue Trend Chart -->
                     <div>
-                        <p class="text-sm font-semibold text-slate-500 mb-2">
+                        <p class="text-sm font-semibold text-secondary-500 mb-2">
                             {{ request('range') }} Revenue Trend
                         </p>
-                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 h-80">
+                        <div class="bg-secondary-50 border border-secondary-200 rounded-xl p-4 h-80">
                             <canvas id="revenueTrend"></canvas>
                         </div>
                     </div>
 
                     <!-- Orders vs Returns Bar Chart -->
                     <div>
-                        <p class="text-sm font-semibold text-slate-500 mb-2">
+                        <p class="text-sm font-semibold text-secondary-500 mb-2">
                             Orders vs Returns
                         </p>
-                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 h-80 relative">
+                        <div class="bg-secondary-50 border border-secondary-200 rounded-xl p-4 h-80 relative">
                             <canvas id="ordersReturns"></canvas>
 
                             <!-- Return Rate Badge -->
                             <div
-                                class="absolute top-4 right-4 bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold">
+                                class="absolute top-4 right-4 bg-danger-100 text-danger px-3 py-1 rounded-full text-xs font-bold">
                                 {{ $ordersReturnsChart['return_rate'] }}% Return Rate
                             </div>
                         </div>
@@ -256,40 +256,40 @@
             </div>
 
             {{-- Quick Facts --}}
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+            <div class="bg-white rounded-2xl border border-secondary-200 shadow-sm p-5">
 
-                <h3 class="text-lg font-bold text-slate-800 mb-5">
+                <h3 class="text-lg font-bold text-secondary-800 mb-5">
                     Quick Facts
                 </h3>
 
                 <div class="space-y-4">
 
                     <div class="flex items-center justify-between">
-                        <span class="text-slate-500">
+                        <span class="text-secondary-500">
                             Total Orders
                         </span>
 
-                        <span class="font-bold text-blue-600">
+                        <span class="font-bold text-primary">
                             {{ $quickFacts['totalOrders'] }}
                         </span>
                     </div>
 
                     <div class="flex items-center justify-between">
-                        <span class="text-slate-500">
+                        <span class="text-secondary-500">
                             Refund Rate
                         </span>
 
-                        <span class="font-bold text-red-500">
+                        <span class="font-bold text-danger">
                             {{ $quickFacts['refundRate'] }}%
                         </span>
                     </div>
 
                     <div class="flex items-center justify-between gap-3">
-                        <span class="text-slate-500">
+                        <span class="text-secondary-500">
                             Best Sales Day
                         </span>
 
-                        <span class="font-bold text-emerald-600 text-right">
+                        <span class="font-bold text-success text-right">
                             {{ $quickFacts['bestSalesDay'] ?? '-' }}
                         </span>
                     </div>
@@ -299,10 +299,10 @@
         </div>
 
         {{-- Top Products --}}
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-2xl border border-secondary-200 shadow-sm overflow-hidden">
 
-            <div class="p-5 border-b border-slate-200">
-                <h3 class="text-lg font-bold text-slate-800">
+            <div class="p-5 border-b border-secondary-200">
+                <h3 class="text-lg font-bold text-secondary-800">
                     Top Product Snapshot
                 </h3>
             </div>
@@ -311,33 +311,33 @@
 
                 <table class="w-full">
 
-                    <thead class="bg-slate-50">
+                    <thead class="bg-secondary-50">
                         <tr>
-                            <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                            <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-secondary-500">
                                 Product
                             </th>
 
-                            <th class="px-5 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                            <th class="px-5 py-4 text-right text-xs font-bold uppercase tracking-wider text-secondary-500">
                                 Units Sold
                             </th>
 
-                            <th class="px-5 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                            <th class="px-5 py-4 text-right text-xs font-bold uppercase tracking-wider text-secondary-500">
                                 Sales
                             </th>
 
-                            <th class="px-5 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                            <th class="px-5 py-4 text-right text-xs font-bold uppercase tracking-wider text-secondary-500">
                                 Stock
                             </th>
                         </tr>
                     </thead>
 
-                    <tbody class="divide-y divide-slate-100">
+                    <tbody class="divide-y divide-secondary-100">
 
                         @foreach ($topProducts as $product)
 
-                            <tr class="hover:bg-slate-50 transition">
+                            <tr class="hover:bg-secondary-50 transition">
 
-                                <td class="px-5 py-4 font-medium text-slate-700">
+                                <td class="px-5 py-4 font-medium text-secondary-700">
                                     {{ $product['name'] }}
                                 </td>
 
@@ -345,7 +345,7 @@
                                     {{ $product['unitsSold'] }}
                                 </td>
 
-                                <td class="px-5 py-4 text-right font-semibold text-emerald-600">
+                                <td class="px-5 py-4 text-right font-semibold text-success">
                                     {{ money($product['sales']) }}
                                 </td>
 

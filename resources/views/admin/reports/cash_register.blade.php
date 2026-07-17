@@ -10,11 +10,11 @@
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 
             <div>
-                <h1 class="text-2xl font-bold text-slate-800">
+                <h1 class="text-2xl font-bold text-secondary-800">
                     Cash Register Reports
                 </h1>
 
-                <p class="mt-1 text-sm text-slate-500">
+                <p class="mt-1 text-sm text-secondary-500">
                     Monitor cashier opening and closing balances.
                 </p>
             </div>
@@ -25,69 +25,69 @@
 
             <div class="overflow-x-auto">
 
-                <table class="min-w-full divide-y divide-slate-200">
+                <table class="min-w-full divide-y divide-secondary-200">
 
-                    <thead class="bg-slate-50">
+                    <thead class="bg-secondary-50">
 
                         <tr>
                             <th
-                                class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500">
                                 Date
                             </th>
 
                             <th
-                                class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500">
                                 Cashier
                             </th>
 
                             <th
-                                class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-secondary-500">
                                 Opening Cash
                             </th>
 
                             <th
-                                class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-secondary-500">
                                 Closing Cash
                             </th>
 
                             <th
-                                class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-secondary-500">
                                 Difference
                             </th>
 
                             <th
-                                class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-secondary-500">
                                 Status
                             </th>
                         </tr>
                     </thead>
 
-                    <tbody class="divide-y divide-slate-100 bg-white">
+                    <tbody class="divide-y divide-secondary-100 bg-white">
 
                         @forelse ($cashRegisters as $cashRegister)
 
-                            <tr class="transition hover:bg-slate-50">
+                            <tr class="transition hover:bg-secondary-50">
 
                                 {{-- Date --}}
-                                <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-700">
+                                <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-secondary-700">
 
                                     {{ $cashRegister->opened_at->format('d M Y') }}
                                 </td>
 
                                 {{-- Cashier --}}
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
+                                <td class="whitespace-nowrap px-6 py-4 text-sm text-secondary-600">
 
                                     {{ $cashRegister?->employee?->name }}
                                 </td>
 
                                 {{-- Opening --}}
-                                <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-slate-700">
+                                <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-secondary-700">
 
                                     {{ money($cashRegister->opening_amount) }}
                                 </td>
 
                                 {{-- Closing --}}
-                                <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-slate-700">
+                                <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-secondary-700">
 
                                     {{ money($cashRegister->closing_amount) }}
                                 </td>
@@ -98,14 +98,14 @@
 
                                     @if ($cashRegister->difference < 0)
 
-                                        <span class="text-red-600">
+                                        <span class="text-danger">
 
                                             -{{ money(abs($cashRegister->difference)) }}
                                         </span>
 
                                     @else
 
-                                        <span class="text-emerald-600">
+                                        <span class="text-success">
 
                                             +{{ money($cashRegister->difference) }}
                                         </span>
@@ -119,7 +119,7 @@
                                     @if (!empty($cashRegister->closed_at))
 
                                         <span
-                                            class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                            class="inline-flex items-center rounded-full bg-success-100 px-3 py-1 text-xs font-semibold text-success">
 
                                             Closed
                                         </span>
@@ -127,7 +127,7 @@
                                     @else
 
                                         <span
-                                            class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">
+                                            class="inline-flex items-center rounded-full bg-secondary-200 px-3 py-1 text-xs font-semibold text-secondary-700">
 
                                             Not Closed
                                         </span>
@@ -141,7 +141,7 @@
                             <tr>
 
                                 <td colspan="6"
-                                    class="px-6 py-10 text-center text-sm text-slate-500">
+                                    class="px-6 py-10 text-center text-sm text-secondary-500">
 
                                     No cash register reports found.
                                 </td>

@@ -7,19 +7,19 @@
     {{-- HEADER --}}
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Sales Returns</h1>
-            <p class="text-sm text-gray-500 mt-1">Manage and track all returned orders</p>
+            <h1 class="text-2xl font-bold text-primary">Sales Returns</h1>
+            <p class="text-sm text-secondary-500 mt-1">Manage and track all returned orders</p>
         </div>
 
         <div class="flex items-center gap-3">
             <button onclick="window.print()"
-                class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition flex items-center gap-2">
+                class="px-4 py-2 border border-secondary-300 text-secondary-700 rounded-xl hover:bg-secondary-50 transition flex items-center gap-2">
                 <i class="fas fa-print"></i>
                 <span class="hidden sm:inline">Print</span>
             </button>
 
             <button onclick="exportReturns()"
-                class="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition flex items-center gap-2">
+                class="px-4 py-2 bg-success text-white rounded-xl hover:bg-success-700 transition flex items-center gap-2">
                 <i class="fas fa-download"></i>
                 <span class="hidden sm:inline">Export</span>
             </button>
@@ -27,7 +27,7 @@
     </div>
 
     {{-- FILTERS --}}
-    <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+    <div class="bg-white rounded-2xl border border-secondary-200 p-6 mb-6">
 
         <form method="GET" action="{{ route('admin.saleReturns.index') }}" class="space-y-4">
             {{-- SEARCH + FILTERS --}}
@@ -38,22 +38,22 @@
 
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Search customer, phone, order #..."
-                        class="w-full h-11 pl-10 pr-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                        class="w-full h-11 pl-10 pr-4 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary">
 
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400"></i>
 
                 </div>
 
                 {{-- FROM DATE --}}
                 <div>
                     <input type="date" name="from_date" value="{{ request('from_date') }}"
-                        class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                        class="w-full h-11 px-4 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary">
                 </div>
 
                 {{-- TO DATE --}}
                 <div>
                     <input type="date" name="to_date" value="{{ request('to_date') }}"
-                        class="w-full h-11 px-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                        class="w-full h-11 px-4 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary">
                 </div>
 
             </div>
@@ -61,12 +61,12 @@
             {{-- ACTION BUTTONS --}}
             <div class="flex items-center gap-2">
 
-                <button type="submit" class="h-11 px-6 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">
+                <button type="submit" class="h-11 px-6 bg-primary text-white rounded-xl hover:bg-primary-700 transition">
                     <i class="fas fa-filter mr-2"></i>Apply Filters
                 </button>
 
                 <a href="{{ route('admin.saleReturns.index') }}"
-                    class="h-11 px-6 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition flex items-center justify-center">
+                    class="h-11 px-6 border border-secondary-300 text-secondary-700 rounded-xl hover:bg-secondary-50 transition flex items-center justify-center">
                     <i class="fas fa-times mr-2"></i>Reset
                 </a>
 
@@ -76,37 +76,37 @@
     </div>
 
     {{-- TABLE --}}
-    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-2xl border border-secondary-200 overflow-hidden">
 
         <div class="overflow-x-auto">
             <table class="w-full">
 
-                <thead class="bg-gray-50 border-b border-gray-200">
+                <thead class="bg-secondary-50 border-b border-secondary-200">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Return</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Order</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Customer</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Items</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Refund</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Method</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Returned By</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Return</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Order</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Customer</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Items</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Refund</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Method</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Returned By</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Date</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-secondary-600 uppercase">Actions</th>
                     </tr>
                 </thead>
 
                 <tbody class="divide-y divide-gray-200">
 
                     @forelse($returns as $return)
-                        <tr class="hover:bg-gray-50 transition">
+                        <tr class="hover:bg-secondary-50 transition">
 
                             {{-- RETURN ID --}}
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div>
-                                    <p class="font-semibold text-blue-600">
+                                    <p class="font-semibold text-primary">
                                         #{{ $return->return_number }}
                                     </p>
-                                    <p class="text-xs text-gray-500">ID: {{ $return->id }}</p>
+                                    <p class="text-xs text-secondary-500">ID: {{ $return->id }}</p>
                                 </div>
                             </td>
 
@@ -115,18 +115,18 @@
                                 @if ($return->order != null)
                                     @if ($return->order->is_pos)
                                         <a href="{{ route('admin.pos.sales.show', $return->sale_id) }}"
-                                            class="font-medium text-blue-600 hover:underline">
+                                            class="font-medium text-primary hover:underline">
                                             {{ $return->order_number }}
                                         </a>
                                     @else
                                         <a href="{{ route('admin.orders.show', $return->sale_id) }}"
-                                            class="font-medium text-blue-600 hover:underline">
+                                            class="font-medium text-primary hover:underline">
                                             {{ $return->order_number }} 
                                         </a>
                                     @endif
 
                                 @else
-                                    <p class="font-medium text-red-600 hover:underline">
+                                    <p class="font-medium text-danger hover:underline">
                                         {{ $return->order_number }} (Deleted)
                                     </p>
                                 @endif
@@ -134,51 +134,51 @@
 
                             {{-- CUSTOMER --}}
                             <td class="px-6 py-4">
-                                <p class="font-medium text-gray-900">{{ $return->order?->customer?->name }}</p>
-                                <p class="text-sm text-gray-500">{{ $return->order?->customer?->phone }}</p>
+                                <p class="font-medium text-primary">{{ $return->order?->customer?->name }}</p>
+                                <p class="text-sm text-secondary-500">{{ $return->order?->customer?->phone }}</p>
                             </td>
 
                             {{-- ITEMS --}}
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-medium text-gray-900">
+                                <span class="text-sm font-medium text-primary">
                                     {{ $return->items_count }} item(s)
                                 </span>
                             </td>
 
                             {{-- REFUND --}}
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-base font-bold text-green-600">
+                                <span class="text-base font-bold text-success">
                                     {{ money($return->refund_amount) }}
                                 </span>
                             </td>
 
                             {{-- METHOD --}}
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700">
+                                <span class="px-2 py-1 rounded-full text-xs bg-secondary-100 text-secondary-700">
                                     {{ ucfirst($return->refund_method) }}
                                 </span>
                             </td>
 
                             {{-- Returned by --}}
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-medium text-gray-900">
+                                <span class="text-sm font-medium text-primary">
                                     {{ $return->employee->name }}
                                 </span>
                             </td>
 
                             {{-- DATE --}}
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <p class="text-sm font-medium text-gray-900">
+                                <p class="text-sm font-medium text-primary">
                                     {{ $return->created_at->format('M d, Y') }}
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-secondary-500">
                                     {{ $return->created_at->format('h:i A') }}
                                 </p>
                             </td>
 
                             <td class="px-6 py-4 text-right">
                                 <a href="{{ route('admin.saleReturns.show', $return->id) }}"
-                                    class="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg">
+                                    class="w-8 h-8 flex items-center justify-center text-primary hover:bg-primary-50 rounded-lg">
                                     <i class="fas fa-eye"></i>
                                 </a>
                             </td>
@@ -187,7 +187,7 @@
 
                         <tr>
                             <td colspan="9" class="px-6 py-12 text-center">
-                                <div class="text-gray-500">
+                                <div class="text-secondary-500">
                                     <i class="fas fa-undo text-3xl mb-2"></i>
                                     <p class="font-semibold">No returns found</p>
                                 </div>
@@ -204,7 +204,7 @@
 
     {{-- PAGINATION --}}
     @if($returns->hasPages())
-        <div class="border-t border-gray-200 px-6 py-4">
+        <div class="border-t border-secondary-200 px-6 py-4">
             {{ $returns->links() }}
         </div>
     @endif

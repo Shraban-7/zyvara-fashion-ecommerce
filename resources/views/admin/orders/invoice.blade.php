@@ -29,12 +29,12 @@
     </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-secondary-100 min-h-screen">
     <div class="max-w-4xl mx-auto bg-white min-h-screen relative p-10">
 
         {{-- Header --}}
         <header class="mb-6">
-            <div class="flex justify-between items-start pb-4 border-b-4 border-gray-200">
+            <div class="flex justify-between items-start pb-4 border-b-4 border-secondary-200">
 
                 {{-- Left: Logo & Seller Info --}}
                 <div class="flex-1">
@@ -42,7 +42,7 @@
                         {{ $siteName }}
                     </h1>
                     <div class="w-12 h-0.5 bg-black mb-2"></div>
-                    <p class="text-xs text-gray-500 leading-relaxed">
+                    <p class="text-xs text-secondary-500 leading-relaxed">
                         {{ settings('contact_address') }}<br>
                         Phone: {{ settings('contact_phone') }} | Email: {{ settings('contact_email') }}<br>
                         Web: {{ preg_replace('#^https?://#', '', config('app.url')) }}
@@ -52,17 +52,17 @@
 
                 {{-- Right: Invoice Info --}}
                 <div class="text-right">
-                    <h2 class="text-3xl font-bold tracking-widest text-gray-700 mb-3">INVOICE</h2>
+                    <h2 class="text-3xl font-bold tracking-widest text-secondary-700 mb-3">INVOICE</h2>
 
                     <table class="ml-auto border border-gray-400 text-xs mt-2">
                         <tr>
-                            <td class="border px-2 py-1 text-gray-500 font-semibold text-right">Date:</td>
+                            <td class="border px-2 py-1 text-secondary-500 font-semibold text-right">Date:</td>
                             <td class="border px-2 py-1 text-black font-bold">
                                 {{ $order->created_at->format('d M, Y') }}
                             </td>
                         </tr>
                         <tr>
-                            <td class="border px-2 py-1 text-gray-500 font-semibold text-right">Order No:</td>
+                            <td class="border px-2 py-1 text-secondary-500 font-semibold text-right">Order No:</td>
                             <td class="border px-2 py-1 text-black font-bold">
                                 {{ $order->order_number }}
                             </td>
@@ -78,8 +78,8 @@
             {{-- Invoiced To --}}
             <div class="flex gap-8 mb-5">
                 <div class="flex-1 border-l-4 border-gray-400 pl-3">
-                    <h3 class="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Invoiced To</h3>
-                    <address class="not-italic text-sm text-gray-800 leading-relaxed">
+                    <h3 class="text-xs font-bold text-secondary-700 uppercase tracking-widest mb-1">Invoiced To</h3>
+                    <address class="not-italic text-sm text-secondary-800 leading-relaxed">
                         <strong class="text-base block mb-1">
                             {{ $order->customer->name ?? $order->shipping_name ?? '' }}
                         </strong>
@@ -91,16 +91,16 @@
 
             {{-- Items Table --}}
             <div class="overflow-x-auto mb-4">
-                <table class="w-full border border-gray-300 border-collapse text-sm">
+                <table class="w-full border border-secondary-300 border-collapse text-sm">
                     <thead>
-                        <tr class="bg-gray-100 text-gray-700">
-                            <th class="p-2 text-left text-xs font-semibold uppercase border-r border-gray-300">
+                        <tr class="bg-secondary-100 text-secondary-700">
+                            <th class="p-2 text-left text-xs font-semibold uppercase border-r border-secondary-300">
                                 Item
                             </th>
-                            <th class="p-2 text-center text-xs font-semibold uppercase border-r border-gray-300 w-32">
+                            <th class="p-2 text-center text-xs font-semibold uppercase border-r border-secondary-300 w-32">
                                 Rate
                             </th>
-                            <th class="p-2 text-center text-xs font-semibold uppercase border-r border-gray-300 w-16">
+                            <th class="p-2 text-center text-xs font-semibold uppercase border-r border-secondary-300 w-16">
                                 QTY
                             </th>
                             <th class="p-2 text-right text-xs font-semibold uppercase w-28">
@@ -111,14 +111,14 @@
 
                     <tbody>
                         @foreach($order->items as $item)
-                            <tr class="border-b border-gray-200">
-                                <td class="p-2 border-r border-gray-200">
-                                    <div class="text-sm font-semibold text-gray-800">
+                            <tr class="border-b border-secondary-200">
+                                <td class="p-2 border-r border-secondary-200">
+                                    <div class="text-sm font-semibold text-secondary-800">
                                         {{ $item->product_name }}
                                     </div>
 
                                     @if ($item->size_name || $item->color_name)
-                                        <div class="text-gray-500 text-[11px] mt-1">
+                                        <div class="text-secondary-500 text-[11px] mt-1">
                                             @if ($item->size_name)
                                                 <span class="mr-2">Size: {{ $item->size_name }}</span>
                                             @endif
@@ -129,33 +129,33 @@
                                     @endif
                                 </td>
 
-                                <td class="p-2 text-center border-r border-gray-200">
+                                <td class="p-2 text-center border-r border-secondary-200">
                                     @if($item->product->compare_price)
-                                        <span class="line-through text-gray-400 text-xs block">
+                                        <span class="line-through text-secondary-400 text-xs block">
                                             {{ money($item->product->compare_price) }}
                                         </span>
                                     @endif
-                                    <span class="text-sm font-semibold text-gray-800">
+                                    <span class="text-sm font-semibold text-secondary-800">
                                         {{ money($item->unit_price) }}
                                     </span>
                                 </td>
 
-                                <td class="p-2 text-center text-sm font-semibold text-gray-800 border-r border-gray-200">
+                                <td class="p-2 text-center text-sm font-semibold text-secondary-800 border-r border-secondary-200">
                                     {{ $item->quantity }}
                                 </td>
 
                                 <td class="p-2 text-right">
                                     @if($item->product->compare_price)
-                                        <span class="line-through text-gray-400 text-xs block">
+                                        <span class="line-through text-secondary-400 text-xs block">
                                             {{ money($item->product->compare_price * $item->quantity) }}
                                         </span>
                                     @elseif($item->subtotal!=$item->total)
-                                        <span class="line-through text-gray-400 text-xs block">
+                                        <span class="line-through text-secondary-400 text-xs block">
                                             {{ money($item->subtotal) }}
                                         </span>
                                     @endif
 
-                                    <span class="text-sm font-bold text-gray-400">
+                                    <span class="text-sm font-bold text-secondary-400">
                                         {{ money($item->total) }}
                                     </span>
                                 </td>
@@ -169,7 +169,7 @@
             <div class="flex gap-6 mb-5">
 
                 {{-- Summary --}}
-                <div class="flex-1 text-sm text-gray-700">
+                <div class="flex-1 text-sm text-secondary-700">
                     <p class="mb-1"><strong>Total Qty:</strong> {{ $order->items->sum('quantity') }}</p>
                     <p class="mb-1"><strong>In Words:</strong> {{ convert_number_to_words_bdt($order->total) }} Taka
                         only.</p>
@@ -178,70 +178,70 @@
 
                 {{-- Totals --}}
                 <div class="w-72">
-                    <table class="w-full border border-gray-300 border-collapse text-sm">
+                    <table class="w-full border border-secondary-300 border-collapse text-sm">
 
-                        <tr class="border-b border-gray-200">
-                            <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                        <tr class="border-b border-secondary-200">
+                            <td class="py-2 px-3 bg-secondary-50 text-secondary-700 font-semibold text-xs uppercase">
                                 Subtotal
                             </td>
-                            <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                            <td class="py-2 px-3 text-right font-semibold text-secondary-800">
                                 {{ money($order->subtotal) }}
                             </td>
                         </tr>
 
-                        <tr class="border-b border-gray-200">
-                            <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                        <tr class="border-b border-secondary-200">
+                            <td class="py-2 px-3 bg-secondary-50 text-secondary-700 font-semibold text-xs uppercase">
                                 Shipping Fee
                             </td>
-                            <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                            <td class="py-2 px-3 text-right font-semibold text-secondary-800">
                                 {{ money($order->shipping_cost) }}
                             </td>
                         </tr>
 
                         @if($order->discount_amount)
-                            <tr class="border-b border-gray-200">
-                                <td class="py-2 px-3 bg-gray-50 text-gray-800 font-semibold text-xs uppercase">
+                            <tr class="border-b border-secondary-200">
+                                <td class="py-2 px-3 bg-secondary-50 text-secondary-800 font-semibold text-xs uppercase">
                                     Discount
                                 </td>
-                                <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                                <td class="py-2 px-3 text-right font-semibold text-secondary-800">
                                     {{ money($order->discount_amount) }}
                                 </td>
                             </tr>
                         @endif
 
-                        <tr class="border-b border-gray-200">
-                            <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                        <tr class="border-b border-secondary-200">
+                            <td class="py-2 px-3 bg-secondary-50 text-secondary-700 font-semibold text-xs uppercase">
                                 Total
                             </td>
-                            <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                            <td class="py-2 px-3 text-right font-semibold text-secondary-800">
                                 {{ money($order->payable) }}
                             </td>
                         </tr>
 
                         @if($order->due > 0)
-                            <tr class="border-b border-gray-200">
-                                <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                            <tr class="border-b border-secondary-200">
+                                <td class="py-2 px-3 bg-secondary-50 text-secondary-700 font-semibold text-xs uppercase">
                                     Paid
                                 </td>
-                                <td class="py-2 px-3 text-right font-semibold text-gray-800">
+                                <td class="py-2 px-3 text-right font-semibold text-secondary-800">
                                     {{ money($order->paid) }}
                                 </td>
                             </tr>
 
                             <tr>
-                                <td class="py-2 px-3 bg-gray-50 text-red-600 font-bold text-xs uppercase">
+                                <td class="py-2 px-3 bg-secondary-50 text-danger font-bold text-xs uppercase">
                                     Due
                                 </td>
-                                <td class="py-2 px-3 text-right font-bold text-red-600">
+                                <td class="py-2 px-3 text-right font-bold text-danger">
                                     {{ money($order->due) }}
                                 </td>
                             </tr>
                         @else
                             <tr>
-                                <td class="py-2 px-3 bg-gray-50 text-gray-700 font-semibold text-xs uppercase">
+                                <td class="py-2 px-3 bg-secondary-50 text-secondary-700 font-semibold text-xs uppercase">
                                     Paid
                                 </td>
-                                <td class="py-2 px-3 text-right font-bold text-gray-800">
+                                <td class="py-2 px-3 text-right font-bold text-secondary-800">
                                     {{ money($order->paid) }}
                                 </td>
                             </tr>

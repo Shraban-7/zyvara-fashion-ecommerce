@@ -5,11 +5,11 @@
 <div class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h3 class="text-2xl font-bold text-gray-800">Create Static Page</h3>
-            <p class="mt-1 text-sm text-gray-500">Create content pages with SEO metadata and footer position.</p>
+            <h3 class="text-2xl font-bold text-secondary-800">Create Static Page</h3>
+            <p class="mt-1 text-sm text-secondary-500">Create content pages with SEO metadata and footer position.</p>
         </div>
         <a href="{{ route('admin.static_pages.index') }}"
-            class="inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2.5 font-medium text-gray-700 transition hover:bg-gray-200">
+            class="inline-flex items-center justify-center rounded-lg bg-secondary-100 px-4 py-2.5 font-medium text-secondary-700 transition hover:bg-gray-200">
             <i class="fas fa-arrow-left mr-2"></i>Back to Pages
         </a>
     </div>
@@ -17,77 +17,77 @@
     <form id="staticPageForm" action="{{ route('admin.static_pages.store') }}" method="POST" class="space-y-6">
         @csrf
 
-        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h4 class="text-lg font-semibold text-gray-800">Basic Information</h4>
+        <div class="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm">
+            <h4 class="text-lg font-semibold text-secondary-800">Basic Information</h4>
             <div class="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div class="md:col-span-2">
-                    <label for="title" class="mb-1.5 block text-sm font-semibold text-gray-700">Title <span class="text-red-500">*</span></label>
+                    <label for="title" class="mb-1.5 block text-sm font-semibold text-secondary-700">Title <span class="text-danger">*</span></label>
                     <input type="text" id="title" name="title" value="{{ old('title') }}" required
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        class="w-full rounded-lg border border-secondary-300 px-3 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-200"
                         placeholder="Example: About Us">
                 </div>
 
                 <div class="md:col-span-2">
-                    <label for="slug" class="mb-1.5 block text-sm font-semibold text-gray-700">Slug <span class="text-red-500">*</span></label>
+                    <label for="slug" class="mb-1.5 block text-sm font-semibold text-secondary-700">Slug <span class="text-danger">*</span></label>
                     <input type="text" id="slug" name="slug" value="{{ old('slug') }}" required
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        class="w-full rounded-lg border border-secondary-300 px-3 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-200"
                         placeholder="about-us">
-                    <p class="mt-1 text-xs text-gray-500">This will be used in page URL: /pages/your-slug</p>
+                    <p class="mt-1 text-xs text-secondary-500">This will be used in page URL: /pages/your-slug</p>
                 </div>
 
                 <div>
-                    <label for="sort_order" class="mb-1.5 block text-sm font-semibold text-gray-700">Sort Order</label>
+                    <label for="sort_order" class="mb-1.5 block text-sm font-semibold text-secondary-700">Sort Order</label>
                     <input type="number" id="sort_order" name="sort_order" value="{{ old('sort_order', 0) }}" min="0"
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                        class="w-full rounded-lg border border-secondary-300 px-3 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-200">
                 </div>
 
                 <div>
-                    <label for="footer_position" class="mb-1.5 block text-sm font-semibold text-gray-700">Footer Position</label>
+                    <label for="footer_position" class="mb-1.5 block text-sm font-semibold text-secondary-700">Footer Position</label>
                     <input type="number" id="footer_position" name="footer_position" value="{{ old('footer_position', 1) }}" min="1"
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                        class="w-full rounded-lg border border-secondary-300 px-3 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-200">
                 </div>
 
                 <div class="md:col-span-2">
-                    <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <label class="inline-flex items-center gap-2 text-sm font-medium text-secondary-700">
                         <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }}
-                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            class="rounded border-secondary-300 text-primary focus:ring-primary">
                         Active Page
                     </label>
                 </div>
             </div>
         </div>
 
-        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h4 class="text-lg font-semibold text-gray-800">Page Content</h4>
+        <div class="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm">
+            <h4 class="text-lg font-semibold text-secondary-800">Page Content</h4>
             <div class="mt-5">
-                <label for="content_editor" class="mb-1.5 block text-sm font-semibold text-gray-700">Content</label>
+                <label for="content_editor" class="mb-1.5 block text-sm font-semibold text-secondary-700">Content</label>
                 <textarea id="content" name="content" class="hidden">{{ old('content') }}</textarea>
                 <div id="content_editor" class="quill-editor bg-white"></div>
             </div>
         </div>
 
-        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h4 class="text-lg font-semibold text-gray-800">SEO Metadata</h4>
+        <div class="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm">
+            <h4 class="text-lg font-semibold text-secondary-800">SEO Metadata</h4>
             <div class="mt-5 grid grid-cols-1 gap-5">
                 <div>
-                    <label for="meta_title" class="mb-1.5 block text-sm font-semibold text-gray-700">Meta Title</label>
+                    <label for="meta_title" class="mb-1.5 block text-sm font-semibold text-secondary-700">Meta Title</label>
                     <input type="text" id="meta_title" name="meta_title" value="{{ old('meta_title') }}"
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        class="w-full rounded-lg border border-secondary-300 px-3 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-200"
                         placeholder="SEO title for search engines">
                 </div>
 
                 <div>
-                    <label for="meta_description" class="mb-1.5 block text-sm font-semibold text-gray-700">Meta Description</label>
+                    <label for="meta_description" class="mb-1.5 block text-sm font-semibold text-secondary-700">Meta Description</label>
                     <textarea id="meta_description" name="meta_description" rows="4"
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        class="w-full rounded-lg border border-secondary-300 px-3 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-200"
                         placeholder="Short description for search results">{{ old('meta_description') }}</textarea>
                 </div>
 
                 <div>
-                    <label for="meta_keywords" class="mb-1.5 block text-sm font-semibold text-gray-700">Meta Keywords</label>
+                    <label for="meta_keywords" class="mb-1.5 block text-sm font-semibold text-secondary-700">Meta Keywords</label>
                     <textarea id="meta_keywords" name="meta_keywords" rows="3"
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        class="w-full rounded-lg border border-secondary-300 px-3 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-200"
                         placeholder="keyword1, keyword2, keyword3">{{ old('meta_keywords') }}</textarea>
                 </div>
             </div>
@@ -95,9 +95,9 @@
 
         <div class="flex flex-wrap justify-end gap-3">
             <a href="{{ route('admin.static_pages.index') }}"
-                class="rounded-lg bg-gray-100 px-5 py-2.5 font-medium text-gray-700 transition hover:bg-gray-200">Cancel</a>
+                class="rounded-lg bg-secondary-100 px-5 py-2.5 font-medium text-secondary-700 transition hover:bg-gray-200">Cancel</a>
             <button type="submit"
-                class="rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white transition hover:bg-blue-700">
+                class="rounded-lg bg-primary px-5 py-2.5 font-medium text-white transition hover:bg-primary-700">
                 <i class="fas fa-save mr-2"></i>Save Page
             </button>
         </div>

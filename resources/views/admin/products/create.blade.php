@@ -4,8 +4,8 @@
 
 <div class="mb-3">
     <div class="flex items-center justify-between">
-        <h1 class="text-lg md:text-2xl font-bold text-gray-900 mb-0">Add New Product</h1>
-        <a href="{{ route('admin.products.index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+        <h1 class="text-lg md:text-2xl font-bold text-primary mb-0">Add New Product</h1>
+        <a href="{{ route('admin.products.index') }}" class="px-4 py-2 text-sm font-medium text-secondary-700 bg-white border border-secondary-300 rounded-lg hover:bg-secondary-50 transition">
             <i class="fas fa-arrow-left mr-2"></i>Back to Products
         </a>
     </div>
@@ -18,14 +18,14 @@
         {{-- Main Content --}}
         <div class="lg:col-span-2 space-y-6">
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Basic Information</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Basic Information</h2>
                 <div class="mb-5">
                     <x-input name="name" label="Product Name" required placeholder="e.g., Men's Slim Fit Cotton Shirt" />
                 </div>
 
                 <div class="mb-5">
                     <x-input name="sku" label="SKU (Stock Keeping Unit)" placeholder="e.g., SHIRT-BLU-M-001" />
-                    <p class="mt-1 text-xs text-gray-500">Leave empty to auto-generate</p>
+                    <p class="mt-1 text-xs text-secondary-500">Leave empty to auto-generate</p>
                 </div>
 
                 <div class="mb-5">
@@ -38,7 +38,7 @@
 
             {{-- Pricing --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Pricing</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Pricing</h2>
 
                 <div class="grid md:grid-cols-3 gap-5">
                     <div>
@@ -46,11 +46,11 @@
                     </div>
                     <div>
                         <x-input name="compare_price" label="Compare Price (৳)" placeholder="0.00" />
-                        <p class="mt-1 text-xs text-gray-500">Original price before discount</p>
+                        <p class="mt-1 text-xs text-secondary-500">Original price before discount</p>
                     </div>
                     <div>
                         <x-input name="cost_price" label="Buying Price (৳)" placeholder="0.00" />
-                        <p class="mt-1 text-xs text-gray-500">For profit calculation</p>
+                        <p class="mt-1 text-xs text-secondary-500">For profit calculation</p>
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@
                     <div class="flex items-center justify-between flex-wrap gap-4">
 
                         <div>
-                            <p class="text-sm font-medium text-gray-500 mb-2">
+                            <p class="text-sm font-medium text-secondary-500 mb-2">
                                 Product Pricing Preview
                             </p>
 
@@ -68,7 +68,7 @@
                                 {{-- Current Price --}}
                                 <span
                                     id="preview-price"
-                                    class="text-xl font-bold text-gray-900"
+                                    class="text-xl font-bold text-primary"
                                 >
                                     {{ money(old('price')) }}
                                 </span>
@@ -76,7 +76,7 @@
                                 {{-- Compare Price --}}
                                 <span
                                     id="preview-compare-price"
-                                    class="text-md text-gray-400 line-through {{ old('compare_price') ? '' : 'hidden' }}"
+                                    class="text-md text-secondary-400 line-through {{ old('compare_price') ? '' : 'hidden' }}"
                                 >
                                     {{ money(old('compare_price')) }}
                                 </span>
@@ -90,12 +90,12 @@
 
             {{-- Product Details --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Product Details</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Product Details</h2>
                 <div class="grid md:grid-cols-2 gap-5">
                     <div>
-                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                        <label for="brand_id" class="block text-sm font-medium text-secondary-700 mb-2">Brand</label>
                         <select name="brand_id" id="brand_id" 
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('category_id') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('category_id') border-danger @enderror">
                             <option value="">Select Brand</option>
                             @foreach($brands as $brand)
                             <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
@@ -104,7 +104,7 @@
                             @endforeach
                         </select>
                         @error('brand_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
@@ -112,9 +112,9 @@
                     </div>
                     {{-- Fit Type --}}
                     <div>
-                        <label for="fit_type" class="block text-sm font-medium text-gray-700 mb-2">Fit Type</label>
+                        <label for="fit_type" class="block text-sm font-medium text-secondary-700 mb-2">Fit Type</label>
                         <select name="fit_type" id="fit_type"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('fit_type') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('fit_type') border-danger @enderror">
                             <option value="">Select Fit Type</option>
                             @foreach($fitTypes as $fitType)
                             <option value="{{ $fitType->value }}" {{ old('fit_type') == $fitType->value ? 'selected' : '' }}>
@@ -123,15 +123,15 @@
                             @endforeach
                         </select>
                         @error('fit_type')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Pattern --}}
                     <div>
-                        <label for="pattern" class="block text-sm font-medium text-gray-700 mb-2">Pattern</label>
+                        <label for="pattern" class="block text-sm font-medium text-secondary-700 mb-2">Pattern</label>
                         <select name="pattern" id="pattern"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('pattern') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('pattern') border-danger @enderror">
                             <option value="">Select Pattern</option>
                             @foreach($patterns as $pattern)
                             <option value="{{ $pattern->value }}" {{ old('pattern') == $pattern->value ? 'selected' : '' }}>
@@ -140,15 +140,15 @@
                             @endforeach
                         </select>
                         @error('pattern')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Occasion --}}
                     <div>
-                        <label for="occasion" class="block text-sm font-medium text-gray-700 mb-2">Occasion</label>
+                        <label for="occasion" class="block text-sm font-medium text-secondary-700 mb-2">Occasion</label>
                         <select name="occasion" id="occasion"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('occasion') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('occasion') border-danger @enderror">
                             <option value="">Select Occasion</option>
                             @foreach($occasions as $occasion)
                             <option value="{{ $occasion->value }}" {{ old('occasion') == $occasion->value ? 'selected' : '' }}>
@@ -157,7 +157,7 @@
                             @endforeach
                         </select>
                         @error('occasion')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -168,22 +168,22 @@
             </div>
 
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Inventory</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Inventory</h2>
                 <div class="grid md:grid-cols-2 gap-5">
                     <div>
                         <x-input name="stock_in" label="Stock Quantity" type="number" required placeholder="0" />
-                        <p class="mt-1 text-xs text-gray-500">Add stock quantity here if no variants available</p>
+                        <p class="mt-1 text-xs text-secondary-500">Add stock quantity here if no variants available</p>
                     </div>
                     <div>
                         <x-input name="low_stock_threshold" label="Low Stock Alert" type="number" value="{{ old('low_stock_threshold', 5) }}" placeholder="5" />
-                        <p class="mt-1 text-xs text-gray-500">Alert when stock reaches this level</p>
+                        <p class="mt-1 text-xs text-secondary-500">Alert when stock reaches this level</p>
                     </div>
                 </div>
             </div>
 
             {{-- SEO Settings --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">SEO Settings</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">SEO Settings</h2>
                 <div class="mb-5">
                     <x-input name="meta_title" label="Meta Title" placeholder="SEO title for search engines" />
                 </div>
@@ -192,7 +192,7 @@
                 </div>
                 <div>
                     <x-input name="tags" label="Tags" placeholder="e.g., summer, casual, cotton" />
-                    <p class="mt-1 text-xs text-gray-500">Separate tags with commas</p>
+                    <p class="mt-1 text-xs text-secondary-500">Separate tags with commas</p>
                 </div>
             </div>
         </div>
@@ -202,13 +202,13 @@
 
             {{-- Status --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Status & Visibility</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Status & Visibility</h2>
 
                 {{-- Category --}}
                 <div class="mb-5">
-                    <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">Category <span class="text-red-500">*</span></label>
+                    <label for="category_id" class="block text-sm font-medium text-secondary-700 mb-2">Category <span class="text-danger">*</span></label>
                     <select name="category_id" id="category_id" required
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('category_id') border-red-500 @enderror">
+                        class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('category_id') border-danger @enderror">
                         <option value="">Select Category</option>
                         @foreach($categories as $category)
                         <option value="{{ $category['id'] }}" {{ old('category_id') == $category['id'] ? 'selected' : '' }}>
@@ -217,30 +217,30 @@
                         @endforeach
                     </select>
                     @error('category_id')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="mb-5">
-                    <label for="subcategory_id" class="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
+                    <label for="subcategory_id" class="block text-sm font-medium text-secondary-700 mb-2">Subcategory</label>
                     <select name="subcategory_id" id="subcategory_id"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('subcategory_id') border-red-500 @enderror">
+                        class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('subcategory_id') border-danger @enderror">
                         <option value="">Select Subcategory</option>
                        
                     </select>
                     @error('subcategory_id')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="mb-5">
-                    <label for="sub_subcategory_id" class="block text-sm font-medium text-gray-700 mb-2">Sub Subcategory</label>
+                    <label for="sub_subcategory_id" class="block text-sm font-medium text-secondary-700 mb-2">Sub Subcategory</label>
                     <select name="sub_subcategory_id" id="sub_subcategory_id"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('subcategory_id') border-red-500 @enderror">
+                        class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('subcategory_id') border-danger @enderror">
                         <option value="">Select Sub Subcategory</option>
                        
                     </select>
                     @error('sub_subcategory_id')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -248,102 +248,102 @@
                 <div class="space-y-3">
                     <label class="flex items-center">
                         <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Active (visible to customers)</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">Active (visible to customers)</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Featured Product</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">Featured Product</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_new_arrival" value="1" {{ old('is_new_arrival') ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">New Arrival</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">New Arrival</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_best_seller" value="1" {{ old('is_best_seller') ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Best Seller</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">Best Seller</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_on_sale" value="1" {{ old('is_on_sale') ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">On Sale</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">On Sale</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_trending" value="1" {{ old('is_trending') ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Trending</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">Trending</span>
                     </label>
                 </div>
             </div>
 
             {{-- Product Media --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Product Media</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Product Media</h2>
 
                 {{-- image --}}
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Image <span class="text-red-500">*</span></label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition relative">
+                    <label class="block text-sm font-medium text-secondary-700 mb-2">Image <span class="text-danger">*</span></label>
+                    <div class="border-2 border-dashed border-secondary-300 rounded-lg p-6 text-center hover:border-primary transition relative">
                         <input type="file" name="image" id="image" accept="image/*" class="hidden">
                         <div id="imagePlaceholder">
-                            <i class="fas fa-image text-4xl text-gray-400 mb-3"></i>
-                            <p class="text-sm text-gray-600 mb-2">Click to upload image</p>
-                            <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 2MB</p>
+                            <i class="fas fa-image text-4xl text-secondary-400 mb-3"></i>
+                            <p class="text-sm text-secondary-600 mb-2">Click to upload image</p>
+                            <p class="text-xs text-secondary-500">PNG, JPG, WEBP up to 2MB</p>
                         </div>
                         <div id="imagePreview" class="hidden">
-                            <img src="" class="mx-auto h-32 object-cover rounded-lg border border-gray-200">
-                            <button type="button" id="removeimage" class="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
+                            <img src="" class="mx-auto h-32 object-cover rounded-lg border border-secondary-200">
+                            <button type="button" id="removeimage" class="absolute top-2 right-2 p-1 bg-danger-500 text-white rounded-full hover:bg-danger transition">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
                         <button type="button" onclick="document.getElementById('image').click()"
-                            class="mt-3 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition" id="imageBtn">
+                            class="mt-3 px-4 py-2 text-sm font-medium text-primary bg-primary-50 rounded-lg hover:bg-primary-100 transition" id="imageBtn">
                             Choose File
                         </button>
                     </div>
                     @error('image')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                 </div>
 
                 {{-- Gallery --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Gallery Images (Max 5)</label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition">
-                        <i class="fas fa-images text-4xl text-gray-400 mb-3"></i>
-                        <p class="text-sm text-gray-600 mb-2">Drop images here or click to upload</p>
-                        <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB. Max 5 images.</p>
+                    <label class="block text-sm font-medium text-secondary-700 mb-2">Gallery Images (Max 5)</label>
+                    <div class="border-2 border-dashed border-secondary-300 rounded-lg p-6 text-center hover:border-primary transition">
+                        <i class="fas fa-images text-4xl text-secondary-400 mb-3"></i>
+                        <p class="text-sm text-secondary-600 mb-2">Drop images here or click to upload</p>
+                        <p class="text-xs text-secondary-500">PNG, JPG, WEBP up to 5MB. Max 5 images.</p>
                         <input type="file" name="images[]" id="images" multiple accept="image/*" class="hidden">
                         <button type="button" onclick="document.getElementById('images').click()"
-                            class="mt-3 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                            class="mt-3 px-4 py-2 text-sm font-medium text-primary bg-primary-50 rounded-lg hover:bg-primary-100 transition">
                             Choose Files
                         </button>
                     </div>
                     <div id="galleryPreview" class="mt-4 grid grid-cols-2 gap-3"></div>
                     @error('images')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                     @error('images.*')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
             {{-- Action Buttons --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <button type="submit" id="submitBtn" class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:ring-blue-300 transition">
+                <button type="submit" id="submitBtn" class="w-full px-6 py-3 bg-gradient-to-r from-primary to-primary-700 text-white font-medium rounded-lg hover:from-primary-700 hover:to-primary-800 focus:ring-4 focus:ring-primary-300 transition">
                     <i class="fas fa-plus mr-2"></i><span id="btnText">Save Product</span>
                     <i class="fas fa-spinner fa-spin ml-2 hidden" id="btnSpinner"></i>
                 </button>
-                <a href="{{ route('admin.products.index') }}" class="block w-full px-6 py-3 text-center text-gray-700 font-medium bg-gray-100 rounded-lg hover:bg-gray-200 transition mt-3">
+                <a href="{{ route('admin.products.index') }}" class="block w-full px-6 py-3 text-center text-secondary-700 font-medium bg-secondary-100 rounded-lg hover:bg-gray-200 transition mt-3">
                     Cancel
                 </a>
             </div>
@@ -552,11 +552,11 @@
                 div.className = 'relative group';
                 div.innerHTML = `
                     <div class="relative w-full h-32">
-                        <img src="${e.target.result}" class="w-full h-full object-cover rounded-lg border border-gray-200">
-                        <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md remove-gallery-image" data-index="${index}" title="Remove image">
+                        <img src="${e.target.result}" class="w-full h-full object-cover rounded-lg border border-secondary-200">
+                        <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-danger-500 text-white rounded-full hover:bg-danger transition shadow-md remove-gallery-image" data-index="${index}" title="Remove image">
                             <i class="fas fa-times text-xs"></i>
                         </button>
-                        <span class="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">Image ${index + 1}</span>
+                        <span class="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">Image ${index + 1}</span>
                     </div>
                 `;
                 galleryPreviewContainer.appendChild(div);

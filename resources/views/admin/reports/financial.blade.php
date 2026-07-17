@@ -6,11 +6,11 @@
         {{-- Header --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
-                <h3 class="text-2xl font-bold text-gray-800">Financial Reports</h3>
-                <nav class="text-sm text-gray-500 mt-1">
-                    <span class="text-gray-400">Reports</span>
-                    <span class="mx-2 text-gray-300">/</span>
-                    <span class="font-semibold text-gray-700">Financial Reports</span>
+                <h3 class="text-2xl font-bold text-secondary-800">Financial Reports</h3>
+                <nav class="text-sm text-secondary-500 mt-1">
+                    <span class="text-secondary-400">Reports</span>
+                    <span class="mx-2 text-secondary-300">/</span>
+                    <span class="font-semibold text-secondary-700">Financial Reports</span>
                 </nav>
             </div>
 
@@ -20,7 +20,7 @@
                 {{-- Filter Dropdown --}}
                 <div class="w-full sm:w-48">
                     <select name="range"
-                        class="w-full h-11 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        class="w-full h-11 px-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
                         onchange="toggleCustomDates(this.value)">
                         <option value="daily" {{ request('range') == 'daily' ? 'selected' : '' }}>
                             Daily
@@ -51,17 +51,17 @@
                     <input type="date"
                         name="date_from"
                         value="{{ request('date_from') }}"
-                        class="h-11 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm w-full">
+                        class="h-11 px-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary text-sm w-full">
 
                     <input type="date"
                         name="date_to"
                         value="{{ request('date_to') }}"
-                        class="h-11 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm w-full">
+                        class="h-11 px-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary text-sm w-full">
                 </div>
 
                 {{-- Filter Button --}}
                 <button type="submit"
-                    class="h-11 px-5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium flex items-center justify-center whitespace-nowrap">
+                    class="h-11 px-5 bg-primary text-white rounded-xl hover:bg-primary-700 transition font-medium flex items-center justify-center whitespace-nowrap">
                     <i class="fas fa-filter mr-2"></i>
                     Filter
                 </button>
@@ -72,21 +72,21 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-8">
 
             {{-- Total Revenue --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-blue-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-primary p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                        <i class="fas fa-sack-dollar text-blue-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center">
+                        <i class="fas fa-sack-dollar text-primary text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Total Revenue</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Total Revenue</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($currentMetrics['totalRevenue']) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $changes['revenue'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $changes['revenue'] >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $changes['revenue'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['revenue']), 2) }}%
                     </span>
@@ -94,21 +94,21 @@
             </div>
 
             {{-- Gross Profit --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-cyan-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-accent p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center">
-                        <i class="fas fa-hand-holding-dollar text-cyan-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-accent-50 flex items-center justify-center">
+                        <i class="fas fa-hand-holding-dollar text-accent text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Gross Profit</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Gross Profit</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($currentMetrics['grossProfit']) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $changes['grossProfit'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $changes['grossProfit'] >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $changes['grossProfit'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['grossProfit']), 2) }}%
                     </span>
@@ -116,21 +116,21 @@
             </div>
 
             {{-- Net Profit --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-green-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-success p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
-                        <i class="fas fa-coins text-green-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-success-50 flex items-center justify-center">
+                        <i class="fas fa-coins text-success text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Net Profit</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Net Profit</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($currentMetrics['netProfit']) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $changes['netProfit'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $changes['netProfit'] >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $changes['netProfit'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['netProfit']), 2) }}%
                     </span>
@@ -138,21 +138,21 @@
             </div>
 
             {{-- Total Expenses --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-rose-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-danger p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center">
-                        <i class="fas fa-wallet text-rose-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-danger-50 flex items-center justify-center">
+                        <i class="fas fa-wallet text-danger text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Total Expenses</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Total Expenses</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($currentMetrics['totalExpense']) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $changes['expense'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $changes['expense'] >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $changes['expense'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['expense']), 2) }}%
                     </span>
@@ -160,40 +160,40 @@
             </div>
 
             {{-- Inventory Value --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-amber-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-warning p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
-                        <i class="fas fa-boxes-stacked text-amber-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-warning-50 flex items-center justify-center">
+                        <i class="fas fa-boxes-stacked text-warning text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Inventory Value</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Inventory Value</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($inventoryValue) }}
                         </p>
                     </div>
                 </div>
 
-                <div class="mt-2 text-xs text-gray-500">
+                <div class="mt-2 text-xs text-secondary-500">
                     Current stock value
                 </div>
             </div>
 
             {{-- Profit Margin --}}
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-violet-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-accent p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center">
-                        <i class="fas fa-percent text-violet-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-accent-50 flex items-center justify-center">
+                        <i class="fas fa-percent text-accent text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Profit Margin</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Profit Margin</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ number_format($currentMetrics['profitMargin'], 2) }}%
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $changes['profitMargin'] >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $changes['profitMargin'] >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $changes['profitMargin'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($changes['profitMargin']), 2) }}%
                     </span>
@@ -203,26 +203,26 @@
         </div>
 
         {{-- Tabs --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
-            <div class="border-b border-gray-200">
+        <div class="bg-white rounded-xl shadow-sm border border-secondary-200 mb-6">
+            <div class="border-b border-secondary-200">
                 <nav class="flex gap-1 px-4 pt-2" aria-label="Tabs">
                     <button onclick="switchTab('pnl')" id="tab-pnl"
-                        class="tab-btn px-4 py-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 rounded-t-lg hover:bg-gray-50 transition flex items-center gap-2">
+                        class="tab-btn px-4 py-3 text-sm font-semibold text-primary border-b-2 border-primary rounded-t-lg hover:bg-secondary-50 transition flex items-center gap-2">
                         <i class="fas fa-chart-line"></i>
                         Profit & Loss
                     </button>
                     <button onclick="switchTab('income')" id="tab-income"
-                        class="tab-btn px-4 py-3 text-sm font-semibold text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-700 hover:bg-gray-50 transition flex items-center gap-2">
+                        class="tab-btn px-4 py-3 text-sm font-semibold text-secondary-500 border-b-2 border-transparent rounded-t-lg hover:text-secondary-700 hover:bg-secondary-50 transition flex items-center gap-2">
                         <i class="fas fa-money-bill-transfer"></i>
                         Income Breakdown
                     </button>
                     <button onclick="switchTab('expenses')" id="tab-expenses"
-                        class="tab-btn px-4 py-3 text-sm font-semibold text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-700 hover:bg-gray-50 transition flex items-center gap-2">
+                        class="tab-btn px-4 py-3 text-sm font-semibold text-secondary-500 border-b-2 border-transparent rounded-t-lg hover:text-secondary-700 hover:bg-secondary-50 transition flex items-center gap-2">
                         <i class="fas fa-hand-holding-usd"></i>
                         Expenses
                     </button>
                     <button onclick="switchTab('inventory')" id="tab-inventory"
-                        class="tab-btn px-4 py-3 text-sm font-semibold text-gray-500 border-b-2 border-transparent rounded-t-lg hover:text-gray-700 hover:bg-gray-50 transition flex items-center gap-2">
+                        class="tab-btn px-4 py-3 text-sm font-semibold text-secondary-500 border-b-2 border-transparent rounded-t-lg hover:text-secondary-700 hover:bg-secondary-50 transition flex items-center gap-2">
                         <i class="fas fa-warehouse"></i>
                         Inventory Value
                     </button>
@@ -234,7 +234,7 @@
                 <div id="panel-pnl" class="tab-panel">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {{-- Chart --}}
-                        <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+                        <div class="lg:col-span-2 bg-white rounded-xl border border-secondary-200 p-5">
                             @php
                                 $filterText = match (request('range', 'daily')) {
                                     'daily' => 'Daily Profit Trend',
@@ -253,56 +253,56 @@
                                     default => 'Net Profit Over the Last 30 Days',
                                 };
                             @endphp
-                            <h5 class="text-lg font-bold text-blue-600 mb-1">{{ $filterText }}</h5>
-                            <p class="text-sm text-gray-500 mb-4">{{ $descriptionText }}</p>
+                            <h5 class="text-lg font-bold text-primary mb-1">{{ $filterText }}</h5>
+                            <p class="text-sm text-secondary-500 mb-4">{{ $descriptionText }}</p>
 
-                            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                            <div class="bg-secondary-50 rounded-lg border border-secondary-200 p-4">
                                 <canvas id="profitChart" class="w-full" style="max-height: 300px;"></canvas>
                             </div>
 
-                            <div class="mt-4 px-4 py-3 rounded-lg font-bold text-center text-sm {{ $changes['profitMargin'] >= 0 ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200' }}">
+                            <div class="mt-4 px-4 py-3 rounded-lg font-bold text-center text-sm {{ $changes['profitMargin'] >= 0 ? 'bg-success-50 text-success border border-success-200' : 'bg-danger-50 text-danger border border-danger-200' }}">
                                 Net Profit Margin: {{ number_format($currentMetrics['profitMargin'], 2) }}%
                             </div>
                         </div>
 
                         {{-- P&L Summary Table --}}
-                        <div class="bg-white rounded-xl border border-gray-200 p-5">
-                            <h5 class="text-lg font-bold text-gray-800 mb-4">P&L Summary</h5>
+                        <div class="bg-white rounded-xl border border-secondary-200 p-5">
+                            <h5 class="text-lg font-bold text-secondary-800 mb-4">P&L Summary</h5>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm">
                                     <thead>
-                                        <tr class="bg-gray-50">
-                                            <th class="px-3 py-2 text-left font-semibold text-gray-600 rounded-tl-lg">Category</th>
-                                            <th class="px-3 py-2 text-right font-semibold text-gray-600">Amount</th>
-                                            <th class="px-3 py-2 text-right font-semibold text-gray-600 rounded-tr-lg">Change %</th>
+                                        <tr class="bg-secondary-50">
+                                            <th class="px-3 py-2 text-left font-semibold text-secondary-600 rounded-tl-lg">Category</th>
+                                            <th class="px-3 py-2 text-right font-semibold text-secondary-600">Amount</th>
+                                            <th class="px-3 py-2 text-right font-semibold text-secondary-600 rounded-tr-lg">Change %</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
                                         <tr>
-                                            <td class="px-3 py-3 text-gray-700">Total Sales</td>
-                                            <td class="px-3 py-3 text-right font-semibold text-gray-800">{{ money($currentMetrics['totalRevenue']) }}</td>
-                                            <td class="px-3 py-3 text-right {{ $changes['revenue'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                                            <td class="px-3 py-3 text-secondary-700">Total Sales</td>
+                                            <td class="px-3 py-3 text-right font-semibold text-secondary-800">{{ money($currentMetrics['totalRevenue']) }}</td>
+                                            <td class="px-3 py-3 text-right {{ $changes['revenue'] >= 0 ? 'text-success' : 'text-danger' }}">
                                                 {{ $changes['revenue'] >= 0 ? '+' : '' }}{{ number_format($changes['revenue'], 2) }}%
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="px-3 py-3 text-gray-700">Cost of Goods Sold</td>
-                                            <td class="px-3 py-3 text-right font-semibold text-gray-800">{{ money($currentMetrics['totalProductCost']) }}</td>
-                                            <td class="px-3 py-3 text-right {{ $changes['grossProfit'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                                            <td class="px-3 py-3 text-secondary-700">Cost of Goods Sold</td>
+                                            <td class="px-3 py-3 text-right font-semibold text-secondary-800">{{ money($currentMetrics['totalProductCost']) }}</td>
+                                            <td class="px-3 py-3 text-right {{ $changes['grossProfit'] >= 0 ? 'text-success' : 'text-danger' }}">
                                                 {{ $changes['grossProfit'] >= 0 ? '+' : '' }}{{ number_format($changes['grossProfit'], 2) }}%
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="px-3 py-3 text-gray-700">Gross Profit</td>
-                                            <td class="px-3 py-3 text-right font-semibold text-gray-800">{{ money($currentMetrics['grossProfit']) }}</td>
-                                            <td class="px-3 py-3 text-right {{ $changes['grossProfit'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                                            <td class="px-3 py-3 text-secondary-700">Gross Profit</td>
+                                            <td class="px-3 py-3 text-right font-semibold text-secondary-800">{{ money($currentMetrics['grossProfit']) }}</td>
+                                            <td class="px-3 py-3 text-right {{ $changes['grossProfit'] >= 0 ? 'text-success' : 'text-danger' }}">
                                                 {{ $changes['grossProfit'] >= 0 ? '+' : '' }}{{ number_format($changes['grossProfit'], 2) }}%
                                             </td>
                                         </tr>
-                                        <tr class="bg-green-50">
-                                            <td class="px-3 py-3 font-bold text-gray-800 rounded-bl-lg">Net Profit</td>
-                                            <td class="px-3 py-3 text-right font-bold text-gray-800">{{ money($currentMetrics['netProfit']) }}</td>
-                                            <td class="px-3 py-3 text-right font-bold {{ $changes['netProfit'] >= 0 ? 'text-green-600' : 'text-red-600' }} rounded-br-lg">
+                                        <tr class="bg-success-50">
+                                            <td class="px-3 py-3 font-bold text-secondary-800 rounded-bl-lg">Net Profit</td>
+                                            <td class="px-3 py-3 text-right font-bold text-secondary-800">{{ money($currentMetrics['netProfit']) }}</td>
+                                            <td class="px-3 py-3 text-right font-bold {{ $changes['netProfit'] >= 0 ? 'text-success' : 'text-danger' }} rounded-br-lg">
                                                 {{ $changes['netProfit'] >= 0 ? '+' : '' }}{{ number_format($changes['netProfit'], 2) }}%
                                             </td>
                                         </tr>
@@ -311,7 +311,7 @@
                             </div>
 
                             {{-- Profit Margin Card --}}
-                            <div class="mt-4 p-4 rounded-xl {{ $changes['profitMargin'] >= 0 ? 'bg-green-600' : 'bg-red-600' }} text-white">
+                            <div class="mt-4 p-4 rounded-xl {{ $changes['profitMargin'] >= 0 ? 'bg-success' : 'bg-danger' }} text-white">
                                 <div class="flex justify-between items-center">
                                     <span class="font-semibold text-sm">Current Profit Margin</span>
                                     <span class="font-bold text-xl">{{ number_format($currentMetrics['profitMargin'], 2) }}%</span>
@@ -325,32 +325,32 @@
                 <div id="panel-income" class="tab-panel hidden">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {{-- Pie Chart --}}
-                        <div class="bg-white rounded-xl border border-gray-200 p-5">
-                            <h5 class="text-lg font-bold text-cyan-600 mb-1">Income Source Proportions</h5>
-                            <p class="text-sm text-gray-500 mb-4">Visual breakdown of all income streams.</p>
-                            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 flex items-center justify-center">
+                        <div class="bg-white rounded-xl border border-secondary-200 p-5">
+                            <h5 class="text-lg font-bold text-accent mb-1">Income Source Proportions</h5>
+                            <p class="text-sm text-secondary-500 mb-4">Visual breakdown of all income streams.</p>
+                            <div class="bg-secondary-50 rounded-lg border border-secondary-200 p-4 flex items-center justify-center">
                                 <canvas id="incomePieChart" style="max-height: 300px;"></canvas>
                             </div>
                         </div>
 
                         {{-- Income Table --}}
-                        <div class="bg-white rounded-xl border border-gray-200 p-5">
-                            <h5 class="text-lg font-bold text-gray-800 mb-4">Income Data Table</h5>
+                        <div class="bg-white rounded-xl border border-secondary-200 p-5">
+                            <h5 class="text-lg font-bold text-secondary-800 mb-4">Income Data Table</h5>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm">
                                     <thead>
-                                        <tr class="bg-gray-50">
-                                            <th class="px-4 py-3 text-left font-semibold text-gray-600 rounded-tl-lg">Source</th>
-                                            <th class="px-4 py-3 text-right font-semibold text-gray-600">Amount</th>
-                                            <th class="px-4 py-3 text-right font-semibold text-gray-600 rounded-tr-lg">Contribution %</th>
+                                        <tr class="bg-secondary-50">
+                                            <th class="px-4 py-3 text-left font-semibold text-secondary-600 rounded-tl-lg">Source</th>
+                                            <th class="px-4 py-3 text-right font-semibold text-secondary-600">Amount</th>
+                                            <th class="px-4 py-3 text-right font-semibold text-secondary-600 rounded-tr-lg">Contribution %</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
                                         @foreach ($incomeData as $income)
-                                            <tr class="hover:bg-gray-50 transition">
-                                                <td class="px-4 py-3 font-semibold text-gray-800">{{ $income['source'] }}</td>
-                                                <td class="px-4 py-3 text-right text-gray-700">{{ money($income['amount']) }}</td>
-                                                <td class="px-4 py-3 text-right text-gray-700">{{ number_format($income['percentage'], 2) }}%</td>
+                                            <tr class="hover:bg-secondary-50 transition">
+                                                <td class="px-4 py-3 font-semibold text-secondary-800">{{ $income['source'] }}</td>
+                                                <td class="px-4 py-3 text-right text-secondary-700">{{ money($income['amount']) }}</td>
+                                                <td class="px-4 py-3 text-right text-secondary-700">{{ number_format($income['percentage'], 2) }}%</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -364,22 +364,22 @@
                 <div id="panel-expenses" class="tab-panel hidden">
                     {{-- Expense KPI Cards --}}
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div class="bg-white rounded-xl shadow-sm border-l-4 border-red-500 p-4">
-                            <p class="text-xs text-gray-500 font-medium mb-1">Total Expense</p>
-                            <h4 class="text-xl font-bold text-red-600">{{ money($totalExpense) }}</h4>
+                        <div class="bg-white rounded-xl shadow-sm border-l-4 border-danger p-4">
+                            <p class="text-xs text-secondary-500 font-medium mb-1">Total Expense</p>
+                            <h4 class="text-xl font-bold text-danger">{{ money($totalExpense) }}</h4>
                         </div>
-                        <div class="bg-white rounded-xl shadow-sm border-l-4 border-yellow-500 p-4">
-                            <p class="text-xs text-gray-500 font-medium mb-1">Highest Expense Category</p>
-                            <h4 class="text-xl font-bold text-yellow-600">
+                        <div class="bg-white rounded-xl shadow-sm border-l-4 border-warning p-4">
+                            <p class="text-xs text-secondary-500 font-medium mb-1">Highest Expense Category</p>
+                            <h4 class="text-xl font-bold text-warning">
                                 {{ $highestExpense->category->name ?? '' }}
-                                <span class="text-sm font-normal text-gray-500">
+                                <span class="text-sm font-normal text-secondary-500">
                                     {{ isset($highestExpense->totalAmount) ? '('.money($highestExpense->totalAmount).')' : '' }}
                                 </span>
                             </h4>
                         </div>
                         <div class="bg-white rounded-xl shadow-sm border-l-4 border-gray-500 p-4">
-                            <p class="text-xs text-gray-500 font-medium mb-1">Expense Growth %</p>
-                            <h4 class="text-xl font-bold {{ $expenseGrowth >= 0 ? 'text-red-600' : 'text-green-600' }}">
+                            <p class="text-xs text-secondary-500 font-medium mb-1">Expense Growth %</p>
+                            <h4 class="text-xl font-bold {{ $expenseGrowth >= 0 ? 'text-danger' : 'text-success' }}">
                                 <i class="fas fa-arrow-{{ $expenseGrowth >= 0 ? 'up' : 'down' }} mr-1 text-sm"></i>
                                 {{ number_format($expenseGrowth, 2) }}%
                             </h4>
@@ -388,24 +388,24 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {{-- Expense Trend Chart --}}
-                        <div class="bg-white rounded-xl border border-gray-200 p-5">
-                            <h5 class="text-lg font-bold text-red-600 mb-1">Expense Trend</h5>
-                            <p class="text-sm text-gray-500 mb-4">{{ ucfirst(request('range')) }} expense comparison.</p>
-                            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                        <div class="bg-white rounded-xl border border-secondary-200 p-5">
+                            <h5 class="text-lg font-bold text-danger mb-1">Expense Trend</h5>
+                            <p class="text-sm text-secondary-500 mb-4">{{ ucfirst(request('range')) }} expense comparison.</p>
+                            <div class="bg-secondary-50 rounded-lg border border-secondary-200 p-4">
                                 <canvas id="expenseBarChart" class="w-full" style="max-height: 300px;"></canvas>
                             </div>
                         </div>
 
                         {{-- Expense Breakdown Table --}}
-                        <div class="bg-white rounded-xl border border-gray-200 p-5">
-                            <h5 class="text-lg font-bold text-gray-800 mb-4">Expense Breakdown Table</h5>
+                        <div class="bg-white rounded-xl border border-secondary-200 p-5">
+                            <h5 class="text-lg font-bold text-secondary-800 mb-4">Expense Breakdown Table</h5>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm">
                                     <thead>
-                                        <tr class="bg-gray-50">
-                                            <th class="px-4 py-3 text-left font-semibold text-gray-600 rounded-tl-lg">Category</th>
-                                            <th class="px-4 py-3 text-right font-semibold text-gray-600">Amount</th>
-                                            <th class="px-4 py-3 text-right font-semibold text-gray-600 rounded-tr-lg">Change</th>
+                                        <tr class="bg-secondary-50">
+                                            <th class="px-4 py-3 text-left font-semibold text-secondary-600 rounded-tl-lg">Category</th>
+                                            <th class="px-4 py-3 text-right font-semibold text-secondary-600">Amount</th>
+                                            <th class="px-4 py-3 text-right font-semibold text-secondary-600 rounded-tr-lg">Change</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
@@ -420,10 +420,10 @@
                                                 $categoryName = $expense['category']->name ?? '';
                                                 $progressWidth = ($expense['totalAmount'] / ($totalExpense ?: 1)) * 100;
                                             @endphp
-                                            <tr class="hover:bg-gray-50 transition">
-                                                <td class="px-4 py-3 font-semibold text-gray-800">{{ $categoryName }}</td>
-                                                <td class="px-4 py-3 text-right text-gray-700">{{ money($expense['totalAmount']) }}</td>
-                                                <td class="px-4 py-3 text-right {{ $change >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                                            <tr class="hover:bg-secondary-50 transition">
+                                                <td class="px-4 py-3 font-semibold text-secondary-800">{{ $categoryName }}</td>
+                                                <td class="px-4 py-3 text-right text-secondary-700">{{ money($expense['totalAmount']) }}</td>
+                                                <td class="px-4 py-3 text-right {{ $change >= 0 ? 'text-success' : 'text-danger' }}">
                                                     {{ $change >= 0 ? '+' : '' }}{{ number_format($change, 2) }}%
                                                 </td>
                                             </tr>
@@ -446,12 +446,12 @@
                 {{-- Inventory Value Tab --}}
                 <div id="panel-inventory" class="tab-panel hidden">
                     {{-- Inventory Header --}}
-                    <div class="bg-white rounded-xl shadow-sm border-b-4 border-yellow-500 p-5 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm border-b-4 border-warning p-5 mb-6">
                         <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                            <h4 class="text-lg font-bold text-yellow-600">
-                                Total Inventory Value: <span class="text-gray-800">{{ money($inventoryValue) }}</span>
+                            <h4 class="text-lg font-bold text-warning">
+                                Total Inventory Value: <span class="text-secondary-800">{{ money($inventoryValue) }}</span>
                             </h4>
-                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-red-50 text-red-700 text-sm font-semibold border border-red-200">
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-danger-50 text-danger text-sm font-semibold border border-danger-200">
                                 <i class="fas fa-triangle-exclamation mr-2"></i>
                                 Low Turnover Warning: {{ $lowTurnoverDays }} Days ({{ $lowTurnoverCount }} SKUs)
                             </span>
@@ -460,25 +460,25 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {{-- Value by Category Chart --}}
-                        <div class="bg-white rounded-xl border border-gray-200 p-5">
-                            <h5 class="text-lg font-bold text-yellow-600 mb-1">Value by Category</h5>
-                            <p class="text-sm text-gray-500 mb-4">Horizontal Bar Chart showing stock worth.</p>
-                            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                        <div class="bg-white rounded-xl border border-secondary-200 p-5">
+                            <h5 class="text-lg font-bold text-warning mb-1">Value by Category</h5>
+                            <p class="text-sm text-secondary-500 mb-4">Horizontal Bar Chart showing stock worth.</p>
+                            <div class="bg-secondary-50 rounded-lg border border-secondary-200 p-4">
                                 <canvas id="inventoryChart" class="w-full" style="max-height: 300px;"></canvas>
                             </div>
                         </div>
 
                         {{-- Inventory Details Table --}}
-                        <div class="bg-white rounded-xl border border-gray-200 p-5">
-                            <h5 class="text-lg font-bold text-gray-800 mb-4">Inventory Details</h5>
+                        <div class="bg-white rounded-xl border border-secondary-200 p-5">
+                            <h5 class="text-lg font-bold text-secondary-800 mb-4">Inventory Details</h5>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm">
                                     <thead>
-                                        <tr class="bg-gray-50">
-                                            <th class="px-4 py-3 text-left font-semibold text-gray-600 rounded-tl-lg">Category</th>
-                                            <th class="px-4 py-3 text-right font-semibold text-gray-600">SKU Count</th>
-                                            <th class="px-4 py-3 text-right font-semibold text-gray-600">Stock Value</th>
-                                            <th class="px-4 py-3 text-right font-semibold text-gray-600 rounded-tr-lg">% of Total</th>
+                                        <tr class="bg-secondary-50">
+                                            <th class="px-4 py-3 text-left font-semibold text-secondary-600 rounded-tl-lg">Category</th>
+                                            <th class="px-4 py-3 text-right font-semibold text-secondary-600">SKU Count</th>
+                                            <th class="px-4 py-3 text-right font-semibold text-secondary-600">Stock Value</th>
+                                            <th class="px-4 py-3 text-right font-semibold text-secondary-600 rounded-tr-lg">% of Total</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
@@ -489,11 +489,11 @@
                                                 $stockValue = $item['stockValue'];
                                                 $percent = $totalStockValue > 0 ? ($stockValue / $totalStockValue) * 100 : 0;
                                             @endphp
-                                            <tr class="hover:bg-gray-50 transition">
-                                                <td class="px-4 py-3 font-semibold text-gray-800">{{ $categoryName }}</td>
-                                                <td class="px-4 py-3 text-right text-gray-700">{{ $skuCount }}</td>
-                                                <td class="px-4 py-3 text-right text-gray-700">{{ money($stockValue) }}</td>
-                                                <td class="px-4 py-3 text-right text-gray-700">{{ number_format($percent, 2) }}%</td>
+                                            <tr class="hover:bg-secondary-50 transition">
+                                                <td class="px-4 py-3 font-semibold text-secondary-800">{{ $categoryName }}</td>
+                                                <td class="px-4 py-3 text-right text-secondary-700">{{ $skuCount }}</td>
+                                                <td class="px-4 py-3 text-right text-secondary-700">{{ money($stockValue) }}</td>
+                                                <td class="px-4 py-3 text-right text-secondary-700">{{ number_format($percent, 2) }}%</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -523,14 +523,14 @@
 
             // Reset all tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('text-blue-600', 'border-blue-600');
-                btn.classList.add('text-gray-500', 'border-transparent');
+                btn.classList.remove('text-primary', 'border-primary');
+                btn.classList.add('text-secondary-500', 'border-transparent');
             });
 
             // Activate selected tab
             const activeBtn = document.getElementById('tab-' + tabId);
-            activeBtn.classList.remove('text-gray-500', 'border-transparent');
-            activeBtn.classList.add('text-blue-600', 'border-blue-600');
+            activeBtn.classList.remove('text-secondary-500', 'border-transparent');
+            activeBtn.classList.add('text-primary', 'border-primary');
         }
 
         const ctx = document.getElementById('profitChart').getContext('2d');

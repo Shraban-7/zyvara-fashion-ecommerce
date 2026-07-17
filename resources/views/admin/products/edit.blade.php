@@ -6,14 +6,14 @@
 <div class="mb-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Edit Product</h1>
-            <p class="text-gray-500">Update product information</p>
+            <h1 class="text-2xl md:text-3xl font-bold text-primary mb-2">Edit Product</h1>
+            <p class="text-secondary-500">Update product information</p>
         </div>
         <div class="flex gap-3">
-            <a href="{{ route('admin.products.manage-stock', $product) }}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg hover:from-purple-600 hover:to-purple-700 transition">
+            <a href="{{ route('admin.products.manage-stock', $product) }}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary to-primary-700 rounded-lg hover:from-primary-700 hover:to-primary-800 transition">
                 <i class="fas fa-boxes mr-2"></i>Manage Stock
             </a>
-            <a href="{{ route('admin.products.index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+            <a href="{{ route('admin.products.index') }}" class="px-4 py-2 text-sm font-medium text-secondary-700 bg-white border border-secondary-300 rounded-lg hover:bg-secondary-50 transition">
                 <i class="fas fa-arrow-left mr-2"></i>Back to Products
             </a>
         </div>
@@ -31,7 +31,7 @@
 
             {{-- Basic Information --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Basic Information</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Basic Information</h2>
 
                 {{-- Product Name --}}
                 <div class="mb-5">
@@ -56,7 +56,7 @@
 
             {{-- Pricing --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Pricing</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Pricing</h2>
 
                 <div class="grid md:grid-cols-3 gap-5">
                     {{-- Regular Price --}}
@@ -82,7 +82,7 @@
                             value="{{ old('compare_price', $product->compare_price) }}"
                             step="0.01"
                         />
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-secondary-500">
                             Original price before discount
                         </p>
                     </div>
@@ -97,7 +97,7 @@
                             value="{{ old('cost_price', $product->cost_price) }}"
                             step="0.01"
                         />
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-secondary-500">
                             For profit calculation
                         </p>
                     </div>
@@ -108,7 +108,7 @@
                     <div class="flex items-center justify-between flex-wrap gap-4">
 
                         <div>
-                            <p class="text-sm font-medium text-gray-500 mb-2">
+                            <p class="text-sm font-medium text-secondary-500 mb-2">
                                 Product Pricing Preview
                             </p>
 
@@ -117,7 +117,7 @@
                                 {{-- Current Price --}}
                                 <span
                                     id="preview-price"
-                                    class="text-xl font-bold text-gray-900"
+                                    class="text-xl font-bold text-primary"
                                 >
                                     {{ money(old('price', $product->price ?? 0)) }}
                                 </span>
@@ -125,7 +125,7 @@
                                 {{-- Compare Price --}}
                                 <span
                                     id="preview-compare-price"
-                                    class="text-md text-gray-400 line-through {{ old('compare_price', $product->compare_price) ? '' : 'hidden' }}"
+                                    class="text-md text-secondary-400 line-through {{ old('compare_price', $product->compare_price) ? '' : 'hidden' }}"
                                 >
                                     {{ money(old('compare_price', $product->compare_price ?? 0)) }}
                                 </span>
@@ -139,14 +139,14 @@
 
             {{-- Product Details --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Product Details</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Product Details</h2>
 
                 <div class="grid md:grid-cols-2 gap-5">
                     {{-- Brand --}}
                     <div>
-                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                        <label for="brand_id" class="block text-sm font-medium text-secondary-700 mb-2">Brand</label>
                         <select name="brand_id" id="brand_id" 
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('category_id') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('category_id') border-danger @enderror">
                             <option value="">Select Brand</option>
                             @foreach($brands as $brand)
                             <option value="{{ $brand->id }}" {{ $product->brand_id == $brand->id ? 'selected' : '' }}>
@@ -155,7 +155,7 @@
                             @endforeach
                         </select>
                         @error('brand_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -166,9 +166,9 @@
 
                     {{-- Fit Type --}}
                     <div>
-                        <label for="fit_type" class="block text-sm font-medium text-gray-700 mb-2">Fit Type</label>
+                        <label for="fit_type" class="block text-sm font-medium text-secondary-700 mb-2">Fit Type</label>
                         <select name="fit_type" id="fit_type"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('fit_type') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('fit_type') border-danger @enderror">
                             <option value="">Select Fit Type</option>
                             @foreach($fitTypes as $fitType)
                             <option value="{{ $fitType->value }}" {{ old('fit_type', $product->fit_type?->value) == $fitType->value ? 'selected' : '' }}>
@@ -177,15 +177,15 @@
                             @endforeach
                         </select>
                         @error('fit_type')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Pattern --}}
                     <div>
-                        <label for="pattern" class="block text-sm font-medium text-gray-700 mb-2">Pattern</label>
+                        <label for="pattern" class="block text-sm font-medium text-secondary-700 mb-2">Pattern</label>
                         <select name="pattern" id="pattern"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('pattern') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('pattern') border-danger @enderror">
                             <option value="">Select Pattern</option>
                             @foreach($patterns as $pattern)
                             <option value="{{ $pattern->value }}" {{ old('pattern', $product->pattern?->value) == $pattern->value ? 'selected' : '' }}>
@@ -194,15 +194,15 @@
                             @endforeach
                         </select>
                         @error('pattern')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Occasion --}}
                     <div>
-                        <label for="occasion" class="block text-sm font-medium text-gray-700 mb-2">Occasion</label>
+                        <label for="occasion" class="block text-sm font-medium text-secondary-700 mb-2">Occasion</label>
                         <select name="occasion" id="occasion"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('occasion') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('occasion') border-danger @enderror">
                             <option value="">Select Occasion</option>
                             @foreach($occasions as $occasion)
                             <option value="{{ $occasion->value }}" {{ old('occasion', $product->occasion?->value) == $occasion->value ? 'selected' : '' }}>
@@ -211,7 +211,7 @@
                             @endforeach
                         </select>
                         @error('occasion')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -226,10 +226,10 @@
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
 
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-lg font-bold text-gray-900">Inventory</h2>
+                    <h2 class="text-lg font-bold text-primary">Inventory</h2>
 
                     <a href="{{ route('admin.products.manage-stock', $product) }}"
-                    class="px-4 py-2 text-xs font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition">
+                    class="px-4 py-2 text-xs font-medium text-white bg-primary-500 rounded-lg hover:bg-primary transition">
                         <i class="fas fa-boxes mr-2"></i>Manage Stock
                     </a>
                 </div>
@@ -247,10 +247,10 @@
                             :disabled="true"
                         />
 
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-secondary-500">
                             Need to update stock? Please click
                             <a href="{{ route('admin.products.manage-stock', $product) }}">
-                                <span class="font-semibold text-blue-600">Manage Stock</span>
+                                <span class="font-semibold text-primary">Manage Stock</span>
                             </a>.
                         </p>
                     </div>
@@ -265,7 +265,7 @@
                             value="{{ old('low_stock_threshold', $product->low_stock_threshold) }}"
                         />
 
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-secondary-500">
                             You'll get a warning when stock drops below this level.
                         </p>
                     </div>
@@ -277,21 +277,21 @@
               {{-- Product Variants --}}
             {{-- <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-lg font-bold text-gray-900">Product Variants</h2>
-                    <button type="button" onclick="addVariant()" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                    <h2 class="text-lg font-bold text-primary">Product Variants</h2>
+                    <button type="button" onclick="addVariant()" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-700 transition">
                         <i class="fas fa-plus mr-2"></i>Add Variant
                     </button>
                 </div>
 
                 <div id="variantsContainer" class="space-y-4">
                     @forelse($product->variants as $index => $variant)
-                    <div class="variant-row p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <div class="variant-row p-4 border border-secondary-200 rounded-lg bg-secondary-50">
                         <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}">
 
                         <div class="grid md:grid-cols-5 gap-4">
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Size</label>
-                                <select name="variants[{{ $index }}][size_id]" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <label class="block text-xs font-medium text-secondary-700 mb-1">Size</label>
+                                <select name="variants[{{ $index }}][size_id]" class="w-full px-3 py-2 text-sm border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary">
                                     <option value="">Select Size</option>
                                     @foreach($sizes as $size)
                                     <option value="{{ $size->id }}" {{ $variant->size_id == $size->id ? 'selected' : '' }}>
@@ -302,8 +302,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Color</label>
-                                <select name="variants[{{ $index }}][color_id]" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <label class="block text-xs font-medium text-secondary-700 mb-1">Color</label>
+                                <select name="variants[{{ $index }}][color_id]" class="w-full px-3 py-2 text-sm border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary">
                                     <option value="">Select Color</option>
                                     @foreach($colors as $color)
                                     <option value="{{ $color->id }}" {{ $variant->color_id == $color->id ? 'selected' : '' }}>
@@ -314,35 +314,35 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Price (৳)</label>
+                                <label class="block text-xs font-medium text-secondary-700 mb-1">Price (৳)</label>
                                 <input
                                     type="number"
                                     step="0.01"
                                     name="variants[{{ $index }}][price]"
                                     value="{{ $variant->price }}"
                                     required
-                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 text-sm border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary"
                                     placeholder="0.00">
                             </div>
 
 
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">SKU</label>
+                                <label class="block text-xs font-medium text-secondary-700 mb-1">SKU</label>
                                 <input type="text" name="variants[{{ $index }}][sku]" value="{{ $variant->sku }}"
-                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 text-sm border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary"
                                     placeholder="Optional">
                             </div>
 
                             <div class="flex items-end">
                                 <button type="button" onclick="removeVariant(this, {{ $variant->id }})"
-                                    class="w-full px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition">
+                                    class="w-full px-3 py-2 text-sm font-medium text-white bg-danger rounded-lg hover:bg-danger-700 transition">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                     @empty
-                    <p class="text-sm text-gray-500 text-center py-4">No variants added yet. Click "Add Variant" to create one.</p>
+                    <p class="text-sm text-secondary-500 text-center py-4">No variants added yet. Click "Add Variant" to create one.</p>
                     @endforelse
                 </div>
 
@@ -353,7 +353,7 @@
 
             {{-- SEO Settings --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">SEO Settings</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">SEO Settings</h2>
 
                 {{-- Meta Title --}}
                 <div class="mb-5">
@@ -368,7 +368,7 @@
                 {{-- Tags --}}
                 <div>
                     <x-input name="tags" label="Tags" placeholder="e.g., summer, casual, cotton" value="{{ old('tags', is_array($product->tags) ? implode(', ', $product->tags) : '') }}" />
-                    <p class="mt-1 text-xs text-gray-500">Separate tags with commas</p>
+                    <p class="mt-1 text-xs text-secondary-500">Separate tags with commas</p>
                 </div>
             </div>
         </div>
@@ -378,12 +378,12 @@
 
             {{-- Status --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Status & Visibility</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Status & Visibility</h2>
 
                 <div class="mb-5">
-                    <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">Category <span class="text-red-500">*</span></label>
+                    <label for="category_id" class="block text-sm font-medium text-secondary-700 mb-2">Category <span class="text-danger">*</span></label>
                     <select name="category_id" id="category_id" required
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('category_id') border-red-500 @enderror">
+                        class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('category_id') border-danger @enderror">
                         <option value="">Select Category</option>
                         @foreach($categories as $category)
                         <option value="{{ $category['id'] }}" {{ old('category_id', $product->category_id) == $category['id'] ? 'selected' : '' }}>
@@ -394,17 +394,17 @@
                 </div>
 
                 <div class="mb-5">
-                    <label for="subcategory_id" class="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
+                    <label for="subcategory_id" class="block text-sm font-medium text-secondary-700 mb-2">Subcategory</label>
                     <select name="subcategory_id" id="subcategory_id"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         <option value="">Select Subcategory</option>
                     </select>
                 </div>
 
                 <div class="mb-5">
-                    <label for="sub_subcategory_id" class="block text-sm font-medium text-gray-700 mb-2">Sub Subcategory</label>
+                    <label for="sub_subcategory_id" class="block text-sm font-medium text-secondary-700 mb-2">Sub Subcategory</label>
                     <select name="sub_subcategory_id" id="sub_subcategory_id"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition @error('subcategory_id') border-red-500 @enderror">
+                        class="w-full px-4 py-2.5 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition @error('subcategory_id') border-danger @enderror">
                         <option value="">Select Sub Subcategory</option>
                        
                     </select>
@@ -414,86 +414,86 @@
                 <div class="space-y-3">
                     <label class="flex items-center">
                         <input type="checkbox" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Active (visible to customers)</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">Active (visible to customers)</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Featured Product</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">Featured Product</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_new_arrival" value="1" {{ old('is_new_arrival', $product->is_new_arrival) ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">New Arrival</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">New Arrival</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_best_seller" value="1" {{ old('is_best_seller', $product->is_best_seller) ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Best Seller</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">Best Seller</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_on_sale" value="1" {{ old('is_on_sale', $product->is_on_sale) ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">On Sale</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">On Sale</span>
                     </label>
 
                     <label class="flex items-center">
                         <input type="checkbox" name="is_trending" value="1" {{ old('is_trending', $product->is_trending) ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Trending</span>
+                            class="w-4 h-4 text-primary border-secondary-300 rounded focus:ring-primary">
+                        <span class="ml-2 text-sm text-secondary-700">Trending</span>
                     </label>
                 </div>
             </div>
 
             {{-- Product Images --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Product Media</h2>
+                <h2 class="text-lg font-bold text-primary mb-6">Product Media</h2>
 
                 {{-- Thumbnail Image --}}
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Thumbnail Image <span class="text-red-500">*</span></label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition relative">
+                    <label class="block text-sm font-medium text-secondary-700 mb-2">Thumbnail Image <span class="text-danger">*</span></label>
+                    <div class="border-2 border-dashed border-secondary-300 rounded-lg p-6 text-center hover:border-primary transition relative">
                         <input type="file" name="image" id="image" accept="image/*" class="hidden">
                         <div id="imagePlaceholder" class="{{ $product->image ? 'hidden' : '' }}">
-                            <i class="fas fa-image text-4xl text-gray-400 mb-3"></i>
-                            <p class="text-sm text-gray-600 mb-2">Click to upload thumbnail</p>
-                            <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 2MB</p>
+                            <i class="fas fa-image text-4xl text-secondary-400 mb-3"></i>
+                            <p class="text-sm text-secondary-600 mb-2">Click to upload thumbnail</p>
+                            <p class="text-xs text-secondary-500">PNG, JPG, WEBP up to 2MB</p>
                         </div>
                         <div id="thumbnailPreview" class="{{ $product->image ? '' : 'hidden' }}">
-                            <img src="{{ $product->image ? storage_url($product->image) : '' }}" class="mx-auto h-32 object-cover rounded-lg border border-gray-200">
-                            <button type="button" id="removeThumbnail" class="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
+                            <img src="{{ $product->image ? storage_url($product->image) : '' }}" class="mx-auto h-32 object-cover rounded-lg border border-secondary-200">
+                            <button type="button" id="removeThumbnail" class="absolute top-2 right-2 p-1 bg-danger-500 text-white rounded-full hover:bg-danger transition">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
                         <button type="button" onclick="document.getElementById('image').click()"
-                            class="mt-3 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition" id="thumbnailBtn">
+                            class="mt-3 px-4 py-2 text-sm font-medium text-primary bg-primary-50 rounded-lg hover:bg-primary-100 transition" id="thumbnailBtn">
                             {{ $product->image ? 'Change Thumbnail' : 'Choose File' }}
                         </button>
                     </div>
                     @error('image')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                 </div>
 
                 {{-- Gallery --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Gallery Images (Max 5)</label>
+                    <label class="block text-sm font-medium text-secondary-700 mb-2">Gallery Images (Max 5)</label>
 
                     {{-- Existing Images --}}
                     @if($product->images && $product->images->count() > 0)
                     <div class="mb-4">
-                        <p class="text-xs text-gray-600 mb-2">Existing Images ({{ $product->images->count() }})</p>
+                        <p class="text-xs text-secondary-600 mb-2">Existing Images ({{ $product->images->count() }})</p>
                         <div class="grid grid-cols-2 gap-3" id="existingImagesContainer">
                             @foreach($product->images as $image)
                             <div class="relative group existing-image-item" data-image-id="{{ $image->id }}">
                                 <div class="relative w-full h-32">
-                                    <img src="{{ storage_url($image->image_path) }}" class="w-full h-full object-cover rounded-lg border border-gray-200">
-                                    <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md remove-existing-image" data-image-id="{{ $image->id }}" title="Remove image">
+                                    <img src="{{ storage_url($image->image_path) }}" class="w-full h-full object-cover rounded-lg border border-secondary-200">
+                                    <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-danger-500 text-white rounded-full hover:bg-danger transition shadow-md remove-existing-image" data-image-id="{{ $image->id }}" title="Remove image">
                                         <i class="fas fa-times text-xs"></i>
                                     </button>
                                 </div>
@@ -505,33 +505,33 @@
                     @endif
 
                     {{-- New Images Upload --}}
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition">
-                        <i class="fas fa-images text-4xl text-gray-400 mb-3"></i>
-                        <p class="text-sm text-gray-600 mb-2">Add more images ({{ 5 - ($product->images ? $product->images->count() : 0) }} remaining)</p>
-                        <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB</p>
+                    <div class="border-2 border-dashed border-secondary-300 rounded-lg p-6 text-center hover:border-primary transition">
+                        <i class="fas fa-images text-4xl text-secondary-400 mb-3"></i>
+                        <p class="text-sm text-secondary-600 mb-2">Add more images ({{ 5 - ($product->images ? $product->images->count() : 0) }} remaining)</p>
+                        <p class="text-xs text-secondary-500">PNG, JPG, WEBP up to 5MB</p>
                         <input type="file" name="images[]" id="images" multiple accept="image/*" class="hidden">
                         <button type="button" onclick="document.getElementById('images').click()"
-                            class="mt-3 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                            class="mt-3 px-4 py-2 text-sm font-medium text-primary bg-primary-50 rounded-lg hover:bg-primary-100 transition">
                             Choose Files
                         </button>
                     </div>
                     <div id="galleryPreview" class="mt-4 grid grid-cols-2 gap-3"></div>
                     @error('images')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                     @error('images.*')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
             {{-- Action Buttons --}}
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <button type="submit" id="submitBtn" class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:ring-blue-300 transition">
+                <button type="submit" id="submitBtn" class="w-full px-6 py-3 bg-gradient-to-r from-primary to-primary-700 text-white font-medium rounded-lg hover:from-primary-700 hover:to-primary-800 focus:ring-4 focus:ring-primary-300 transition">
                     <i class="fas fa-save mr-2"></i><span id="btnText">Update Product</span>
                     <i class="fas fa-spinner fa-spin ml-2 hidden" id="btnSpinner"></i>
                 </button>
-                <a href="{{ route('admin.products.index') }}" class="block w-full px-6 py-3 text-center text-gray-700 font-medium bg-gray-100 rounded-lg hover:bg-gray-200 transition mt-3">
+                <a href="{{ route('admin.products.index') }}" class="block w-full px-6 py-3 text-center text-secondary-700 font-medium bg-secondary-100 rounded-lg hover:bg-gray-200 transition mt-3">
                     Cancel
                 </a>
             </div>
@@ -696,7 +696,7 @@
 
         // Update remaining count
         const remainingCount = 5 - (document.querySelectorAll('.existing-image-item').length + galleryFiles.files.length);
-        document.querySelector('.text-sm.text-gray-600').textContent = `Add more images (${remainingCount} remaining)`;
+        document.querySelector('.text-sm.text-secondary-600').textContent = `Add more images (${remainingCount} remaining)`;
     });
 
     galleryInput.addEventListener('change', function(e) {
@@ -752,8 +752,8 @@
                 div.className = 'relative group';
                 div.innerHTML = `
                     <div class="relative w-full h-32">
-                        <img src="${e.target.result}" class="w-full h-full object-cover rounded-lg border border-gray-200">
-                        <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md remove-gallery-image" data-index="${index}" title="Remove image">
+                        <img src="${e.target.result}" class="w-full h-full object-cover rounded-lg border border-secondary-200">
+                        <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-danger-500 text-white rounded-full hover:bg-danger transition shadow-md remove-gallery-image" data-index="${index}" title="Remove image">
                             <i class="fas fa-times text-xs"></i>
                         </button>
                     </div>

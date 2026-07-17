@@ -9,14 +9,14 @@
         <header class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
             <div>
-                <h1 class="text-3xl font-bold text-slate-900">Customer Report</h1>
+                <h1 class="text-3xl font-bold text-primary">Customer Report</h1>
 
-                <nav class="mt-2 flex items-center gap-2 text-sm text-slate-600">
+                <nav class="mt-2 flex items-center gap-2 text-sm text-secondary-600">
                     <span>Reports</span>
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
-                    <span class="font-medium text-slate-900">Customer Report</span>
+                    <span class="font-medium text-primary">Customer Report</span>
                 </nav>
             </div>
 
@@ -24,7 +24,7 @@
             <form method="GET" class="flex flex-col gap-3 sm:flex-row sm:items-end">
 
                 <select name="range" onchange="toggleCustomDates(this.value)"
-                    class="w-full rounded-lg border-2 border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:w-48">
+                    class="w-full rounded-lg border-2 border-secondary-200 bg-white px-4 py-2.5 text-sm font-medium text-secondary-700 transition hover:border-secondary-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:w-48">
 
                     <option value="daily" {{ request('range') == 'daily' ? 'selected' : '' }}>Daily</option>
                     <option value="weekly" {{ request('range') == 'weekly' ? 'selected' : '' }}>Weekly</option>
@@ -36,14 +36,14 @@
                 <div id="customDateRange" class="{{ request('range') == 'custom' ? 'flex' : 'hidden' }} gap-2">
 
                     <input type="date" name="date_from" value="{{ request('date_from') }}"
-                        class="rounded-lg border-2 border-slate-200 px-4 py-2.5 text-sm font-medium transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                        class="rounded-lg border-2 border-secondary-200 px-4 py-2.5 text-sm font-medium transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
 
                     <input type="date" name="date_to" value="{{ request('date_to') }}"
-                        class="rounded-lg border-2 border-slate-200 px-4 py-2.5 text-sm font-medium transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                        class="rounded-lg border-2 border-secondary-200 px-4 py-2.5 text-sm font-medium transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                 </div>
 
                 <button type="submit"
-                    class="h-11 px-5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium flex items-center justify-center whitespace-nowrap">
+                    class="h-11 px-5 bg-primary text-white rounded-xl hover:bg-primary-700 transition font-medium flex items-center justify-center whitespace-nowrap">
                     <i class="fas fa-filter mr-2"></i>
                     Filter
                 </button>
@@ -55,22 +55,22 @@
 
             {{-- Total Customers --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-blue-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-primary p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                        <i class="fas fa-users text-blue-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center">
+                        <i class="fas fa-users text-primary text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Total Customers</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Total Customers</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ number_format($allTimeTotalCustomers) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $newCustomersChange >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $newCustomersChange >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $newCustomersChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($newCustomersChange), 2) }}%
                     </span>
@@ -79,22 +79,22 @@
 
             {{-- New Customers --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-cyan-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-accent p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center">
-                        <i class="fas fa-user-plus text-cyan-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-accent-50 flex items-center justify-center">
+                        <i class="fas fa-user-plus text-accent text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">New Customers</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">New Customers</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ number_format($newCustomersCurrent) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $newCustomersChange >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $newCustomersChange >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $newCustomersChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($newCustomersChange), 2) }}%
                     </span>
@@ -103,43 +103,43 @@
 
             {{-- Returning Rate --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-emerald-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-success p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
-                        <i class="fas fa-redo-alt text-emerald-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-success-50 flex items-center justify-center">
+                        <i class="fas fa-redo-alt text-success text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Returning Rate</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Returning Rate</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ $returningPercentage }}%
                         </p>
                     </div>
                 </div>
 
-                <div class="mt-3 text-xs text-gray-500">
+                <div class="mt-3 text-xs text-secondary-500">
                     Of total customers
                 </div>
             </div>
 
             {{-- Avg CLV --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-amber-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-warning p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
-                        <i class="fas fa-hand-holding-usd text-amber-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-warning-50 flex items-center justify-center">
+                        <i class="fas fa-hand-holding-usd text-warning text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Avg CLV</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Avg CLV</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($avgClvCurrent) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $avgClvChange >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $avgClvChange >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $avgClvChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($avgClvChange), 2) }}%
                     </span>
@@ -148,22 +148,22 @@
 
             {{-- Avg Orders --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-violet-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-accent p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center">
-                        <i class="fas fa-cart-shopping text-violet-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-accent-50 flex items-center justify-center">
+                        <i class="fas fa-cart-shopping text-accent text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Avg Orders</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Avg Orders</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ number_format($avgOrdersPerCustomerCurrent, 1) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $avgOrdersPerCustomerChange >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $avgOrdersPerCustomerChange >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $avgOrdersPerCustomerChange >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($avgOrdersPerCustomerChange), 2) }}%
                     </span>
@@ -177,28 +177,28 @@
 
             {{-- Customer Growth Trend --}}
             <div class="lg:col-span-6">
-                <div class="h-full rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm flex flex-col">
+                <div class="h-full rounded-2xl border border-secondary-200 bg-white p-4 sm:p-6 shadow-sm flex flex-col">
 
                     {{-- Header --}}
                     <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
                         <div>
-                            <h3 class="text-lg font-bold text-slate-900">
+                            <h3 class="text-lg font-bold text-primary">
                                 Customer Growth Trend
                             </h3>
-                            <p class="mt-1 text-sm text-slate-500">
+                            <p class="mt-1 text-sm text-secondary-500">
                                 Track customer acquisition over time
                             </p>
                         </div>
 
-                        <div class="flex w-full lg:w-auto items-center gap-2 rounded-lg bg-slate-100 p-1">
+                        <div class="flex w-full lg:w-auto items-center gap-2 rounded-lg bg-secondary-100 p-1">
                             <button type="button" onclick="showCustomerChart('total')" id="totalTab"
-                                class="w-1/2 lg:w-auto rounded-md bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm">
+                                class="w-1/2 lg:w-auto rounded-md bg-white px-3 py-2 text-sm font-semibold text-primary shadow-sm">
                                 Total
                             </button>
 
                             <button type="button" onclick="showCustomerChart('returning')" id="returningTab"
-                                class="w-1/2 lg:w-auto rounded-md px-3 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900">
+                                class="w-1/2 lg:w-auto rounded-md px-3 py-2 text-sm font-semibold text-secondary-600 hover:text-primary">
                                 New vs Returning
                             </button>
                         </div>
@@ -207,13 +207,13 @@
                     {{-- Charts --}}
                     <div class="flex-1">
 
-                        <div id="totalChartWrapper" class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                        <div id="totalChartWrapper" class="bg-secondary-50 rounded-lg border border-secondary-200 p-4">
 
                             <canvas id="totalCustomersChart" height="150"></canvas>
 
                         </div>
 
-                        <div id="returningChartWrapper" class="hidden bg-gray-50 rounded-lg border border-gray-200 p-4">
+                        <div id="returningChartWrapper" class="hidden bg-secondary-50 rounded-lg border border-secondary-200 p-4">
 
                             <canvas id="newReturningChart" height="150"></canvas>
 
@@ -226,43 +226,43 @@
 
             {{-- Top High-Value Customers --}}
             <div class="lg:col-span-6">
-                <div class="h-full rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm flex flex-col">
+                <div class="h-full rounded-2xl border border-secondary-200 bg-white p-4 sm:p-6 shadow-sm flex flex-col">
 
                     <div class="mb-6">
-                        <h3 class="text-lg font-bold text-slate-900">
+                        <h3 class="text-lg font-bold text-primary">
                             Top High-Value Customers
                         </h3>
-                        <p class="mt-1 text-sm text-slate-500">
+                        <p class="mt-1 text-sm text-secondary-500">
                             Customers with highest spending
                         </p>
                     </div>
 
                     {{-- Table wrapper fixes overflow --}}
-                    <div class="flex-1 overflow-auto rounded-lg border border-slate-200">
+                    <div class="flex-1 overflow-auto rounded-lg border border-secondary-200">
 
                         <table class="min-w-full text-sm">
 
-                            <thead class="bg-slate-50 sticky top-0 z-10">
-                                <tr class="text-slate-600">
+                            <thead class="bg-secondary-50 sticky top-0 z-10">
+                                <tr class="text-secondary-600">
                                     <th class="px-4 py-3 text-left whitespace-nowrap">Customer</th>
                                     <th class="px-4 py-3 text-right whitespace-nowrap">Orders</th>
                                     <th class="px-4 py-3 text-right whitespace-nowrap">Spent</th>
                                 </tr>
                             </thead>
 
-                            <tbody class="divide-y divide-slate-100">
+                            <tbody class="divide-y divide-secondary-100">
 
                                 @forelse ($topCustomers as $index => $cust)
-                                    <tr class="hover:bg-slate-50">
+                                    <tr class="hover:bg-secondary-50">
 
                                         <td class="px-4 py-3 min-w-[160px]">
-                                            <div class="flex items-center gap-2 font-medium text-slate-900">
+                                            <div class="flex items-center gap-2 font-medium text-primary">
                                                 @if ($index === 0)
-                                                    <i class="fas fa-crown text-amber-500"></i>
+                                                    <i class="fas fa-crown text-warning"></i>
                                                 @elseif ($index === 1)
-                                                    <i class="fas fa-medal text-slate-500"></i>
+                                                    <i class="fas fa-medal text-secondary-500"></i>
                                                 @elseif ($index === 2)
-                                                    <i class="fas fa-medal text-amber-700"></i>
+                                                    <i class="fas fa-medal text-warning"></i>
                                                 @endif
 
                                                 <span class="truncate max-w-[140px]">
@@ -273,19 +273,19 @@
 
                                         <td class="px-4 py-3 text-right">
                                             <span
-                                                class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+                                                class="inline-flex rounded-full bg-primary-100 px-2 py-1 text-xs font-semibold text-primary">
                                                 {{ $cust['orders'] }}
                                             </span>
                                         </td>
 
-                                        <td class="px-4 py-3 text-right font-semibold text-emerald-600">
+                                        <td class="px-4 py-3 text-right font-semibold text-success">
                                             {{ money($cust['spent']) }}
                                         </td>
 
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="px-4 py-10 text-center text-slate-500">
+                                        <td colspan="3" class="px-4 py-10 text-center text-secondary-500">
                                             No customers found
                                         </td>
                                     </tr>
@@ -324,15 +324,15 @@
                 totalWrapper.classList.remove('hidden');
                 returningWrapper.classList.add('hidden');
 
-                totalTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-                returningTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+                totalTab.classList.add('bg-white', 'text-primary', 'shadow-sm');
+                returningTab.classList.remove('bg-white', 'text-primary', 'shadow-sm');
 
             } else {
                 returningWrapper.classList.remove('hidden');
                 totalWrapper.classList.add('hidden');
 
-                returningTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-                totalTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+                returningTab.classList.add('bg-white', 'text-primary', 'shadow-sm');
+                totalTab.classList.remove('bg-white', 'text-primary', 'shadow-sm');
             }
 
             setTimeout(() => {

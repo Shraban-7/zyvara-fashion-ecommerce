@@ -9,14 +9,14 @@
         <header class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
             <div>
-                <h1 class="text-3xl font-bold text-slate-900">Sales Report</h1>
+                <h1 class="text-3xl font-bold text-primary">Sales Report</h1>
 
-                <nav class="mt-2 flex items-center gap-2 text-sm text-slate-600">
+                <nav class="mt-2 flex items-center gap-2 text-sm text-secondary-600">
                     <span>Reports</span>
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
-                    <span class="font-medium text-slate-900">Sales Report</span>
+                    <span class="font-medium text-primary">Sales Report</span>
                 </nav>
             </div>
 
@@ -24,7 +24,7 @@
             <form method="GET" class="flex flex-col gap-3 sm:flex-row sm:items-end">
 
                 <select name="range" onchange="toggleCustomDates(this.value)"
-                    class="w-full rounded-lg border-2 border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:w-48">
+                    class="w-full rounded-lg border-2 border-secondary-200 bg-white px-4 py-2.5 text-sm font-medium text-secondary-700 transition hover:border-secondary-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:w-48">
 
                     <option value="daily" {{ request('range') == 'daily' ? 'selected' : '' }}>Daily</option>
                     <option value="weekly" {{ request('range') == 'weekly' ? 'selected' : '' }}>Weekly</option>
@@ -36,14 +36,14 @@
                 <div id="customDateRange" class="{{ request('range') == 'custom' ? 'flex' : 'hidden' }} gap-2">
 
                     <input type="date" name="date_from" value="{{ request('date_from') }}"
-                        class="rounded-lg border-2 border-slate-200 px-4 py-2.5 text-sm font-medium transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                        class="rounded-lg border-2 border-secondary-200 px-4 py-2.5 text-sm font-medium transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
 
                     <input type="date" name="date_to" value="{{ request('date_to') }}"
-                        class="rounded-lg border-2 border-slate-200 px-4 py-2.5 text-sm font-medium transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                        class="rounded-lg border-2 border-secondary-200 px-4 py-2.5 text-sm font-medium transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                 </div>
 
                 <button type="submit"
-                    class="h-11 px-5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium flex items-center justify-center whitespace-nowrap">
+                    class="h-11 px-5 bg-primary text-white rounded-xl hover:bg-primary-700 transition font-medium flex items-center justify-center whitespace-nowrap">
                     <i class="fas fa-filter mr-2"></i>
                     Filter
                 </button>
@@ -55,22 +55,22 @@
 
             {{-- Total Revenue --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-blue-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-primary p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                        <i class="fas fa-sack-dollar text-blue-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center">
+                        <i class="fas fa-sack-dollar text-primary text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Total Revenue</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Total Revenue</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($totalRevenue) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $revenueGrowth >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $revenueGrowth >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $revenueGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($revenueGrowth), 2) }}%
                     </span>
@@ -79,22 +79,22 @@
 
             {{-- Orders --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-cyan-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-accent p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center">
-                        <i class="fas fa-clipboard-list text-cyan-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-accent-50 flex items-center justify-center">
+                        <i class="fas fa-clipboard-list text-accent text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Total Orders</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Total Orders</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ number_format($totalOrder) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $orderGrowth >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $orderGrowth >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $orderGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($orderGrowth), 2) }}%
                     </span>
@@ -103,22 +103,22 @@
 
             {{-- Average Order Value --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-amber-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-warning p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
-                        <i class="fas fa-chart-line text-amber-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-warning-50 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-warning text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Avg Order Value</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Avg Order Value</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ money($avgOrder) }}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-3 text-xs">
-                    <span class="{{ $avgOrderGrowth >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                    <span class="{{ $avgOrderGrowth >= 0 ? 'text-success' : 'text-danger' }} font-semibold">
                         <i class="fas {{ $avgOrderGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
                         {{ number_format(abs($avgOrderGrowth), 2) }}%
                     </span>
@@ -127,42 +127,42 @@
 
             {{-- Growth Rate --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-emerald-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-success p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
-                        <i class="fas fa-arrow-trend-up text-emerald-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-success-50 flex items-center justify-center">
+                        <i class="fas fa-arrow-trend-up text-success text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Growth Rate</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Growth Rate</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ $avgOrderGrowth }}%
                         </p>
                     </div>
                 </div>
 
-                <div class="mt-3 text-xs text-gray-500">
+                <div class="mt-3 text-xs text-secondary-500">
                     Period comparison
                 </div>
             </div>
 
             {{-- Refund Items --}}
             <div
-                class="bg-white rounded-xl shadow-sm border-l-4 border-rose-500 p-4 hover:shadow-md transition h-full flex flex-col justify-between">
+                class="bg-white rounded-xl shadow-sm border-l-4 border-danger p-4 hover:shadow-md transition h-full flex flex-col justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center">
-                        <i class="fas fa-rotate-left text-rose-600 text-lg"></i>
+                    <div class="w-10 h-10 rounded-lg bg-danger-50 flex items-center justify-center">
+                        <i class="fas fa-rotate-left text-danger text-lg"></i>
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Refund Items</p>
-                        <p class="text-lg font-bold text-gray-800">
+                        <p class="text-xs text-secondary-500 font-medium">Refund Items</p>
+                        <p class="text-lg font-bold text-secondary-800">
                             {{ number_format($totalRefundItems) }}
                         </p>
                     </div>
                 </div>
 
-                <div class="mt-3 text-xs text-gray-500">
+                <div class="mt-3 text-xs text-secondary-500">
                     Returned products count
                 </div>
             </div>
@@ -170,14 +170,14 @@
         </div>
 
         {{-- Revenue Chart --}}
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div class="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm">
             <div class="mb-6 flex items-center justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-slate-900">Revenue Trend</h3>
-                    <p class="text-sm text-slate-500">Track your revenue performance over time</p>
+                    <h3 class="text-lg font-bold text-primary">Revenue Trend</h3>
+                    <p class="text-sm text-secondary-500">Track your revenue performance over time</p>
                 </div>
             </div>
-            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+            <div class="bg-secondary-50 rounded-lg border border-secondary-200 p-4">
                 <canvas id="revenueTrendChart" height="80"></canvas>
             </div>
         </div>
@@ -186,34 +186,34 @@
         <div class="grid gap-6 lg:grid-cols-2">
 
             {{-- Category Performance --}}
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm">
                 <div class="mb-6">
-                    <h3 class="text-lg font-bold text-slate-900">Category Performance</h3>
-                    <p class="text-sm text-slate-500">Sales breakdown by category</p>
+                    <h3 class="text-lg font-bold text-primary">Category Performance</h3>
+                    <p class="text-sm text-secondary-500">Sales breakdown by category</p>
                 </div>
 
                 <div class="grid gap-6 md:grid-cols-2">
 
-                    <div class="flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4">
+                    <div class="flex items-center justify-center bg-secondary-50 rounded-lg border border-secondary-200 p-4">
                         <canvas id="categoryPieChart"></canvas>
                     </div>
 
-                    <div class="overflow-hidden rounded-lg border border-slate-200">
+                    <div class="overflow-hidden rounded-lg border border-secondary-200">
                         <table class="w-full text-sm">
-                            <thead class="bg-slate-50">
-                                <tr class="text-slate-600">
+                            <thead class="bg-secondary-50">
+                                <tr class="text-secondary-600">
                                     <th class="px-4 py-3 text-left font-semibold">Category</th>
                                     <th class="px-4 py-3 text-right font-semibold">Sales</th>
                                     <th class="px-4 py-3 text-right font-semibold">Orders</th>
                                 </tr>
                             </thead>
 
-                            <tbody class="divide-y divide-slate-100">
+                            <tbody class="divide-y divide-secondary-100">
                                 @foreach ($categoryData ?? [] as $data)
-                                    <tr class="transition hover:bg-slate-50">
-                                        <td class="px-4 py-3 font-medium text-slate-900">{{ $data['category'] }}</td>
-                                        <td class="px-4 py-3 text-right text-slate-700">{{ money($data['sales']) }}</td>
-                                        <td class="px-4 py-3 text-right text-slate-700">{{ $data['orders'] }}</td>
+                                    <tr class="transition hover:bg-secondary-50">
+                                        <td class="px-4 py-3 font-medium text-primary">{{ $data['category'] }}</td>
+                                        <td class="px-4 py-3 text-right text-secondary-700">{{ money($data['sales']) }}</td>
+                                        <td class="px-4 py-3 text-right text-secondary-700">{{ $data['orders'] }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -224,16 +224,16 @@
             </div>
 
             {{-- Channel Contribution --}}
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm">
                 <div class="mb-6">
-                    <h3 class="text-lg font-bold text-slate-900">Channel Contribution</h3>
-                    <p class="text-sm text-slate-500">Revenue distribution across channels</p>
+                    <h3 class="text-lg font-bold text-primary">Channel Contribution</h3>
+                    <p class="text-sm text-secondary-500">Revenue distribution across channels</p>
                 </div>
 
-                <div class="overflow-hidden rounded-lg border border-slate-200">
+                <div class="overflow-hidden rounded-lg border border-secondary-200">
                     <table class="w-full text-sm">
-                        <thead class="bg-slate-50">
-                            <tr class="text-slate-600">
+                        <thead class="bg-secondary-50">
+                            <tr class="text-secondary-600">
                                 <th class="px-4 py-3 text-left font-semibold">Channel</th>
                                 <th class="px-4 py-3 text-right font-semibold">Revenue</th>
                                 <th class="px-4 py-3 text-right font-semibold">Orders</th>
@@ -241,19 +241,19 @@
                             </tr>
                         </thead>
 
-                        <tbody class="divide-y divide-slate-100">
+                        <tbody class="divide-y divide-secondary-100">
                             @foreach ($channelData ?? [] as $data)
-                                <tr class="transition hover:bg-slate-50">
-                                    <td class="px-4 py-3 font-medium text-slate-900">{{ $data['channel'] }}</td>
-                                    <td class="px-4 py-3 text-right text-slate-700">{{ money($data['revenue']) }}</td>
-                                    <td class="px-4 py-3 text-right text-slate-700">{{ $data['orders'] }}</td>
+                                <tr class="transition hover:bg-secondary-50">
+                                    <td class="px-4 py-3 font-medium text-primary">{{ $data['channel'] }}</td>
+                                    <td class="px-4 py-3 text-right text-secondary-700">{{ money($data['revenue']) }}</td>
+                                    <td class="px-4 py-3 text-right text-secondary-700">{{ $data['orders'] }}</td>
                                     <td class="px-4 py-3 text-right">
                                         <div class="flex items-center justify-end gap-2">
-                                            <div class="h-2 w-16 overflow-hidden rounded-full bg-slate-100">
-                                                <div class="h-full bg-blue-600" style="width: {{ $data['contribution'] }}%">
+                                            <div class="h-2 w-16 overflow-hidden rounded-full bg-secondary-100">
+                                                <div class="h-full bg-primary" style="width: {{ $data['contribution'] }}%">
                                                 </div>
                                             </div>
-                                            <span class="font-semibold text-slate-900">{{ $data['contribution'] }}%</span>
+                                            <span class="font-semibold text-primary">{{ $data['contribution'] }}%</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -269,17 +269,17 @@
 
             {{-- Top Products --}}
             <div class="lg:col-span-7">
-                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm h-full">
+                <div class="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm h-full">
 
                     <div class="mb-6">
-                        <h3 class="text-lg font-bold text-slate-900">Top Products</h3>
-                        <p class="text-sm text-slate-500">Best performing products by sales volume</p>
+                        <h3 class="text-lg font-bold text-primary">Top Products</h3>
+                        <p class="text-sm text-secondary-500">Best performing products by sales volume</p>
                     </div>
 
-                    <div class="overflow-hidden rounded-lg border border-slate-200">
+                    <div class="overflow-hidden rounded-lg border border-secondary-200">
                         <table class="w-full text-sm">
-                            <thead class="bg-slate-50">
-                                <tr class="text-slate-600">
+                            <thead class="bg-secondary-50">
+                                <tr class="text-secondary-600">
                                     <th class="px-4 py-3 text-left font-semibold">Product</th>
                                     <th class="px-4 py-3 text-right font-semibold">Price</th>
                                     <th class="px-4 py-3 text-right font-semibold">Units Sold</th>
@@ -288,30 +288,30 @@
                                 </tr>
                             </thead>
 
-                            <tbody class="divide-y divide-slate-100">
+                            <tbody class="divide-y divide-secondary-100">
                                 @foreach ($productStats ?? [] as $prod)
-                                    <tr class="transition hover:bg-slate-50">
-                                        <td class="px-4 py-3 font-semibold text-slate-900">
+                                    <tr class="transition hover:bg-secondary-50">
+                                        <td class="px-4 py-3 font-semibold text-primary">
                                             {{ $prod['product_name'] }}
                                         </td>
 
-                                        <td class="px-4 py-3 text-right text-slate-700">
+                                        <td class="px-4 py-3 text-right text-secondary-700">
                                             {{ money($prod['price']) }}
                                         </td>
 
-                                        <td class="px-4 py-3 text-right text-slate-700">
+                                        <td class="px-4 py-3 text-right text-secondary-700">
                                             {{ number_format($prod['units_sold']) }}
                                         </td>
 
                                         <td class="px-4 py-3 text-right">
-                                            <span class="font-semibold text-green-600">
+                                            <span class="font-semibold text-success">
                                                 {{ money($prod['total_sales']) }}
                                             </span>
                                         </td>
 
                                         <td class="px-4 py-3 text-right">
                                             <span
-                                                class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                                                class="inline-flex items-center rounded-full bg-primary-100 px-2.5 py-1 text-xs font-semibold text-primary">
                                                 {{ $prod['profit_margin'] }}%
                                             </span>
                                         </td>
@@ -327,14 +327,14 @@
 
             {{-- District Pie Chart --}}
             <div class="lg:col-span-5">
-                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm h-full">
+                <div class="rounded-2xl border border-secondary-200 bg-white p-6 shadow-sm h-full">
 
                     <div class="mb-6">
-                        <h3 class="text-lg font-bold text-slate-900">Orders by District</h3>
-                        <p class="text-sm text-slate-500">Distribution of orders across regions</p>
+                        <h3 class="text-lg font-bold text-primary">Orders by District</h3>
+                        <p class="text-sm text-secondary-500">Distribution of orders across regions</p>
                     </div>
 
-                    <div class="relative h-[320px] flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4">
+                    <div class="relative h-[320px] flex items-center justify-center bg-secondary-50 rounded-lg border border-secondary-200 p-4">
                         <canvas id="districtPieChart"></canvas>
                     </div>
 

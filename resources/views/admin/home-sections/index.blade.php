@@ -28,22 +28,22 @@ $labels = [
 <div>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Homepage Sections</h1>
-            <p class="text-sm text-gray-600">Control which sections appear on the homepage, their order, and their headings. Drag rows to reorder.</p>
+            <h1 class="text-2xl font-bold text-secondary-800">Homepage Sections</h1>
+            <p class="text-sm text-secondary-600">Control which sections appear on the homepage, their order, and their headings. Drag rows to reorder.</p>
         </div>
 
         @if($availableKeys->isNotEmpty())
         <button onclick="openCreateModal()"
-            class="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition shadow-sm">
+            class="px-4 py-2.5 bg-gradient-to-r from-primary to-primary-700 text-white font-medium rounded-lg hover:from-primary-700 hover:to-primary-800 transition shadow-sm">
             <i class="fas fa-plus mr-2"></i> Add Section
         </button>
         @endif
     </div>
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-secondary-200">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+            <table class="w-full text-sm text-left text-secondary-500">
+                <thead class="text-xs text-secondary-700 uppercase bg-secondary-50 border-b">
                     <tr>
                         <th class="px-4 py-4 w-10"></th>
                         <th class="px-6 py-4">Section</th>
@@ -55,24 +55,24 @@ $labels = [
                 </thead>
                 <tbody id="sectionsBody" class="divide-y divide-gray-200">
                     @forelse($sections as $section)
-                    <tr class="hover:bg-gray-50 transition-colors" data-id="{{ $section->id }}">
-                        <td class="px-4 py-4 text-gray-300 cursor-move drag-handle text-center">
+                    <tr class="hover:bg-secondary-50 transition-colors" data-id="{{ $section->id }}">
+                        <td class="px-4 py-4 text-secondary-300 cursor-move drag-handle text-center">
                             <i class="fas fa-grip-vertical"></i>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-gray-900">{{ $labels[$section->section_key] ?? $section->section_key }}</div>
-                            <div class="text-xs text-gray-400 font-mono">{{ $section->section_key }}</div>
+                            <div class="text-sm font-bold text-primary">{{ $labels[$section->section_key] ?? $section->section_key }}</div>
+                            <div class="text-xs text-secondary-400 font-mono">{{ $section->section_key }}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-gray-800">{{ $section->title ?? '—' }}</div>
-                            <div class="text-xs text-gray-500 line-clamp-1">{{ $section->subtitle ?? '' }}</div>
+                            <div class="text-sm text-secondary-800">{{ $section->title ?? '—' }}</div>
+                            <div class="text-xs text-secondary-500 line-clamp-1">{{ $section->subtitle ?? '' }}</div>
                         </td>
-                        <td class="px-6 py-4 text-gray-600 font-mono text-xs">{{ $section->item_limit }}</td>
+                        <td class="px-6 py-4 text-secondary-600 font-mono text-xs">{{ $section->item_limit }}</td>
                         <td class="px-6 py-4">
                             <button type="button"
                                 onclick="toggleStatus({{ $section->id }}, this)"
-                                class="toggle-btn inline-flex items-center text-xs font-medium {{ $section->is_visible ? 'text-green-600' : 'text-gray-400' }}">
-                                <span class="h-1.5 w-1.5 rounded-full mr-1.5 {{ $section->is_visible ? 'bg-green-600' : 'bg-gray-400' }}"></span>
+                                class="toggle-btn inline-flex items-center text-xs font-medium {{ $section->is_visible ? 'text-success' : 'text-secondary-400' }}">
+                                <span class="h-1.5 w-1.5 rounded-full mr-1.5 {{ $section->is_visible ? 'bg-success' : 'bg-gray-400' }}"></span>
                                 <span class="toggle-label">{{ $section->is_visible ? 'Visible' : 'Hidden' }}</span>
                             </button>
                         </td>
@@ -80,7 +80,7 @@ $labels = [
                             <div class="flex justify-end items-center gap-1">
                                 <button type="button"
                                     onclick="openEditModal({{ $section->id }}, '{{ addslashes($labels[$section->section_key] ?? $section->section_key) }}', '{{ addslashes($section->title) }}', '{{ addslashes($section->eyebrow) }}', '{{ addslashes($section->subtitle) }}', {{ $section->item_limit }}, {{ $section->is_visible ? 'true' : 'false' }})"
-                                    class="w-8 h-8 flex items-center justify-center text-indigo-600 hover:bg-indigo-50 rounded-md transition-all"
+                                    class="w-8 h-8 flex items-center justify-center text-primary hover:bg-accent-50 rounded-md transition-all"
                                     title="Edit">
                                     <i class="fa-solid fa-pen-to-square text-base"></i>
                                 </button>
@@ -88,7 +88,7 @@ $labels = [
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="w-8 h-8 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-md transition-all"
+                                        class="w-8 h-8 flex items-center justify-center text-danger hover:bg-danger-50 rounded-md transition-all"
                                         title="Remove">
                                         <i class="fa-solid fa-trash-can text-base"></i>
                                     </button>
@@ -98,7 +98,7 @@ $labels = [
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-12 text-center text-gray-400 italic">
+                        <td colspan="6" class="px-6 py-12 text-center text-secondary-400 italic">
                             No sections configured yet. Click "Add Section" to build your homepage.
                         </td>
                     </tr>
@@ -111,11 +111,11 @@ $labels = [
     {{-- Add Section Modal --}}
     <div id="createModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div onclick="closeCreateModal()" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+            <div onclick="closeCreateModal()" class="fixed inset-0 bg-secondary-500/75 transition-opacity"></div>
             <div class="inline-block w-full max-w-xl p-6 my-8 text-left align-middle bg-white shadow-xl rounded-2xl relative">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-bold text-gray-900">Add Section</h3>
-                    <button type="button" onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-500 transition">
+                    <h3 class="text-lg font-bold text-primary">Add Section</h3>
+                    <button type="button" onclick="closeCreateModal()" class="text-secondary-400 hover:text-secondary-500 transition">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
@@ -123,9 +123,9 @@ $labels = [
                     @csrf
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Section Type *</label>
+                            <label class="block text-sm font-medium text-secondary-700 mb-2">Section Type *</label>
                             <select name="section_key" required
-                                class="block w-full px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                                class="block w-full px-4 py-2.5 rounded-lg border border-secondary-300 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary transition">
                                 @foreach($availableKeys as $key)
                                 <option value="{{ $key }}">{{ $labels[$key] ?? $key }}</option>
                                 @endforeach
@@ -137,15 +137,15 @@ $labels = [
                         <x-input name="item_limit" type="number" value="10" label="Item Limit *" required />
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_visible" checked
-                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 focus:ring-2">
-                            <span class="ml-2 text-sm text-gray-700">Visible on homepage</span>
+                                class="rounded border-secondary-300 text-primary shadow-sm focus:ring-primary focus:ring-2">
+                            <span class="ml-2 text-sm text-secondary-700">Visible on homepage</span>
                         </label>
                     </div>
                     <div class="mt-8 flex justify-end gap-3 border-t pt-4">
                         <button type="button" onclick="closeCreateModal()"
-                            class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">Cancel</button>
+                            class="px-4 py-2.5 text-sm font-medium text-secondary-700 bg-secondary-100 rounded-lg hover:bg-gray-200 transition">Cancel</button>
                         <button type="submit"
-                            class="px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition">
+                            class="px-4 py-2.5 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-700 shadow-sm transition">
                             <i class="fas fa-save mr-2"></i>Add Section
                         </button>
                     </div>
@@ -157,11 +157,11 @@ $labels = [
     {{-- Edit Section Modal --}}
     <div id="editModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div onclick="closeEditModal()" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+            <div onclick="closeEditModal()" class="fixed inset-0 bg-secondary-500/75 transition-opacity"></div>
             <div class="inline-block w-full max-w-xl p-6 my-8 text-left align-middle bg-white shadow-xl rounded-2xl relative">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-bold text-gray-900">Edit <span id="edit_section_name"></span></h3>
-                    <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-500 transition">
+                    <h3 class="text-lg font-bold text-primary">Edit <span id="edit_section_name"></span></h3>
+                    <button type="button" onclick="closeEditModal()" class="text-secondary-400 hover:text-secondary-500 transition">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
@@ -175,15 +175,15 @@ $labels = [
                         <x-input name="item_limit" type="number" label="Item Limit *" id="edit_item_limit" required />
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_visible" id="edit_is_visible"
-                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 focus:ring-2">
-                            <span class="ml-2 text-sm text-gray-700">Visible on homepage</span>
+                                class="rounded border-secondary-300 text-primary shadow-sm focus:ring-primary focus:ring-2">
+                            <span class="ml-2 text-sm text-secondary-700">Visible on homepage</span>
                         </label>
                     </div>
                     <div class="mt-8 flex justify-end gap-3 border-t pt-4">
                         <button type="button" onclick="closeEditModal()"
-                            class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">Cancel</button>
+                            class="px-4 py-2.5 text-sm font-medium text-secondary-700 bg-secondary-100 rounded-lg hover:bg-gray-200 transition">Cancel</button>
                         <button type="submit"
-                            class="px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition">
+                            class="px-4 py-2.5 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-700 shadow-sm transition">
                             <i class="fas fa-save mr-2"></i>Update
                         </button>
                     </div>
@@ -224,12 +224,12 @@ $labels = [
             const dot = btn.querySelector('span');
             const label = btn.querySelector('.toggle-label');
             if (data.is_visible) {
-                btn.classList.remove('text-gray-400'); btn.classList.add('text-green-600');
-                dot.classList.remove('bg-gray-400'); dot.classList.add('bg-green-600');
+                btn.classList.remove('text-secondary-400'); btn.classList.add('text-success');
+                dot.classList.remove('bg-gray-400'); dot.classList.add('bg-success');
                 label.textContent = 'Visible';
             } else {
-                btn.classList.remove('text-green-600'); btn.classList.add('text-gray-400');
-                dot.classList.remove('bg-green-600'); dot.classList.add('bg-gray-400');
+                btn.classList.remove('text-success'); btn.classList.add('text-secondary-400');
+                dot.classList.remove('bg-success'); dot.classList.add('bg-gray-400');
                 label.textContent = 'Hidden';
             }
         });
