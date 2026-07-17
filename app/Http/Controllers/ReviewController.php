@@ -50,8 +50,18 @@ class ReviewController extends Controller
         return back()->with(
             'success',
             $review->wasRecentlyCreated
-            ? 'Review submitted successfully.'
-            : 'Review updated successfully.'
+                ? 'Review submitted successfully.'
+                : 'Review updated successfully.'
         );
+    }
+
+    public function destroy(Review $review)
+    {
+        // Ensure the review belongs to the authenticated customer.
+        abort_unless($review->user_id === auth()->id(), 403);
+
+        $review->delete();
+
+        return back()->with('success', 'Review deleted successfully.');
     }
 }

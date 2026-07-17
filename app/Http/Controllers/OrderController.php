@@ -36,6 +36,17 @@ class OrderController extends Controller
         return view('orders.show', compact('order','refunds','totalRefund'));
     }
 
+    public function track(Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $order->load('items.product');
+
+        return view('orders.tracking', compact('order'));
+    }
+
     public function trackOrder(Request $request)
     {
         if ($request->has('order_number') || $request->has('phone')) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Address;
 use App\Models\Wishlist;
 use App\Models\Review;
@@ -22,12 +23,13 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         $stats = [
-            'total_orders' => Order::where('user_id', $user->id)->count(),
+            'total_orders'   => Order::where('user_id', $user->id)->count(),
             'pending_orders' => Order::where('user_id', $user->id)
                 ->whereIn('status', ['pending', 'processing'])
                 ->count(),
-            'wishlist_items' => Wishlist::where('user_id', $user->id)->count(),
-            'addresses' => Address::where('user_id', $user->id)->count(),
+            'wishlist_count' => Wishlist::where('user_id', $user->id)->count(),
+            'addresses'      => Address::where('user_id', $user->id)->count(),
+            'reward_points'  => $user->reward_points ?? 0,
         ];
 
         $recent_orders = Order::where('user_id', $user->id)
@@ -106,6 +108,11 @@ class CustomerController extends Controller
 
         $user = Auth::user();
 
+        $makeDefault = $request->has('is_default');
+        if ($makeDefault) {
+            Address::where('user_id', $user->id)->update(['is_default' => false]);
+        }
+
         Address::create([
             'user_id' => $user->id,
             'name' => $request->name,
@@ -116,7 +123,7 @@ class CustomerController extends Controller
             'state' => $request->state,
             'postal_code' => $request->postal_code,
             'type' => $request->type,
-            'is_default' => $request->has('is_default') ? true : false,
+            'is_default' => $makeDefault,
         ]);
 
         return back()->with('success', 'Address added successfully!');
@@ -139,6 +146,11 @@ class CustomerController extends Controller
             'type' => 'required|in:home,office',
         ]);
 
+        $makeDefault = $request->has('is_default');
+        if ($makeDefault) {
+            Address::where('user_id', Auth::id())->where('id', '!=', $address->id)->update(['is_default' => false]);
+        }
+
         $address->update([
             'name' => $request->name,
             'phone' => $request->phone,
@@ -148,7 +160,7 @@ class CustomerController extends Controller
             'state' => $request->state,
             'postal_code' => $request->postal_code,
             'type' => $request->type,
-            'is_default' => $request->has('is_default') ? true : false,
+            'is_default' => $makeDefault,
         ]);
 
         return back()->with('success', 'Address updated successfully!');
@@ -164,12 +176,26 @@ class CustomerController extends Controller
         return back()->with('success', 'Address deleted successfully!');
     }
 
+    public function setDefaultAddress(Request $request, Address $address)
+    {
+        if ($address->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // Only one default per user.
+        Address::where('user_id', Auth::id())->update(['is_default' => false]);
+        $address->update(['is_default' => true]);
+
+        return back()->with('success', 'Default address updated!');
+    }
+
     public function wishlist()
     {
         $user = Auth::user();
         $wishlists = Wishlist::where('user_id', $user->id)
             ->with('product.images')
-            ->get();
+            ->latest()
+            ->paginate(12);
 
         return view('customer.wishlist', compact('wishlists'));
     }
@@ -182,6 +208,26 @@ class CustomerController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('customer.reviews', compact('reviews'));
+        // Pending reviews: items from delivered orders that the user hasn't reviewed yet.
+        $reviewedProductIds = $reviews->pluck('product_id')->push(0)->all();
+        $pending_reviews = OrderItem::whereHas('order', function ($q) use ($user) {
+                $q->where('user_id', $user->id)->where('status', 'delivered');
+            })
+            ->whereNotNull('product_id')
+            ->whereNotIn('product_id', $reviewedProductIds)
+            ->with('product')
+            ->limit(10)
+            ->get()
+            ->map(function ($item) {
+                return (object) [
+                    'product_id'   => $item->product_id,
+                    'product_name' => $item->product->name ?? 'Product',
+                    'product_image' => $item->product->thumbnail ?? null,
+                    'order_id'     => $item->order_id,
+                    'delivered_at' => optional($item->order)->created_at?->format('M d, Y'),
+                ];
+            });
+
+        return view('customer.reviews', compact('reviews', 'pending_reviews'));
     }
 }

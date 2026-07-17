@@ -91,7 +91,7 @@ class HomeSection extends Model
         'our_brands' => ['eyebrow' => 'Trusted Partners', 'title' => 'Our Brands', 'subtitle' => 'Premium labels, exceptional quality'],
         'categories' => ['eyebrow' => 'Collections', 'title' => 'Shop by Category', 'subtitle' => 'Explore our curated edit — crafted for everyday ease and quiet luxury.'],
         'newsletter' => ['eyebrow' => '', 'title' => 'Subscribe for Exclusive Offers', 'subtitle' => 'Stay updated with our latest collections and offers.'],
-        'bento_events' => ['eyebrow' => 'Curated', 'title' => 'Explore The Collection', 'subtitle' => ''],
+        'bento_events' => ['eyebrow' => 'Festival', 'title' => 'Festival & Events', 'subtitle' => 'Curated offers, live right now'],
     ];
 
     public static function clearCache(): void

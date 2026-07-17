@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Coupon;
+use App\Models\Address;
 use App\Models\Setting;
 use App\Models\District;
 use App\Models\OrderItem;
@@ -14,6 +15,7 @@ use App\Enums\DeliveryZone;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\ShippingZone;
+use App\Services\CouponService;
 use Illuminate\Http\Request;
 use App\Models\OrderStatusHistory;
 use Illuminate\Support\Facades\Log;
@@ -23,6 +25,25 @@ use Illuminate\Support\Facades\Http;
 
 class CheckoutController extends Controller
 {
+    public function __construct(
+        protected CouponService $couponService
+    ) {
+    }
+
+    /**
+     * Load the current user/session cart with items.
+     */
+    protected function getOrCreateCart()
+    {
+        return Auth::check()
+            ? Cart::with(['items.product', 'items.variant.size', 'items.variant.color'])
+                ->where('user_id', Auth::id())
+                ->first()
+            : Cart::with(['items.product', 'items.variant.size', 'items.variant.color'])
+                ->where('session_id', session()->getId())
+                ->first();
+    }
+
     public function index()
     {
         $cart = Auth::check()
@@ -47,10 +68,14 @@ class CheckoutController extends Controller
 
         $user = Auth::user();
 
+        $savedAddresses = $user
+            ? Address::where('user_id', $user->id)->get()
+            : collect();
+
         $bkashNumber = Setting::get('bkash_merchant_number');
         $nagadNumber = Setting::get('nagad_merchant_number');
 
-        return view('checkout', compact('cart', 'shippingZones', 'districts', 'user', 'bkashNumber', 'nagadNumber'));
+        return view('checkout', compact('cart', 'shippingZones', 'districts', 'user', 'savedAddresses', 'bkashNumber', 'nagadNumber'));
     }
 
     public function store(Request $request)
@@ -107,15 +132,24 @@ class CheckoutController extends Controller
             $shippingCost = $shippingZone->shipping_cost;
             $discountAmount = 0;
             $couponId = null;
+            $appliedCoupon = null;
 
-            if (!empty($validated['coupon'])) {
-                $coupon = Coupon::where('code', $validated['coupon'])->valid()->first();
+            // Re-validate coupon server-side (do not trust session/frontend state alone)
+            $sessionCode = session('applied_coupon_code', $validated['coupon'] ?? null);
 
-                if ($coupon && $coupon->isValid()) {
-                    $discountAmount = $coupon->calculateDiscount($subtotal);
-                    $couponId = $coupon->id;
+            if (!empty($sessionCode)) {
+                $result = $this->couponService->apply($sessionCode, $cart, Auth::user());
+
+                if ($result->success) {
+                    $discountAmount = $result->discount;
+                    $appliedCoupon = $result->coupon;
+                    $couponId = $appliedCoupon->id;
                 } else {
-                    toast_warning('Coupon code is invalid or expired.');
+                    // Coupon became invalid between cart and checkout
+                    session()->forget(['applied_coupon_code', 'applied_coupon_discount']);
+                    toast_warning($result->error ?? 'Coupon code is invalid or expired.');
+
+                    return back()->withInput();
                 }
             }
 
@@ -179,9 +213,18 @@ class CheckoutController extends Controller
                 'updated_by' => Auth::id(),
             ]);
 
-            if ($couponId) {
-                $coupon->incrementUsage();
+            if ($couponId && $appliedCoupon) {
+                // Race-safe: re-check usage limit inside the transaction
+                $appliedCoupon->refresh();
+                if ($appliedCoupon->usage_limit !== null && $appliedCoupon->used_count >= $appliedCoupon->usage_limit) {
+                    throw new \Exception('This coupon has just reached its usage limit. Please remove it and try again.');
+                }
+
+                $appliedCoupon->increment('used_count');
+                $this->couponService->recordUsage($appliedCoupon, Auth::user(), $order, $discountAmount);
             }
+
+            session()->forget(['applied_coupon_code', 'applied_coupon_discount']);
 
             $cart->items()->delete();
             $cart->delete();
@@ -253,51 +296,44 @@ class CheckoutController extends Controller
     {
         $request->validate([
             'coupon' => 'required|string|max:50',
-            'subtotal' => 'required|numeric|min:0',
         ]);
 
-        $coupon = Coupon::where('code', $request->coupon)
-            ->valid()
-            ->first();
+        $cart = $this->getOrCreateCart();
 
-        if (!$coupon || !$coupon->isValid()) {
+        if (! $cart || $cart->items->isEmpty()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid or expired coupon code',
+                'error_code' => 'empty_cart',
+                'message' => 'Your cart is empty.',
             ], 422);
         }
 
-        $subtotal = (float) $request->subtotal;
+        $result = $this->couponService->apply($request->coupon, $cart, Auth::user());
 
-        if ($subtotal < $coupon->minimum_order_amount) {
+        if (! $result->success) {
+            session()->forget(['applied_coupon_code', 'applied_coupon_discount']);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Minimum order amount of ' . money($coupon->minimum_order_amount) . ' required',
+                'error_code' => $result->errorCode,
+                'message' => $result->error,
             ], 422);
         }
 
-        if ($coupon->usage_limit_per_user && Auth::check()) {
-            $userUsageCount = Order::where('user_id', Auth::id())
-                ->where('coupon_id', $coupon->id)
-                ->count();
-
-            if ($userUsageCount >= $coupon->usage_limit_per_user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You have already used this coupon maximum times',
-                ], 422);
-            }
-        }
-
-        $discountAmount = $coupon->calculateDiscount($subtotal);
+        // Persist applied coupon in session until checkout completes or is removed
+        session([
+            'applied_coupon_code' => $result->coupon->code,
+            'applied_coupon_discount' => $result->discount,
+        ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Coupon applied successfully!',
-            'discount' => $discountAmount,
-            'discount_formatted' => money($discountAmount),
-            'coupon_type' => $coupon->type->value,
-            'coupon_value' => $coupon->value,
+            'discount' => $result->discount,
+            'discount_formatted' => money($result->discount),
+            'coupon_type' => $result->coupon->type->value,
+            'coupon_value' => $result->coupon->value,
+            'coupon_code' => $result->coupon->code,
         ]);
     }
 

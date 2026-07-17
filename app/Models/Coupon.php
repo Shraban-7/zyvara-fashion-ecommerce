@@ -6,6 +6,7 @@ use App\Enums\CouponType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Coupon extends Model
 {
@@ -15,6 +16,8 @@ class Coupon extends Model
         'code',
         'name',
         'description',
+        'applicable_categories',
+        'applicable_products',
         'type',
         'value',
         'minimum_order_amount',
@@ -37,6 +40,8 @@ class Coupon extends Model
         'is_active' => 'boolean',
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
+        'applicable_categories' => 'array',
+        'applicable_products' => 'array',
         'type' => CouponType::class,
     ];
 
@@ -44,6 +49,11 @@ class Coupon extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function usages(): HasMany
+    {
+        return $this->hasMany(CouponUsage::class);
     }
 
     // Scopes
@@ -114,5 +124,111 @@ class Coupon extends Model
     public function incrementUsage(): void
     {
         $this->increment('used_count');
+    }
+
+    // Code normalization (prevent case-sensitive conflicts)
+    public function setCodeAttribute($value): void
+    {
+        $this->attributes['code'] = $value !== null ? strtoupper(trim($value)) : null;
+    }
+
+    public static function normalizeCode(string $code): string
+    {
+        return strtoupper(trim($code));
+    }
+
+    // Status helpers (for admin badges)
+    public function getStatusAttribute(): string
+    {
+        if (! $this->is_active) {
+            return 'inactive';
+        }
+
+        if ($this->starts_at && $this->starts_at->isFuture()) {
+            return 'scheduled';
+        }
+
+        if ($this->expires_at && $this->expires_at->isPast()) {
+            return 'expired';
+        }
+
+        return 'active';
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'active' => 'Active',
+            'scheduled' => 'Scheduled',
+            'expired' => 'Expired',
+            'inactive' => 'Inactive',
+        };
+    }
+
+    // Restriction helpers
+    public function hasCategoryRestrictions(): bool
+    {
+        return ! empty($this->applicable_categories);
+    }
+
+    public function hasProductRestrictions(): bool
+    {
+        return ! empty($this->applicable_products);
+    }
+
+    public function isRestricted(): bool
+    {
+        return $this->hasCategoryRestrictions() || $this->hasProductRestrictions();
+    }
+
+    /**
+     * Given cart items, return the portion of the subtotal that is eligible
+     * for this coupon (items matching category/product restrictions).
+     * When no restrictions exist, the entire subtotal is eligible.
+     *
+     * @param  \Illuminate\Support\Collection  $items  CartItem collection (already loaded with product + variant)
+     */
+    public function eligibleSubtotal($items): float
+    {
+        if (! $this->isRestricted()) {
+            return (float) $items->sum('total_price');
+        }
+
+        return (float) $items->sum(function ($item) {
+            $product = $item->product;
+
+            $inCategories = $this->hasCategoryRestrictions()
+                && $product
+                && in_array($product->category_id, $this->applicable_categories, true);
+
+            $inProducts = $this->hasProductRestrictions()
+                && in_array($item->product_id, $this->applicable_products, true);
+
+            return ($inCategories || $inProducts) ? (float) $item->total_price : 0.0;
+        });
+    }
+
+    /**
+     * Whether the coupon applies to at least one item currently in the cart.
+     */
+    public function appliesToCart($items): bool
+    {
+        if (! $this->isRestricted()) {
+            return $items->isNotEmpty();
+        }
+
+        foreach ($items as $item) {
+            $product = $item->product;
+
+            if ($this->hasProductRestrictions() && in_array($item->product_id, $this->applicable_products, true)) {
+                return true;
+            }
+
+            if ($this->hasCategoryRestrictions() && $product && in_array($product->category_id, $this->applicable_categories, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -7,6 +7,8 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\HomeSection;
 use App\Models\Product;
+use App\Models\Store;
+use App\Services\BentoLayoutService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
@@ -112,6 +114,12 @@ class HomeController extends Controller
             return HomeSection::visible()->ordered()->get();
         });
 
+        $stores = Cache::remember('active_stores', now()->addHours(6), function () {
+            return Store::where('is_active', true)->ordered()->get();
+        });
+
+        $bentoCells = BentoLayoutService::cached();
+
         return view('home', compact(
             'newArrivals',
             'bestSelling',
@@ -122,7 +130,10 @@ class HomeController extends Controller
             'ourBrands',
             'featuredProducts',
             'onSaleProducts',
-            'trendingProducts'
+            'trendingProducts',
+            'homeSections',
+            'stores',
+            'bentoCells'
         ));
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\CouponService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,11 @@ use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
+    public function __construct(
+        protected CouponService $couponService
+    ) {
+    }
+
     /**
      * Get or create cart for the current user/session
      */
@@ -278,6 +284,70 @@ class CartController extends Controller
                 'message' => 'Failed to remove item: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Apply a coupon code to the current cart (AJAX, persists to session).
+     */
+    public function applyCoupon(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|max:50',
+        ]);
+
+        $cart = $this->getOrCreateCart();
+        $cart->load(['items.product', 'items.variant']);
+
+        if (! $cart || $cart->items->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'error_code' => 'empty_cart',
+                'message' => 'Your cart is empty.',
+            ], 422);
+        }
+
+        $result = $this->couponService->apply($request->code, $cart, Auth::user());
+
+        if (! $result->success) {
+            session()->forget(['applied_coupon_code', 'applied_coupon_discount']);
+
+            return response()->json([
+                'success' => false,
+                'error_code' => $result->errorCode,
+                'message' => $result->error,
+            ], 422);
+        }
+
+        session([
+            'applied_coupon_code' => $result->coupon->code,
+            'applied_coupon_discount' => $result->discount,
+        ]);
+
+        $shipping = $cart->items->count() > 0 ? ($cart->subtotal >= 1500 ? 0 : 60) : 0;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coupon applied successfully!',
+            'coupon_code' => $result->coupon->code,
+            'discount' => $result->discount,
+            'discount_formatted' => money($result->discount),
+            'subtotal' => (float) $cart->subtotal,
+            'shipping' => $shipping,
+            'total' => (float) $cart->subtotal + $shipping - $result->discount,
+        ]);
+    }
+
+    /**
+     * Remove the applied coupon from the session (AJAX).
+     */
+    public function removeCoupon(Request $request)
+    {
+        session()->forget(['applied_coupon_code', 'applied_coupon_discount']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coupon removed.',
+        ]);
     }
 
     /**
