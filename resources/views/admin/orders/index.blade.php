@@ -79,6 +79,7 @@
                 <select name="payment_method" class="w-full h-10 px-3 border border-secondary-300 rounded-xl text-xs bg-white focus:outline-none focus:ring-4 focus:ring-primary-100 focus:border-primary transition">
                     <option value="all">All Payment Methods</option>
                     <option value="cod" {{ request('payment_method') === 'cod' ? 'selected' : '' }}>Cash on Delivery</option>
+                    <option value="sslcommerz" {{ request('payment_method') === 'sslcommerz' ? 'selected' : '' }}>SSLCommerz (Online)</option>
                     <option value="bkash" {{ request('payment_method') === 'bkash' ? 'selected' : '' }}>bKash</option>
                     <option value="nagad" {{ request('payment_method') === 'nagad' ? 'selected' : '' }}>Nagad</option>
                 </select>

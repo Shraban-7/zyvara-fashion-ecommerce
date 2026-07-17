@@ -148,12 +148,20 @@
         <section class="checkout-step lg:col-span-2 bg-surface-elevated rounded-2xl border border-secondary-100 shadow-sm p-5 md:p-6 hidden" data-step="2">
             <h2 class="font-heading text-lg font-semibold text-primary mb-5 flex items-center gap-2"><i class="fas fa-credit-card text-accent-600"></i> Payment Method</h2>
             <div class="grid sm:grid-cols-2 gap-3">
-                @foreach([['cod','fa-money-bill-wave','Cash on Delivery','Pay when you receive.'],['online','fa-globe','Pay Online','Card / mobile banking.']] as $pm)
+                @foreach([['cod','fa-money-bill-wave','Cash on Delivery','Pay when you receive.'],['online','fa-globe','Pay Online (SSLCommerz)','Secure checkout via SSLCommerz gateway.']] as $pm)
                     <label class="cursor-pointer">
                         <input type="radio" name="payment_method" value="{{ $pm[0] }}" class="sr-only peer" {{ $loop->first ? 'checked' : '' }}>
                         <div class="p-4 border-2 border-secondary-200 rounded-xl peer-checked:border-accent peer-checked:bg-accent-50 transition">
                             <div class="flex items-center gap-2 mb-1"><i class="fas {{ $pm[1] }} text-primary-500"></i><span class="font-semibold text-primary">{{ $pm[2] }}</span></div>
                             <p class="text-xs text-secondary-500">{{ $pm[3] }}</p>
+                            @if($pm[0] === 'online')
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="text-[10px] font-semibold text-secondary-400 uppercase tracking-wide">Accepts</span>
+                                    <span class="inline-flex items-center gap-1 text-[11px] text-secondary-600"><i class="fas fa-mobile-alt text-[#e2136e]"></i>bKash</span>
+                                    <span class="inline-flex items-center gap-1 text-[11px] text-secondary-600"><i class="fas fa-mobile-alt text-[#e7343f]"></i>Nagad</span>
+                                    <span class="inline-flex items-center gap-1 text-[11px] text-secondary-600"><i class="fas fa-credit-card text-[#1a1f71]"></i>Visa / Mastercard</span>
+                                </div>
+                            @endif
                         </div>
                     </label>
                 @endforeach
