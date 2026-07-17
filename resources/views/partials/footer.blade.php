@@ -100,24 +100,11 @@ $rightPages = \App\Models\StaticPage::active()->where('footer_position', 2)->ord
 
         {{-- Payment Methods --}}
         <div class="border-t border-surface-elevated/10 pt-8 mb-8">
-            <div class="flex flex-wrap items-center justify-center gap-4">
-                <span class="text-secondary-400 text-sm font-medium">We Accept:</span>
-                <div class="flex items-center gap-3 flex-wrap justify-center">
-                    <div class="bg-surface-elevated/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-shadow">
-                        <span class="text-xs font-bold text-accent-600">bKash</span>
-                    </div>
-                    <div class="bg-surface-elevated/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-shadow">
-                        <span class="text-xs font-bold text-warning-500">Nagad</span>
-                    </div>
-                    <div class="bg-surface-elevated/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-shadow">
-                        <span class="text-xs font-bold text-primary">VISA</span>
-                    </div>
-                    <div class="bg-surface-elevated/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-shadow">
-                        <span class="text-xs font-bold text-danger">Master</span>
-                    </div>
-                    <div class="bg-surface-elevated/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-shadow">
-                        <span class="text-xs font-bold text-secondary-700">COD</span>
-                    </div>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <span class="text-secondary-400 text-sm font-medium">Secure Payments via</span>
+                <div class="flex items-center gap-2 bg-surface-elevated/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm">
+                    <i class="fas fa-lock text-accent-600 text-sm"></i>
+                    <span class="text-sm font-bold text-primary tracking-tight">SSL<span class="text-accent-600">Commerz</span></span>
                 </div>
             </div>
         </div>
