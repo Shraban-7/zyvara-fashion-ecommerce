@@ -30,7 +30,7 @@
     @stack('styles')
 </head>
 
-<body class="bg-light min-h-screen pb-20 md:pb-0">
+<body class="bg-light min-h-screen pb-20 lg:pb-0">
 
     @if($settings['body_start_scripts'])
         {!! $settings['body_start_scripts'] !!}

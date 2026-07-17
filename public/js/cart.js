@@ -69,7 +69,9 @@ class CartManager {
                         data.message || "Failed to add item to cart",
                     );
                 }
-                return false;
+                const err = new Error(data.message || "Failed to add item to cart");
+                err.cartError = data;
+                throw err;
             }
         } catch (error) {
             console.error("Failed to add to cart:", error);

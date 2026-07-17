@@ -1,157 +1,73 @@
 @php
-    $bentoBanners = \App\Models\Banner::bento()->active()->ordered()->get();
-    $bentoHeadings = isset($section) ? $section->headings() : ['eyebrow' => 'Curated', 'title' => 'Explore The Collection', 'subtitle' => ''];
-    $bentoTitle = $bentoHeadings['title'];
-    $bentoSub = $bentoHeadings['eyebrow'];
+    // $bentoCells comes from HomeController (BentoLayoutService::cached()).
+    // Each cell: ['type' => 'event'|'view-all', 'event' => Event|null, 'size', 'span']
+    $cells = $bentoCells ?? [];
+    if (empty($cells)) {
+        return; // auto-hide entire section when no active events
+    }
+
+    $headings = isset($section) ? $section->headings() : ['eyebrow' => 'Festival', 'title' => 'Running Events', 'subtitle' => ''];
+    $title = $headings['title'];
+    $eyebrow = $headings['eyebrow'];
 @endphp
 
-@if($bentoBanners->isNotEmpty())
-<section class="home-section home-section--bento">
-    <div class="home-wrap">
-        @if($bentoTitle)
-        <div class="section-head">
-            <div class="section-head-text">
-                @if($bentoSub)<span class="section-eyebrow">{{ $bentoSub }}</span>@endif
-                <h2 class="section-title">{{ $bentoTitle }}</h2>
-            </div>
+<section class="home-section py-12 md:py-16 bg-[var(--color-background)]" aria-label="Festival and running events">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        @if($eyebrow || $title)
+        <div class="mb-7">
+            @if($eyebrow)
+                <span class="inline-block text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--color-accent)] mb-2">{{ $eyebrow }}</span>
+            @endif
+            @if($title)
+                <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--color-primary)] font-heading">{{ $title }}</h2>
+            @endif
         </div>
         @endif
 
-        <div class="bento-grid">
-            @foreach($bentoBanners as $banner)
-                @php $sizeClass = $banner->size?->gridClass() ?? 'bento-item--small'; @endphp
-                <a href="{{ $banner->button_link ?: '#' }}" class="bento-item {{ $sizeClass }}">
-                    <img src="{{ storage_url($banner->image) }}" alt="{{ $banner->title }}" class="bento-img" loading="lazy">
-                    <div class="bento-overlay">
-                        @if($banner->subtitle)<span class="bento-eyebrow">{{ $banner->subtitle }}</span>@endif
-                        <h3 class="bento-title">{{ $banner->title }}</h3>
-                        @if($banner->button_text)
-                            <span class="bento-cta">{{ $banner->button_text }} <i class="fas fa-arrow-right"></i></span>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 auto-rows-[180px] md:auto-rows-[200px] gap-3 md:gap-4">
+            @foreach($cells as $cell)
+                @if($cell['type'] === 'view-all')
+                    <a href="{{ route('events.index') }}"
+                       class="group relative flex items-center justify-center rounded-2xl border border-dashed border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 {{ $cell['span'] }} overflow-hidden transition-colors hover:bg-[var(--color-primary)]/10">
+                        <span class="text-sm font-semibold text-[var(--color-primary)] flex items-center gap-2">
+                            View All Offers
+                            <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                        </span>
+                    </a>
+                    @continue
+                @endif
+
+                @php
+                    $event = $cell['event'];
+                    $img = $event->image ? storage_url($event->image) : null;
+                @endphp
+
+                <a href="{{ $event->link_url ?: '#' }}"
+                   class="group relative block rounded-2xl overflow-hidden bg-[var(--color-secondary)]/20 border border-[var(--color-secondary)]/30 {{ $cell['span'] }} transition-shadow hover:shadow-lg"
+                   aria-label="{{ $event->title }}">
+                    @if($img)
+                        <img src="{{ $img }}" alt="{{ $event->title }}" loading="lazy"
+                             class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]">
+                    @endif
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/80 via-[var(--color-primary)]/25 to-transparent transition-opacity duration-300 group-hover:from-[var(--color-primary)]/90"></div>
+
+                    @if($event->badge_text)
+                        <span class="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-[var(--color-accent)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[var(--color-primary)] shadow-sm">
+                            {{ $event->badge_text }}
+                        </span>
+                    @endif
+
+                    <div class="relative flex h-full flex-col justify-end p-4 md:p-5">
+                        @if($event->subtitle)
+                            <span class="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-accent)] mb-1">{{ $event->subtitle }}</span>
                         @endif
+                        <h3 class="font-heading font-semibold leading-tight text-[var(--color-background)] {{ $cell['size'] === 'large' ? 'text-xl md:text-2xl' : 'text-base md:text-lg' }}">
+                            {{ $event->title }}
+                        </h3>
                     </div>
                 </a>
             @endforeach
         </div>
     </div>
 </section>
-
-<style>
-    .home-section--bento {
-        padding: 48px 0;
-        background: var(--color-background);
-        width: 100%;
-    }
-
-    @media (min-width: 768px) {
-        .home-section--bento { padding: 64px 0; }
-    }
-
-    .home-section--bento .section-head { margin-bottom: 28px; }
-
-    .home-section--bento .section-eyebrow {
-        display: inline-block;
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--color-accent);
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        margin-bottom: 8px;
-    }
-
-    .home-section--bento .section-title {
-        font-size: clamp(22px, 4vw, 32px);
-        font-weight: 600;
-        font-family: var(--font-heading);
-        color: var(--color-primary);
-        letter-spacing: -0.02em;
-        margin: 0;
-    }
-
-    .bento-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: 180px;
-        gap: 12px;
-        width: 100%;
-    }
-
-    @media (min-width: 768px) {
-        .bento-grid {
-            grid-template-columns: repeat(4, 1fr);
-            grid-auto-rows: 220px;
-            gap: 16px;
-        }
-    }
-
-    .bento-item {
-        position: relative;
-        overflow: hidden;
-        border-radius: 16px;
-        display: block;
-        text-decoration: none;
-        background: var(--color-surface-muted);
-        border: 1px solid var(--color-border);
-    }
-
-    .bento-item--small { grid-column: span 1; grid-row: span 1; }
-    .bento-item--wide  { grid-column: span 2; grid-row: span 1; }
-    .bento-item--tall  { grid-column: span 1; grid-row: span 2; }
-    .bento-item--large { grid-column: span 2; grid-row: span 2; }
-
-    .bento-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .bento-item:hover .bento-img { transform: scale(1.06); }
-
-    .bento-overlay {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 18px 20px;
-        background: linear-gradient(to top, rgba(26, 26, 26, 0.72) 0%, rgba(26, 26, 26, 0.15) 55%, transparent 100%);
-    }
-
-    .bento-eyebrow {
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--color-accent);
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        margin-bottom: 4px;
-    }
-
-    .bento-title {
-        font-size: clamp(15px, 2.2vw, 20px);
-        font-weight: 600;
-        font-family: var(--font-heading);
-        color: #FAF8F5;
-        margin: 0;
-        line-height: 1.25;
-    }
-
-    .bento-cta {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        margin-top: 8px;
-        font-size: 12px;
-        font-weight: 700;
-        color: #FAF8F5;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-    }
-
-    .bento-cta i { font-size: 10px; transition: transform 0.25s ease; }
-    .bento-item:hover .bento-cta i { transform: translateX(4px); }
-
-    @media (prefers-reduced-motion: reduce) {
-        .bento-img, .bento-cta i { transition: none !important; }
-    }
-</style>
-@endif

@@ -13,11 +13,10 @@ $rightPages = \App\Models\StaticPage::active()->where('footer_position', 2)->ord
             {{-- Logo & About --}}
             <div class="col-span-2 md:col-span-1">
                 <a href="{{ url('/') }}" class="flex items-center mb-5 group">
-                    <span class="text-2xl font-bold text-surface-elevated tracking-tight">Spinner</span>
-                    <span class="text-2xl font-bold text-secondary-400 tracking-tight group-hover:text-surface-elevated transition-colors duration-300">Fashion</span>
+                    <span class="text-2xl font-bold text-surface-elevated tracking-tight">{{ $siteName }}</span>
                 </a>
                 <p class="text-secondary-300 text-sm leading-relaxed mb-6 max-w-xs">
-                    Premium Bangladeshi clothing brand offering quality fashion at affordable prices. Your trusted partner for modern style.
+                    {{ $settings['site_tagline'] ?? 'Your trusted partner for modern style. Premium fashion at affordable prices.' }}
                 </p>
 
                 {{-- Social Links --}}

@@ -17,7 +17,7 @@
     @include('home.on-sale')
     @include('home.featured')
     @include('home.testimonials')
-    @include('home.festive-banner')
+    @include('home.bento-events')
     @include('home.mens-collection')
     @include('home.ladies-collection')
     @include('home.our-brands')

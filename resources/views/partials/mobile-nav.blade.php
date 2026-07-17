@@ -1,5 +1,5 @@
 {{-- Mobile Bottom Navigation --}}
-<nav class="mobile-nav md:hidden">
+<nav class="mobile-nav lg:hidden">
     <div class="mobile-nav-inner">
 
         {{-- Home --}}
@@ -61,6 +61,14 @@
         padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
         max-width: 500px;
         margin: 0 auto;
+        gap: 2px;
+    }
+
+    /* Smaller phones: tighten spacing so 4 items fit comfortably */
+    @media (max-width: 359px) {
+        .mobile-nav-inner { gap: 0; }
+        .mobile-nav-item { padding: 6px 4px; }
+        .mobile-nav-label { font-size: 9px; letter-spacing: -0.02em; }
     }
 
     /* ── Nav Item ── */
@@ -94,6 +102,13 @@
         border-radius: 12px;
         position: relative;
         transition: all 0.2s ease;
+    }
+
+    /* Slightly larger touch targets on bigger phones */
+    @media (min-width: 480px) {
+        .mobile-nav-icon { width: 44px; height: 44px; }
+        .mobile-nav-icon i { font-size: 19px; }
+        .mobile-nav-label { font-size: 11px; }
     }
 
     .mobile-nav-icon i {

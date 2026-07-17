@@ -7,14 +7,14 @@
 <header id="mainHeader"
     class="site-header {{ $isHome ? 'site-header--over-hero' : '' }} top-0 z-50 bg-surface-elevated/95 backdrop-blur-xl border-b border-border/70 transition-all duration-300">
 
-    <div class="max-w-[1400px] mx-auto px-4 md:px-8">
-        <div class="site-header-inner flex items-center justify-between gap-4 h-16 md:h-24 transition-all duration-300">
+    <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="site-header-inner flex items-center justify-between gap-4 h-16 lg:h-24 transition-all duration-300">
 
             {{-- ========== LEFT: nav links (desktop) / hamburger (mobile) ========== --}}
             <div class="flex items-center gap-6 flex-1 min-w-0">
                 {{-- Mobile hamburger --}}
                 <button onclick="toggleMobileMenu(true)"
-                    class="site-icon-btn md:hidden -ml-2 p-2 rounded-lg transition-colors shrink-0"
+                    class="site-icon-btn lg:hidden -ml-2 p-2 rounded-lg transition-colors shrink-0"
                     aria-label="Open menu" aria-expanded="false" aria-controls="mobileCategoryDrawer">
                     <svg class="w-6 h-6 site-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
@@ -22,7 +22,7 @@
                 </button>
 
                 {{-- Desktop nav links --}}
-                <nav class="hidden md:flex items-stretch gap-7 h-full" aria-label="Primary">
+                <nav class="hidden lg:flex items-stretch gap-7 h-full" aria-label="Primary">
                     @foreach ($navCategories as $category)
                         @php $hasChildren = $category->children && $category->children->count() > 0; @endphp
                         <div class="site-nav-item group/nav flex items-center"
@@ -89,18 +89,18 @@
             </div>
 
             {{-- ========== CENTER: logo ========== --}}
-            <a href="{{ url('/') }}" class="flex items-center justify-center shrink-0 group" aria-label="{{ $siteName }} home">
+            <a href="{{ url('/') }}" class="flex items-center justify-center shrink-0 group flex-none" aria-label="{{ $siteName }} home">
                 @if ($settings['site_logo'])
-                    <img src="{{ storage_url($settings['site_logo']) }}" alt="{{ $siteName }}" class="site-logo-img h-10 md:h-12 transition-all duration-300">
+                    <img src="{{ storage_url($settings['site_logo']) }}" alt="{{ $siteName }}" class="site-logo-img h-8 sm:h-10 lg:h-12 transition-all duration-300 max-w-full">
                 @else
-                    <span class="site-logo-text font-heading text-2xl md:text-3xl font-semibold uppercase tracking-[0.3em] transition-all duration-300">
+                    <span class="site-logo-text font-heading text-lg sm:text-2xl lg:text-3xl font-semibold uppercase transition-all duration-300 truncate">
                         {{ $siteName }}
                     </span>
                 @endif
             </a>
 
             {{-- ========== RIGHT: icon group ========== --}}
-            <div class="flex items-center justify-end gap-1 md:gap-2 flex-1">
+            <div class="flex items-center justify-end gap-1 lg:gap-2 flex-1">
 
                 {{-- Search --}}
                 <button onclick="openSearch()" class="site-icon-btn p-2.5 rounded-lg transition-colors" aria-label="Search">
@@ -119,15 +119,15 @@
                         </svg>
                     </button>
 
-                    {{-- Mobile bottom-sheet backdrop --}}
+                    {{-- Mobile/tablet bottom-sheet backdrop --}}
                     <div id="profileBackdrop" onclick="closeProfileDropdown()"
-                        class="fixed inset-0 bg-primary/40 backdrop-blur-sm opacity-0 invisible transition-opacity duration-200 z-[59] md:hidden"></div>
+                        class="fixed inset-0 bg-primary/40 backdrop-blur-sm opacity-0 invisible transition-opacity duration-200 z-[59] lg:hidden"></div>
 
                     {{-- Dropdown / bottom-sheet --}}
                     <div id="profileDropdownMenu" role="menu" aria-label="Account menu"
                         class="site-profile-panel
                                fixed inset-x-0 bottom-0 translate-y-full rounded-t-3xl
-                               md:absolute md:inset-x-auto md:right-0 md:bottom-auto md:top-full md:mt-3 md:w-72 md:rounded-2xl md:translate-y-0 md:scale-95 md:origin-top-right
+                               lg:absolute lg:inset-x-auto lg:right-0 lg:bottom-auto lg:top-full lg:mt-3 lg:w-72 lg:rounded-2xl lg:translate-y-0 lg:scale-95 lg:origin-top-right
                                bg-surface-elevated border border-border shadow-2xl
                                opacity-0 invisible transition-all duration-200 z-[60] overflow-hidden">
 
@@ -136,8 +136,8 @@
                             $user = auth()->user();
                             $isAdmin = $user->role == \App\Enums\UserRole::CUSTOMER ? false : true;
                             ?>
-                            {{-- Mobile grabber --}}
-                            <div class="md:hidden flex justify-center pt-3 pb-1">
+                            {{-- Mobile/tablet grabber --}}
+                            <div class="lg:hidden flex justify-center pt-3 pb-1">
                                 <span class="h-1 w-10 rounded-full bg-border"></span>
                             </div>
                             {{-- Greeting --}}
@@ -147,7 +147,7 @@
                             </div>
                             <div class="h-px bg-border"></div>
 
-                            <nav class="p-2 pb-3 md:pb-2" aria-label="Account links">
+                            <nav class="p-2 pb-3 lg:pb-2" aria-label="Account links">
                                 @if ($isAdmin)
                                     <a href="{{ route('admin.dashboard') }}" role="menuitem" class="site-menu-link">
                                         <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" /></svg>
@@ -173,7 +173,7 @@
                                 @endif
                             </nav>
                             <div class="h-px bg-border"></div>
-                            <div class="p-2 pb-3 md:pb-2">
+                            <div class="p-2 pb-3 lg:pb-2">
                                 <form action="{{ route('auth.logout') }}" method="POST" id="logoutForm">
                                     @csrf
                                     <button type="submit" role="menuitem" class="site-menu-link w-full text-left">
@@ -183,11 +183,11 @@
                                 </form>
                             </div>
                         @else
-                            {{-- Mobile grabber --}}
-                            <div class="md:hidden flex justify-center pt-3 pb-1">
+                            {{-- Mobile/tablet grabber --}}
+                            <div class="lg:hidden flex justify-center pt-3 pb-1">
                                 <span class="h-1 w-10 rounded-full bg-border"></span>
                             </div>
-                            <div class="px-5 py-5 pb-7 md:pb-5">
+                            <div class="px-5 py-5 pb-7 lg:pb-5">
                                 <h3 class="font-heading text-lg text-primary">My Account</h3>
                                 <p class="mt-1 text-xs leading-relaxed text-secondary">New here? Join for early access to sales.</p>
                                 <div class="mt-4 space-y-2.5">
@@ -234,6 +234,37 @@
     .site-header.scrolled .site-logo-text { font-size: 1.5rem; }
     .site-header.scrolled .site-logo-img { height: 2.25rem; }
 
+    /* ── Logo responsiveness: avoid overflow / crowding on small screens ── */
+    .site-logo-text {
+        letter-spacing: 0.18em;
+        white-space: nowrap;
+        max-width: 38vw;
+    }
+    @media (min-width: 640px)  { .site-logo-text { letter-spacing: 0.3em; max-width: none; } }
+    .site-logo-img { max-width: 120px; object-fit: contain; }
+    @media (min-width: 768px)  { .site-logo-img { max-width: 180px; } }
+
+    /* Prevent hamburger + logo overlap on small phones */
+    @media (max-width: 479px) {
+        .site-header-inner { gap: 2px; }
+        .site-logo-img { max-width: 100px; }
+    }
+
+    /* ── Tighter gaps on small tablets (between mobile + desktop nav) ── */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .site-header-inner { gap: 2px; }
+        .site-nav-link,
+        .site-nav-sale { letter-spacing: 0.10em; }
+        .site-header .site-icon-btn { padding: 0.5rem; }
+    }
+
+    /* ── Very small phones: shrink icon buttons to avoid overflow ── */
+    @media (max-width: 359px) {
+        .site-header-inner { gap: 2px; }
+        .site-icon-btn { padding: 0.375rem; }
+        .site-logo-text { letter-spacing: 0.2em; }
+    }
+
     /* ================= TRANSPARENT OVER-HERO ================= */
     .site-header--over-hero:not(.scrolled) {
         background-color: transparent !important;
@@ -271,8 +302,8 @@
 
     /* ================= profile panel open state ================= */
     .site-profile-panel.is-open { opacity: 1; visibility: visible; }
-    @media (min-width: 768px) { .site-profile-panel.is-open { transform: scale(1); } }
-    @media (max-width: 767px) { .site-profile-panel.is-open { transform: translateY(0); } }
+    @media (min-width: 1024px) { .site-profile-panel.is-open { transform: scale(1); } }
+    @media (max-width: 1023px) { .site-profile-panel.is-open { transform: translateY(0); } }
     #profileBackdrop.is-open { opacity: 1; visibility: visible; }
 </style>
 

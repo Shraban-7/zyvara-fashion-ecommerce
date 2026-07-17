@@ -233,9 +233,19 @@ $total = count($slides);
     padding: 20px 20px 80px;
     max-width: 680px;
 }
+@media (min-width: 480px)  { .hs2-content { padding: 24px 28px 84px; } }
 @media (min-width: 640px)  { .hs2-content { padding: 28px 32px 90px; } }
 @media (min-width: 1024px) { .hs2-content { padding: 40px 64px 110px; } }
 @media (min-width: 1280px) { .hs2-content { padding: 48px 80px 120px; } }
+
+/* Very small phones: compress vertical rhythm so content fits the short height */
+@media (max-width: 359px) {
+    .hs2-content { padding: 16px 16px 72px; justify-content: flex-end; }
+    .hs2-heading { margin-bottom: 8px; }
+    .hs2-sub { margin-bottom: 14px; max-width: 100%; }
+    .hs2-cta-row { margin-bottom: 12px; }
+    .hs2-badges { gap: 10px; }
+}
 
 /* Eyebrow */
 .hs2-eyebrow {
@@ -396,6 +406,12 @@ $total = count($slides);
 @media (min-width: 640px)  { .hs2-bar { padding: 0 32px 16px; } }
 @media (min-width: 1024px) { .hs2-bar { padding: 0 64px 20px; } }
 @media (min-width: 1280px) { .hs2-bar { padding: 0 80px 24px; } }
+
+/* Very small phones: hide thumbnail strip, keep only counter + arrows */
+@media (max-width: 419px) {
+    .hs2-thumbs { display: none; }
+    .hs2-bar { justify-content: flex-end; }
+}
 
 /* Thumbnails */
 .hs2-thumbs {

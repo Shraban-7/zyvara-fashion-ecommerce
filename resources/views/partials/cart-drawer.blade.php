@@ -67,17 +67,35 @@
 
     {{-- Coupon Code --}}
     <div class="px-6 py-4 border-t border-primary-100 bg-light/50" id="couponSection">
-        <div class="flex gap-2">
+        {{-- Applied coupon display --}}
+        <div id="appliedCouponBox" class="hidden mb-3 flex items-center justify-between gap-2 rounded-xl border border-accent/30 bg-accent-50 px-4 py-3">
+            <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-tag text-accent text-sm"></i>
+                    <span id="appliedCouponCode" class="font-mono font-bold text-primary text-sm truncate"></span>
+                </div>
+                <div id="appliedCouponDiscount" class="text-xs text-accent-600 font-semibold"></div>
+            </div>
+            <button type="button" onclick="removeCoupon()" id="removeCouponBtn"
+                class="shrink-0 text-secondary-400 hover:text-danger transition-colors" title="Remove coupon">
+                <i class="fas fa-times text-base"></i>
+            </button>
+        </div>
+
+        <div id="couponInputRow" class="flex gap-2">
             <div class="flex-1 relative">
-                <input type="text" placeholder="Enter coupon code" class="w-full h-11 px-4 pr-10 bg-surface-elevated border border-primary-100 rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200">
+                <input type="text" id="couponCodeInput" placeholder="Enter coupon code"
+                    class="w-full h-11 px-4 pr-10 bg-surface-elevated border border-primary-100 rounded-xl text-sm text-primary placeholder-secondary-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 uppercase tracking-wide">
                 <svg class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                 </svg>
             </div>
-            <button class="h-11 px-5 bg-primary text-surface-elevated rounded-xl font-semibold text-sm hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm hover:shadow-md">
+            <button type="button" onclick="applyCoupon()" id="applyCouponBtn"
+                class="h-11 px-5 bg-primary text-surface-elevated rounded-xl font-semibold text-sm hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 shadow-sm hover:shadow-md">
                 Apply
             </button>
         </div>
+        <div id="couponMessage" class="hidden mt-2 text-xs"></div>
     </div>
 
     {{-- Cart Footer --}}
@@ -92,8 +110,8 @@
                 <span class="text-secondary-400">Shipping</span>
                 <span class="font-semibold text-primary" id="cartShipping">৳60</span>
             </div>
-            <div class="flex items-center justify-between text-sm text-primary hidden" id="discountRow">
-                <span>Discount</span>
+            <div class="flex items-center justify-between text-sm text-accent-600 hidden" id="discountRow">
+                <span class="flex items-center gap-1.5"><i class="fas fa-tag text-xs"></i> Discount</span>
                 <span class="font-semibold" id="cartDiscount">-৳0</span>
             </div>
             <div class="h-px bg-primary-100 my-3"></div>
@@ -244,5 +262,97 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeCartDrawer();
         });
+
+        // Coupon apply/remove (storefront)
+        window.applyCoupon = function() {
+            const input = document.getElementById('couponCodeInput');
+            const btn = document.getElementById('applyCouponBtn');
+            const code = input.value.trim();
+
+            if (!code) {
+                showCartCouponMessage('Please enter a coupon code.', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            const original = btn.textContent;
+            btn.textContent = '...';
+
+            fetch('{{ route("cart.apply-coupon") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ code })
+            })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (ok && data.success) {
+                    showAppliedCoupon(data.coupon_code, data.discount_formatted);
+                    showCartCouponMessage(data.message, 'success');
+                } else {
+                    clearAppliedCoupon();
+                    showCartCouponMessage(data.message || 'Invalid coupon code.', 'error');
+                }
+            })
+            .catch(() => {
+                showCartCouponMessage('Something went wrong. Please try again.', 'error');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.textContent = original;
+            });
+        };
+
+        window.removeCoupon = function() {
+            fetch('{{ route("cart.remove-coupon") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(() => {
+                clearAppliedCoupon();
+                showCartCouponMessage('Coupon removed.', 'success');
+            })
+            .catch(() => {});
+        };
+
+        function showAppliedCoupon(code, discountFormatted) {
+            document.getElementById('appliedCouponCode').textContent = code;
+            document.getElementById('appliedCouponDiscount').textContent = 'You saved ' + discountFormatted;
+            document.getElementById('appliedCouponBox').classList.remove('hidden');
+            document.getElementById('couponInputRow').classList.add('hidden');
+
+            // Reflect discount in footer
+            const discountRow = document.getElementById('discountRow');
+            discountRow.classList.remove('hidden');
+            document.getElementById('cartDiscount').textContent = '-' + discountFormatted;
+
+            // Refresh cart totals from server
+            if (typeof refreshCart === 'function') refreshCart();
+        }
+
+        function clearAppliedCoupon() {
+            document.getElementById('appliedCouponBox').classList.add('hidden');
+            document.getElementById('couponInputRow').classList.remove('hidden');
+            document.getElementById('couponCodeInput').value = '';
+
+            const discountRow = document.getElementById('discountRow');
+            discountRow.classList.add('hidden');
+            document.getElementById('cartDiscount').textContent = '-৳0';
+
+            if (typeof refreshCart === 'function') refreshCart();
+        }
+
+        function showCartCouponMessage(message, type) {
+            const el = document.getElementById('couponMessage');
+            el.textContent = message;
+            el.classList.remove('hidden', 'text-danger-600', 'text-accent-600');
+            el.classList.add(type === 'success' ? 'text-accent-600' : 'text-danger-600');
+        }
     })();
 </script>
