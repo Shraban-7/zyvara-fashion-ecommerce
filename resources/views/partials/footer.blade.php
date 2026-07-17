@@ -101,14 +101,14 @@ $rightPages = \App\Models\StaticPage::active()->where('footer_position', 2)->ord
         {{-- Payment Methods --}}
         <div class="border-t border-surface-elevated/10 pt-8 mb-8">
             <div class="flex flex-wrap items-center justify-center">
-                <img src="{{ asset('assets/images/sslcommerz.png') }}" alt="SSLCommerz" class="w-20 h-auto object-contain">
+                <img src="{{ asset('assets/images/sslcommerz.png') }}" alt="SSLCommerz" class="w-full h-auto object-contain">
             </div>
         </div>
 
         {{-- Copyright --}}
         <div class="border-t border-surface-elevated/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
             <p class="text-secondary-400 text-sm">© {{ date('Y') }} {{ $siteName }}. All Rights Reserved.</p>
-            <p class="text-secondary-600 text-xs">Designed & Developed by <a href="https://spinnertech.dev" target="_blank" rel="noopener noreferrer" class="text-secondary-400 hover:text-surface-elevated transition-colors">Spinner Tech</a></p>
+            <p class="text-secondary-600 text-xs">Designed & Developed by <a href="#" target="_blank" rel="noopener noreferrer" class="text-secondary-400 hover:text-surface-elevated transition-colors">Shraban</a></p>
         </div>
 
     </div>
