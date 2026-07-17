@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CashRegisterController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\ReturnRequestController;
 use App\Http\Controllers\Admin\SaleReturnController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\SettingController;
@@ -22,6 +24,8 @@ use App\Http\Controllers\Admin\FlashSaleController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\SocialPostController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\StoreController;
+use App\Http\Controllers\Admin\CouponController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
@@ -64,6 +68,13 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('sale-returns')->as('saleReturns.')->group(function () {
         Route::get('/', [SaleReturnController::class, 'index'])->name('index');
         Route::get('/{return}', [SaleReturnController::class, 'show'])->name('show');
+    });
+
+    // Customer Returns & Exchanges
+    Route::prefix('returns')->as('returns.')->group(function () {
+        Route::get('/', [ReturnRequestController::class, 'index'])->name('index');
+        Route::get('/{returnRequest}', [ReturnRequestController::class, 'show'])->name('show');
+        Route::post('/{returnRequest}/status', [ReturnRequestController::class, 'updateStatus'])->name('update-status');
     });
 
     Route::prefix('expenses')->as('expenses.')->group(function () {
@@ -117,6 +128,13 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/store', [BannerController::class, 'store'])->name('store');
         Route::put('/{banner}/update', [BannerController::class, 'update'])->name('update');
         Route::delete('/{banner}/delete', [BannerController::class, 'delete'])->name('delete');
+    });
+
+    Route::prefix('events')->as('events.')->group(function () {
+        Route::get('/', [EventController::class, 'index'])->name('index');
+        Route::post('/store', [EventController::class, 'store'])->name('store');
+        Route::put('/{event}/update', [EventController::class, 'update'])->name('update');
+        Route::delete('/{event}/delete', [EventController::class, 'delete'])->name('delete');
     });
 
     Route::prefix('static-pages')->as('static_pages.')->group(function () {
@@ -178,13 +196,19 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         return redirect()->route('admin.dashboard');
     })->name('users.index');
 
-    // Coupons Routes (placeholder)
-    Route::get('/coupons', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('coupons.index');
-    Route::get('/coupons/create', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('coupons.create');
+    // Coupons Routes
+    Route::prefix('coupons')->as('coupons.')->group(function () {
+        Route::get('/', [CouponController::class, 'index'])->name('index');
+        Route::get('/create', [CouponController::class, 'create'])->name('create');
+        Route::post('/store', [CouponController::class, 'store'])->name('store');
+        Route::get('/generate-code', [CouponController::class, 'generateCode'])->name('generate-code');
+        Route::get('/{coupon}', [CouponController::class, 'show'])->name('show');
+        Route::get('/{coupon}/edit', [CouponController::class, 'edit'])->name('edit');
+        Route::put('/{coupon}/update', [CouponController::class, 'update'])->name('update');
+        Route::delete('/{coupon}/delete', [CouponController::class, 'destroy'])->name('delete');
+        Route::post('/{coupon}/duplicate', [CouponController::class, 'duplicate'])->name('duplicate');
+        Route::post('/{coupon}/toggle-status', [CouponController::class, 'toggleStatus'])->name('toggle-status');
+    });
 
     // Banners Routes (placeholder)
     // Route::get('/banners', function () {
@@ -209,6 +233,14 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{home_section}/delete', [HomeSectionController::class, 'destroy'])->name('destroy');
         Route::post('/{home_section}/toggle-status', [HomeSectionController::class, 'toggleStatus'])->name('toggle-status');
         Route::post('/reorder', [HomeSectionController::class, 'reorder'])->name('reorder');
+    });
+
+    // Stores / Showrooms Routes
+    Route::prefix('stores')->as('stores.')->group(function () {
+        Route::get('/', [StoreController::class, 'index'])->name('index');
+        Route::post('/store', [StoreController::class, 'store'])->name('store');
+        Route::put('/{store}/update', [StoreController::class, 'update'])->name('update');
+        Route::delete('/{store}', [StoreController::class, 'delete'])->name('delete');
     });
 
     // Flash Sales Routes

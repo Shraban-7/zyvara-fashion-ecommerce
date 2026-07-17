@@ -202,6 +202,8 @@ Route::prefix('cart')->as('cart.')->group(function () {
     Route::put('/update/{itemId}', [CartController::class, 'updateQuantity'])->name('update');
     Route::delete('/remove/{itemId}', [CartController::class, 'removeItem'])->name('remove');
     Route::delete('/clear', [CartController::class, 'clearCart'])->name('clear');
+    Route::post('/apply-coupon', [CartController::class, 'applyCoupon'])->name('apply-coupon');
+    Route::post('/remove-coupon', [CartController::class, 'removeCoupon'])->name('remove-coupon');
 });
 
 Route::prefix('checkout')->as('checkout.')->group(function () {
@@ -225,21 +227,38 @@ Route::middleware('auth')->group(function () {
         Route::put('/password', [CustomerController::class, 'updatePassword'])->name('password.update');
         Route::get('/addresses', [CustomerController::class, 'addresses'])->name('addresses');
         Route::post('/addresses', [CustomerController::class, 'storeAddress'])->name('addresses.store');
+        Route::post('/addresses/{address}/default', [CustomerController::class, 'setDefaultAddress'])->name('addresses.default');
         Route::put('/addresses/{address}', [CustomerController::class, 'updateAddress'])->name('addresses.update');
         Route::delete('/addresses/{address}', [CustomerController::class, 'deleteAddress'])->name('addresses.delete');
         Route::get('/wishlist', [CustomerController::class, 'wishlist'])->name('wishlist');
         Route::get('/reviews', [CustomerController::class, 'reviews'])->name('reviews');
+        Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
 
     // Orders
     Route::prefix('orders')->as('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order:order_number}/show', [OrderController::class, 'show'])->name('show');
+        Route::get('/{order:order_number}/track', [OrderController::class, 'track'])->name('track');
         Route::post('/{order:order_number}/pay-now', [CheckoutController::class, 'payNow'])->name('payNow');
         Route::get('/{orderNumber}/invoice', [OrderController::class, 'invoice'])->name('invoice');
+
+        // Returns & Exchanges
+        Route::prefix('returns')->as('returns.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\ReturnRequestController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\ReturnRequestController::class, 'itemOptions'])->name('create');
+            Route::get('/{returnRequest}', [\App\Http\Controllers\ReturnRequestController::class, 'show'])->name('show');
+            Route::post('/', [\App\Http\Controllers\ReturnRequestController::class, 'store'])->name('store');
+        });
     });
 
     Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
+
+    // Store locator
+    Route::get('/stores', [\App\Http\Controllers\StoreLocatorController::class, 'index'])->name('stores.index');
+
+    // Public events listing
+    Route::get('/events', [\App\Http\Controllers\EventPublicController::class, 'index'])->name('events.index');
 });
 
 Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribe');
