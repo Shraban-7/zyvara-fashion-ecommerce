@@ -240,7 +240,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order:order_number}/show', [OrderController::class, 'show'])->name('show');
         Route::get('/{order:order_number}/track', [OrderController::class, 'track'])->name('track');
-        Route::post('/{order:order_number}/pay-now', [CheckoutController::class, 'payNow'])->name('payNow');
+        Route::get('/{order:order_number}/pay-now', [PaymentController::class, 'initiate'])->name('payNow');
         Route::get('/{orderNumber}/invoice', [OrderController::class, 'invoice'])->name('invoice');
 
         // Returns & Exchanges
@@ -264,10 +264,12 @@ Route::middleware('auth')->group(function () {
 Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribe');
 Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');
 
+// SSLCommerz callbacks. SSLCommerz POSTs to these from its servers,
+// so they are CSRF-exempt (see app/Http/Middleware/VerifyCsrfToken.php).
 Route::prefix('payment')->as('payment.')->group(function () {
-    Route::get('/success', [PaymentController::class, 'success'])->name('success');
-    Route::get('/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');
-    Route::get('/failed', [PaymentController::class, 'failed'])->name('failed');
+    Route::post('/success', [PaymentController::class, 'success'])->name('success');
+    Route::post('/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');
+    Route::post('/failed', [PaymentController::class, 'failed'])->name('failed');
     Route::post('/ipn', [PaymentController::class, 'ipn'])->name('ipn');
 });
 

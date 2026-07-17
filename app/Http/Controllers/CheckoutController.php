@@ -21,7 +21,6 @@ use App\Models\OrderStatusHistory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 class CheckoutController extends Controller
 {
@@ -230,29 +229,15 @@ class CheckoutController extends Controller
             $cart->delete();
 
             if ($request->payment_method == PaymentMethod::ONLINE->value) {
-                $paymentData = $this->preparePaymentData($order);
-                $paymentGatewayResponse = Http::post(env('SLASHPAY_PAYMENT_URL'), $paymentData);
-                $jsonResponse = $paymentGatewayResponse->json();
-                if ($paymentGatewayResponse->successful()) {
-                    $order->payment_id = $jsonResponse['payment_id'];
-                    $order->save();
-
-                    DB::commit();
-
-                    return redirect()->away($jsonResponse['payment_url']);
-                } else {
-                    DB::rollBack();
-                    Log::error('Checkout error: Payment gateway response unsuccessful', [
-                        'order_id' => $order->id,
-                        'response' => $jsonResponse,
-                        'paymentData' => $paymentData,
-                    ]);
-                    toast_error('Payment gateway error. Please try again.');
-                    return back()->withInput();
-                }
-            } else {
+                // Create the order (payment_status = pending) then redirect to the
+                // SSLCommerz hosted gateway. The gateway callbacks (success/fail/
+                // cancel/IPN) are the authoritative source for payment_status.
                 DB::commit();
+
+                return redirect()->route('orders.payNow', ['order' => $order->order_number]);
             }
+
+            DB::commit();
 
             session(['last_order_id' => $order->id]);
 
@@ -339,39 +324,7 @@ class CheckoutController extends Controller
 
     public function payNow(Order $order)
     {
-        if ($order->payment_status != PaymentStatus::PENDING) {
-            toast_warning('This order has already been paid or is not eligible for payment.');
-            return redirect()->route('orders.show', $order);
-        }
-
-        $paymentGatewayResponse = Http::post(env('SLASHPAY_PAYMENT_URL'), $this->preparePaymentData($order));
-
-        $jsonResponse = $paymentGatewayResponse->json();
-
-        if (!$paymentGatewayResponse->successful()) {
-            toast_error('Failed to initiate payment. Please try again later.');
-            return redirect()->route('orders.show', $order);
-        }
-
-        $order->payment_id = $jsonResponse['payment_id'] ?? null;
-        $order->save();
-
-        return redirect()->away($jsonResponse['payment_url']);
-    }
-
-    private function preparePaymentData(Order $order): array
-    {
-        return [
-            'api_key' => env('SLASHPAY_API_KEY'),
-            'order_id' => (string) $order->id,
-            'amount' => $order->total,
-            'cus_name' => $order->shipping_name,
-            'cus_email_mobile' => $order->shipping_phone,
-            'ipn_url' => route('payment.ipn'),
-            'cancel_url' => route('payment.cancelled'),
-            'success_url' => route('payment.success'),
-            'fail_url' => route('payment.failed'),
-            'currency' => 'BDT',
-        ];
+        // Delegate to the SSLCommerz payment flow in PaymentController.
+        return app(PaymentController::class)->initiate($order);
     }
 }
