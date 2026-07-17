@@ -10,6 +10,7 @@ enum PaymentMethod: string
     case CARD = 'card';
     case BANK = 'bank';
     case ONLINE = 'online';
+    case SSLCOMMERZ = 'sslcommerz';
     case CASH = 'cash';
 
     case NONE = 'none';
@@ -25,7 +26,8 @@ enum PaymentMethod: string
             self::NAGAD => 'Nagad',
             self::CARD => 'Credit/Debit Card',
             self::BANK => 'Bank Transfer',
-            self::ONLINE => 'Online Payment',
+            self::ONLINE => 'Pay Online (SSLCommerz)',
+            self::SSLCOMMERZ => 'SSLCommerz (Online)',
             self::CASH => 'Cash Payment',
             self::NONE => 'None',
 
@@ -44,6 +46,7 @@ enum PaymentMethod: string
             self::CARD => 'fa-credit-card',
             self::BANK => 'fa-university',
             self::ONLINE => 'fa-globe',
+            self::SSLCOMMERZ => 'fa-globe',
             self::CASH => 'fa-money-bill',
         };
     }
@@ -58,6 +61,7 @@ enum PaymentMethod: string
             self::NAGAD,
             self::BANK,
             self::ONLINE,
+            self::SSLCOMMERZ,
         ]);
     }
 
@@ -70,11 +74,11 @@ enum PaymentMethod: string
     }
 
     /**
-     * Online payment check
+     * Online payment check (gateway-based, redirect to SSLCommerz)
      */
     public function isOnline(): bool
     {
-        return $this === self::ONLINE;
+        return in_array($this, [self::ONLINE, self::SSLCOMMERZ]);
     }
 
     /**
